@@ -1,0 +1,186 @@
+import 'dart:convert';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Auth with ChangeNotifier {
+  String _userRole;
+  String _accessToken;
+  String _refreshToken;
+  DateTime _expiryDate;
+  String _userId;
+  String _username;
+  ApiBaseHelper _helper = ApiBaseHelper();
+
+  bool get isAuth {
+    return _accessToken != null;
+  }
+
+  String get userRole {
+    return _userRole;
+  }
+  String get userId {
+    return _userId;
+  }
+  String get username {
+    return _username;
+  }
+
+  String get accessToken {
+    if (_expiryDate != null &&
+        _expiryDate.isAfter(DateTime.now()) &&
+        _accessToken != null) {
+      return _accessToken;
+    }
+    return null;
+  }
+
+  signup(String username, String email, String password, List<String> roles) async {
+    final url = "public";
+    try {
+      String body = json.encode({
+        "username": username,
+        "password": password,
+        "email": email,
+        "roles": roles
+      });
+      final responseData = await _helper.post(url, body:body);
+
+      login(username, password);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  saveTokens(Map<dynamic, dynamic> responseData) async {
+    _accessToken = responseData['access_token'];
+    _refreshToken = responseData['refresh_token'];
+    _expiryDate = DateTime.now().add(
+      Duration(seconds: responseData['expires_in']),
+    );
+    final prefs = await SharedPreferences.getInstance();
+    final userData = json.encode(
+      {
+        'accessToken': _accessToken,
+        'refreshToken': _refreshToken,
+        'expiryDate': _expiryDate.toIso8601String(),
+      },
+    );
+    prefs.setString('userData', userData);
+  }
+
+  Future<bool> login(String username, String password) async {
+    final url =
+        'oauth/token?password=$password&username=$username&grant_type=password';
+    final responseData = await _helper.post(
+      url,
+    );
+    await saveTokens(responseData);
+    // await retrieveUser();
+    notifyListeners();
+  }
+
+  Future refreshAcessToken() async {
+    try {
+      final url =
+          'oauth/token?grant_type=refresh_token&refresh_token=$_refreshToken';
+      final responseData = await _helper.post(
+        url,
+      );
+      await saveTokens(responseData);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+    final extractedUserData =
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final expiryDate = DateTime.parse(extractedUserData['expiryDate']);
+
+    _accessToken = extractedUserData['accessToken'];
+    _refreshToken = extractedUserData['refreshToken'];
+    _expiryDate = DateTime.parse(extractedUserData['expiryDate']);
+    if (expiryDate.subtract(Duration(seconds: 600)).isBefore(DateTime.now())) {
+      // accessToken expired
+      try {
+        refreshAcessToken();
+      } catch (error) {
+        //refreshToken expired
+        logout();
+        throw (error);
+      }
+    }
+    // await retrieveUser();
+
+    notifyListeners();
+    return true;
+  }
+
+  Future<void> logout() async {
+    _accessToken = null;
+    _userId = null;
+    _expiryDate = null;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+  }
+
+  // Future<void> retrieveUser() async {
+  //   final url = 'authenticated/me';
+  //   final responseData = await _helper.getProtected(url, _accessToken);
+  //   _userId = responseData['id'].toString();
+  //   _username = responseData['username'].toString();
+  //   userFavourites = await Stall.getStallsFromJson(responseData['favourites'], true);
+
+  //   if(responseData['roles'].contains("ADMIN")){
+  //     _userRole = "ADMIN";
+  //   } else if(responseData['roles'].contains("BUSINESS")){
+  //     _userRole = "BUSINESS";
+  //   } else{
+  //     _userRole = "USER";
+  //   }
+  //   print("UserId :   --------------" + _userId);
+  //   notifyListeners();
+  // }
+
+  // List<Review> userReviews = [];
+  // Future<List<Review>> retrieveUserReviews() async {
+  //   final url = ApiBaseHelper().baseUrl + 'retrieveUserReviews?userId=$userId';
+  //   try {
+  //     final response = await http.get(
+  //       url,
+  //     );
+  //     print(userId);
+  //     print(response.statusCode);
+  //     print(response.body);
+  //     final responseData = json.decode(response.body) as Map<String, dynamic>;
+  //     if (responseData.containsKey("errorMessage")) {
+  //       throw HttpException(responseData['errorMessage']);
+  //     }
+
+  //     userReviews = responseData['reviews'].map<Review>((r) {
+  //       return new Review(
+  //         author: _username,
+  //         date: DateTime.parse(r['date']),
+  //         reviewId: r['reviewId'],
+  //         rating: r['rating'],
+  //         reviewTitle: r['reviewTitle'],
+  //         reviewText: r['reviewText'],
+  //       );
+  //     }).toList();
+  //     return [];
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+}
