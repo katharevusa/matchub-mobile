@@ -1,7 +1,12 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:matchub_mobile/screens/explore/explore_screen.dart';
+import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 
 class TabsScreen extends StatefulWidget {
   @override
@@ -96,13 +101,17 @@ class _TabsScreenState extends State<TabsScreen> {
         break;
       case 1:
         _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => HomeScreen()));
+            TabRouteBuilder(builder: (context) => ExploreScreen()));
         break;
       case 2:
         _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => HomeScreen()));
+            TabRouteBuilder(builder: (context) => ProjectScreen()));
         break;
       case 3:
+        _navigatorKey.currentState.pushReplacement(
+            TabRouteBuilder(builder: (context) => ResourceScreen()));
+        break;
+      case 4:
         _navigatorKey.currentState.pushReplacement(
             TabRouteBuilder(builder: (context) => HomeScreen()));
         break;
@@ -144,6 +153,10 @@ class _TabsScreenState extends State<TabsScreen> {
           title: Text('Explore'),
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.access_time),
+          title: Text('Projects'),
+        ),
+        BottomNavigationBarItem(
           icon: Icon(FlutterIcons.briefcase_fea),
           title: Text('Resources'),
         ),
@@ -164,12 +177,26 @@ class _TabsScreenState extends State<TabsScreen> {
       case HomeScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);
+      case ProjectScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ProjectScreen(), settings: settings);
+      case ProjectScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ResourceScreen(), settings: settings);
+      case ProjectScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ResourceRequestScreen(), settings: settings);
+      case ProjectScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ResourceDonationHistoryScreen(),
+            settings: settings);
       default:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);
     }
   }
 }
+
 class TabRouteBuilder<T> extends MaterialPageRoute<T> {
   TabRouteBuilder({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);

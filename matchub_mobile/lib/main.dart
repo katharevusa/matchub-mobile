@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'MatcHub',
           // theme: AppTheme.lightTheme,
-          home: LoginScreen(),
+          home: TabsScreen(),
           // auth.isAuth
           //     ?  TabsScreen()
           //     : FutureBuilder(

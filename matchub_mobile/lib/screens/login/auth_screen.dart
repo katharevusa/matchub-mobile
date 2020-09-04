@@ -10,7 +10,6 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: Color(0xFF89c9b8),
       body: GestureDetector(
@@ -63,7 +62,6 @@ class BackgroundClipper extends CustomClipper<Path> {
 class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-
     Rect rect = Rect.fromLTRB(0.0, 0.0, size.width, size.height / 2);
     var paint = new Paint()
       // ..shader = gradient.createShader(rect)
@@ -115,7 +113,6 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
-
   final GlobalKey<FormState> _formKey = GlobalKey();
   Map<String, String> _authData = {
     'username': '',
@@ -317,8 +314,9 @@ class _AuthCardState extends State<AuthCard> {
                         color: kAccentColor,
                       ),
                     FlatButton(
-                      child: Text(
-                          widget.authMode == AuthMode.Login ? '${ 'REGISTER' }': 'LOGIN'),
+                      child: Text(widget.authMode == AuthMode.Login
+                          ? '${'REGISTER'}'
+                          : 'LOGIN'),
                       onPressed: _switchAuthMode,
                       padding:
                           EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
