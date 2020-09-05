@@ -4,6 +4,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
+import 'package:matchub_mobile/screens/resource/newResouce/title_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
@@ -180,13 +181,13 @@ class _TabsScreenState extends State<TabsScreen> {
       case ProjectScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ProjectScreen(), settings: settings);
-      case ProjectScreen.routeName:
+      case ResourceScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ResourceScreen(), settings: settings);
-      case ProjectScreen.routeName:
+      case ResourceScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ResourceRequestScreen(), settings: settings);
-      case ProjectScreen.routeName:
+      case ResourceScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ResourceDonationHistoryScreen(),
             settings: settings);

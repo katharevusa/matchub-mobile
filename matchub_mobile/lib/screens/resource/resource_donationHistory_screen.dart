@@ -27,56 +27,64 @@ class _ResourceDonationHistoryScreenState
           backgroundColor: Colors.blueGrey,
           elevation: 0.0,
         ),
-        body: SingleChildScrollView(
-            child: donationHistory.isEmpty
-                ? Column(
-                    children: <Widget>[
-                      Text(
-                        'No transactions added yet!',
-                        style: Theme.of(context).textTheme.title,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  )
-                : ListView.builder(
+        body: Container(
+            child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+              Expanded(
+                child: ListView.builder(
                     itemCount: donationHistory.length,
                     itemBuilder: (context, index) {
-                      // final history = donationHistory[index];
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 8.0, bottom: 4.0),
-                                child: Row(children: <Widget>[
-                                  Text(
-                                    '\$${donationHistory[index].amount}',
-                                    style: new TextStyle(fontSize: 30.0),
+                      return Container(
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0, bottom: 4.0),
+                                  child: Row(children: <Widget>[
+                                    Text(
+                                      donationHistory[index].title,
+                                      style: new TextStyle(fontSize: 30.0),
+                                    ),
+                                    Spacer(),
+                                  ]),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 4.0, bottom: 80.0),
+                                  child: Row(children: <Widget>[
+                                    Text(DateFormat('dd/MM/yyyy')
+                                        .format(donationHistory[index].date)
+                                        .toString()),
+                                    Spacer(),
+                                  ]),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0, bottom: 8.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        donationHistory[index]
+                                            .amount
+                                            .toString(),
+                                        style: new TextStyle(fontSize: 35.0),
+                                      ),
+                                      Spacer(),
+                                    ],
                                   ),
-                                  Spacer(),
-                                ]),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 4.0, bottom: 80.0),
-                                child: Row(children: <Widget>[
-                                  Text(
-                                      "${DateFormat('dd/MM/yyyy').format(donationHistory[index].date).toString()}"),
-                                  Spacer(),
-                                ]),
-                              ),
-                            ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       );
-                    },
-                  )
-
-            //child: Center(child: Text("Donation history")),
-            ));
+                    }),
+              )
+            ])));
   }
 }
