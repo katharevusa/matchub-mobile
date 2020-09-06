@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/model/resource.dart';
 import 'package:matchub_mobile/screens/resource/expiredResource.dart';
-import 'package:matchub_mobile/screens/resource/model/resource.dart';
 import 'package:matchub_mobile/screens/resource/navDrawer.dart';
 import 'package:matchub_mobile/screens/resource/ongoingResource.dart';
 
@@ -13,17 +13,10 @@ class ResourceScreen extends StatefulWidget {
 
 class _ResourceScreenState extends State<ResourceScreen>
     with SingleTickerProviderStateMixin {
-  List _resources = [
-    Resource("Resource1", "description", ["Poverty"], "Available"),
-    Resource("Resource2", "description", ["Poverty"], "Available"),
-    Resource("Resource3", "description", ["Poverty"], "Available"),
-    Resource("Resource4", "description", ["Poverty"], "Busy"),
-    Resource("Resource5", "description", ["Poverty"], "Busy"),
-    Resource("Resource6", "description", ["Poverty"], "Busy"),
-    Resource("Resource7", "description", ["Poverty"], "Expired"),
-    Resource("Resource8", "description", ["Poverty"], "Expired"),
-    Resource("Resource9", "description", ["Poverty"], "Expired"),
-  ];
+  void selectOwnResource(BuildContext ctx) {
+    Navigator.of(ctx).pushNamed('/own-resource-detail-screen');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/screens/resource/model/resource.dart';
+import 'package:matchub_mobile/model/resource.dart';
 
 class ResourceCategoryScreen extends StatefulWidget {
   static const routeName = "/resource-category-screen";

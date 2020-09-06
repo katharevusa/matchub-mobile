@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
-import 'package:matchub_mobile/screens/resource/model/resource.dart';
-import 'package:matchub_mobile/screens/resource/newResouce/title_screen.dart';
-import 'package:matchub_mobile/screens/resource/model/resource.dart';
+import 'package:matchub_mobile/model/resource.dart';
 
 class ExpiredResource extends StatefulWidget {
   @override
@@ -12,9 +10,12 @@ class ExpiredResource extends StatefulWidget {
 class _ExpiredResourceState extends State<ExpiredResource> {
   // testing only
   List _resources = [
-    Resource("Resource7", "description", ["Poverty"], "Expired"),
-    Resource("Resource8", "description", ["Poverty"], "Expired"),
-    Resource("Resource9", "description", ["Poverty"], "Expired"),
+    Resource("Resource7", "description", ["Poverty"], DateTime.now(),
+        DateTime.now(), "file", "Available"),
+    Resource("Resource8", "description", ["Poverty"], DateTime.now(),
+        DateTime.now(), "file", "Available"),
+    Resource("Resource9", "description", ["Poverty"], DateTime.now(),
+        DateTime.now(), "file", "Available"),
   ];
 
   @override

@@ -1,49 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/resource.dart';
-import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 
-class OngoingResource extends StatefulWidget {
+class IncomingResourceRequest extends StatefulWidget {
   @override
-  _OngoingResourceState createState() => _OngoingResourceState();
+  _IncomingResourceRequestState createState() =>
+      _IncomingResourceRequestState();
 }
 
-class _OngoingResourceState extends State<OngoingResource> {
+class _IncomingResourceRequestState extends State<IncomingResourceRequest> {
   List _resourceStatus = [
     "All",
-    "Available",
-    "Busy",
+    "Pending",
+    "Approved",
+    "Rejected",
   ];
-  // testing only
-  List<Resource> _resources = [
-    Resource("Resource1", "description", ["Poverty"], DateTime.now(),
+  List _resources = [
+    Resource("Resource7", "description", ["Poverty"], DateTime.now(),
         DateTime.now(), "file", "Available"),
-    Resource("Resource2", "description", ["Poverty"], DateTime.now(),
+    Resource("Resource8", "description", ["Poverty"], DateTime.now(),
         DateTime.now(), "file", "Available"),
-    Resource("Resource3", "description", ["Poverty"], DateTime.now(),
+    Resource("Resource9", "description", ["Poverty"], DateTime.now(),
         DateTime.now(), "file", "Available"),
-    Resource("Resource4", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Busy"),
-    Resource("Resource5", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Busy"),
-    Resource("Resource6", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Busy"),
   ];
   String _selected = "All";
-
-  //List<Resource> avail = _resources.where((element) => _resources.status == "Available").toList();
-
   @override
   Widget build(BuildContext context) {
     //new empty resource
-    final newResource =
-        new Resource(null, null, new List<String>(), null, null, null, null);
     return Scaffold(
       // body: SingleChildScrollView(
       //   child: Container(
       //     height: 400,
       body: Column(
-        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           DropdownButton(
@@ -74,16 +62,6 @@ class _OngoingResourceState extends State<OngoingResource> {
               }),
         ],
       ),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FlatButton.icon(
-          onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      ResourceCreationScreen(resource: newResource))),
-          icon: Icon(Icons.add),
-          label: Text("New")),
     );
   }
 }

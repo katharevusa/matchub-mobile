@@ -4,7 +4,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
-import 'package:matchub_mobile/screens/resource/newResouce/title_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
