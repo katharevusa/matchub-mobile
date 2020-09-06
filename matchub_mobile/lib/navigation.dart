@@ -1,7 +1,14 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
+import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/project/project_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_screen.dart';
+import 'package:matchub_mobile/screens/user/user_screen.dart';
+
+import 'model/individual.dart';
 
 class TabsScreen extends StatefulWidget {
   @override
@@ -96,15 +103,19 @@ class _TabsScreenState extends State<TabsScreen> {
         break;
       case 1:
         _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => HomeScreen()));
+            TabRouteBuilder(builder: (context) => ExploreScreen()));
         break;
       case 2:
         _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => HomeScreen()));
+            TabRouteBuilder(builder: (context) => ProjectScreen()));
         break;
       case 3:
         _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => HomeScreen()));
+            TabRouteBuilder(builder: (context) => ResourceScreen()));
+        break;
+      case 4:
+        _navigatorKey.currentState.pushReplacement(
+            TabRouteBuilder(builder: (context) => UserScreen()));
         break;
     }
     setState(() {
@@ -140,8 +151,12 @@ class _TabsScreenState extends State<TabsScreen> {
           title: Text('Home'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(FlutterIcons.tasks_faw5s),
+          icon: Icon(FlutterIcons.compass_fea),
           title: Text('Explore'),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(FlutterIcons.tasks_faw5s),
+          title: Text('Projects'),
         ),
         BottomNavigationBarItem(
           icon: Icon(FlutterIcons.briefcase_fea),
@@ -149,7 +164,7 @@ class _TabsScreenState extends State<TabsScreen> {
         ),
         BottomNavigationBarItem(
           icon: Icon(FlutterIcons.user_fea),
-          title: Text('My Profile'),
+          title: Text('Profile'),
         ),
       ],
     );
@@ -164,12 +179,22 @@ class _TabsScreenState extends State<TabsScreen> {
       case HomeScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);
+      case ProfileScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) =>
+                ProfileScreen(profile: settings.arguments as Individual),
+            fullscreenDialog: true,
+            settings: settings);
+      case UserScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => UserScreen(), settings: settings);
       default:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);
     }
   }
 }
+
 class TabRouteBuilder<T> extends MaterialPageRoute<T> {
   TabRouteBuilder({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);
