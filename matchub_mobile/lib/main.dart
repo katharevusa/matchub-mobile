@@ -19,31 +19,6 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-<<<<<<< HEAD
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => Auth()),
-      ],
-      child: Consumer<Auth>(
-        builder: (context, auth, widget) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'MatcHub',
-          // theme: AppTheme.lightTheme,
-          home: TabsScreen(),
-          // auth.isAuth
-          //     ?  TabsScreen()
-          //     : FutureBuilder(
-          //         future: auth.tryAutoLogin(),
-          //         builder: (ctx, authResultSnapshot) => LoginScreen(),
-          //       ),
-          onGenerateRoute: TabsScreen().generateRoutes,
-          onUnknownRoute: (settings) {
-            return MaterialPageRoute(builder: (context) => TabsScreen());
-          },
-        ),
-      ),
-    );
-=======
     return LayoutBuilder(builder: (context, constraints) {
       return OrientationBuilder(builder: (context, orientation) {
         SizeConfig().init(constraints, orientation);
@@ -72,6 +47,5 @@ class MyApp extends StatelessWidget {
         );
       });
     });
->>>>>>> 7f799bf8e20060b9120dd80c752ffecfe0d7cc08
   }
 }

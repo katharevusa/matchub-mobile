@@ -18,13 +18,13 @@ class BasicInfo extends StatelessWidget {
       height: 35 * SizeConfig.heightMultiplier,
       child: Stack(
         children: [
-          Container(
-              height: 20 * SizeConfig.heightMultiplier,
-              decoration: BoxDecoration(
-                  color: Color(0xFF7B89A4),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30.0),
-                      bottomRight: Radius.circular(30.0)))),
+          // Container(
+          //     height: 20 * SizeConfig.heightMultiplier,
+          //     decoration: BoxDecoration(
+          //         color: Color(0xFF7B89A4),
+          //         borderRadius: BorderRadius.only(
+          //             bottomLeft: Radius.circular(30.0),
+          //             bottomRight: Radius.circular(30.0)))),
           Container(
               margin: EdgeInsets.only(top: 30, right: 20, left: 20),
               width: 100 * SizeConfig.widthMultiplier,

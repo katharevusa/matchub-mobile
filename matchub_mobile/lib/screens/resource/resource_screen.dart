@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:matchub_mobile/model/resource.dart';
 import 'package:matchub_mobile/screens/resource/expiredResource.dart';
 import 'package:matchub_mobile/screens/resource/navDrawer.dart';
@@ -8,16 +7,10 @@ import 'package:matchub_mobile/screens/resource/ongoingResource.dart';
 class ResourceScreen extends StatefulWidget {
   static const routeName = "/resource-screen";
 
-=======
-
-class ResourceScreen extends StatefulWidget {
-  static const routeName = "/resource-screen";
->>>>>>> 7f799bf8e20060b9120dd80c752ffecfe0d7cc08
   @override
   _ResourceScreenState createState() => _ResourceScreenState();
 }
 
-<<<<<<< HEAD
 class _ResourceScreenState extends State<ResourceScreen>
     with SingleTickerProviderStateMixin {
   void selectOwnResource(BuildContext ctx) {
@@ -70,15 +63,3 @@ class _ResourceScreenState extends State<ResourceScreen>
     );
   }
 }
-=======
-class _ResourceScreenState extends State<ResourceScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(child: Text("Resources")),
-      ),
-    );
-  }
-}
->>>>>>> 7f799bf8e20060b9120dd80c752ffecfe0d7cc08
