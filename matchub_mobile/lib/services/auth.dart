@@ -5,6 +5,9 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/model/individual.dart';
+import 'package:matchub_mobile/model/post.dart';
+import 'package:matchub_mobile/model/sdg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
@@ -16,6 +19,29 @@ class Auth with ChangeNotifier {
   String _username;
   ApiBaseHelper _helper = ApiBaseHelper();
 
+  Individual user = Individual(
+      firstName: "Wee Kek",
+      lastName: "Tan",
+      email: "tanwk@comp.edu",
+      genderEnum: GenderEnum.MALE,
+      profileDescription: 'Best Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years Running',
+      followers: [1, 2, 3, 4, 5, 5],
+      following: [1, 2, 3, 4, 5, 5, 9, 9, 9],
+      reputationPoints: 124,
+      profilePhoto: ("assets/images/avatar2.jpg"),
+      country: "Singapore",
+      city: "Singapore",
+      sdgs: [
+        SDG(sdgName: "Environment", sdgDescription: "I love the Encironmetn!"),
+        SDG(
+            sdgName: "Zero Hungry",
+            sdgDescription: "I want to end world hunger.")
+      ],
+      skillSet: ["MukBang", "Talented Individual", "Sleeping at 4am"],
+      profileUrl: "www.matchub.com/profile/users-123",
+      posts: [Post(content: "We are the champions my friends", timeCreated: DateTime.now(), likes: 25, comments: [Comment(content: "My First Comment", timeCreated: DateTime.now())]),Post(content: "We are the champions my friends", timeCreated: DateTime.now()),Post(content: "We are the champions my friends", timeCreated: DateTime.now()),Post(content: "We are the champions my friends", timeCreated: DateTime.now())]
+      );
+
   bool get isAuth {
     return _accessToken != null;
   }
@@ -23,9 +49,11 @@ class Auth with ChangeNotifier {
   String get userRole {
     return _userRole;
   }
+
   String get userId {
     return _userId;
   }
+
   String get username {
     return _username;
   }
@@ -39,7 +67,8 @@ class Auth with ChangeNotifier {
     return null;
   }
 
-  signup(String username, String email, String password, List<String> roles) async {
+  signup(String username, String email, String password,
+      List<String> roles) async {
     final url = "public";
     try {
       String body = json.encode({
@@ -48,7 +77,7 @@ class Auth with ChangeNotifier {
         "email": email,
         "roles": roles
       });
-      final responseData = await _helper.post(url, body:body);
+      final responseData = await _helper.post(url, body: body);
 
       login(username, password);
     } catch (error) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 
 class ProjectScreen extends StatefulWidget {
   static const routeName = "/project-screen";
@@ -12,7 +13,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(child: Text("Projects")),
-      )
+      ),
     );
   }
 }

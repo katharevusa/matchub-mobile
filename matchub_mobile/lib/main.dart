@@ -4,6 +4,7 @@ import 'package:matchub_mobile/navigation.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/login/auth_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+<<<<<<< HEAD
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
@@ -41,5 +43,35 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
+=======
+    return LayoutBuilder(builder: (context, constraints) {
+      return OrientationBuilder(builder: (context, orientation) {
+        SizeConfig().init(constraints, orientation);
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => Auth()),
+          ],
+          child: Consumer<Auth>(
+            builder: (context, auth, widget) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'MatcHub',
+              theme: AppTheme.lightTheme,
+              home: TabsScreen(),
+              // auth.isAuth
+              //     ?  TabsScreen()
+              //     : FutureBuilder(
+              //         future: auth.tryAutoLogin(),
+              //         builder: (ctx, authResultSnapshot) => LoginScreen(),
+              //       ),
+              onGenerateRoute: TabsScreen().generateRoutes,
+              onUnknownRoute: (settings) {
+                return MaterialPageRoute(builder: (context) => TabsScreen());
+              },
+            ),
+          ),
+        );
+      });
+    });
+>>>>>>> 7f799bf8e20060b9120dd80c752ffecfe0d7cc08
   }
 }

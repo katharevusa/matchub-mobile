@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
-import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
+import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
   static const routeName = "/explore-screen";
@@ -17,9 +17,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
         child: Center(child: Text("Explore")),
       ),
       floatingActionButton: FlatButton.icon(
-          onPressed: () => ApiBaseHelper().post("createUser", body: ""),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pushNamed(ProfileScreen.routeName),
           icon: Icon(Icons.add),
-          label: Text("projects")),
+          label: Text("Explore")),
     );
   }
 }

@@ -8,6 +8,13 @@ import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
+import 'package:matchub_mobile/screens/home/home_screen.dart';
+import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/project/project_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_screen.dart';
+import 'package:matchub_mobile/screens/user/user_screen.dart';
+
+import 'model/individual.dart';
 
 class TabsScreen extends StatefulWidget {
   @override
@@ -56,16 +63,16 @@ class _TabsScreenState extends State<TabsScreen> {
     return (await showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-            title: new Text('Are you sure?'),
-            content: new Text('Do you wish to exit MatcHub...'),
+            title: Text('Are you sure?'),
+            content: Text('Do you wish to exit MatcHub...'),
             actions: <Widget>[
-              new FlatButton(
+              FlatButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
+                child: Text('No'),
               ),
-              new FlatButton(
+              FlatButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: new Text('Yes'),
+                child: Text('Yes'),
               ),
             ],
           ),
@@ -114,7 +121,7 @@ class _TabsScreenState extends State<TabsScreen> {
         break;
       case 4:
         _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => HomeScreen()));
+            TabRouteBuilder(builder: (context) => UserScreen()));
         break;
     }
     setState(() {
@@ -150,11 +157,11 @@ class _TabsScreenState extends State<TabsScreen> {
           title: Text('Home'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(FlutterIcons.tasks_faw5s),
+          icon: Icon(FlutterIcons.compass_fea),
           title: Text('Explore'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.access_time),
+          icon: Icon(FlutterIcons.tasks_faw5s),
           title: Text('Projects'),
         ),
         BottomNavigationBarItem(
@@ -163,7 +170,7 @@ class _TabsScreenState extends State<TabsScreen> {
         ),
         BottomNavigationBarItem(
           icon: Icon(FlutterIcons.user_fea),
-          title: Text('My Profile'),
+          title: Text('Profile'),
         ),
       ],
     );
@@ -191,6 +198,15 @@ class _TabsScreenState extends State<TabsScreen> {
         return MaterialPageRoute(
             builder: (context) => ResourceDonationHistoryScreen(),
             settings: settings);
+      case ProfileScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) =>
+                ProfileScreen(profile: settings.arguments as Individual),
+            fullscreenDialog: true,
+            settings: settings);
+      case UserScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => UserScreen(), settings: settings);
       default:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);

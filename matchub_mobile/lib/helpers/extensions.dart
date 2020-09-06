@@ -21,3 +21,17 @@ extension TimeOfDayComparison on TimeOfDay {
     return false;
   }
 }
+extension DifferenceInTime on DateTime {
+  String differenceFrom(DateTime date) {
+    Duration difference = this.difference(date);
+    if(difference.inMinutes==0){
+      return difference.inMinutes.toString() + " seconds ago";
+    } else if(difference.inHours==0){
+      return difference.inMinutes.toString() + " minutes ago";
+    } else if (difference.inDays ==0){
+      return difference.inHours.toString() + " hours ago";
+    } else {
+      return difference.inDays.toString() + " days ago";
+    }
+  }
+}
