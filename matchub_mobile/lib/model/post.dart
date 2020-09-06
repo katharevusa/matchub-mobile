@@ -6,8 +6,14 @@ class Post with ChangeNotifier {
   DateTime timeCreated;
   Individual postCreator;
   List<Comment> comments;
+  int likes;
 
-  Post({this.content, this.timeCreated, this.postCreator});
+  Post(
+      {this.content,
+      this.timeCreated,
+      this.postCreator,
+      this.likes = 0,
+      this.comments = const []});
 }
 
 class Comment with ChangeNotifier {

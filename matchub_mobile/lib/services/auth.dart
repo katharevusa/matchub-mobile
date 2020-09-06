@@ -39,7 +39,7 @@ class Auth with ChangeNotifier {
       ],
       skillSet: ["MukBang", "Talented Individual", "Sleeping at 4am"],
       profileUrl: "www.matchub.com/profile/users-123",
-      posts: [Post(content: "We are the champions my friends", timeCreated: DateTime.now()),Post(content: "We are the champions my friends", timeCreated: DateTime.now()),Post(content: "We are the champions my friends", timeCreated: DateTime.now()),Post(content: "We are the champions my friends", timeCreated: DateTime.now())]
+      posts: [Post(content: "We are the champions my friends", timeCreated: DateTime.now(), likes: 25, comments: [Comment(content: "My First Comment", timeCreated: DateTime.now())]),Post(content: "We are the champions my friends", timeCreated: DateTime.now()),Post(content: "We are the champions my friends", timeCreated: DateTime.now()),Post(content: "We are the champions my friends", timeCreated: DateTime.now())]
       );
 
   bool get isAuth {
