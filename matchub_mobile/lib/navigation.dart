@@ -1,9 +1,11 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:matchub_mobile/model/resource.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
+import 'package:matchub_mobile/screens/resource/ownResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
@@ -207,6 +209,18 @@ class _TabsScreenState extends State<TabsScreen> {
       case UserScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => UserScreen(), settings: settings);
+
+      // case OwnResourceDetailScreen.routeName:
+      //   return MaterialPageRoute(
+      //       builder: (context) => OwnResourceDetailScreen(
+      //           resource: settings.arguments as Resource),
+      //       settings: settings);
+
+      case OwnResourceDetailScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => OwnResourceDetailScreen(),
+            settings: settings);
+
       default:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);

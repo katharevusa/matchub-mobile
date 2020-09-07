@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/resource.dart';
+import 'package:matchub_mobile/screens/resource/ownResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 
 class OngoingResource extends StatefulWidget {
@@ -32,6 +33,17 @@ class _OngoingResourceState extends State<OngoingResource> {
   String _selected = "All";
 
   //List<Resource> avail = _resources.where((element) => _resources.status == "Available").toList();
+  // void selecteResource(BuildContext ctx, Resource resource) {
+  //   Navigator.of(ctx).push(MaterialPageRoute(
+  //     builder: (c) {
+  //       return OwnResourceDetailScreen(resource);
+  //     },
+  //   ));
+  // }
+  void selecteResource(BuildContext ctx, Resource resource) {
+    Navigator.of(ctx)
+        .pushNamed(OwnResourceDetailScreen.routeName, arguments: resource);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +79,14 @@ class _OngoingResourceState extends State<OngoingResource> {
                 return _selected == _resources[index].status
                     ? ListTile(
                         title: Text(_resources[index].title),
+                        onTap: () => selecteResource(ctx, _resources[index]),
                       )
                     : _selected == "All"
-                        ? ListTile(title: Text(_resources[index].title))
+                        ? ListTile(
+                            title: Text(_resources[index].title),
+                            onTap: () =>
+                                selecteResource(ctx, _resources[index]),
+                          )
                         : SizedBox.shrink();
               }),
         ],

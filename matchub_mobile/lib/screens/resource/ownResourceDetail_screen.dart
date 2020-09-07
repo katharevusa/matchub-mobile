@@ -1,28 +1,19 @@
-// import 'package:flutter/material.dart';
-// import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:flutter/material.dart';
+import 'package:matchub_mobile/model/resource.dart';
 
-// class OwnResourceDetailScreen extends StatefulWidget {
-//   static const routeName = "/own-resource-detail";
-//   @override
-//   _OwnResourceDetailScreenState createState() =>
-//       _OwnResourceDetailScreenState();
-// }
+class OwnResourceDetailScreen extends StatelessWidget {
+  static const routeName = "/own-resource-detail";
 
-// class _OwnResourceDetailScreenState extends State<OwnResourceDetailScreen> {
-//   final routeArgs =
-//       ModalRoute.of(context).settings.arguments as Map<String, String>;
-//   final resourceTitle = routeArgs['title'];
-//   // final categoryId = routeArgs['id'];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(resourceTitle),
-//       ),
-//       body: SingleChildScrollView(
-//         child: Center(child: Text("Own Resource detail")),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    final Resource resource = ModalRoute.of(context).settings.arguments;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(resource.title),
+      ),
+      body: SingleChildScrollView(
+        child: Center(child: Text("Own Resource detail")),
+      ),
+    );
+  }
+}
