@@ -86,8 +86,8 @@ class DescriptionInfo extends StatelessWidget {
   }
 
   Row buildSkillset() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Flexible(flex: 1, child: Text("Skill-Set")),
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Flexible(flex: 1, child: Text("Skillset")),
       Flexible(
         flex: 3,
         child: Tags(

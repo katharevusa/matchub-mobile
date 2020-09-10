@@ -4,8 +4,6 @@ import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widget/rounded_button.dart';
 import 'package:provider/provider.dart';
 
-enum AuthMode { Signup, Login }
-
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,15 +24,15 @@ class LoginScreen extends StatelessWidget {
                 top: deviceSize.height * 0.1,
                 child: Container(
                   width: deviceSize.width,
-                  color: Colors.transparent,
-                  child: AuthCard(),
+                  // color: Colors.transparent,
+                  child: LoginCard(),
                 ),
               ),
             ],
           ),
         ),
       ),
-      // resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
     );
   }
 }
@@ -104,28 +102,24 @@ class CurvePainter extends CustomPainter {
   }
 }
 
-class AuthCard extends StatefulWidget {
-  AuthMode authMode;
-  AuthCard();
+class LoginCard extends StatefulWidget {
+  LoginCard();
 
   @override
-  _AuthCardState createState() => _AuthCardState();
+  _LoginCardState createState() => _LoginCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _LoginCardState extends State<LoginCard> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Map<String, String> _authData = {
     'username': '',
-    'email': '',
     'password': '',
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
   @override
-  void initState() {
-    widget.authMode = AuthMode.Login;
-  }
+  void initState() {}
 
   void _showErrorDialog(String message) {
     showDialog(
@@ -156,20 +150,11 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = true;
     });
     try {
-      if (widget.authMode == AuthMode.Login) {
-        // Log user in
-        await Provider.of<Auth>(context, listen: false).login(
-          _authData['username'],
-          _authData['password'],
-        );
-      } else {
-        // Sign user up
-        await Provider.of<Auth>(context, listen: false).signup(
-            _authData['username'],
-            _authData['email'],
-            _authData['password'],
-            ["USER"]);
-      }
+      // Log user in
+      await Provider.of<Auth>(context, listen: false).login(
+        _authData['username'],
+        _authData['password'],
+      );
     } catch (error) {
       const errorMessage =
           'Could not authenticate you. Please try again later.';
@@ -179,18 +164,6 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = false;
     });
-  }
-
-  void _switchAuthMode() {
-    if (widget.authMode == AuthMode.Login) {
-      setState(() {
-        widget.authMode = AuthMode.Signup;
-      });
-    } else {
-      setState(() {
-        widget.authMode = AuthMode.Login;
-      });
-    }
   }
 
   @override
@@ -212,14 +185,11 @@ class _AuthCardState extends State<AuthCard> {
                           top: deviceSize.height * 0.1,
                           left: deviceSize.width * 0.1,
                           child: Text(
-                            widget.authMode == AuthMode.Signup
-                                ? 'Create \nAccount'
-                                : 'Welcome\nBack',
+                            'Welcome\nBack',
                             style: TextStyle(
                               height: 1.1,
                               color: Colors.grey[50],
                               fontSize: 44,
-                              fontFamily: 'Boorsok',
                             ),
                           )),
                     ],
@@ -230,94 +200,82 @@ class _AuthCardState extends State<AuthCard> {
                 ),
                 child: Column(
                   children: [
-                    if (widget.authMode == AuthMode.Signup)
-                      TextFormField(
-                        enabled: widget.authMode == AuthMode.Signup,
+                    SizedBox(height: 20),
+                    Container(
+                      color: Colors.grey[200].withOpacity(0.1),
+                      child: TextFormField(
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          labelText: 'Email',
+                          labelText: 'Username',
                           labelStyle: TextStyle(
                             color: Colors.white,
                           ),
-                          focusedBorder: UnderlineInputBorder(
+                          fillColor: Colors.grey[100],
+                          hoverColor: Colors.grey[100],
+                          focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
                           ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                         keyboardType: TextInputType.emailAddress,
+                        // validator: (value) {
+                        //   if (value.isEmpty || !value.contains('@')) {
+                        //     return 'Invalid email!';
+                        //   }
+                        // },
                         onSaved: (value) {
-                          _authData['email'] = value;
+                          _authData['username'] = value;
                         },
                       ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                      // validator: (value) {
-                      //   if (value.isEmpty || !value.contains('@')) {
-                      //     return 'Invalid email!';
-                      //   }
-                      // },
-                      onSaved: (value) {
-                        _authData['username'] = value;
-                      },
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
+                    SizedBox(height: 20),
+                    Container(
+                      color: Colors.grey[200].withOpacity(0.1),
+                      child: TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          labelStyle: TextStyle(
+                            color: Colors.grey[200],
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey[200],
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey[200],
+                            ),
                           ),
                         ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                        ),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value.isEmpty || value.length < 8) {
+                            return 'Password is too short!';
+                          }
+                        },
+                        onSaved: (value) {
+                          _authData['password'] = value;
+                        },
                       ),
-                      obscureText: true,
-                      validator: (value) {
-                        if (value.isEmpty || value.length < 8) {
-                          return 'Password is too short!';
-                        }
-                      },
-                      onSaved: (value) {
-                        _authData['password'] = value;
-                      },
                     ),
                     SizedBox(height: 100),
                     if (_isLoading)
                       CircularProgressIndicator()
                     else
                       RoundedButton(
-                        text: widget.authMode == AuthMode.Login
-                            ? 'LOGIN'
-                            : 'SIGN UP',
+                        text: 'LOGIN',
                         press: _submit,
                         color: kAccentColor,
                       ),
                     FlatButton(
-                      child: Text(widget.authMode == AuthMode.Login
-                          ? '${'REGISTER'}'
-                          : 'LOGIN'),
-                      onPressed: _switchAuthMode,
+                      child: Text('${'REGISTER'}'),
+                      onPressed: () {},
                       padding:
                           EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

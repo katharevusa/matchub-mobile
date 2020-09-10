@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 import 'package:matchub_mobile/model/individual.dart';
+import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:provider/provider.dart';
 
-class Wall extends StatelessWidget {
+class Wall extends StatefulWidget {
   Individual profile;
 
   Wall({this.profile});
 
+  @override
+  _WallState createState() => _WallState();
+}
+
+class _WallState extends State<Wall> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,10 +26,7 @@ class Wall extends StatelessWidget {
         Text("Activity", style: AppTheme.titleLight),
         SizedBox(height: 10),
         ListView.separated(
-          separatorBuilder: (ctx, index) => Divider(
-            height: 40,
-            thickness: 1 
-          ),
+          separatorBuilder: (ctx, index) => Divider(height: 40, thickness: 1),
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (context, index) => Column(
@@ -31,23 +36,98 @@ class Wall extends StatelessWidget {
                 contentPadding: EdgeInsets.symmetric(horizontal: 0),
                 leading: CircleAvatar(
                   radius: 25,
-                  backgroundImage: AssetImage(profile.profilePhoto),
+                  backgroundImage: AssetImage(widget.profile.profilePhoto),
                 ),
-                title: Text("${profile.lastName} ${profile.firstName}"),
+                title: Text(
+                    "${widget.profile.lastName} ${widget.profile.firstName}"),
                 subtitle: Text(
-                    "${profile.posts[index].comments.length} comments | ${profile.posts[index].likes} likes"),
+                    "${widget.profile.posts[index].comments.length} comments | ${widget.profile.posts[index].likes} likes"),
                 trailing: Text(
                     DateTime.now().differenceFrom(
-                      profile.posts[index].timeCreated,
+                      widget.profile.posts[index].timeCreated,
                     ),
                     style: AppTheme.unSelectedTabLight),
               ),
               SizedBox(height: 10),
-              Text("${profile.posts[index].content}",
+              Text("${widget.profile.posts[index].content}",
                   style: AppTheme.unSelectedTabLight),
+              SizedBox(height: 10),
+              ButtonBar(
+                // alignment: MainAxisAlignment.spaceBetween,
+                buttonTextTheme: ButtonTextTheme.primary,
+                children: [
+                  FlatButton(
+                    visualDensity: VisualDensity.comfortable,
+                    highlightColor: Colors.transparent,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.thumb_up,
+                          color: Provider.of<Auth>(context)
+                                      .user
+                                      .likedPosts
+                                      .indexWhere((element) =>
+                                          widget.profile.posts[index].postId ==
+                                          element.postId) >=
+                                  0
+                              ? kAccentColor
+                              : Colors.grey,
+                        ),
+                        Text("  Like",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Provider.of<Auth>(context)
+                                          .user
+                                          .likedPosts
+                                          .indexWhere((element) =>
+                                              widget.profile.posts[index]
+                                                  .postId ==
+                                              element.postId) >=
+                                      0
+                                  ? kAccentColor
+                                  : Colors.grey,
+                            ))
+                      ],
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        Provider.of<Auth>(context)
+                            .user
+                            .toggleLikedPost(widget.profile.posts[index]);
+                      });
+                    },
+                  ),SizedBox(width:20),
+                  FlatButton(
+                      textColor: Colors.grey,
+                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          Icon(Icons.comment, color: Colors.grey),
+                          Text(
+                            "  Comment",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      )),
+                  FlatButton(
+                      textColor: Colors.grey,
+                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          Icon(Icons.share, color: Colors.grey),
+                          Text("  Share",
+                              style: TextStyle(
+                                fontSize: 15,
+                              )),
+                        ],
+                      )),
+                ],
+              )
             ],
           ),
-          itemCount: profile.posts.length,
+          itemCount: widget.profile.posts.length,
         )
       ]),
     );

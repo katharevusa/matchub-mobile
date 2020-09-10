@@ -24,13 +24,16 @@ class Auth with ChangeNotifier {
       lastName: "Tan",
       email: "tanwk@comp.edu",
       genderEnum: GenderEnum.MALE,
-      profileDescription: 'Best Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years Running',
+      profileDescription:
+          'Best Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years Running',
       followers: [1, 2, 3, 4, 5, 5],
       following: [1, 2, 3, 4, 5, 5, 9, 9, 9],
       reputationPoints: 124,
       profilePhoto: ("assets/images/avatar2.jpg"),
       country: "Singapore",
       city: "Singapore",
+      likedPosts: [],
+      comments: [],
       sdgs: [
         SDG(sdgName: "Environment", sdgDescription: "I love the Encironmetn!"),
         SDG(
@@ -39,8 +42,28 @@ class Auth with ChangeNotifier {
       ],
       skillSet: ["MukBang", "Talented Individual", "Sleeping at 4am"],
       profileUrl: "www.matchub.com/profile/users-123",
-      posts: [Post(content: "We are the champions my friends", timeCreated: DateTime.now(), likes: 25, comments: [Comment(content: "My First Comment", timeCreated: DateTime.now())]),Post(content: "We are the champions my friends", timeCreated: DateTime.now()),Post(content: "We are the champions my friends", timeCreated: DateTime.now()),Post(content: "We are the champions my friends", timeCreated: DateTime.now())]
-      );
+      posts: [
+        Post(
+            postId: 1,
+            content: "We are the champions my friends",
+            timeCreated: DateTime.now(),
+            likes: 25,
+            comments: [
+              Comment(content: "My First Comment", timeCreated: DateTime.now())
+            ]),
+        Post(
+            postId: 2,
+            content: "We are the champions my friends",
+            timeCreated: DateTime.now()),
+        Post(
+            postId: 3,
+            content: "We are the champions my friends",
+            timeCreated: DateTime.now()),
+        Post(
+            postId: 4,
+            content: "We are the champions my friends",
+            timeCreated: DateTime.now())
+      ]);
 
   bool get isAuth {
     return _accessToken != null;

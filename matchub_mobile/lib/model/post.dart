@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/model/individual.dart';
 
 class Post with ChangeNotifier {
+  int postId;
   String content;
   DateTime timeCreated;
   Individual postCreator;
-  List<Comment> comments;
+  List<Comment> comments = [];
   int likes;
 
   Post(
-      {this.content,
+      {this.postId,
+      this.content,
       this.timeCreated,
       this.postCreator,
       this.likes = 0,
-      this.comments = const []});
+      this.comments});
 }
 
 class Comment with ChangeNotifier {

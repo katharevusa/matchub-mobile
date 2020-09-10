@@ -52,7 +52,7 @@ class UserScreen extends StatelessWidget {
                       "Followers",
                       Icon(
                         FlutterIcons.user_friends_faw5s,
-                        color: Color(0xFFf1d1b5),
+                        color: Color(0xFFf5f1da),
                       )),
                   buildSettingCard(
                       "Following",
@@ -64,6 +64,18 @@ class UserScreen extends StatelessWidget {
                       "Announcements",
                       Icon(
                         Icons.notifications,
+                        color: Color(0xFFf1d1b5),
+                      )),
+                  buildSettingCard(
+                      "Saved Projects",
+                      Icon(
+                        FlutterIcons.list_alt_faw5s,
+                        color: Color(0xFFc3aed6),
+                      )),
+                  buildSettingCard(
+                      "Comments",
+                      Icon(
+                        FlutterIcons.comment_dots_faw5s,
                         color: Color(0xFFf18c8e),
                       ))
                 ],
@@ -111,7 +123,9 @@ class UserScreen extends StatelessWidget {
                         style: AppTheme.subTitleLight,
                       )),
                   ListTile(
-                    onTap: () {},
+                    onTap: () {
+                      Provider.of<Auth>(context).logout();
+                    },
                     leading: Icon(FlutterIcons.log_out_fea),
                     title: Text("Logout"),
                   ),
@@ -137,7 +151,7 @@ class UserScreen extends StatelessWidget {
             height: 10 * SizeConfig.heightMultiplier,
             child: Row(
               children: [
-                Expanded(child: Text(setting)),
+                Expanded(child: Text(setting,)),
                 icon,
               ],
             )),

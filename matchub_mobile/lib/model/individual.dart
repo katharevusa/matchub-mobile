@@ -14,32 +14,60 @@ class Individual with ChangeNotifier {
   String profilePhoto;
   String profileUrl;
   int reputationPoints;
-  List<int> followers;
-  List<int> following;
-  List<SDG> sdgs;
-  
+  List<int> followers = [];
+  List<int> following = [];
+  List<SDG> sdgs = [];
+
   String country;
   String city;
-  List<Post> posts;
+  List<Post> posts = [];
+  List<Post> likedPosts = [];
+  List<Comment> comments = [];
 
-  Individual(
-      {this.firstName,
-      this.lastName,
-      this.email,
-      this.genderEnum,
-      this.profileDescription,
-      this.projectFollowing = const [],
-      this.skillSet = const [],
-      this.sdgs = const [],
-      this.posts = const [],
-      this.profilePhoto,
-      this.reputationPoints,
-      this.followers,
-      this.following,
-      this.country,
-      this.city,
-      this.profileUrl,
-      });
+  Individual({
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.genderEnum,
+    this.profileDescription,
+    this.projectFollowing,
+    this.skillSet,
+    this.sdgs,
+    this.posts,
+    this.likedPosts,
+    this.profilePhoto,
+    this.reputationPoints,
+    this.followers,
+    this.following,
+    this.country,
+    this.city,
+    this.profileUrl,
+    this.comments
+  });
+
+  void addPostToWall(Post post) {
+    // if (stall.isFavourite) {
+    //   _helper.postProtected(
+    //       "authenticated/addOrRemoveFavourite?userId=$userId&companyId=${stall.stallId}&addFavourite=true",
+    //       accessToken: accessToken);
+    //   addToFavourites(stall);
+    // } else {
+    //   _helper
+    this.posts.add(post);
+    notifyListeners();
+  }
+
+  void toggleLikedPost(Post post){
+    if(this.likedPosts == null){
+      this.likedPosts = [];
+    }
+    if(this.likedPosts.indexWhere((element) => element.postId == post.postId) >=0){
+      this.likedPosts.remove(post);
+    } else{
+    this.likedPosts.add(post);
+    }
+    notifyListeners();
+  }
 }
 
 enum GenderEnum { MALE, FEMALE }

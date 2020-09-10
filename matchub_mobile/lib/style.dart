@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 
 const kPrimaryColor = Color(0xFF40858C);
-const kAccentColor = Color(0xFFCFD7C7);
+const kAccentColor = Color(0xFFfc8b6f);
 const kSecondaryColor = Color(0xFF70A9A1);
 
 const kTextColor = Color(0xFF50505D);
@@ -40,8 +40,6 @@ class AppTheme {
   );
 
   static final TextTheme lightTextTheme = TextTheme(
-    // bodyText1: TextStyle(color: Colors.grey),
-    // bodyText2: TextStyle(color: Colors.grey),
     title: titleLight,
     subtitle: subTitleLight,
     button: buttonLight,
