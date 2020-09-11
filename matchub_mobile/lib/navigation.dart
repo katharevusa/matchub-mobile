@@ -15,6 +15,7 @@ import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/screens/user/edit_profile.dart';
 import 'package:matchub_mobile/screens/user/user_screen.dart';
+import 'package:matchub_mobile/widgets/sdgPicker.dart';
 
 import 'model/individual.dart';
 
@@ -199,6 +200,10 @@ class _TabsScreenState extends State<TabsScreen> {
       case ResourceScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ResourceDonationHistoryScreen(),
+            settings: settings);
+      case SDGPicker.routeName:
+        return MaterialPageRoute(
+            builder: (context) => SDGPicker(),
             settings: settings);
       case ProfileScreen.routeName:
         return MaterialPageRoute(

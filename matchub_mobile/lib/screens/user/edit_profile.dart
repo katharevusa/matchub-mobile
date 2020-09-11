@@ -5,7 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
-import 'package:matchub_mobile/screens/user/info_edit_screen.dart';
+import 'package:matchub_mobile/screens/user/edit/info_edit_screen.dart';
+import 'package:matchub_mobile/screens/user/edit/interest_edit_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
@@ -32,8 +33,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       "country": widget.profile.country,
       "city": widget.profile.city,
       "profileDescription": widget.profile.profileDescription,
-      "skillSet": widget.profile.skillSet,
-      "sdgIds": [],
+      "skillSet": widget.profile.skillSet ?? [],
+      "sdgIds": widget.profile.sdgs ?? [],
     };
   }
 
@@ -45,51 +46,65 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(60.0),
-            child: AppBar(
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    color: Colors.grey[850],
-                    icon: Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(),
+        child: Stack(
+          children: [
+            Scaffold(
+              body: Container(
+                margin: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.white.withOpacity(0.15), BlendMode.dstATop),
+                    image: AssetImage(
+                        "assets/images/edit-screen.png"), // <-- BACKGROUND IMAGE
+                    fit: BoxFit.scaleDown,
                   ),
-                )
-              ],
-              automaticallyImplyLeading: false,
-              title: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                child: Text("Edit Profile Details",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                        color: Colors.grey[850])),
+                ),
               ),
-              backgroundColor: kScaffoldColor,
-              elevation: 0,
+              resizeToAvoidBottomInset: false,
             ),
-          ),
-          body: SafeArea(
-            child: Form(
-              key: _formKey,
-              child: PageView(
-                controller: controller,
-                children: <Widget>[
-                  InfoEditPage(editedProfile),
-                  Container(
-                      child: Center(
-                          child: FlatButton(
-                    child: Text("Submit"),
-                    onPressed: () => _updateProfile(
-                        Provider.of<Auth>(context).accessToken, context),
-                  )))
-                ],
+            Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(60.0),
+                child: AppBar(
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        color: Colors.grey[850],
+                        icon: Icon(Icons.close),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    )
+                  ],
+                  automaticallyImplyLeading: false,
+                  title: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                    child: Text("Edit Profile Details",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.grey[300])),
+                  ),
+                  // backgroundColor: kScaffoldColor,
+                  elevation: 10,
+                ),
+              ),
+              body: SafeArea(
+                child: Form(
+                  key: _formKey,
+                  child: PageView(
+                    controller: controller,
+                    children: <Widget>[
+                      InfoEditPage(editedProfile, controller),
+                      InterestEditPage(editedProfile, controller, _updateProfile),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ));
   }
 

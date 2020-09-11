@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:matchub_mobile/helpers/sdgs.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'dart:convert';
 // import 'package:matchub_mobile/model/individual.dart';
@@ -9,13 +10,15 @@ import 'package:matchub_mobile/screens/user/edit_profile.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import 'package:provider/provider.dart';
 
 class UserScreen extends StatelessWidget {
   static const routeName = "/user-screen";
   @override
   Widget build(BuildContext context) {
-    Profile profile = Profile.fromJson(json.decode(json.encode(Provider.of<Auth>(context).myProfile)));
+    Profile profile = Profile.fromJson(
+        json.decode(json.encode(Provider.of<Auth>(context).myProfile)));
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -26,7 +29,7 @@ class UserScreen extends StatelessWidget {
                   dense: true,
                   leading: CircleAvatar(
                     radius: 25,
-                    backgroundImage: AssetImage(profile.profilePhoto),
+                    backgroundImage: AssetImage("assets/images/avatar2.jpg"),
                   ),
                   title: Text(
                     "${profile.lastName} ${profile.firstName}",
@@ -34,8 +37,10 @@ class UserScreen extends StatelessWidget {
                   ),
                   subtitle: Text("View My Profile"),
                   onTap: () {
-                    Navigator.of(context, rootNavigator: true,).pushNamed(
-                        ProfileScreen.routeName,
+                    Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).pushNamed(ProfileScreen.routeName,
                         arguments: Provider.of<Auth>(context).myProfile);
                   }),
               Divider(
@@ -53,7 +58,10 @@ class UserScreen extends StatelessWidget {
                   buildSettingCard("Edit Profile",
                       Icon(FlutterIcons.edit_fea, color: Color(0xFFa8e6cf)),
                       () {
-                    Navigator.of(context, rootNavigator: true,).pushNamed(EditProfileScreen.routeName,
+                    Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).pushNamed(EditProfileScreen.routeName,
                         arguments: profile);
                   }),
                   buildSettingCard(
