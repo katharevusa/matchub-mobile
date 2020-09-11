@@ -8,6 +8,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/model/post.dart';
 import 'package:matchub_mobile/model/sdg.dart';
+import 'package:matchub_mobile/models/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
@@ -15,9 +16,11 @@ class Auth with ChangeNotifier {
   String _accessToken;
   String _refreshToken;
   DateTime _expiryDate;
-  String _userId;
+  String _accountId;
   String _username;
+  bool _isIndividual;
   ApiBaseHelper _helper = ApiBaseHelper();
+  Profile myProfile;
 
   Individual user = Individual(
       firstName: "Wee Kek",
@@ -69,12 +72,16 @@ class Auth with ChangeNotifier {
     return _accessToken != null;
   }
 
+  bool get isIndividual {
+    return _isIndividual;
+  }
+
   String get userRole {
     return _userRole;
   }
 
   String get userId {
-    return _userId;
+    return _accountId;
   }
 
   String get username {
@@ -132,7 +139,7 @@ class Auth with ChangeNotifier {
       url,
     );
     await saveTokens(responseData);
-    // await retrieveUser();
+    await retrieveUser();
     notifyListeners();
   }
 
@@ -172,7 +179,7 @@ class Auth with ChangeNotifier {
         throw (error);
       }
     }
-    // await retrieveUser();
+    await retrieveUser();
 
     notifyListeners();
     return true;
@@ -180,30 +187,28 @@ class Auth with ChangeNotifier {
 
   Future<void> logout() async {
     _accessToken = null;
-    _userId = null;
+    _accountId = null;
     _expiryDate = null;
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
 
-  // Future<void> retrieveUser() async {
-  //   final url = 'authenticated/me';
-  //   final responseData = await _helper.getProtected(url, _accessToken);
-  //   _userId = responseData['id'].toString();
-  //   _username = responseData['username'].toString();
-  //   userFavourites = await Stall.getStallsFromJson(responseData['favourites'], true);
-
-  //   if(responseData['roles'].contains("ADMIN")){
-  //     _userRole = "ADMIN";
-  //   } else if(responseData['roles'].contains("BUSINESS")){
-  //     _userRole = "BUSINESS";
-  //   } else{
-  //     _userRole = "USER";
-  //   }
-  //   print("UserId :   --------------" + _userId);
-  //   notifyListeners();
-  // }
+  Future<void> retrieveUser() async {
+    final url = 'authenticated/me';
+    final responseData = await _helper.getProtected(url, _accessToken);
+    if (responseData.containsKey("firstName")) {
+      myProfile = Profile.fromJson(responseData);
+      _isIndividual = true;
+    } else {
+      _isIndividual = false;
+    }
+    print(myProfile.projectsOwned[0].projectTitle);
+    _accountId = responseData['accountId'].toString();
+    _username = responseData['email'].toString();
+    print("Account Id :   --------------" + _accountId);
+    notifyListeners();
+  }
 
   // List<Review> userReviews = [];
   // Future<List<Review>> retrieveUserReviews() async {

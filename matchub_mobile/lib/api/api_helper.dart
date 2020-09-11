@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/helpers/extensions.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = "http://192.168.72.136:8080/api/v1/";
+  final String _baseUrl = "http://192.168.1.55:8080/api/v1/";
   String get baseUrl { return _baseUrl;}
   Future<dynamic> get(String url) async {
     var responseJson;

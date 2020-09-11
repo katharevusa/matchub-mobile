@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:matchub_mobile/model/individual.dart';
+import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 
 class DescriptionInfo extends StatelessWidget {
-  Individual profile;
+  Profile profile;
 
   DescriptionInfo({this.profile});
   @override
@@ -38,8 +39,8 @@ class DescriptionInfo extends StatelessWidget {
                 children: [
                   Expanded(child: Text("Based In")),
                   if (profile.city != null)
-                    Text("${profile.city}, ", style: AppTheme.subTitleLight),
-                  Text("${profile.country}", style: AppTheme.subTitleLight)
+                    Text("${profile.city??'No Data'}, ", style: AppTheme.subTitleLight),
+                  Text("${profile.country??'No Data'}", style: AppTheme.subTitleLight)
                 ],
               ),
             SizedBox(height: 10),
@@ -55,7 +56,7 @@ class DescriptionInfo extends StatelessWidget {
                   children: [Expanded(child: Text("Description"))],
                 ),
                 Row(
-                  children: [Expanded(child: Text(profile.profileDescription,
+                  children: [Expanded(child: Text(profile.profileDescription??'No Data',
                     style: AppTheme.unSelectedTabLight))],
                 )
               ],
@@ -77,7 +78,7 @@ class DescriptionInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Expanded(
-                child: Text("${profile.profileUrl}",
+                child: Text(profile.profileDescription??'No Data',
                     style: AppTheme.unSelectedTabLight)),
           ],
         )

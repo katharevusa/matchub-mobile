@@ -1,6 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
@@ -12,6 +13,7 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
+import 'package:matchub_mobile/screens/user/edit_profile.dart';
 import 'package:matchub_mobile/screens/user/user_screen.dart';
 
 import 'model/individual.dart';
@@ -201,7 +203,13 @@ class _TabsScreenState extends State<TabsScreen> {
       case ProfileScreen.routeName:
         return MaterialPageRoute(
             builder: (context) =>
-                ProfileScreen(profile: settings.arguments as Individual),
+                ProfileScreen(profile: settings.arguments as Profile),
+            fullscreenDialog: true,
+            settings: settings);
+      case EditProfileScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) =>
+                EditProfileScreen(profile: settings.arguments as Profile),
             fullscreenDialog: true,
             settings: settings);
       case UserScreen.routeName:

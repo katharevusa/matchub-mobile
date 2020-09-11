@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/model/individual.dart';
+import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
-import 'package:matchub_mobile/widget/attachment_image.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
 class BasicInfo extends StatelessWidget {
-  Individual profile;
-  
+  Profile profile;
+
   BasicInfo({this.profile});
   @override
   Widget build(BuildContext context) {
@@ -96,8 +97,8 @@ class BasicInfo extends StatelessWidget {
                                                 NumberFormat.compactCurrency(
                                                         decimalDigits: 0,
                                                         symbol: '')
-                                                    .format(
-                                                        profile.reputationPoints),
+                                                    .format(profile
+                                                        .reputationPoints),
                                                 style: TextStyle(fontSize: 17),
                                               ),
                                             ],

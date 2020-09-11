@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
-import 'package:matchub_mobile/widget/rounded_button.dart';
+import 'package:matchub_mobile/widgets/rounded_button.dart';
 import 'package:provider/provider.dart';
 
 enum AuthMode { Signup, Login }
