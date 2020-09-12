@@ -32,7 +32,7 @@ class UserScreen extends StatelessWidget {
                     backgroundImage: AssetImage("assets/images/avatar2.jpg"),
                   ),
                   title: Text(
-                    "${profile.lastName} ${profile.firstName}",
+                    "${profile.firstName} ${profile.lastName}",overflow: TextOverflow.fade,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   subtitle: Text("View My Profile"),
