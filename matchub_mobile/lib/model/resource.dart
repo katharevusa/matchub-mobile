@@ -1,19 +1,21 @@
+import 'package:matchub_mobile/model/resourceCategory.dart';
+
 class Resource {
   String title;
   String description;
-  List<String> category;
+  List<String> uploadedFiles;
   DateTime startDateTime;
   DateTime endDateTime;
-  String files;
-  String status;
+  bool available;
+  ResourceCategory resourceCategory;
 
-  Resource(
+  Resource({
     this.title,
     this.description,
-    this.category,
     this.startDateTime,
+    this.resourceCategory,
     this.endDateTime,
-    this.files,
-    this.status,
-  );
+    this.uploadedFiles = const [],
+    this.available,
+  });
 }

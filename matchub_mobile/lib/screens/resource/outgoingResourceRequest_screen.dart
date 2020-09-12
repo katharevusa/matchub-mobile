@@ -16,14 +16,7 @@ class _OutgoingResourceRequestState extends State<OutgoingResourceRequest> {
     "Approved",
     "Rejected",
   ];
-  List _resources = [
-    Resource("Resource7", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Available"),
-    Resource("Resource8", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Available"),
-    Resource("Resource9", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Available"),
-  ];
+
   String _selected = "All";
   @override
   Widget build(BuildContext context) {
@@ -49,18 +42,18 @@ class _OutgoingResourceRequestState extends State<OutgoingResourceRequest> {
               );
             }).toList(),
           ),
-          ListView.builder(
-              shrinkWrap: true,
-              itemCount: _resources.length,
-              itemBuilder: (BuildContext ctx, int index) {
-                return _selected == _resources[index].status
-                    ? ListTile(
-                        title: Text(_resources[index].title),
-                      )
-                    : _selected == "All"
-                        ? ListTile(title: Text(_resources[index].title))
-                        : SizedBox.shrink();
-              }),
+          // ListView.builder(
+          //     shrinkWrap: true,
+          //     itemCount: _resources.length,
+          //     itemBuilder: (BuildContext ctx, int index) {
+          //       return _selected == _resources[index].status
+          //           ? ListTile(
+          //               title: Text(_resources[index].title),
+          //             )
+          //           : _selected == "All"
+          //               ? ListTile(title: Text(_resources[index].title))
+          //               : SizedBox.shrink();
+          //     }),
         ],
       ),
     );

@@ -1,0 +1,1 @@
+enum ApproverEnum { PROJECT_OWNER, RESOURCE_OWNER }

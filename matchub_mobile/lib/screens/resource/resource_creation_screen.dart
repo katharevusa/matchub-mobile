@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/model/resource.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:matchub_mobile/model/data.dart';
+import 'package:matchub_mobile/model/resource.dart';
 
 class ResourceCreationScreen extends StatelessWidget {
   static const routeName = "/resource-title-screen";
-  final Resource resource;
-  ResourceCreationScreen({Key key, @required this.resource}) : super(key: key);
+  Resource newResource;
+  ResourceCreationScreen({this.newResource});
 
   PageController _controller = PageController(
     initialPage: 0,
@@ -15,16 +16,26 @@ class ResourceCreationScreen extends StatelessWidget {
     return PageView(
       controller: _controller,
       children: [
-        Title(resource),
-        Description(resource),
-        Category(resource),
-        StartDateTime(resource),
-        EndDateTime(resource),
+        Title(newResource),
+        Description(newResource),
+        Category(newResource),
+        StartDateTime(newResource),
+        EndDateTime(newResource),
         // FileUpload(resource),
       ],
     );
   }
 }
+
+// class Description extends StatefulWidget {
+//   _DescriptionState createState() => _DescriptionState();
+// }
+
+// class _DescriptionState extends State<Description> {
+//   Widget build(BuildContext context) {
+//     return Scaffold(body: Center(child: Text("Description")));
+//   }
+// }
 
 class Title extends StatelessWidget {
   Resource resource;
@@ -95,12 +106,12 @@ class Category extends StatefulWidget {
 class _CategoryState extends State<Category> {
   Resource resource;
   _CategoryState(this.resource);
-  List<String> _avail_categories = [
-    "Food",
-    "Instructor",
-    "Transportation",
-    "Techinicians"
-  ];
+  // List<String> _avail_categories = [
+  //   "Food",
+  //   "Instructor",
+  //   "Transportation",
+  //   "Techinicians"
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -114,30 +125,36 @@ class _CategoryState extends State<Category> {
         Text("Select category"),
         Expanded(
           child: ListView.builder(
-            itemCount: _avail_categories.length,
+            itemCount: DUMMY_RESOURCE_CATEGORY.length,
             itemBuilder: (BuildContext context, int index) {
-              return resource.category.contains(_avail_categories[index])
+              return resource.resourceCategory.resourceCategoryName != null &&
+                      resource.resourceCategory.resourceCategoryName ==
+                          DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName
                   ? CheckboxListTile(
-                      title: Text(_avail_categories[index]),
+                      title: Text(
+                          DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName),
                       controlAffinity: ListTileControlAffinity.platform,
                       value: _checked,
                       onChanged: (bool value) {
                         setState(() {
-                          resource.category.remove(_avail_categories[index]);
+                          resource.resourceCategory = null;
                           _checked = value;
                         });
                       },
                     )
                   : CheckboxListTile(
-                      title: Text(_avail_categories[index]),
+                      title: Text(
+                          DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName),
                       controlAffinity: ListTileControlAffinity.platform,
                       value: _unchecked,
                       onChanged: (bool value) {
                         setState(() {
-                          resource.category.add(_avail_categories[index]);
+                          resource.resourceCategory =
+                              DUMMY_RESOURCE_CATEGORY[index];
                           _unchecked = value;
                           print(resource.title);
-                          print(resource.category);
+                          print(resource
+                              .resourceCategory.resourceCategoryDescription);
                         });
                       },
                     );

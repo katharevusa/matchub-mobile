@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/model/data.dart';
 import 'package:matchub_mobile/model/resource.dart';
 import 'package:matchub_mobile/screens/resource/ownResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
@@ -15,31 +16,9 @@ class _OngoingResourceState extends State<OngoingResource> {
     "Available",
     "Busy",
   ];
-  // testing only
-  List<Resource> _resources = [
-    Resource("Resource1", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Available"),
-    Resource("Resource2", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Available"),
-    Resource("Resource3", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Available"),
-    Resource("Resource4", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Busy"),
-    Resource("Resource5", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Busy"),
-    Resource("Resource6", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Busy"),
-  ];
+
   String _selected = "All";
 
-  //List<Resource> avail = _resources.where((element) => _resources.status == "Available").toList();
-  // void selecteResource(BuildContext ctx, Resource resource) {
-  //   Navigator.of(ctx).push(MaterialPageRoute(
-  //     builder: (c) {
-  //       return OwnResourceDetailScreen(resource);
-  //     },
-  //   ));
-  // }
   void selecteResource(BuildContext ctx, Resource resource) {
     Navigator.of(ctx)
         .pushNamed(OwnResourceDetailScreen.routeName, arguments: resource);
@@ -48,8 +27,14 @@ class _OngoingResourceState extends State<OngoingResource> {
   @override
   Widget build(BuildContext context) {
     //new empty resource
-    final newResource =
-        new Resource(null, null, new List<String>(), null, null, null, null);
+    final newResource = new Resource(
+        title: null,
+        description: null,
+        startDateTime: null,
+        resourceCategory: null,
+        endDateTime: null,
+        uploadedFiles: new List<String>(),
+        available: true);
     return Scaffold(
       // body: SingleChildScrollView(
       //   child: Container(
@@ -74,20 +59,38 @@ class _OngoingResourceState extends State<OngoingResource> {
           ),
           ListView.builder(
               shrinkWrap: true,
-              itemCount: _resources.length,
+              itemCount: DUMMY_RESROUCES.length,
               itemBuilder: (BuildContext ctx, int index) {
-                return _selected == _resources[index].status
+                return _selected == "Available" &&
+                        DUMMY_RESROUCES[index].available == true &&
+                        DUMMY_RESROUCES[index]
+                            .endDateTime
+                            .isAfter(DateTime.now())
                     ? ListTile(
-                        title: Text(_resources[index].title),
-                        onTap: () => selecteResource(ctx, _resources[index]),
+                        title: Text(DUMMY_RESROUCES[index].title),
+                        onTap: () =>
+                            selecteResource(ctx, DUMMY_RESROUCES[index]),
                       )
-                    : _selected == "All"
+                    : _selected == "Busy" &&
+                            DUMMY_RESROUCES[index].available == false &&
+                            DUMMY_RESROUCES[index]
+                                .endDateTime
+                                .isAfter(DateTime.now())
                         ? ListTile(
-                            title: Text(_resources[index].title),
+                            title: Text(DUMMY_RESROUCES[index].title),
                             onTap: () =>
-                                selecteResource(ctx, _resources[index]),
+                                selecteResource(ctx, DUMMY_RESROUCES[index]),
                           )
-                        : SizedBox.shrink();
+                        : _selected == "All" &&
+                                DUMMY_RESROUCES[index]
+                                    .endDateTime
+                                    .isAfter(DateTime.now())
+                            ? ListTile(
+                                title: Text(DUMMY_RESROUCES[index].title),
+                                onTap: () => selecteResource(
+                                    ctx, DUMMY_RESROUCES[index]),
+                              )
+                            : SizedBox.shrink();
               }),
         ],
       ),
@@ -98,7 +101,7 @@ class _OngoingResourceState extends State<OngoingResource> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      ResourceCreationScreen(resource: newResource))),
+                      ResourceCreationScreen(newResource: newResource))),
           icon: Icon(Icons.add),
           label: Text("New")),
     );

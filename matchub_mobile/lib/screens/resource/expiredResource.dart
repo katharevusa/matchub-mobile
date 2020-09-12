@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/model/data.dart';
 import 'package:matchub_mobile/model/resource.dart';
+import 'package:matchub_mobile/screens/resource/ownResourceDetail_screen.dart';
 
 class ExpiredResource extends StatefulWidget {
   @override
@@ -9,14 +11,11 @@ class ExpiredResource extends StatefulWidget {
 
 class _ExpiredResourceState extends State<ExpiredResource> {
   // testing only
-  List _resources = [
-    Resource("Resource7", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Available"),
-    Resource("Resource8", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Available"),
-    Resource("Resource9", "description", ["Poverty"], DateTime.now(),
-        DateTime.now(), "file", "Available"),
-  ];
+
+  void selecteResource(BuildContext ctx, Resource resource) {
+    Navigator.of(ctx)
+        .pushNamed(OwnResourceDetailScreen.routeName, arguments: resource);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +24,22 @@ class _ExpiredResourceState extends State<ExpiredResource> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            for (var item in _resources)
-              ListTile(
-                  title: Text(item.title),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(context,
-                        new MaterialPageRoute(builder: (context) => null));
-                  })
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: DUMMY_RESROUCES.length,
+                itemBuilder: (BuildContext ctx, int index) {
+                  return DUMMY_RESROUCES[index]
+                          .endDateTime
+                          .isBefore(DateTime.now())
+                      ? ListTile(
+                          title: Text(DUMMY_RESROUCES[index].title),
+                          onTap: () =>
+                              selecteResource(ctx, DUMMY_RESROUCES[index]),
+                        )
+                      : SizedBox.shrink();
+                })
           ],
         ),
       ),
