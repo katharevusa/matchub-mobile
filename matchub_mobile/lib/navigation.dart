@@ -1,7 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:matchub_mobile/model/resource.dart';
+import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
@@ -14,7 +14,9 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
+import 'package:matchub_mobile/screens/user/edit_profile.dart';
 import 'package:matchub_mobile/screens/user/user_screen.dart';
+import 'package:matchub_mobile/widgets/sdgPicker.dart';
 
 import 'model/individual.dart';
 
@@ -200,27 +202,28 @@ class _TabsScreenState extends State<TabsScreen> {
         return MaterialPageRoute(
             builder: (context) => ResourceDonationHistoryScreen(),
             settings: settings);
+      case SDGPicker.routeName:
+        return MaterialPageRoute(
+            builder: (context) => SDGPicker(), settings: settings);
       case ProfileScreen.routeName:
         return MaterialPageRoute(
             builder: (context) =>
-                ProfileScreen(profile: settings.arguments as Individual),
+                ProfileScreen(profile: settings.arguments as Profile),
+            fullscreenDialog: true,
+            settings: settings);
+      case EditProfileScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) =>
+                EditProfileScreen(profile: settings.arguments as Profile),
             fullscreenDialog: true,
             settings: settings);
       case UserScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => UserScreen(), settings: settings);
-
-      // case OwnResourceDetailScreen.routeName:
-      //   return MaterialPageRoute(
-      //       builder: (context) => OwnResourceDetailScreen(
-      //           resource: settings.arguments as Resource),
-      //       settings: settings);
-
       case OwnResourceDetailScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => OwnResourceDetailScreen(),
             settings: settings);
-
       default:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/model/individual.dart';
+import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/components/basicInfo.dart';
 import 'package:matchub_mobile/screens/profile/components/wall.dart';
 
@@ -9,7 +10,7 @@ import 'components/descriptionInfo.dart';
 class ProfileScreen extends StatefulWidget {
   static const routeName = "/profile-screen";
 
-  Individual profile;
+  Profile profile;
 
   ProfileScreen({this.profile});
   @override

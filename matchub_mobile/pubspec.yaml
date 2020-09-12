@@ -24,16 +24,24 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_icons: ^1.1.0
+  country_provider: ^0.0.1
+  flutter_launcher_icons: ^0.7.5
+  json_model: ^0.0.2
+  build_runner: ^1.0.0
+  json_serializable: ^2.0.0
+  json_annotation: ^2.2.0
   connectivity: ^0.4.9+2
   shared_preferences: ^0.5.7+3
   http: ^0.12.1
   intl: ^0.16.1
   provider: ^3.0.0
   # path_provider: ^1.1.0
+  drag_select_grid_view: ^0.3.1
   flutter_staggered_grid_view: "^0.3.2"
   path: ^1.6.2
   flutter_datetime_picker: ^1.4.0
   flutter_tags: "^0.4.8+2"
+  country_list_pick: ^1.0.0+7
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

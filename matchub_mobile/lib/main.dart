@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:matchub_mobile/navigation.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
-import 'package:matchub_mobile/screens/login/auth_screen.dart';
+// import 'package:matchub_mobile/screens/login/auth_screen.dart';
+import 'package:matchub_mobile/screens/login/login_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -31,13 +32,12 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'MatcHub',
               theme: AppTheme.lightTheme,
-              home: TabsScreen(),
-              // auth.isAuth
-              //     ?  TabsScreen()
-              //     : FutureBuilder(
-              //         future: auth.tryAutoLogin(),
-              //         builder: (ctx, authResultSnapshot) => LoginScreen(),
-              //       ),
+              home: auth.isAuth
+                  ? TabsScreen()
+                  : FutureBuilder(
+                      future: auth.tryAutoLogin(),
+                      builder: (ctx, authResultSnapshot) => LoginScreen(),
+                    ),
               onGenerateRoute: TabsScreen().generateRoutes,
               onUnknownRoute: (settings) {
                 return MaterialPageRoute(builder: (context) => TabsScreen());
