@@ -6,7 +6,8 @@ import 'package:matchub_mobile/models/profile.dart';
 import 'dart:convert';
 // import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
-import 'package:matchub_mobile/screens/user/edit-individual/edit_profile.dart';
+import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
+import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -31,7 +32,8 @@ class UserScreen extends StatelessWidget {
                     backgroundImage: AssetImage("assets/images/avatar2.jpg"),
                   ),
                   title: Text(
-                    "${profile.name}",overflow: TextOverflow.fade,
+                    "${profile.name}",
+                    overflow: TextOverflow.fade,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   subtitle: Text("View My Profile"),
@@ -57,11 +59,21 @@ class UserScreen extends StatelessWidget {
                   buildSettingCard("Edit Profile",
                       Icon(FlutterIcons.edit_fea, color: Color(0xFFa8e6cf)),
                       () {
-                    Navigator.of(
-                      context,
-                      rootNavigator: true,
-                    ).pushNamed(EditProfileScreen.routeName,
-                        arguments: profile);
+                    if (!profile.isOrgnisation) {
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      ).pushNamed(EditIndividualScreen.routeName,
+                          arguments: profile);
+                          print("Individual");
+                    } else {
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      ).pushNamed(EditOrganisationScreen.routeName,
+                          arguments: profile);
+                          print("Orgnisation");
+                    }
                   }),
                   buildSettingCard(
                       "Followers",

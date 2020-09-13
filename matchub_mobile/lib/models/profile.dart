@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:matchub_mobile/model/post.dart';
 import 'package:matchub_mobile/models/project.dart';
+import 'package:matchub_mobile/models/sdg.dart';
 
 part 'profile.g.dart';
 
@@ -11,6 +12,7 @@ class Profile with ChangeNotifier {
 
   num accountId;
   String name;
+  String address;
   bool isOrgnisation;
   String uuid;
   String email;
@@ -69,6 +71,7 @@ class Profile with ChangeNotifier {
       ..phoneNumber = json['phoneNumber'] as String?? "" 
       ..country = json['country'] as String?? "" 
       ..city = json['city']as String ?? "" 
+      ..address = json['address']as String ?? "" 
       ..profilePhoto = "assets/images/avatar2.jpg"
       // ..profilePhoto = json['profilePhoto'] as String
       ..reputationPoints = json['reputationPoints'] as num
@@ -80,7 +83,8 @@ class Profile with ChangeNotifier {
       ..posts = json['posts'] as List
       ..notifications = json['notifications'] as List
       ..hostedResources = json['hostedResources'] as List
-      ..sdgs = json['sdgs'] as List
+      ..sdgs = (json['sdgs'] as List).map((i) => Sdg.fromJson(i))
+          .toList()
       ..meetings = json['meetings'] as List
       ..projectsJoined = json['projectsJoined'] as List
       ..projectsOwned = (json['projectsOwned'] as List)
@@ -99,7 +103,7 @@ class Profile with ChangeNotifier {
       ..genderEnum = json['genderEnum'] as String
       ..profileDescription = json['profileDescription']  ?? json['organizationDescription'] as String
       ..projectFollowing = json['projectFollowing'] as List
-      ..skillSet = json['skillSet'] as List ?? json['areasOfExpertise'];
+      ..skillSet = json['skillSet'] as List ?? json['areasOfExpertise']as List ;
   }
   Map<String, dynamic> toJson() => _$ProfileToJson(this);
 

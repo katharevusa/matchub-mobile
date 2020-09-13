@@ -11,16 +11,16 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  static const routeName = "/edit-profile";
+class EditIndividualScreen extends StatefulWidget {
+  static const routeName = "/edit-individual";
   Profile profile;
 
-  EditProfileScreen({this.profile});
+  EditIndividualScreen({this.profile});
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _EditIndividualScreenState createState() => _EditIndividualScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditIndividualScreenState extends State<EditIndividualScreen> {
   Map<String, dynamic> editedProfile;
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       "city": widget.profile.city,
       "profileDescription": widget.profile.profileDescription??"",
       "skillSet": widget.profile.skillSet ?? [],
-      "sdgIds": widget.profile.sdgs ?? [],
+      "sdgIds": widget.profile.sdgs.map((e) => e.sdgId).toList() ?? [],
     };
   }
 

@@ -13,7 +13,8 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
-import 'package:matchub_mobile/screens/user/edit-individual/edit_profile.dart';
+import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
+import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/screens/user/user_screen.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 
@@ -211,10 +212,16 @@ class _TabsScreenState extends State<TabsScreen> {
                 ProfileScreen(profile: settings.arguments as Profile),
             fullscreenDialog: true,
             settings: settings);
-      case EditProfileScreen.routeName:
+      case EditIndividualScreen.routeName:
         return MaterialPageRoute(
             builder: (context) =>
-                EditProfileScreen(profile: settings.arguments as Profile),
+                EditIndividualScreen(profile: settings.arguments as Profile),
+            fullscreenDialog: true,
+            settings: settings);
+      case EditOrganisationScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) =>
+                EditOrganisationScreen(profile: settings.arguments as Profile),
             fullscreenDialog: true,
             settings: settings);
       case UserScreen.routeName:
