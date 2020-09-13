@@ -25,7 +25,6 @@ dependencies:
     sdk: flutter
   flutter_icons: ^1.1.0
   country_provider: ^0.0.1
-  flutter_launcher_icons: ^0.7.5
   json_model: ^0.0.2
   build_runner: ^1.0.0
   json_serializable: ^2.0.0
@@ -41,6 +40,7 @@ dependencies:
   path: ^1.6.2
   flutter_datetime_picker: ^1.4.0
   flutter_tags: "^0.4.8+2"
+  flutter_launcher_icons: ^0.8.0
   country_list_pick: ^1.0.0+7
 
   # The following adds the Cupertino Icons font to your application.
@@ -50,6 +50,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

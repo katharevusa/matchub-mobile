@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'project.g.dart';
 
 @JsonSerializable()
-class Project with ChangeNotifier{
+class Project {
     Project();
 
     num projectId;

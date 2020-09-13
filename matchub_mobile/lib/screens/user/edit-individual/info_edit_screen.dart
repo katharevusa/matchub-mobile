@@ -1,6 +1,7 @@
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:country_provider/country_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
@@ -21,12 +22,12 @@ class _InfoEditPageState extends State<InfoEditPage> {
   Future isLoaded;
   @override
   initState() {
-    isLoaded =  getCountryCode();
+    isLoaded = getCountryCode();
   }
 
   getCountryCode() async {
-      await CountryProvider.getCountryByFullname(widget.profile['country'])
-          .then((value) => countryCode = value.callingCodes.first);
+    await CountryProvider.getCountryByFullname(widget.profile['country'])
+        .then((value) => countryCode = value.callingCodes.first);
     print(countryCode);
   }
 
@@ -158,6 +159,9 @@ class _InfoEditPageState extends State<InfoEditPage> {
                             ),
                             initialValue: widget.profile['phoneNumber'],
                             keyboardType: TextInputType.phone,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly  
+                            ],
                             onChanged: (value) {
                               widget.profile['phoneNumber'] = value;
                             },

@@ -10,6 +10,8 @@ class Profile with ChangeNotifier {
   Profile();
 
   num accountId;
+  String name;
+  bool isOrgnisation;
   String uuid;
   String email;
   bool accountLocked;
@@ -54,6 +56,8 @@ class Profile with ChangeNotifier {
   factory Profile.fromJson(Map<String, dynamic> json) {
     return Profile()
       ..accountId = json['accountId'] as num
+      ..name = json['organizationName'] as String?? (json['firstName'] +" "+ json['lastName'])as String
+      ..isOrgnisation = json['organizationName'] !=null ? true : false
       ..uuid = json['uuid'] as String
       ..email = json['email'] as String
       ..accountLocked = json['accountLocked'] as bool
@@ -62,9 +66,9 @@ class Profile with ChangeNotifier {
       ..roles = json['roles'] as List
       ..isVerified = json['isVerified'] as bool
       ..joinDate = json['joinDate'] as String
-      ..phoneNumber = json['phoneNumber'] ?? ""as String
-      ..country = json['country'] ?? "" as String
-      ..city = json['city'] ?? "" as String
+      ..phoneNumber = json['phoneNumber'] as String?? "" 
+      ..country = json['country'] as String?? "" 
+      ..city = json['city']as String ?? "" 
       ..profilePhoto = "assets/images/avatar2.jpg"
       // ..profilePhoto = json['profilePhoto'] as String
       ..reputationPoints = json['reputationPoints'] as num
@@ -90,12 +94,12 @@ class Profile with ChangeNotifier {
       ..managedChannel = json['managedChannel'] as List
       ..joinedChannel = json['joinedChannel'] as List
       ..likedPosts = json['likedPosts'] as List
-      ..firstName = json['firstName'] as String
-      ..lastName = json['lastName'] as String
+      ..firstName = json['firstName'] as String ?? ""
+      ..lastName = json['lastName'] as String ?? "" 
       ..genderEnum = json['genderEnum'] as String
-      ..profileDescription = json['profileDescription']  ?? "" as String
+      ..profileDescription = json['profileDescription']  ?? json['organizationDescription'] as String
       ..projectFollowing = json['projectFollowing'] as List
-      ..skillSet = json['skillSet'] as List;
+      ..skillSet = json['skillSet'] as List ?? json['areasOfExpertise'];
   }
   Map<String, dynamic> toJson() => _$ProfileToJson(this);
 

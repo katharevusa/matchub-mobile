@@ -6,7 +6,7 @@ import 'package:matchub_mobile/models/profile.dart';
 import 'dart:convert';
 // import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
-import 'package:matchub_mobile/screens/user/edit_profile.dart';
+import 'package:matchub_mobile/screens/user/edit-individual/edit_profile.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -17,8 +17,7 @@ class UserScreen extends StatelessWidget {
   static const routeName = "/user-screen";
   @override
   Widget build(BuildContext context) {
-    Profile profile = Profile.fromJson(
-        json.decode(json.encode(Provider.of<Auth>(context).myProfile)));
+    Profile profile = Provider.of<Auth>(context).myProfile;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -32,7 +31,7 @@ class UserScreen extends StatelessWidget {
                     backgroundImage: AssetImage("assets/images/avatar2.jpg"),
                   ),
                   title: Text(
-                    "${profile.firstName} ${profile.lastName}",overflow: TextOverflow.fade,
+                    "${profile.name}",overflow: TextOverflow.fade,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   subtitle: Text("View My Profile"),

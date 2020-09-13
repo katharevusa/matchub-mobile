@@ -197,13 +197,9 @@ class Auth with ChangeNotifier {
   Future<void> retrieveUser() async {
     final url = 'authenticated/me';
     final responseData = await _helper.getProtected(url, _accessToken);
-    if (responseData.containsKey("firstName")) {
-      myProfile = Profile.fromJson(responseData);
-      _isIndividual = true;
-    } else {
-      _isIndividual = false;
-    }
+    myProfile = Profile.fromJson(responseData);
     print(myProfile.projectsOwned[0].projectTitle);
+    print(myProfile.name);
     _accountId = responseData['accountId'].toString();
     _username = responseData['email'].toString();
     print("Account Id :   --------------" + _accountId);

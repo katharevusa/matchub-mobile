@@ -13,7 +13,7 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
-import 'package:matchub_mobile/screens/user/edit_profile.dart';
+import 'package:matchub_mobile/screens/user/edit-individual/edit_profile.dart';
 import 'package:matchub_mobile/screens/user/user_screen.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 

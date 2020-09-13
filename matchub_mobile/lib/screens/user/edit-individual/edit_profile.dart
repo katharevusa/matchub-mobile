@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
-import 'package:matchub_mobile/screens/user/edit/info_edit_screen.dart';
-import 'package:matchub_mobile/screens/user/edit/interest_edit_screen.dart';
+import 'package:matchub_mobile/screens/user/edit-individual/info_edit_screen.dart';
+import 'package:matchub_mobile/screens/user/edit-individual/interest_edit_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
@@ -28,11 +28,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       "id": widget.profile.accountId,
       "firstName": widget.profile.firstName,
       "lastName": widget.profile.lastName,
-      "password": "12345678",
+      // "password": "12345678",
       "phoneNumber": widget.profile.phoneNumber,
       "country": widget.profile.country,
       "city": widget.profile.city,
-      "profileDescription": widget.profile.profileDescription,
+      "profileDescription": widget.profile.profileDescription??"",
       "skillSet": widget.profile.skillSet ?? [],
       "sdgIds": widget.profile.sdgs ?? [],
     };
@@ -85,7 +85,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
-                            color: Colors.grey[300])),
+                            color: Colors.white)),
                   ),
                   // backgroundColor: kScaffoldColor,
                   elevation: 10,

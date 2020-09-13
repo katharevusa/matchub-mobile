@@ -23,9 +23,9 @@ class _WallState extends State<Wall> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8 * SizeConfig.widthMultiplier),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        SizedBox(height: 20),
         Text("Activity", style: AppTheme.titleLight),
         SizedBox(height: 10),
+        if(widget.profile.posts.isEmpty) Text("No Posts Yet"),
         ListView.separated(
           separatorBuilder: (ctx, index) => Divider(height: 40, thickness: 1),
           physics: NeverScrollableScrollPhysics(),
@@ -40,7 +40,7 @@ class _WallState extends State<Wall> {
                   backgroundImage: AssetImage(widget.profile.profilePhoto),
                 ),
                 title: Text(
-                    "${widget.profile.lastName} ${widget.profile.firstName}"),
+                    "${widget.profile.name}"),
                 subtitle: Text(
                     "${widget.profile.posts[index].comments.length} comments | ${widget.profile.posts[index].likes} likes"),
                 trailing: Text(

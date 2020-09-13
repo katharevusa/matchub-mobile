@@ -12,7 +12,7 @@ class DescriptionInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         padding: EdgeInsets.all(20),
         // height: 29 * SizeConfig.heightMultiplier,
         width: 100 * SizeConfig.widthMultiplier,
