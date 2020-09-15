@@ -167,8 +167,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       ),
                       SizedBox(height: 20),
                       RaisedButton(
+                        color: kAccentColor.withOpacity(0.9),
                           onPressed: _submitChangePassword,
-                          child: Text("Save Changes"))
+                          child: Text("Save Changes", style: AppTheme.selectedTabLight))
                     ],
                   ),
                 )),

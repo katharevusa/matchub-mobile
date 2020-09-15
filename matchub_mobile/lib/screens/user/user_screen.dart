@@ -17,10 +17,17 @@ import 'package:provider/provider.dart';
 
 class UserScreen extends StatelessWidget {
   static const routeName = "/user-screen";
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void dismissSnackBar() {
+    _scaffoldKey.currentState.removeCurrentSnackBar();
+  }
+
   @override
   Widget build(BuildContext context) {
     Profile profile = Provider.of<Auth>(context).myProfile;
     return Scaffold(
+      key: _scaffoldKey,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -39,11 +46,12 @@ class UserScreen extends StatelessWidget {
                   ),
                   subtitle: Text("View My Profile"),
                   onTap: () {
+                    dismissSnackBar();
                     Navigator.of(
                       context,
                       rootNavigator: true,
                     ).pushNamed(ProfileScreen.routeName,
-                        arguments: Provider.of<Auth>(context).myProfile);
+                        arguments: Provider.of<Auth>(context).myProfile.accountId);
                   }),
               Divider(
                 thickness: 2,
@@ -61,32 +69,41 @@ class UserScreen extends StatelessWidget {
                       Icon(FlutterIcons.edit_fea, color: Color(0xFFa8e6cf)),
                       () {
                     if (!profile.isOrgnisation) {
+                    dismissSnackBar();
                       Navigator.of(
                         context,
                         rootNavigator: true,
-                      ).pushNamed(EditIndividualScreen.routeName,
-                          arguments: profile).then((value) {
-                        if (value) {
+                      )
+                          .pushNamed(EditIndividualScreen.routeName,
+                              arguments: profile)
+                          .then((value) {
+                        if (value != null && value) {
                           Scaffold.of(context).showSnackBar(new SnackBar(
+                            key: UniqueKey(),
                             content: Text("Profile updated successfully"),
-                            duration: Duration(seconds: 2),
+                            duration: Duration(seconds: 1),
                           ));
                         }
-                      });;
+                      });
+                      ;
                       print("Individual");
                     } else {
+                    dismissSnackBar();
                       Navigator.of(
                         context,
                         rootNavigator: true,
-                      ).pushNamed(EditOrganisationScreen.routeName,
-                          arguments: profile).then((value) {
-                        if (value) {
+                      )
+                          .pushNamed(EditOrganisationScreen.routeName,
+                              arguments: profile)
+                          .then((value) {
+                        if (value != null && value) {
                           Scaffold.of(context).showSnackBar(new SnackBar(
+                            key: UniqueKey(),
                             content: Text("Profile updated successfully"),
-                            duration: Duration(seconds: 2),
+                            duration: Duration(seconds: 1),
                           ));
                         }
-                      });;
+                      });
                       print("Orgnisation");
                     }
                   }),
@@ -154,14 +171,15 @@ class UserScreen extends StatelessWidget {
                 children: [
                   ListTile(
                     onTap: () {
+                    dismissSnackBar();
                       Navigator.of(
                         context,
                         rootNavigator: true,
                       ).pushNamed(ChangePasswordScreen.routeName).then((value) {
-                        if (value) {
+                        if (value != null && value) {
                           Scaffold.of(context).showSnackBar(new SnackBar(
                             content: Text("Password updated successfully"),
-                            duration: Duration(seconds: 2),
+                            duration: Duration(seconds: 1),
                           ));
                         }
                       });

@@ -140,7 +140,7 @@ class _InfoEditPageState extends State<InfoEditPage> {
                               enabledCountries: ['+60', '+65','+82', '+1'],
                               labelText: "Phone Number",
                               labelStyle: TextStyle(
-                                  color: Colors.grey[600], fontSize: 14),
+                                  color: Colors.grey[850], fontSize: 14),
                             ),
                           ),
                           SizedBox(height: 20),
@@ -229,7 +229,7 @@ class _InfoEditPageState extends State<InfoEditPage> {
                 color: kSecondaryColor,
                 onPressed: () => widget.controller.animateToPage(2,
                     curve: Curves.decelerate,
-                    duration: Duration(milliseconds: 300)),
+                    duration: Duration(milliseconds: 800)),
                 child: Text("Next")),
           ],
         ),

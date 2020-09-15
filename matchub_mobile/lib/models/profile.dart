@@ -59,8 +59,9 @@ class Profile with ChangeNotifier {
   factory Profile.fromJson(Map<String, dynamic> json) {
     return Profile()
       ..accountId = json['accountId'] as num
-      ..name = json['organizationName'] as String?? (json['firstName'] +" "+ json['lastName'])as String
-      ..isOrgnisation = json['organizationName'] !=null ? true : false
+      ..name = json['organizationName'] as String ??
+          (json['firstName'] + " " + json['lastName']) as String
+      ..isOrgnisation = json['organizationName'] != null ? true : false
       ..uuid = json['uuid'] as String
       ..email = json['email'] as String
       ..accountLocked = json['accountLocked'] as bool
@@ -69,11 +70,11 @@ class Profile with ChangeNotifier {
       ..roles = json['roles'] as List
       ..isVerified = json['isVerified'] as bool
       ..joinDate = json['joinDate'] as String
-      ..phoneNumber = json['phoneNumber'] as String?? "" 
-      ..countryCode = json['countryCode'] as String?? "" 
-      ..country = json['country'] as String?? "" 
-      ..city = json['city']as String ?? "" 
-      ..address = json['address']as String ?? "" 
+      ..phoneNumber = json['phoneNumber'] as String ?? ""
+      ..countryCode = json['countryCode'] as String ?? ""
+      ..country = json['country'] as String ?? ""
+      ..city = json['city'] as String ?? ""
+      ..address = json['address'] as String ?? ""
       ..profilePhoto = "assets/images/avatar2.jpg"
       // ..profilePhoto = json['profilePhoto'] as String
       ..reputationPoints = json['reputationPoints'] as num
@@ -85,8 +86,7 @@ class Profile with ChangeNotifier {
       ..posts = json['posts'] as List
       ..notifications = json['notifications'] as List
       ..hostedResources = json['hostedResources'] as List
-      ..sdgs = (json['sdgs'] as List).map((i) => Sdg.fromJson(i))
-          .toList()
+      ..sdgs = (json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList()
       ..meetings = json['meetings'] as List
       ..projectsJoined = json['projectsJoined'] as List
       ..projectsOwned = (json['projectsOwned'] as List)
@@ -101,25 +101,21 @@ class Profile with ChangeNotifier {
       ..joinedChannel = json['joinedChannel'] as List
       ..likedPosts = json['likedPosts'] as List
       ..firstName = json['firstName'] as String ?? ""
-      ..lastName = json['lastName'] as String ?? "" 
+      ..lastName = json['lastName'] as String ?? ""
       ..genderEnum = json['genderEnum'] as String
-      ..profileDescription = json['profileDescription']  ?? json['organizationDescription'] as String
+      ..profileDescription = json['profileDescription'] ??
+          json['organizationDescription'] as String
       ..projectFollowing = json['projectFollowing'] as List
-      ..skillSet = json['skillSet'] as List ?? json['areasOfExpertise']as List ;
+      ..skillSet = json['skillSet'] as List ?? json['areasOfExpertise'] as List;
   }
   Map<String, dynamic> toJson() => _$ProfileToJson(this);
 
-  void toggleLikedPost(Post post) {
-    if (this.likedPosts == null) {
-      this.likedPosts = [];
-    }
-    if (this
-            .likedPosts
-            .indexWhere((element) => element.postId == post.postId) >=
-        0) {
-      this.likedPosts.remove(post);
+  void toggleFollow(int accountId) {
+    if (this.following.indexOf(accountId) > -1) {
+      this.following.remove(accountId);
     } else {
-      this.likedPosts.add(post);
+      this.following.add(accountId);
+      print(this.following.length);
     }
     notifyListeners();
   }

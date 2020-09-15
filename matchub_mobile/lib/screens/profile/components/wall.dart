@@ -25,7 +25,6 @@ class _WallState extends State<Wall> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text("Activity", style: AppTheme.titleLight),
         SizedBox(height: 10),
-        if(widget.profile.posts.isEmpty) Text("No Posts Yet"),
         ListView.separated(
           separatorBuilder: (ctx, index) => Divider(height: 40, thickness: 1),
           physics: NeverScrollableScrollPhysics(),
@@ -129,7 +128,9 @@ class _WallState extends State<Wall> {
             ],
           ),
           itemCount: widget.profile.posts.length,
-        )
+        ),
+        if(widget.profile.posts.isEmpty) Text("No Posts Yet"),
+        SizedBox(height:20)
       ]),
     );
   }

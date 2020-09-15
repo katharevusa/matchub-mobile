@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
+import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
@@ -205,13 +206,11 @@ class _TabsScreenState extends State<TabsScreen> {
             settings: settings);
       case SDGPicker.routeName:
         return MaterialPageRoute(
-            builder: (context) => SDGPicker(),
-            settings: settings);
+            builder: (context) => SDGPicker(), settings: settings);
       case ProfileScreen.routeName:
         return MaterialPageRoute(
             builder: (context) =>
-                ProfileScreen(profile: settings.arguments as Profile),
-            fullscreenDialog: true,
+                ProfileScreen(accountId: settings.arguments as int,),
             settings: settings);
       case EditIndividualScreen.routeName:
         return MaterialPageRoute(
@@ -221,9 +220,13 @@ class _TabsScreenState extends State<TabsScreen> {
             settings: settings);
       case ChangePasswordScreen.routeName:
         return MaterialPageRoute(
-            builder: (context) =>
-                ChangePasswordScreen(),
-            fullscreenDialog: true,
+            builder: (context) => ChangePasswordScreen(), settings: settings);
+      case FollowOverviewScreen.routeName:
+        final user =
+            (settings.arguments as Map<String, dynamic>)['profile'] as Profile;
+        final initialTab = (settings.arguments as Map<String, dynamic>)['initialTab'] as int;
+        return MaterialPageRoute(
+            builder: (context) => FollowOverviewScreen(user: user, initialTab: initialTab),
             settings: settings);
       case EditOrganisationScreen.routeName:
         return MaterialPageRoute(
