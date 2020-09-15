@@ -196,6 +196,7 @@ class Auth with ChangeNotifier {
     _accountId = responseData['accountId'].toString();
     _username = responseData['email'].toString();
     print("Account Id :   -------------- " + _accountId);
+    print(myProfile.sdgs[0].sdgName);
     notifyListeners();
   }
 

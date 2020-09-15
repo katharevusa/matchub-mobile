@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/widgets/phoneInput.dart';
 import 'package:matchub_mobile/style.dart';
 
 class InfoEditPage extends StatefulWidget {
@@ -31,6 +32,13 @@ class _InfoEditPageState extends State<InfoEditPage> {
     print(countryCode);
   }
 
+  void onPhoneNumberChange(
+      String number, String internationalizedPhoneNumber, String isoCode) {
+    setState(() {
+      widget.profile['phoneNumber'] = internationalizedPhoneNumber;
+      print("sdfsd"+ internationalizedPhoneNumber);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,34 +146,57 @@ class _InfoEditPageState extends State<InfoEditPage> {
                             onChanged: (value) {
                               widget.profile['profileDescription'] = value;
                             },
-                          ),
-                          SizedBox(height: 20),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Phone No.',
-                              hintText: 'Fill in your phone no. here',
+                          ),SizedBox(height: 20),
+                          Container(
+                            constraints: BoxConstraints(
+                                minHeight: 7.5 * SizeConfig.heightMultiplier),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.fromBorderSide(
+                                  BorderSide(color: Colors.grey[850]),
+                                )),
+                            child: InternationalPhoneInput(
+                              onPhoneNumberChange: onPhoneNumberChange,
+                              initialPhoneNumber: widget.profile['phoneNumber'].length>2 ? widget.profile['phoneNumber'] : null,
+                              initialSelection: widget.profile['countryCode'],
+                              showCountryFlags: false,
+                              border: InputBorder.none,
+                              hintText: "eg. 91234567",
+                              enabledCountries: ['+60', '+65','+82', '+1'],
+                              labelText: "Phone Number",
                               labelStyle: TextStyle(
-                                  color: Colors.grey[850], fontSize: 14),
-                              fillColor: Colors.grey[100],
-                              hoverColor: Colors.grey[100],
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: kSecondaryColor),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.grey[850],
-                                ),
-                              ),
+                                  color: Colors.grey[600], fontSize: 14),
                             ),
-                            initialValue: widget.profile['phoneNumber'],
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly  
-                            ],
-                            onChanged: (value) {
-                              widget.profile['phoneNumber'] = value;
-                            },
                           ),
+                          // SizedBox(height: 20),
+                          // TextFormField(
+                          //   decoration: InputDecoration(
+                          //     labelText: 'Phone No.',
+                          //     hintText: 'Fill in your phone no. here',
+                          //     labelStyle: TextStyle(
+                          //         color: Colors.grey[850], fontSize: 14),
+                          //     fillColor: Colors.grey[100],
+                          //     hoverColor: Colors.grey[100],
+                          //     focusedBorder: OutlineInputBorder(
+                          //       borderSide: BorderSide(color: kSecondaryColor),
+                          //     ),
+                          //     enabledBorder: OutlineInputBorder(
+                          //       borderSide: BorderSide(
+                          //         color: Colors.grey[850],
+                          //       ),
+                          //     ),
+                          //   ),
+                          //   initialValue: widget.profile['phoneNumber'],
+                          //   keyboardType: TextInputType.phone,
+                          //   inputFormatters: <TextInputFormatter>[
+                          //     FilteringTextInputFormatter.digitsOnly  
+                          //   ],
+                          //   onChanged: (value) {
+                          //     widget.profile['phoneNumber'] = value;
+                          //   },
+                          // ),
                           SizedBox(height: 20),
                           TextFormField(
                             decoration: InputDecoration(
@@ -201,12 +232,10 @@ class _InfoEditPageState extends State<InfoEditPage> {
                             child: CountryListPick(
                                 isShowFlag: true,
                                 isShowTitle: true,
-                                isShowCode: true,
                                 isDownIcon: true,
                                 showEnglishName: true,
-                                initialSelection: "+${countryCode}",
+                                initialSelection: "+${countryCode}".length>2? "+${countryCode}": null,
                                 buttonColor: Colors.transparent,
-                                // to get feedback data from picker
                                 onChanged: (CountryCode code) {
                                   widget.profile['country'] = code.name;
                                 }),

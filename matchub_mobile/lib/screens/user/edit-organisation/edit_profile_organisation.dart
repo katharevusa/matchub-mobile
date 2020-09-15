@@ -28,6 +28,7 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
       "id": widget.profile.accountId,
       "organizationName": widget.profile.name,
       "phoneNumber": widget.profile.phoneNumber ?? "",
+      "countryCode": widget.profile.countryCode ?? "",
       "country": widget.profile.country ?? "",
       "city": widget.profile.city ?? "",
       "organizationDescription": widget.profile.profileDescription ?? "",
@@ -43,6 +44,7 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("SDGS: +=============" + editedProfile['sdgs']);
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Stack(

@@ -132,12 +132,12 @@ class _InfoEditPageState extends State<InfoEditPage> {
                                 )),
                             child: InternationalPhoneInput(
                               onPhoneNumberChange: onPhoneNumberChange,
-                              initialPhoneNumber: widget.profile['phoneNumber'].length>2 ? widget.profile['phoneNumber'].substring(3) : null,
-                              initialSelection: "+65",
+                              initialPhoneNumber: widget.profile['phoneNumber'].length>2 ? widget.profile['phoneNumber'] : null,
+                              initialSelection: widget.profile['countryCode'],
                               showCountryFlags: false,
                               border: InputBorder.none,
                               hintText: "eg. 91234567",
-                              enabledCountries: ['+233', '+65', '+1'],
+                              enabledCountries: ['+60', '+65','+82', '+1'],
                               labelText: "Phone Number",
                               labelStyle: TextStyle(
                                   color: Colors.grey[600], fontSize: 14),

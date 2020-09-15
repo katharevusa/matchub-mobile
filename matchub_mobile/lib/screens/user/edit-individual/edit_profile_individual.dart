@@ -26,15 +26,15 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
   void initState() {
     editedProfile = {
       "id": widget.profile.accountId,
-      "firstName": widget.profile.firstName,
-      "lastName": widget.profile.lastName,
-      // "password": "12345678",
-      "phoneNumber": widget.profile.phoneNumber,
-      "country": widget.profile.country,
-      "city": widget.profile.city,
+      "firstName": widget.profile.firstName ?? "",
+      "lastName": widget.profile.lastName ?? "",
+      "phoneNumber": widget.profile.phoneNumber ?? "",
+      "countryCode": widget.profile.countryCode ?? "",
+      "country": widget.profile.country ?? "",
+      "city": widget.profile.city ?? "",
       "profileDescription": widget.profile.profileDescription??"",
       "skillSet": widget.profile.skillSet ?? [],
-      "sdgIds": widget.profile.sdgs.map((e) => e.sdgId).toList() ?? [],
+      "sdgIds": widget.profile.sdgs.map((e) => e.sdgId.toString()).toList() ?? [],
     };
   }
 

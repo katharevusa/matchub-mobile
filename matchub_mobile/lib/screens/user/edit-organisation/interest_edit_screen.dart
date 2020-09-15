@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
- 
+
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -38,7 +38,12 @@ class _InterestEditPageState extends State<InterestEditPage> {
                             Navigator.of(context)
                                 .pushNamed(SDGPicker.routeName)
                                 .then((value) {
-                              setState(() => widget.profile['sdgIds'] = value);
+                              setState(() {
+                                if (value != null) {
+                                  widget.profile['sdgIds'].addAll(value);
+                                }
+                                print(widget.profile['sdgIds']);
+                              });
                               print(widget.profile['sdgIds']);
                             });
                           },
@@ -80,7 +85,8 @@ class _InterestEditPageState extends State<InterestEditPage> {
                           suggestions: [],
                           onSubmitted: (String str) {
                             setState(() {
-                              if (!widget.profile['areasOfExpertise'].contains(str)) {
+                              if (!widget.profile['areasOfExpertise']
+                                  .contains(str)) {
                                 widget.profile['areasOfExpertise'].add(str);
                               }
                             });
@@ -89,10 +95,11 @@ class _InterestEditPageState extends State<InterestEditPage> {
                         SizedBox(height: 10),
                         Tags(
                           key: _tagStateKey,
-                          itemCount:
-                              widget.profile['areasOfExpertise'].length, // required
+                          itemCount: widget
+                              .profile['areasOfExpertise'].length, // required
                           itemBuilder: (int index) {
-                            final item = widget.profile['areasOfExpertise'][index];
+                            final item =
+                                widget.profile['areasOfExpertise'][index];
 
                             return ItemTags(
                               key: Key(index.toString()),
@@ -105,7 +112,8 @@ class _InterestEditPageState extends State<InterestEditPage> {
                               removeButton: ItemTagsRemoveButton(
                                 onRemoved: () {
                                   setState(() {
-                                    widget.profile['areasOfExpertise'].removeAt(index);
+                                    widget.profile['areasOfExpertise']
+                                        .removeAt(index);
                                   });
                                   return true;
                                 },

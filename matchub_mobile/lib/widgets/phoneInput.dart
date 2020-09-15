@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:international_phone_input/international_phone_input.dart';
 import 'package:international_phone_input/src/phone_service.dart';
 
-
 class InternationalPhoneInput extends StatefulWidget {
   final void Function(String phoneNumber, String internationalizedPhoneNumber,
       String isoCode) onPhoneNumberChange;
@@ -99,18 +98,15 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
     _fetchCountryData().then((list) {
       Country preSelectedItem;
 
+      print(list.length);
       if (widget.initialSelection != null) {
         preSelectedItem = list.firstWhere(
-            (e) =>
-                ((e.dialCode == widget.initialSelection.toString()
-                 || e.code.toUpperCase() ==
-                    widget.initialSelection.toUpperCase())
-                ),
+            (e) => ((e.dialCode == widget.initialSelection.toString() ||
+                e.code.toUpperCase() == widget.initialSelection.toUpperCase())),
             orElse: () => list[0]);
       } else {
         preSelectedItem = list[0];
       }
-
       setState(() {
         itemList = list;
         selectedItem = preSelectedItem;
@@ -122,7 +118,7 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
 
   _validatePhoneNumber() {
     String phoneText = phoneTextController.text;
-    if (phoneText != null && phoneText.isNotEmpty) {
+    if (phoneText != null && phoneText.isNotEmpty && selectedItem !=null) {
       PhoneService.parsePhoneNumber(phoneText, selectedItem.code)
           .then((isValid) {
         setState(() {

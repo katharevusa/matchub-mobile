@@ -24,6 +24,7 @@ class Profile with ChangeNotifier {
   String joinDate;
   String phoneNumber;
   String country;
+  String countryCode;
   String city;
   String profilePhoto;
   num reputationPoints;
@@ -69,6 +70,7 @@ class Profile with ChangeNotifier {
       ..isVerified = json['isVerified'] as bool
       ..joinDate = json['joinDate'] as String
       ..phoneNumber = json['phoneNumber'] as String?? "" 
+      ..countryCode = json['countryCode'] as String?? "" 
       ..country = json['country'] as String?? "" 
       ..city = json['city']as String ?? "" 
       ..address = json['address']as String ?? "" 
