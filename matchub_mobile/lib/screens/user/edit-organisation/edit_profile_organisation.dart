@@ -123,7 +123,7 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
           accessToken: accessToken, body: json.encode(editedProfile));
       Provider.of<Auth>(context).retrieveUser();
       print("Success");
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     } catch (error) {
       final responseData = error.body as Map<String, dynamic>;
       print("Failure");

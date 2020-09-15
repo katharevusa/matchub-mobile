@@ -6,6 +6,7 @@ import 'package:matchub_mobile/models/profile.dart';
 import 'dart:convert';
 // import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/user/account-settings/change_password.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/services/auth.dart';
@@ -64,26 +65,40 @@ class UserScreen extends StatelessWidget {
                         context,
                         rootNavigator: true,
                       ).pushNamed(EditIndividualScreen.routeName,
-                          arguments: profile);
-                          print("Individual");
+                          arguments: profile).then((value) {
+                        if (value) {
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                            content: Text("Profile updated successfully"),
+                            duration: Duration(seconds: 2),
+                          ));
+                        }
+                      });;
+                      print("Individual");
                     } else {
                       Navigator.of(
                         context,
                         rootNavigator: true,
                       ).pushNamed(EditOrganisationScreen.routeName,
-                          arguments: profile);
-                          print("Orgnisation");
+                          arguments: profile).then((value) {
+                        if (value) {
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                            content: Text("Profile updated successfully"),
+                            duration: Duration(seconds: 2),
+                          ));
+                        }
+                      });;
+                      print("Orgnisation");
                     }
                   }),
                   buildSettingCard(
-                      "Followers",
+                      "Manage Followers",
                       Icon(
                         FlutterIcons.user_friends_faw5s,
                         color: Color(0xFFf5f1da),
                       ),
                       () {}),
                   buildSettingCard(
-                      "Following",
+                      "Manage Following",
                       Icon(
                         FlutterIcons.user_friends_faw5s,
                         color: Color(0xFF4e89ae),
@@ -138,9 +153,21 @@ class UserScreen extends StatelessWidget {
                 title: Text("Account Settings"),
                 children: [
                   ListTile(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      ).pushNamed(ChangePasswordScreen.routeName).then((value) {
+                        if (value) {
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                            content: Text("Password updated successfully"),
+                            duration: Duration(seconds: 2),
+                          ));
+                        }
+                      });
+                    },
                     leading: Icon(FlutterIcons.key_faw5s),
-                    title: Text("Reset Password"),
+                    title: Text("Change Password"),
                     subtitle: Text(
                       "Change your password here",
                       style: AppTheme.subTitleLight,

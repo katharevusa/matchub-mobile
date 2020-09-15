@@ -108,6 +108,7 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
         preSelectedItem = list[0];
       }
       setState(() {
+        list.removeAt(list.length-1);
         itemList = list;
         selectedItem = preSelectedItem;
       });

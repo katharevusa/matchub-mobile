@@ -32,9 +32,10 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
       "countryCode": widget.profile.countryCode ?? "",
       "country": widget.profile.country ?? "",
       "city": widget.profile.city ?? "",
-      "profileDescription": widget.profile.profileDescription??"",
+      "profileDescription": widget.profile.profileDescription ?? "",
       "skillSet": widget.profile.skillSet ?? [],
-      "sdgIds": widget.profile.sdgs.map((e) => e.sdgId.toString()).toList() ?? [],
+      "sdgIds":
+          widget.profile.sdgs.map((e) => e.sdgId.toString()).toList() ?? [],
     };
   }
 
@@ -98,7 +99,8 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
                     controller: controller,
                     children: <Widget>[
                       InfoEditPage(editedProfile, controller),
-                      InterestEditPage(editedProfile, controller, _updateProfile),
+                      InterestEditPage(
+                          editedProfile, controller, _updateProfile),
                     ],
                   ),
                 ),
@@ -123,7 +125,7 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
           accessToken: accessToken, body: json.encode(editedProfile));
       Provider.of<Auth>(context).retrieveUser();
       print("Success");
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     } catch (error) {
       final responseData = error.body as Map<String, dynamic>;
       print("Failure");

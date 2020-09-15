@@ -13,6 +13,7 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
+import 'package:matchub_mobile/screens/user/account-settings/change_password.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/screens/user/user_screen.dart';
@@ -216,6 +217,12 @@ class _TabsScreenState extends State<TabsScreen> {
         return MaterialPageRoute(
             builder: (context) =>
                 EditIndividualScreen(profile: settings.arguments as Profile),
+            fullscreenDialog: true,
+            settings: settings);
+      case ChangePasswordScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) =>
+                ChangePasswordScreen(),
             fullscreenDialog: true,
             settings: settings);
       case EditOrganisationScreen.routeName:
