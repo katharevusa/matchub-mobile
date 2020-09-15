@@ -1,0 +1,5 @@
+version: "Apple Swift version 5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"
+options: "254b247d4f55feb2119891fb6e21cae1"
+build_time: [1600020675, 120206000]
+inputs:
+  "/Users/kaikai/Documents/school/AY202021/S1/IS4103/matchub-mobile/matchub_mobile/ios/Runner/AppDelegate.swift": [1599900509, 672835392]

@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/data.dart';
-import 'package:matchub_mobile/model/resource.dart';
-import 'package:matchub_mobile/screens/resource/ownResourceDetail_screen.dart';
+import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/models/resources.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 
 class ExpiredResource extends StatefulWidget {
+  List<Resources> listOfResources;
+  ExpiredResource(this.listOfResources);
   @override
-  _ExpiredResourceState createState() => _ExpiredResourceState();
+  _ExpiredResourceState createState() => _ExpiredResourceState(listOfResources);
 }
 
 class _ExpiredResourceState extends State<ExpiredResource> {
   // testing only
-
-  void selecteResource(BuildContext ctx, Resource resource) {
+  List<Resources> listOfResource;
+  _ExpiredResourceState(this.listOfResource);
+  void selecteResource(BuildContext ctx, Resources resource) {
     Navigator.of(ctx)
-        .pushNamed(OwnResourceDetailScreen.routeName, arguments: resource);
+        .pushNamed(ResourceDetailScreen.routeName, arguments: resource);
   }
 
   @override
@@ -28,15 +32,14 @@ class _ExpiredResourceState extends State<ExpiredResource> {
           children: <Widget>[
             ListView.builder(
                 shrinkWrap: true,
-                itemCount: DUMMY_RESROUCES.length,
+                itemCount: listOfResource.length,
                 itemBuilder: (BuildContext ctx, int index) {
-                  return DUMMY_RESROUCES[index]
-                          .endDateTime
-                          .isBefore(DateTime.now())
+                  return listOfResource[index].available == false &&
+                          listOfResource[index].matchedProjectId == null
                       ? ListTile(
-                          title: Text(DUMMY_RESROUCES[index].title),
+                          title: Text(listOfResource[index].resourceName),
                           onTap: () =>
-                              selecteResource(ctx, DUMMY_RESROUCES[index]),
+                              selecteResource(ctx, listOfResource[index]),
                         )
                       : SizedBox.shrink();
                 })

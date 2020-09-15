@@ -98,7 +98,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     controller: controller,
                     children: <Widget>[
                       InfoEditPage(editedProfile, controller),
-                      InterestEditPage(editedProfile, controller, _updateProfile),
+                      InterestEditPage(
+                          editedProfile, controller, _updateProfile),
                     ],
                   ),
                 ),

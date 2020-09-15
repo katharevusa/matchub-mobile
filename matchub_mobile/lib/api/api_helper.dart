@@ -4,26 +4,34 @@ import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/helpers/extensions.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = "http://192.168.72.136:8080/api/v1/";
-  String get baseUrl { return _baseUrl;}
+  final String _baseUrl = "http://192.168.1.102:8080/api/v1/";
+  String get baseUrl {
+    return _baseUrl;
+  }
+
   Future<dynamic> get(String url) async {
     var responseJson;
     print(_baseUrl + url);
     try {
-      final response =
-          await http.get(_baseUrl + url, ).timeout(Duration(seconds: 10));
+      final response = await http
+          .get(
+            _baseUrl + url,
+          )
+          .timeout(Duration(seconds: 10));
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
   }
+
   Future<dynamic> getProtected(String url, String accessToken) async {
     var responseJson;
     print(_baseUrl + url);
     try {
-      final response =
-          await http.get(_baseUrl + url, headers: {"Authorization": "Bearer $accessToken"}).timeout(Duration(seconds: 10));
+      final response = await http.get(_baseUrl + url, headers: {
+        "Authorization": "Bearer $accessToken"
+      }).timeout(Duration(seconds: 10));
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -50,7 +58,9 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
-  Future<dynamic> postProtected(String url, {String body = "", String accessToken = ""}) async {
+
+  Future<dynamic> postProtected(String url,
+      {String body = "", String accessToken = ""}) async {
     var responseJson;
     print(_baseUrl + url);
     print(body);
@@ -69,7 +79,9 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
-  Future<dynamic> putProtected(String url, {String body = "", String accessToken = ""}) async {
+
+  Future<dynamic> putProtected(String url,
+      {String body = "", String accessToken = ""}) async {
     var responseJson;
     print(_baseUrl + url);
     print(body);
@@ -88,6 +100,7 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
   Future<dynamic> deleteProtected(String url, {String accessToken = ""}) async {
     var responseJson;
     print(_baseUrl + url);
@@ -108,21 +121,26 @@ class ApiBaseHelper {
   dynamic _returnResponse(http.Response response) {
     print(response.statusCode);
     print(response.body);
-        var responseJson =
-            json.decode(response.body.toString()) as Map<String, dynamic>;
+    var responseJson =
+        json.decode(response.body.toString()) as Map<String, dynamic>;
     switch (response.statusCode) {
       case 200:
         return responseJson;
       case 400:
         var errors;
-        responseJson['errors'] != null ? errors = responseJson['errors'].join(", ").toString().capitalize : errors = "";
+        responseJson['errors'] != null
+            ? errors = responseJson['errors'].join(", ").toString().capitalize
+            : errors = "";
         var errorMsg;
-        responseJson['errorMessage'] != null ? errorMsg = responseJson['errorMessage'] : errorMsg= responseJson['error_description'];
+        responseJson['errorMessage'] != null
+            ? errorMsg = responseJson['errorMessage']
+            : errorMsg = responseJson['error_description'];
         throw BadRequestException(errorMsg + " " + errors);
       case 404:
         throw BadRequestException(responseJson['errorMessage'].toString());
       case 409:
-        throw BadRequestException(responseJson['errorMessage'].toString().capitalize);
+        throw BadRequestException(
+            responseJson['errorMessage'].toString().capitalize);
       case 401:
       case 403:
         throw UnauthorisedException(response.body.toString());

@@ -5,8 +5,8 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
-import 'package:matchub_mobile/screens/resource/ownResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
@@ -220,9 +220,10 @@ class _TabsScreenState extends State<TabsScreen> {
       case UserScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => UserScreen(), settings: settings);
-      case OwnResourceDetailScreen.routeName:
+      case ResourceDetailScreen.routeName:
         return MaterialPageRoute(
-            builder: (context) => OwnResourceDetailScreen(),
+            builder: (context) => ResourceDetailScreen(),
+            fullscreenDialog: true,
             settings: settings);
       default:
         return MaterialPageRoute(

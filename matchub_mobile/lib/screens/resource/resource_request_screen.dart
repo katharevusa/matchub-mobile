@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/screens/resource/incomingResourceRequest_screen.dart';
 import 'package:matchub_mobile/screens/resource/navDrawer.dart';
-import 'package:matchub_mobile/screens/resource/outgoingResourceRequest_screen.dart';
 
 class ResourceRequestScreen extends StatefulWidget {
   static const routeName = "/resource-request-screen";
@@ -39,11 +37,11 @@ class _ResourceRequestScreenState extends State<ResourceRequestScreen>
               child: Container(
                 child: TabBarView(children: [
                   Container(
-                    child: IncomingResourceRequest(),
-                  ),
+                      //      child: IncomingResourceRequest(),
+                      ),
                   Container(
-                    child: OutgoingResourceRequest(),
-                  ),
+                      //  child: OutgoingResourceRequest(),
+                      ),
                 ]),
               ),
             )
