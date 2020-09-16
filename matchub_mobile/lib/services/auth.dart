@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/model/post.dart';
-import 'package:matchub_mobile/model/sdg.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,10 +37,6 @@ class Auth with ChangeNotifier {
       likedPosts: [],
       comments: [],
       sdgs: [
-        SDG(sdgName: "Environment", sdgDescription: "I love the Encironmetn!"),
-        SDG(
-            sdgName: "Zero Hungry",
-            sdgDescription: "I want to end world hunger.")
       ],
       skillSet: ["MukBang", "Talented Individual", "Sleeping at 4am"],
       profileUrl: "www.matchub.com/profile/users-123",
@@ -197,16 +192,11 @@ class Auth with ChangeNotifier {
   Future<void> retrieveUser() async {
     final url = 'authenticated/me';
     final responseData = await _helper.getProtected(url, _accessToken);
-    if (responseData.containsKey("firstName")) {
-      myProfile = Profile.fromJson(responseData);
-      _isIndividual = true;
-    } else {
-      _isIndividual = false;
-    }
-    print(myProfile.projectsOwned[0].projectTitle);
+    myProfile = Profile.fromJson(responseData);
     _accountId = responseData['accountId'].toString();
     _username = responseData['email'].toString();
-    print("Account Id :   --------------" + _accountId);
+    print("Account Id :   -------------- " + _accountId);
+    print(myProfile.sdgs[0].sdgName);
     notifyListeners();
   }
 

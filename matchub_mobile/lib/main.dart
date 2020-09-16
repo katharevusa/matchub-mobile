@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/navigation.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 // import 'package:matchub_mobile/screens/login/auth_screen.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => Auth()),
+            ChangeNotifierProvider(create: (_) => Profile()),
           ],
           child: Consumer<Auth>(
             builder: (context, auth, widget) => MaterialApp(

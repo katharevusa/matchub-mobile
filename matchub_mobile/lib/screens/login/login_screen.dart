@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/rounded_button.dart';
+import 'package:matchub_mobile/widgets/errorDialog.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -121,24 +122,6 @@ class _LoginCardState extends State<LoginCard> {
   @override
   void initState() {}
 
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Oops! Something went wrong...'),
-        content: Text(message),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Okay'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-          )
-        ],
-      ),
-    );
-  }
-
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
@@ -158,7 +141,7 @@ class _LoginCardState extends State<LoginCard> {
     } catch (error) {
       const errorMessage =
           'Could not authenticate you. Please try again later.';
-      _showErrorDialog(error.toString());
+      showErrorDialog(error.toString(), context);
     }
 
     setState(() {

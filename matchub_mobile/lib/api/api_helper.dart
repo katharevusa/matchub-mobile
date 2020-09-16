@@ -1,19 +1,32 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = "http://192.168.1.102:8080/api/v1/";
+  final String _baseUrl = "https://192.168.72.136:8443/api/v1/";
+
+  IOClient client;
+
   String get baseUrl {
     return _baseUrl;
+  }
+
+  ApiBaseHelper() {
+    bool trustSelfSigned = true;
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+          ((X509Certificate cert, String host, int port) => trustSelfSigned);
+    client = new IOClient(httpClient);
   }
 
   Future<dynamic> get(String url) async {
     var responseJson;
     print(_baseUrl + url);
     try {
-      final response = await http
+      final response = await client
           .get(
             _baseUrl + url,
           )
@@ -29,7 +42,7 @@ class ApiBaseHelper {
     var responseJson;
     print(_baseUrl + url);
     try {
-      final response = await http.get(_baseUrl + url, headers: {
+      final response = await client.get(_baseUrl + url, headers: {
         "Authorization": "Bearer $accessToken"
       }).timeout(Duration(seconds: 10));
       responseJson = _returnResponse(response);
@@ -44,7 +57,7 @@ class ApiBaseHelper {
     print(_baseUrl + url);
     print(body);
     try {
-      final response = await http.post(
+      final response = await client.post(
         _baseUrl + url,
         body: body,
         headers: {
@@ -65,7 +78,7 @@ class ApiBaseHelper {
     print(_baseUrl + url);
     print(body);
     try {
-      final response = await http.post(
+      final response = await client.post(
         _baseUrl + url,
         body: body,
         headers: {
@@ -86,7 +99,7 @@ class ApiBaseHelper {
     print(_baseUrl + url);
     print(body);
     try {
-      final response = await http.put(
+      final response = await client.put(
         _baseUrl + url,
         body: body,
         headers: {
@@ -105,7 +118,7 @@ class ApiBaseHelper {
     var responseJson;
     print(_baseUrl + url);
     try {
-      await http.delete(
+      await client.delete(
         _baseUrl + url,
         headers: {
           "Authorization": "Bearer " + accessToken,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/model/post.dart';
-import 'package:matchub_mobile/model/sdg.dart';
+import 'package:matchub_mobile/models/index.dart';
 
 class Individual with ChangeNotifier {
   String firstName;
@@ -16,7 +16,7 @@ class Individual with ChangeNotifier {
   int reputationPoints;
   List<int> followers = [];
   List<int> following = [];
-  List<SDG> sdgs = [];
+  List<Sdg> sdgs = [];
 
   String country;
   String city;
