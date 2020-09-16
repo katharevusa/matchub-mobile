@@ -209,6 +209,12 @@ class _TabsScreenState extends State<TabsScreen> {
             builder: (context) => SDGPicker(), settings: settings);
       case ProfileScreen.routeName:
         return MaterialPageRoute(
+            builder: (context) => ProfileScreen(
+                  accountId: settings.arguments as int,
+                ),
+            settings: settings);
+      case EditIndividualScreen.routeName:
+        return MaterialPageRoute(
             builder: (context) =>
                 ProfileScreen(accountId: settings.arguments as int,),
             settings: settings);
@@ -216,6 +222,24 @@ class _TabsScreenState extends State<TabsScreen> {
         return MaterialPageRoute(
             builder: (context) =>
                 EditIndividualScreen(profile: settings.arguments as Profile),
+            fullscreenDialog: true,
+            settings: settings);
+      case ChangePasswordScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ChangePasswordScreen(), settings: settings);
+      case FollowOverviewScreen.routeName:
+        final user =
+            (settings.arguments as Map<String, dynamic>)['profile'] as Profile;
+        final initialTab =
+            (settings.arguments as Map<String, dynamic>)['initialTab'] as int;
+        return MaterialPageRoute(
+            builder: (context) =>
+                FollowOverviewScreen(user: user, initialTab: initialTab),
+            settings: settings);
+      case EditOrganisationScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) =>
+                EditOrganisationScreen(profile: settings.arguments as Profile),
             fullscreenDialog: true,
             settings: settings);
       case ChangePasswordScreen.routeName:

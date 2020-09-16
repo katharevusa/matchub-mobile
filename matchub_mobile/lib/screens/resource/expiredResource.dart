@@ -14,8 +14,8 @@ class ExpiredResource extends StatefulWidget {
 
 class _ExpiredResourceState extends State<ExpiredResource> {
   // testing only
-  List<Resources> listOfResource;
-  _ExpiredResourceState(this.listOfResource);
+  List<Resources> listOfResources;
+  _ExpiredResourceState(this.listOfResources);
   void selecteResource(BuildContext ctx, Resources resource) {
     Navigator.of(ctx)
         .pushNamed(ResourceDetailScreen.routeName, arguments: resource);
@@ -32,14 +32,14 @@ class _ExpiredResourceState extends State<ExpiredResource> {
           children: <Widget>[
             ListView.builder(
                 shrinkWrap: true,
-                itemCount: listOfResource.length,
+                itemCount: listOfResources.length,
                 itemBuilder: (BuildContext ctx, int index) {
-                  return listOfResource[index].available == false &&
-                          listOfResource[index].matchedProjectId == null
+                  return listOfResources[index].available == false &&
+                          listOfResources[index].matchedProjectId == null
                       ? ListTile(
-                          title: Text(listOfResource[index].resourceName),
+                          title: Text(listOfResources[index].resourceName),
                           onTap: () =>
-                              selecteResource(ctx, listOfResource[index]),
+                              selecteResource(ctx, listOfResources[index]),
                         )
                       : SizedBox.shrink();
                 })

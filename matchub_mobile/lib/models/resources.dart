@@ -14,8 +14,8 @@ class Resources {
     String startTime;
     String endTime;
     List listOfRequests;
-    Map<String,dynamic> resourceCategory;
-    Map<String,dynamic> resourceOwner;
+    num resourceCategoryId;
+    num resourceOwnerId;
     num units;
     List photos;
     bool spotlight;
