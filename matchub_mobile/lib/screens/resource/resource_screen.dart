@@ -16,8 +16,26 @@ class ResourceScreen extends StatefulWidget {
 
 class _ResourceScreenState extends State<ResourceScreen>
     with SingleTickerProviderStateMixin {
-  Resources resources;
   List<Resources> listOfResources;
+  Future resourcesFuture;
+  Resources resources;
+  ApiBaseHelper _helper = ApiBaseHelper();
+
+  @override
+  void initState() {
+    super.initState();
+    resourcesFuture = retrieveResources();
+  }
+
+  retrieveResources() async {
+    final url = 'authenticated/getAllResources';
+    final responseData =
+        await _helper.getProtected(url, Provider.of<Auth>(context).accessToken);
+    listOfResources = (responseData['content'] as List)
+        .map((e) => Resources.fromJson(e))
+        .toList();
+    //   print(listOfResources[0].resourceName);
+  }
 
   void selectOwnResource(BuildContext ctx) {
     Navigator.of(ctx).pushNamed('/own-resource-detail-screen');
@@ -25,47 +43,53 @@ class _ResourceScreenState extends State<ResourceScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavDrawer(),
-      appBar: AppBar(
-        title: Text("Resource Overview"),
-        backgroundColor: Color.fromRGBO(64, 133, 140, 0.8),
-        elevation: 0.0,
-      ),
-      body: DefaultTabController(
-        length: 3,
-        child: Column(
-          children: <Widget>[
-            Container(
-              constraints: BoxConstraints.expand(height: 50),
-              child: TabBar(
-                tabs: [
-                  Tab(text: "Ongoing"),
-                  Tab(text: "Expired"),
-                  Tab(text: "Saved"),
-                ],
-                labelColor: Color.fromRGBO(64, 133, 140, 0.8),
-                indicatorColor: Color.fromRGBO(64, 133, 140, 0.8),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                child: TabBarView(children: [
-                  Container(
-                    child: OngoingResource(listOfResources),
+    return FutureBuilder(
+      future: retrieveResources(),
+      builder: (context, snapshot) =>
+          (snapshot.connectionState == ConnectionState.done)
+              ? Scaffold(
+                  drawer: NavDrawer(),
+                  appBar: AppBar(
+                    title: Text("Resource Overview"),
+                    backgroundColor: Color.fromRGBO(64, 133, 140, 0.8),
+                    elevation: 0.0,
                   ),
-                  Container(
-                    child: ExpiredResource(listOfResources),
+                  body: DefaultTabController(
+                    length: 3,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          constraints: BoxConstraints.expand(height: 50),
+                          child: TabBar(
+                            tabs: [
+                              Tab(text: "Ongoing"),
+                              Tab(text: "Expired"),
+                              Tab(text: "Saved"),
+                            ],
+                            labelColor: Color.fromRGBO(64, 133, 140, 0.8),
+                            indicatorColor: Color.fromRGBO(64, 133, 140, 0.8),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            child: TabBarView(children: [
+                              Container(
+                                child: OngoingResource(listOfResources),
+                              ),
+                              Container(
+                                child: ExpiredResource(listOfResources),
+                              ),
+                              Container(
+                                child: OngoingResource(listOfResources),
+                              ),
+                            ]),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  Container(
-                    child: OngoingResource(listOfResources),
-                  ),
-                ]),
-              ),
-            )
-          ],
-        ),
-      ),
+                )
+              : Center(child: CircularProgressIndicator()),
     );
   }
 }
