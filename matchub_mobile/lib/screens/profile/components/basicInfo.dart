@@ -49,22 +49,25 @@ class BasicInfo extends StatelessWidget {
                         child: AttachmentImage(profile.profilePhoto)),
                   ),
                   Container(
-                    height: 16 * SizeConfig.heightMultiplier,
+                    width: 48 * SizeConfig.widthMultiplier,
                     padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          "${profile.name}",
-                          style: AppTheme.titleLight,
-                        ),
+                         Text(
+                            "${profile.name}",
+                            style: AppTheme.titleLight,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        
                         Text("Stakeholder", style: AppTheme.subTitleLight),
                         SizedBox(height: 10),
                         Container(
                             width: 44 * SizeConfig.widthMultiplier,
-                            height: 7 * SizeConfig.heightMultiplier,
+                            constraints: BoxConstraints(minHeight: 8 * SizeConfig.heightMultiplier),
                             decoration: BoxDecoration(
                               color: Color(0xFF7B89A4).withOpacity(0.1),
                               borderRadius: BorderRadius.circular(10),

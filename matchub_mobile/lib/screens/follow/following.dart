@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
+import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/errorDialog.dart';
@@ -19,6 +20,8 @@ class _FollowingScreenState extends State<FollowingScreen> {
   Future followingFuture;
 
   List<Profile> following;
+  List<Profile> filteredFollowing;
+  String searchQuery = "";
   Profile myProfile;
 
   @override
@@ -36,10 +39,12 @@ class _FollowingScreenState extends State<FollowingScreen> {
     following = (responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
         .toList();
+        filteredFollowing = following;
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
           body: FutureBuilder(
         future: followingFuture,
@@ -48,10 +53,36 @@ class _FollowingScreenState extends State<FollowingScreen> {
             ? Column(
                 children: [
                   SizedBox(height: 10),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: TextFormField(
+                        expands: false,
+                        decoration: InputDecoration(
+                          hintText: "Search Profile...",
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            searchQuery = value;
+                            filteredFollowing = following
+                                .where((element) => element.name
+                                    .toUpperCase()
+                                    .contains(value.toUpperCase()))
+                                .toList();
+                          });
+                        }),
+                  ),
+                  SizedBox(height: 20),
                   ListView.separated(
                     shrinkWrap: true,
                     separatorBuilder: (context, index) => SizedBox(height: 5),
                     itemBuilder: (context, index) => ListTile(
+                      onTap: () => Navigator.of(context).pushNamed(ProfileScreen.routeName, arguments: filteredFollowing[index].accountId),
                       leading: CircleAvatar(
                         radius: 25,
                         backgroundImage:
@@ -64,18 +95,18 @@ class _FollowingScreenState extends State<FollowingScreen> {
                             borderRadius: BorderRadius.circular(6)),
                         child: Text(
                             (myProfile.following
-                                        .indexOf(following[index].accountId) !=
+                                        .indexOf(filteredFollowing[index].accountId) !=
                                     -1)
                                 ? "Following"
                                 : "Follow",
                             style: TextStyle(color: Colors.white)),
                         onPressed: () {
-                          int followId = following[index].accountId;
+                          int followId = filteredFollowing[index].accountId;
                           widget.toggleFollowing(followId);
                           int followerIndex =
                               myProfile.following.indexOf(followId);
                           Profile removeFollower =
-                              following.removeAt(followerIndex);
+                              filteredFollowing.removeAt(followerIndex);
 
                           setState(() {
                             myProfile.toggleFollow(followId);
@@ -90,7 +121,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
                                 onPressed: () {
                                   myProfile.toggleFollow(followId);
                                   setState(() {
-                                    following.insert(
+                                    filteredFollowing.insert(
                                         followerIndex, removeFollower);
                                   });
                                   ApiBaseHelper().postProtected(
@@ -101,13 +132,13 @@ class _FollowingScreenState extends State<FollowingScreen> {
                           ));
                         },
                         color: (myProfile.following
-                                    .indexOf(following[index].accountId) >
+                                    .indexOf(filteredFollowing[index].accountId) >
                                 -1)
                             ? Colors.grey
                             : kAccentColor,
                       ),
                     ),
-                    itemCount: following.length,
+                    itemCount: filteredFollowing.length,
                   ),
                 ],
               )
