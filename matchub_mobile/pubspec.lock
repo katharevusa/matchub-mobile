@@ -182,7 +182,7 @@ packages:
       name: country_list_pick
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0+7"
+    version: "1.0.0+8"
   country_provider:
     dependency: "direct main"
     description:
@@ -292,7 +292,7 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.5"
+    version: "0.8.0"
   flutter_page_indicator:
     dependency: transitive
     description:
@@ -334,7 +334,7 @@ packages:
       name: flutter_tags
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.8+2"
+    version: "0.4.9"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -422,6 +422,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.0+17"
+  international_phone_input:
+    dependency: "direct main"
+    description:
+      name: international_phone_input
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   intl:
     dependency: "direct main"
     description:
@@ -471,6 +478,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.19"
+  libphonenumber:
+    dependency: transitive
+    description:
+      name: libphonenumber
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   logging:
     dependency: transitive
     description:
@@ -527,6 +541,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.10"
+  password_strength:
+    dependency: "direct main"
+    description:
+      name: password_strength
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   path:
     dependency: "direct main"
     description:

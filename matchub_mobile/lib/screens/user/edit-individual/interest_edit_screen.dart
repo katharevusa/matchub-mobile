@@ -34,15 +34,18 @@ class _InterestEditPageState extends State<InterestEditPage> {
                 children: [
                   Container(
                     child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         InkWell(
                           onTap: () {
                             Navigator.of(context)
                                 .pushNamed(SDGPicker.routeName)
                                 .then((value) {
-                              setState(() => widget.profile['sdgIds'] = value);
-                              print(widget.profile['sdgIds']);
+                              setState(() {
+                                if (value != null) {
+                                  widget.profile['sdgIds'].addAll(value);
+                                }
+                                print(widget.profile['sdgIds']);
+                              });
                             });
                           },
                           child: Container(

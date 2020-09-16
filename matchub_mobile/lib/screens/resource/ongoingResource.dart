@@ -19,7 +19,14 @@ class OngoingResource extends StatefulWidget {
 
 class _OngoingResourceState extends State<OngoingResource> {
   List<Resources> listOfResources;
+  Future resourcesFuture;
   _OngoingResourceState(this.listOfResources);
+
+  @override
+  void initState() {
+    super.initState();
+    resourcesFuture = retrieveResources();
+  }
 
   ApiBaseHelper _helper = ApiBaseHelper();
   List _resourceStatus = [
@@ -31,18 +38,18 @@ class _OngoingResourceState extends State<OngoingResource> {
   String _selected = "All";
 
   void selecteResource(BuildContext ctx, Resources individualResource) {
-    Navigator.of(ctx).pushNamed(ResourceDetailScreen.routeName,
+    Navigator.of(ctx, rootNavigator: true).pushNamed(
+        ResourceDetailScreen.routeName,
         arguments: individualResource);
   }
 
-  Future retrieveResources() async {
+  retrieveResources() async {
     final url = 'authenticated/getAllResources';
     final responseData =
         await _helper.getProtected(url, Provider.of<Auth>(context).accessToken);
     listOfResources = (responseData['content'] as List)
         .map((e) => Resources.fromJson(e))
         .toList();
-    return listOfResources;
     //   print(listOfResources[0].resourceName);
   }
 
@@ -54,49 +61,42 @@ class _OngoingResourceState extends State<OngoingResource> {
 
     return FutureBuilder(
       future: retrieveResources(),
-      builder: (context, projectSnap) {
-        return Scaffold(
-          body: Column(
-            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              DropdownButton(
-                value: _selected,
-                onChanged: (value) {
-                  setState(() {
-                    _selected = value;
-                  });
-                },
-                items: _resourceStatus.map((value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: projectSnap.data.length,
-                  itemBuilder: (BuildContext ctx, int index) {
-                    return _selected == "Available" &&
-                            listOfResources[index].available == true
-                        ? ListTile(
-                            title: Text(listOfResources[index].resourceName),
-                            onTap: () =>
-                                selecteResource(ctx, listOfResources[index]),
-                          )
-                        : _selected == "Busy" &&
-                                listOfResources[index].available == false &&
-                                listOfResources[index].matchedProjectId != null
+      builder: (context, snapshot) => (snapshot.connectionState ==
+              ConnectionState.done)
+          ? Scaffold(
+              body: Column(
+                //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  DropdownButton(
+                    value: _selected,
+                    onChanged: (value) {
+                      setState(() {
+                        _selected = value;
+                      });
+                    },
+                    items: _resourceStatus.map((value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: listOfResources.length,
+                      itemBuilder: (BuildContext ctx, int index) {
+                        return _selected == "Available" &&
+                                listOfResources[index].available == true
                             ? ListTile(
                                 title:
                                     Text(listOfResources[index].resourceName),
                                 onTap: () => selecteResource(
                                     ctx, listOfResources[index]),
                               )
-                            : _selected == "All" &&
-                                    listOfResources[index].available == true &&
-                                    listOfResources[index].matchedProjectId ==
+                            : _selected == "Busy" &&
+                                    listOfResources[index].available == false &&
+                                    listOfResources[index].matchedProjectId !=
                                         null
                                 ? ListTile(
                                     title: Text(
@@ -104,21 +104,34 @@ class _OngoingResourceState extends State<OngoingResource> {
                                     onTap: () => selecteResource(
                                         ctx, listOfResources[index]),
                                   )
-                                : SizedBox.shrink();
-                  }),
-            ],
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          floatingActionButton: FlatButton.icon(
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ResourceCreationScreen(newResource: newResource))),
-              icon: Icon(Icons.add),
-              label: Text("New")),
-        );
-      },
+                                : _selected == "All" &&
+                                        listOfResources[index].available ==
+                                            true &&
+                                        listOfResources[index]
+                                                .matchedProjectId ==
+                                            null
+                                    ? ListTile(
+                                        title: Text(listOfResources[index]
+                                            .resourceName),
+                                        onTap: () => selecteResource(
+                                            ctx, listOfResources[index]),
+                                      )
+                                    : SizedBox.shrink();
+                      }),
+                ],
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endFloat,
+              floatingActionButton: FlatButton.icon(
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ResourceCreationScreen(
+                              newResource: newResource))),
+                  icon: Icon(Icons.add),
+                  label: Text("New")),
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }

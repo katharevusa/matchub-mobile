@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
+import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
@@ -14,7 +15,9 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
-import 'package:matchub_mobile/screens/user/edit_profile.dart';
+import 'package:matchub_mobile/screens/user/account-settings/change_password.dart';
+import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
+import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/screens/user/user_screen.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 
@@ -207,14 +210,32 @@ class _TabsScreenState extends State<TabsScreen> {
             builder: (context) => SDGPicker(), settings: settings);
       case ProfileScreen.routeName:
         return MaterialPageRoute(
-            builder: (context) =>
-                ProfileScreen(profile: settings.arguments as Profile),
-            fullscreenDialog: true,
+            builder: (context) => ProfileScreen(
+                  accountId: settings.arguments as int,
+                ),
             settings: settings);
-      case EditProfileScreen.routeName:
+      case EditIndividualScreen.routeName:
         return MaterialPageRoute(
             builder: (context) =>
-                EditProfileScreen(profile: settings.arguments as Profile),
+                EditIndividualScreen(profile: settings.arguments as Profile),
+            fullscreenDialog: true,
+            settings: settings);
+      case ChangePasswordScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ChangePasswordScreen(), settings: settings);
+      case FollowOverviewScreen.routeName:
+        final user =
+            (settings.arguments as Map<String, dynamic>)['profile'] as Profile;
+        final initialTab =
+            (settings.arguments as Map<String, dynamic>)['initialTab'] as int;
+        return MaterialPageRoute(
+            builder: (context) =>
+                FollowOverviewScreen(user: user, initialTab: initialTab),
+            settings: settings);
+      case EditOrganisationScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) =>
+                EditOrganisationScreen(profile: settings.arguments as Profile),
             fullscreenDialog: true,
             settings: settings);
       case UserScreen.routeName:

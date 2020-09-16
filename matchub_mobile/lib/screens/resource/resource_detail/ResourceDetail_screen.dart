@@ -52,7 +52,6 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen>
   @override
   Widget build(BuildContext context) {
     final Resources resource = ModalRoute.of(context).settings.arguments;
-
     // screenSize = MediaQuery.of(context).size.width;
     // appBar = AppBar(
     //   title: Text(resource.resourceName),
@@ -336,7 +335,7 @@ class _DescriptionState extends State<Description> {
                 ),
                 ListTile(
                   title: Text("Category"),
-                  subtitle: Text(resource.resourceCategory.values.toList()[1]),
+                  //  subtitle: Text(resource.resourceCategory.values.toList()[1]),
                   leading: Icon(Icons.category),
                 ),
                 ListTile(

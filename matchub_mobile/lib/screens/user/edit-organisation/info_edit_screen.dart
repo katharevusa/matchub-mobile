@@ -1,10 +1,12 @@
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:country_provider/country_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/phoneInput.dart';
 
 class InfoEditPage extends StatefulWidget {
   final Map<String, dynamic> profile;
@@ -21,17 +23,31 @@ class _InfoEditPageState extends State<InfoEditPage> {
   Future isLoaded;
   @override
   initState() {
-    isLoaded =  getCountryCode();
+    isLoaded = getCountryCode();
   }
 
   getCountryCode() async {
-      await CountryProvider.getCountryByFullname(widget.profile['country'])
-          .then((value) => countryCode = value.callingCodes.first);
-    print(countryCode);
+    await CountryProvider.getCountryByFullname(widget.profile['country'])
+        .then((value) => countryCode = value.callingCodes.first);
+    print("Country code:   ==========   " + countryCode);
+  }
+
+  String phoneNumber;
+  String phoneIsoCode;
+  bool visible = false;
+  String confirmedNumber = '';
+
+  void onPhoneNumberChange(
+      String number, String internationalizedPhoneNumber, String isoCode) {
+    setState(() {
+      widget.profile['phoneNumber'] = internationalizedPhoneNumber;
+      print("sdfsd"+ internationalizedPhoneNumber);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print("Reach here");
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: FutureBuilder(
@@ -46,68 +62,33 @@ class _InfoEditPageState extends State<InfoEditPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Flexible(
-                                flex: 3,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'First Name',
-                                    labelStyle: TextStyle(
-                                        color: Colors.grey[850], fontSize: 14),
-                                    fillColor: Colors.grey[100],
-                                    hoverColor: Colors.grey[100],
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: kSecondaryColor),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[850],
-                                      ),
-                                    ),
-                                  ),
-                                  initialValue: widget.profile['firstName'],
-                                  keyboardType: TextInputType.name,
-                                  // validator: (value) {
-                                  //   if (value.isEmpty || !value.contains('@')) {
-                                  //     return 'Invalid email!';
-                                  //   }
-                                  // },
-                                  onChanged: (value) {
-                                    widget.profile['firstName'] = value;
-                                  },
+                          TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Organisation Name',
+                              labelStyle: TextStyle(
+                                  color: Colors.grey[600], fontSize: 14),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: kSecondaryColor, width: 2),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.grey[850],
                                 ),
                               ),
-                              SizedBox(width: 1 * SizeConfig.widthMultiplier),
-                              Flexible(
-                                flex: 2,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Last Name',
-                                    labelStyle: TextStyle(
-                                        color: Colors.grey[850], fontSize: 14),
-                                    fillColor: Colors.grey[100],
-                                    hoverColor: Colors.grey[100],
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: kSecondaryColor),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[850],
-                                      ),
-                                    ),
-                                  ),
-                                  initialValue: widget.profile['lastName'],
-                                  keyboardType: TextInputType.name,
-                                  onChanged: (value) {
-                                    widget.profile['lastName'] = value;
-                                  },
-                                ),
-                              ),
-                            ],
+                            ),
+                            minLines: 1,
+                            maxLines: 3,
+                            initialValue: widget.profile['organizationName'],
+                            keyboardType: TextInputType.name,
+                            // validator: (value) {
+                            //   if (value.isEmpty || !value.contains('@')) {
+                            //     return 'Invalid email!';
+                            //   }
+                            // },
+                            onChanged: (value) {
+                              widget.profile['organizationName'] = value;
+                            },
                           ),
                           SizedBox(height: 20),
                           TextFormField(
@@ -116,11 +97,10 @@ class _InfoEditPageState extends State<InfoEditPage> {
                               hintText:
                                   'Fill in your profile\'s description here.',
                               labelStyle: TextStyle(
-                                  color: Colors.grey[850], fontSize: 14),
-                              fillColor: Colors.grey[100],
-                              hoverColor: Colors.grey[100],
+                                  color: Colors.grey[600], fontSize: 14),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: kSecondaryColor),
+                                borderSide: BorderSide(
+                                    color: kSecondaryColor, width: 2),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -133,22 +113,47 @@ class _InfoEditPageState extends State<InfoEditPage> {
                             maxLines: 10,
                             maxLength: 500,
                             maxLengthEnforced: true,
-                            initialValue: widget.profile['profileDescription'],
+                            initialValue:
+                                widget.profile['organizationDescription'],
                             onChanged: (value) {
-                              widget.profile['profileDescription'] = value;
+                              widget.profile['organizationDescription'] = value;
                             },
+                          ),
+                          SizedBox(height: 20),
+                          Container(
+                            constraints: BoxConstraints(
+                                minHeight: 7.5 * SizeConfig.heightMultiplier),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.fromBorderSide(
+                                  BorderSide(color: Colors.grey[850]),
+                                )),
+                            child: InternationalPhoneInput(
+                              onPhoneNumberChange: onPhoneNumberChange,
+                              initialPhoneNumber: widget.profile['phoneNumber'].length>2 ? widget.profile['phoneNumber'] : null,
+                              initialSelection: widget.profile['countryCode'],
+                              showCountryFlags: false,
+                              border: InputBorder.none,
+                              hintText: "eg. 91234567",
+                              enabledCountries: ['+60', '+65','+82', '+1'],
+                              labelText: "Phone Number",
+                              labelStyle: TextStyle(
+                                  color: Colors.grey[850], fontSize: 14),
+                            ),
                           ),
                           SizedBox(height: 20),
                           TextFormField(
                             decoration: InputDecoration(
-                              labelText: 'Phone No.',
-                              hintText: 'Fill in your phone no. here',
+                              labelText: 'Address',
+                              hintText:
+                                  'Fill in your orgnisation\'s address here.',
                               labelStyle: TextStyle(
-                                  color: Colors.grey[850], fontSize: 14),
-                              fillColor: Colors.grey[100],
-                              hoverColor: Colors.grey[100],
+                                  color: Colors.grey[600], fontSize: 14),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: kSecondaryColor),
+                                borderSide: BorderSide(
+                                    color: kSecondaryColor, width: 2),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -156,10 +161,12 @@ class _InfoEditPageState extends State<InfoEditPage> {
                                 ),
                               ),
                             ),
-                            initialValue: widget.profile['phoneNumber'],
-                            keyboardType: TextInputType.phone,
+                            keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            maxLines: 5,
+                            initialValue: widget.profile['address'],
                             onChanged: (value) {
-                              widget.profile['phoneNumber'] = value;
+                              widget.profile['address'] = value;
                             },
                           ),
                           SizedBox(height: 20),
@@ -167,11 +174,10 @@ class _InfoEditPageState extends State<InfoEditPage> {
                             decoration: InputDecoration(
                               labelText: 'City',
                               labelStyle: TextStyle(
-                                  color: Colors.grey[850], fontSize: 14),
-                              fillColor: Colors.grey[800],
-                              hoverColor: Colors.grey[800],
+                                  color: Colors.grey[600], fontSize: 14),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: kSecondaryColor),
+                                borderSide: BorderSide(
+                                    color: kSecondaryColor, width: 2),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -197,12 +203,11 @@ class _InfoEditPageState extends State<InfoEditPage> {
                             child: CountryListPick(
                                 isShowFlag: true,
                                 isShowTitle: true,
-                                isShowCode: true,
+                                // isShowCode: true,
                                 isDownIcon: true,
                                 showEnglishName: true,
-                                initialSelection: "+${countryCode}",
+                                initialSelection: "+${countryCode}".length>2? "+${countryCode}": null,
                                 buttonColor: Colors.transparent,
-                                // to get feedback data from picker
                                 onChanged: (CountryCode code) {
                                   widget.profile['country'] = code.name;
                                 }),
@@ -224,7 +229,7 @@ class _InfoEditPageState extends State<InfoEditPage> {
                 color: kSecondaryColor,
                 onPressed: () => widget.controller.animateToPage(2,
                     curve: Curves.decelerate,
-                    duration: Duration(milliseconds: 300)),
+                    duration: Duration(milliseconds: 800)),
                 child: Text("Next")),
           ],
         ),

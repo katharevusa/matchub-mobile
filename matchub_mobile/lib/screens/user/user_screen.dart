@@ -6,7 +6,9 @@ import 'package:matchub_mobile/models/profile.dart';
 import 'dart:convert';
 // import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
-import 'package:matchub_mobile/screens/user/edit_profile.dart';
+import 'package:matchub_mobile/screens/user/account-settings/change_password.dart';
+import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
+import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -15,11 +17,17 @@ import 'package:provider/provider.dart';
 
 class UserScreen extends StatelessWidget {
   static const routeName = "/user-screen";
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void dismissSnackBar() {
+    _scaffoldKey.currentState.removeCurrentSnackBar();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Profile profile = Profile.fromJson(
-        json.decode(json.encode(Provider.of<Auth>(context).myProfile)));
+    Profile profile = Provider.of<Auth>(context).myProfile;
     return Scaffold(
+      key: _scaffoldKey,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -32,16 +40,18 @@ class UserScreen extends StatelessWidget {
                     backgroundImage: AssetImage("assets/images/avatar2.jpg"),
                   ),
                   title: Text(
-                    "${profile.lastName} ${profile.firstName}",
+                    "${profile.name}",
+                    overflow: TextOverflow.fade,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   subtitle: Text("View My Profile"),
                   onTap: () {
+                    dismissSnackBar();
                     Navigator.of(
                       context,
                       rootNavigator: true,
                     ).pushNamed(ProfileScreen.routeName,
-                        arguments: Provider.of<Auth>(context).myProfile);
+                        arguments: Provider.of<Auth>(context).myProfile.accountId);
                   }),
               Divider(
                 thickness: 2,
@@ -58,21 +68,54 @@ class UserScreen extends StatelessWidget {
                   buildSettingCard("Edit Profile",
                       Icon(FlutterIcons.edit_fea, color: Color(0xFFa8e6cf)),
                       () {
-                    Navigator.of(
-                      context,
-                      rootNavigator: true,
-                    ).pushNamed(EditProfileScreen.routeName,
-                        arguments: profile);
+                    if (!profile.isOrgnisation) {
+                    dismissSnackBar();
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      )
+                          .pushNamed(EditIndividualScreen.routeName,
+                              arguments: profile)
+                          .then((value) {
+                        if (value != null && value) {
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                            key: UniqueKey(),
+                            content: Text("Profile updated successfully"),
+                            duration: Duration(seconds: 1),
+                          ));
+                        }
+                      });
+                      ;
+                      print("Individual");
+                    } else {
+                    dismissSnackBar();
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      )
+                          .pushNamed(EditOrganisationScreen.routeName,
+                              arguments: profile)
+                          .then((value) {
+                        if (value != null && value) {
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                            key: UniqueKey(),
+                            content: Text("Profile updated successfully"),
+                            duration: Duration(seconds: 1),
+                          ));
+                        }
+                      });
+                      print("Orgnisation");
+                    }
                   }),
                   buildSettingCard(
-                      "Followers",
+                      "Manage Followers",
                       Icon(
                         FlutterIcons.user_friends_faw5s,
                         color: Color(0xFFf5f1da),
                       ),
                       () {}),
                   buildSettingCard(
-                      "Following",
+                      "Manage Following",
                       Icon(
                         FlutterIcons.user_friends_faw5s,
                         color: Color(0xFF4e89ae),
@@ -127,9 +170,22 @@ class UserScreen extends StatelessWidget {
                 title: Text("Account Settings"),
                 children: [
                   ListTile(
-                    onTap: () {},
+                    onTap: () {
+                    dismissSnackBar();
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      ).pushNamed(ChangePasswordScreen.routeName).then((value) {
+                        if (value != null && value) {
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                            content: Text("Password updated successfully"),
+                            duration: Duration(seconds: 1),
+                          ));
+                        }
+                      });
+                    },
                     leading: Icon(FlutterIcons.key_faw5s),
-                    title: Text("Reset Password"),
+                    title: Text("Change Password"),
                     subtitle: Text(
                       "Change your password here",
                       style: AppTheme.subTitleLight,

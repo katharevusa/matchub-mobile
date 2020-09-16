@@ -5,36 +5,37 @@ import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
-import 'package:matchub_mobile/screens/user/edit/info_edit_screen.dart';
-import 'package:matchub_mobile/screens/user/edit/interest_edit_screen.dart';
+import 'package:matchub_mobile/screens/user/edit-individual/info_edit_screen.dart';
+import 'package:matchub_mobile/screens/user/edit-individual/interest_edit_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  static const routeName = "/edit-profile";
+class EditIndividualScreen extends StatefulWidget {
+  static const routeName = "/edit-individual";
   Profile profile;
 
-  EditProfileScreen({this.profile});
+  EditIndividualScreen({this.profile});
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _EditIndividualScreenState createState() => _EditIndividualScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditIndividualScreenState extends State<EditIndividualScreen> {
   Map<String, dynamic> editedProfile;
   @override
   void initState() {
     editedProfile = {
       "id": widget.profile.accountId,
-      "firstName": widget.profile.firstName,
-      "lastName": widget.profile.lastName,
-      "password": "12345678",
-      "phoneNumber": widget.profile.phoneNumber,
-      "country": widget.profile.country,
-      "city": widget.profile.city,
-      "profileDescription": widget.profile.profileDescription,
+      "firstName": widget.profile.firstName ?? "",
+      "lastName": widget.profile.lastName ?? "",
+      "phoneNumber": widget.profile.phoneNumber ?? "",
+      "countryCode": widget.profile.countryCode ?? "",
+      "country": widget.profile.country ?? "",
+      "city": widget.profile.city ?? "",
+      "profileDescription": widget.profile.profileDescription ?? "",
       "skillSet": widget.profile.skillSet ?? [],
-      "sdgIds": widget.profile.sdgs ?? [],
+      "sdgIds":
+          widget.profile.sdgs.map((e) => e.sdgId.toString()).toList() ?? [],
     };
   }
 
@@ -85,7 +86,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
-                            color: Colors.grey[300])),
+                            color: Colors.white)),
                   ),
                   // backgroundColor: kScaffoldColor,
                   elevation: 10,
@@ -124,7 +125,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           accessToken: accessToken, body: json.encode(editedProfile));
       Provider.of<Auth>(context).retrieveUser();
       print("Success");
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     } catch (error) {
       final responseData = error.body as Map<String, dynamic>;
       print("Failure");

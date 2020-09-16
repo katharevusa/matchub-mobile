@@ -205,36 +205,36 @@ class _CategoryState extends State<Category> {
           child: ListView.builder(
             itemCount: DUMMY_RESOURCE_CATEGORY.length,
             itemBuilder: (BuildContext context, int index) {
-              return newResource.resourceCategory != null &&
-                      newResource.resourceCategory.values.toList()[1] ==
-                          DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName
-                  ? CheckboxListTile(
-                      title: Text(
-                          DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName),
-                      controlAffinity: ListTileControlAffinity.platform,
-                      value: _checked,
-                      onChanged: (bool value) {
-                        setState(() {
-                          newResource.resourceCategory = null;
-                          _checked = value;
-                        });
-                      },
-                    )
-                  : CheckboxListTile(
-                      title: Text(
-                          DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName),
-                      controlAffinity: ListTileControlAffinity.platform,
-                      value: _unchecked,
-                      onChanged: (bool value) {
-                        setState(() {
-                          newResource.resourceCategory.values.toList()[1] =
-                              DUMMY_RESOURCE_CATEGORY[index];
-                          _unchecked = value;
+              // return newResource.resourceCategory != null &&
+              //         newResource.resourceCategory.values.toList()[1] ==
+              //             DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName
+              //     ? CheckboxListTile(
+              //         title: Text(
+              //             DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName),
+              //         controlAffinity: ListTileControlAffinity.platform,
+              //         value: _checked,
+              //         onChanged: (bool value) {
+              //           setState(() {
+              //             newResource.resourceCategory = null;
+              //             _checked = value;
+              //           });
+              //         },
+              //       )
+              //     : CheckboxListTile(
+              //         title: Text(
+              //             DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName),
+              //         controlAffinity: ListTileControlAffinity.platform,
+              //         value: _unchecked,
+              //         onChanged: (bool value) {
+              //           setState(() {
+              //             newResource.resourceCategory.values.toList()[1] =
+              //                 DUMMY_RESOURCE_CATEGORY[index];
+              //             _unchecked = value;
 
-                          //    print(resource.resourceCategory.resourceCategoryName);
-                        });
-                      },
-                    );
+              //             //    print(resource.resourceCategory.resourceCategoryName);
+              //           });
+              //         },
+              //       );
             },
           ),
         ),
