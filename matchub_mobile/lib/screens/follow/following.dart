@@ -23,6 +23,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
   List<Profile> filteredFollowing;
   String searchQuery = "";
   Profile myProfile;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
+          key: _scaffoldKey,
           body: FutureBuilder(
             future: followingFuture,
             builder: (context, snapshot) => (snapshot.connectionState ==
@@ -111,6 +113,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
                             onPressed: () async {
                               if (filteredFollowing[index].accountId ==
                                   myProfile.accountId) return null;
+                              _scaffoldKey.currentState.removeCurrentSnackBar();
                               // int followId = filteredFollowing[index].accountId;
                               // await widget.toggleFollowing(followId);
 
@@ -146,7 +149,6 @@ class _FollowingScreenState extends State<FollowingScreen> {
                                           followerIndex, removeFollower);
                                       widget.toggleFollowing(followId);
                                       myProfile.toggleFollow(followId);
-                                      
                                       setState(() {
                                         filteredFollowing = following
                                             .where((element) => element.name
