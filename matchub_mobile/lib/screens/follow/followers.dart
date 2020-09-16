@@ -11,7 +11,6 @@ class FollowersScreen extends StatefulWidget {
   Profile user;
   List<Profile> follow;
   Function toggleFollowing;
-  Function update;
   FollowersScreen({this.follow, this.toggleFollowing, this.user});
   @override
   _FollowersScreenState createState() => _FollowersScreenState();
@@ -116,43 +115,6 @@ class _FollowersScreenState extends State<FollowersScreen> {
                             myProfile.toggleFollow(followId);
                           });
                         },
-
-                        //for person specific
-                        // int followId = filteredFollowing[index].accountId;
-                        // widget.toggleFollowing(followId); //backend api call
-                        // int followerIndex =
-                        //     myProfile.following.indexOf(followId);
-                        // Profile removeFollower =
-                        //     following.removeAt(followerIndex);
-
-                        // setState(() {
-                        //   myProfile.toggleFollow(followId);
-                        //   filteredFollowing = following
-                        //       .where((element) => element.name
-                        //           .toUpperCase()
-                        //           .contains(searchQuery.toUpperCase()))
-                        //       .toList();
-                        // });
-                        // // widget.update();
-                        // Scaffold.of(context).showSnackBar(new SnackBar(
-                        //   content: Text(
-                        //       "You've stopped following: ${removeFollower.name}"),
-                        //   duration: Duration(seconds: 3),
-                        //   action: SnackBarAction(
-                        //       label: "Undo",
-                        //       onPressed: () {
-                        //         setState(() {
-                        //           following.insert(
-                        //               followerIndex, removeFollower);
-                        //           myProfile.following = (following);
-                        //         });
-                        //         ApiBaseHelper().postProtected(
-                        //             "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
-                        //             accessToken: Provider.of<Auth>(context)
-                        //                 .accessToken);
-                        //       }),
-                        // ));
-
                         color: (myProfile.following.indexOf(
                                     filteredFollowers[index].accountId) >
                                 -1)

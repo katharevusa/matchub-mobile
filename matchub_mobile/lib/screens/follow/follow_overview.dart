@@ -75,6 +75,7 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
               "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
               accessToken: Provider.of<Auth>(context).accessToken);
         }
+        getFollowers();
       });
       print("backend method" + widget.user.following.length.toString());
     } catch (error) {
@@ -126,15 +127,26 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
           builder: (context, snapshot) =>
               (snapshot.connectionState == ConnectionState.done)
                   ? TabBarView(controller: _controller, children: [
-                      FollowersScreen(
-                          follow: followers,
-                          user: widget.user,
-                          toggleFollowing: toggleFollowing),
-                      FollowersScreen(
-                          follow: following,
-                          user: widget.user,
-                          toggleFollowing: toggleFollowing),
-                      // followWidget(following, false)
+                      if (myProfile.accountId != widget.user.accountId) ...[
+                        FollowersScreen(
+                            follow: followers,
+                            user: widget.user,
+                            toggleFollowing: toggleFollowing),
+                        FollowersScreen(
+                            follow: following,
+                            user: widget.user,
+                            toggleFollowing: toggleFollowing),
+                      ],
+                      if (myProfile.accountId == widget.user.accountId) ...[
+                        FollowersScreen(
+                            follow: followers,
+                            user: widget.user,
+                            toggleFollowing: toggleFollowing),
+                        FollowingScreen(
+                            follow: following,
+                            user: widget.user,
+                            toggleFollowing: toggleFollowing),
+                      ]
                     ])
                   : Center(child: CircularProgressIndicator()),
         ));
