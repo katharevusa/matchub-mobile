@@ -25,8 +25,8 @@ class _FollowingScreenState extends State<FollowingScreen> {
   Profile myProfile;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     followingFuture = getFollowers();
     myProfile = Provider.of<Auth>(context, listen: false).myProfile;
   }
@@ -39,14 +39,15 @@ class _FollowingScreenState extends State<FollowingScreen> {
     following = (responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
         .toList();
-        filteredFollowing = following;
+    filteredFollowing = following;
   }
 
   @override
   Widget build(BuildContext context) {
-    
-    return Scaffold(
-          body: FutureBuilder(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+      body: FutureBuilder(
         future: followingFuture,
         builder: (context, snapshot) => (snapshot.connectionState ==
                 ConnectionState.done)
@@ -82,7 +83,9 @@ class _FollowingScreenState extends State<FollowingScreen> {
                     shrinkWrap: true,
                     separatorBuilder: (context, index) => SizedBox(height: 5),
                     itemBuilder: (context, index) => ListTile(
-                      onTap: () => Navigator.of(context).pushNamed(ProfileScreen.routeName, arguments: filteredFollowing[index].accountId),
+                      onTap: () => Navigator.of(context).pushNamed(
+                          ProfileScreen.routeName,
+                          arguments: filteredFollowing[index].accountId),
                       leading: CircleAvatar(
                         radius: 25,
                         backgroundImage:
@@ -94,45 +97,28 @@ class _FollowingScreenState extends State<FollowingScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6)),
                         child: Text(
-                            (myProfile.following
-                                        .indexOf(filteredFollowing[index].accountId) !=
-                                    -1)
-                                ? "Following"
-                                : "Follow",
+                            (filteredFollowing[index].accountId ==
+                                    myProfile.accountId)
+                                ? "Myself"
+                                : (myProfile.following.indexOf(
+                                            filteredFollowing[index]
+                                                .accountId) !=
+                                        -1)
+                                    ? "Following"
+                                    : "Follow",
                             style: TextStyle(color: Colors.white)),
-                        onPressed: () {
+                        onPressed: () async {
+                          if (filteredFollowing[index].accountId ==
+                              myProfile.accountId) return null;
                           int followId = filteredFollowing[index].accountId;
-                          widget.toggleFollowing(followId);
-                          int followerIndex =
-                              myProfile.following.indexOf(followId);
-                          Profile removeFollower =
-                              filteredFollowing.removeAt(followerIndex);
+                          await widget.toggleFollowing(followId);
 
                           setState(() {
                             myProfile.toggleFollow(followId);
                           });
-                          // widget.update();
-                          Scaffold.of(context).showSnackBar(new SnackBar(
-                            content: Text(
-                                "You've stopped following: ${removeFollower.name}"),
-                            duration: Duration(seconds: 3),
-                            action: SnackBarAction(
-                                label: "Undo",
-                                onPressed: () {
-                                  myProfile.toggleFollow(followId);
-                                  setState(() {
-                                    filteredFollowing.insert(
-                                        followerIndex, removeFollower);
-                                  });
-                                  ApiBaseHelper().postProtected(
-                                      "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
-                                      accessToken:
-                                          Provider.of<Auth>(context).accessToken);
-                                }),
-                          ));
                         },
-                        color: (myProfile.following
-                                    .indexOf(filteredFollowing[index].accountId) >
+                        color: (myProfile.following.indexOf(
+                                    filteredFollowing[index].accountId) >
                                 -1)
                             ? Colors.grey
                             : kAccentColor,
@@ -144,6 +130,6 @@ class _FollowingScreenState extends State<FollowingScreen> {
               )
             : Center(child: CircularProgressIndicator()),
       ),
-    );
+    ));
   }
 }

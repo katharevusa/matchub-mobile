@@ -9,9 +9,10 @@ import 'package:provider/provider.dart';
 
 class FollowersScreen extends StatefulWidget {
   Profile user;
+  List<Profile> follow;
   Function toggleFollowing;
   Function update;
-  FollowersScreen({this.user, this.toggleFollowing, this.update});
+  FollowersScreen({this.follow, this.toggleFollowing, this.user});
   @override
   _FollowersScreenState createState() => _FollowersScreenState();
 }
@@ -25,33 +26,30 @@ class _FollowersScreenState extends State<FollowersScreen> {
   String searchQuery = "";
 
   @override
-  void initState() {
-    super.initState();
-    followersFuture = getFollowers();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // followersFuture = getFollowers();
+    followers = widget.follow;
     myProfile = Provider.of<Auth>(context, listen: false).myProfile;
-  }
-
-  getFollowers() async {
-    Map<String, dynamic> responseData;
-    responseData = await ApiBaseHelper().getProtected(
-        "authenticated/getFollowers/${widget.user.accountId}",
-        Provider.of<Auth>(context, listen: false).accessToken);
-    followers = (responseData['content'] as List)
-        .map((e) => Profile.fromJson(e))
-        .toList();
     filteredFollowers = followers;
   }
+
+  // getFollowers() async {
+  //   Map<String, dynamic> responseData;
+  //   responseData = await ApiBaseHelper().getProtected(
+  //       "authenticated/getFollowers/${widget.user.accountId}",
+  //       Provider.of<Auth>(context, listen: false).accessToken);
+  //   followers = (responseData['content'] as List)
+  //       .map((e) => Profile.fromJson(e))
+  //       .toList();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-          body: FutureBuilder(
-        future: followersFuture,
-        builder: (context, snapshot) => (snapshot.connectionState ==
-                ConnectionState.done)
-            ? Column(
+          body: Column(
                 children: [
                   SizedBox(height: 10),
                   Padding(
@@ -97,22 +95,64 @@ class _FollowersScreenState extends State<FollowersScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6)),
                         child: Text(
-                            (myProfile.following.indexOf(
-                                        filteredFollowers[index].accountId) !=
-                                    -1)
-                                ? "Following"
-                                : "Follow",
+                            (filteredFollowers[index].accountId ==
+                                    myProfile.accountId)
+                                ? "Myself"
+                                : (myProfile.following.indexOf(
+                                            filteredFollowers[index]
+                                                .accountId) !=
+                                        -1)
+                                    ? "Following"
+                                    : "Follow",
                             style: TextStyle(color: Colors.white)),
                         onPressed: () async {
+                          if (filteredFollowers[index].accountId ==
+                              myProfile.accountId) return null;
+
                           int followId = filteredFollowers[index].accountId;
                           await widget.toggleFollowing(followId);
 
                           setState(() {
                             myProfile.toggleFollow(followId);
                           });
-                          // print("toggle follo button");
-                          // widget.update();
                         },
+
+                        //for person specific
+                        // int followId = filteredFollowing[index].accountId;
+                        // widget.toggleFollowing(followId); //backend api call
+                        // int followerIndex =
+                        //     myProfile.following.indexOf(followId);
+                        // Profile removeFollower =
+                        //     following.removeAt(followerIndex);
+
+                        // setState(() {
+                        //   myProfile.toggleFollow(followId);
+                        //   filteredFollowing = following
+                        //       .where((element) => element.name
+                        //           .toUpperCase()
+                        //           .contains(searchQuery.toUpperCase()))
+                        //       .toList();
+                        // });
+                        // // widget.update();
+                        // Scaffold.of(context).showSnackBar(new SnackBar(
+                        //   content: Text(
+                        //       "You've stopped following: ${removeFollower.name}"),
+                        //   duration: Duration(seconds: 3),
+                        //   action: SnackBarAction(
+                        //       label: "Undo",
+                        //       onPressed: () {
+                        //         setState(() {
+                        //           following.insert(
+                        //               followerIndex, removeFollower);
+                        //           myProfile.following = (following);
+                        //         });
+                        //         ApiBaseHelper().postProtected(
+                        //             "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
+                        //             accessToken: Provider.of<Auth>(context)
+                        //                 .accessToken);
+                        //       }),
+                        // ));
+
                         color: (myProfile.following.indexOf(
                                     filteredFollowers[index].accountId) >
                                 -1)
@@ -124,8 +164,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
                   ),
                 ],
               )
-            : Center(child: CircularProgressIndicator()),
-      )),
+            ),
     );
   }
 }
