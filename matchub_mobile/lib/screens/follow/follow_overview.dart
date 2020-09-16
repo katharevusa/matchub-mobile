@@ -54,12 +54,14 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
     _controller.dispose();
     super.dispose();
   }
-  update(){
-    setState((){
-      print("Reached here");
-      print(widget.user.following.length);
-    });
-  }
+
+  // update() {
+  //   setState(() {
+  //     print("Reached here");
+  //     print(widget.user.following.length);
+  //   });
+  // }
+
   toggleFollowing(int followId) async {
     try {
       var responseData;
@@ -74,7 +76,7 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
               accessToken: Provider.of<Auth>(context).accessToken);
         }
       });
-      print("backend method" +widget.user.following.length.toString());
+      print("backend method" + widget.user.following.length.toString());
     } catch (error) {
       print(error.toString());
       showErrorDialog(error.toString(), context);
@@ -102,7 +104,7 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
   Widget build(BuildContext context) {
     myProfile = Provider.of<Auth>(context).myProfile;
     return Scaffold(
-      key: _scaffoldKey,
+        key: _scaffoldKey,
         appBar: AppBar(
           // automaticallyImplyLeading: true,
           title: Text("${widget.user.name}"),
@@ -119,15 +121,22 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
             ],
           ),
         ),
-        body: TabBarView(
-          controller: _controller,
-          children: [
-            FollowersScreen(
-                update: update, user: widget.user, toggleFollowing: toggleFollowing),
-            FollowingScreen(
-                update: update, user: widget.user, toggleFollowing: toggleFollowing),
-            // followWidget(following, false)
-          ],
+        body: FutureBuilder(
+          future: followersFuture,
+          builder: (context, snapshot) =>
+              (snapshot.connectionState == ConnectionState.done)
+                  ? TabBarView(controller: _controller, children: [
+                      FollowersScreen(
+                          follow: followers,
+                          user: widget.user,
+                          toggleFollowing: toggleFollowing),
+                      FollowersScreen(
+                          follow: following,
+                          user: widget.user,
+                          toggleFollowing: toggleFollowing),
+                      // followWidget(following, false)
+                    ])
+                  : Center(child: CircularProgressIndicator()),
         ));
   }
 
