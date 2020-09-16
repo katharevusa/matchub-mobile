@@ -108,14 +108,14 @@ class UserScreen extends StatelessWidget {
                     }
                   }),
                   buildSettingCard(
-                      "Manage Followers",
+                      "Manage Following",
                       Icon(
                         FlutterIcons.user_friends_faw5s,
                         color: Color(0xFFf5f1da),
                       ),
                       () {}),
                   buildSettingCard(
-                      "Manage Following",
+                      "Privacy",
                       Icon(
                         FlutterIcons.user_friends_faw5s,
                         color: Color(0xFF4e89ae),
