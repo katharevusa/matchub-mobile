@@ -7,13 +7,14 @@ part of 'project.dart';
 // **************************************************************************
 
 Project _$ProjectFromJson(Map<String, dynamic> json) {
+  print((json['projectOwners']));
   return Project()
     ..projectId = json['projectId'] as num
     ..projectTitle = json['projectTitle'] as String
     ..projectDescription = json['projectDescription'] as String
     ..country = json['country'] as String
-    ..startDate = json['startDate'] as String
-    ..endDate = json['endDate'] as String
+    ..startDate = DateTime.parse(json['startDate'])
+    ..endDate =  DateTime.parse(json['endDate'])
     ..userFollowers = json['userFollowers'] as List
     ..projStatus = json['projStatus'] as String
     ..upvotes = json['upvotes'] as num
@@ -21,18 +22,20 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..relatedResources = json['relatedResources'] as List
     ..projCreatorId = json['projCreatorId'] as num
     ..spotlight = json['spotlight'] as bool
-    ..spotlightEndTime = json['spotlightEndTime'] as String
+    ..spotlightEndTime = json['spotlightEndTime'] ?? ""
     ..joinRequests = json['joinRequests'] as List
     ..reviews = json['reviews'] as List
-    ..projectBadge = json['projectBadge'] as String
+    ..projectBadge = json['projectBadge'] ?? ""
     ..fundsCampaign = json['fundsCampaign'] as List
     ..meetings = json['meetings'] as List
     ..listOfRequests = json['listOfRequests'] as List
-    ..sdgs = json['sdgs'] as List
+    ..sdgs = json['sdgs'] !=null ?(json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList(): []
     ..kpis = json['kpis'] as List
     ..teamMembers = json['teamMembers'] as List
     ..channels = json['channels'] as List
-    ..projectOwners = json['projectOwners'] as List;
+    ..projectOwners =  json['projectOwners'] !=null ?(json['projectOwners'] as List)
+          .map((i) => TruncatedProfile.fromJson(i))
+          .toList() : [];
 }
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{

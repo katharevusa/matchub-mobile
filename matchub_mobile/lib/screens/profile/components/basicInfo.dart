@@ -23,15 +23,15 @@ class BasicInfo extends StatelessWidget {
         decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
-              BoxShadow(
+              BoxShadow( 
                 offset: Offset(4, 6),
                 blurRadius: 10,
-                color: Colors.blueGrey.withOpacity(0.2),
+                color: Colors.blueGrey.withOpacity(0.1),
               ),
               BoxShadow(
                 offset: Offset(-4, -5),
                 blurRadius: 10,
-                color: Colors.blueGrey.withOpacity(0.2),
+                color: Colors.blueGrey.withOpacity(0.1),
               ),
             ],
             borderRadius: BorderRadius.circular(15)),

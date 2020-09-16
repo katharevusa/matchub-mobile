@@ -5,6 +5,7 @@ import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/components/basicInfo.dart';
 import 'package:matchub_mobile/screens/profile/components/wall.dart';
+import 'package:matchub_mobile/screens/profile/profile_projects.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/widgets/errorDialog.dart';
 import 'package:provider/provider.dart';
@@ -85,16 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   Wall(profile: profile)
                                 ],
                               ))),
-                          Container(
-                            child: ListView(shrinkWrap: true, children: [
-                              Text(
-                                "Nowadays, makiowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have owadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yobecome fast, easy and simple. If yoowadays, making printed materials have become fast, easy and simple. If yong printed materials have become fast, easy and simple. If you want your promotional material to be an eye-catching object, you should make it colored. By way of using inkjet printer this is not hard to make. An inkjet printer is any printer that places extremely small droplets of ink onto paper to create an image.Nowadays, making printed materials have become fast, easy and simple. If you want your promotional material to be an eye-catching object, you should make it colored. By way of using inkjet printer this is not hard to make. An inkjet printer is any printer that places extremely small droplets of ink onto paper to create an image.Nowadays, making printed materials have become fast, easy and simple. If you want your promotional material to be an eye-catching object, you should make it colored. By way of using inkjet printer this is not hard to make. An inkjet printer is any printer that places extremely small droplets of ink onto paper to create an image.Nowadays, making printed materials have become fast, easy and simple. If you want your promotional material to be an eye-catching object, you should make it colored. By way of using inkjet printer this is not hard to make. An inkjet printer is any printer that places extremely small droplets of ink onto paper to create an image.Nowadays, making printed materials have become fast, easy and simple. If you want your promotional material to be an eye-catching object, you should make it colored. By way of using inkjet printer this is not hard to make. An inkjet printer is any printer that places extremely small droplets of ink onto paper to create an image.Nowadays, making printed materials have become fast, easy and simple. If you want your promotional material to be an eye-catching object, you should make it colored. By way of using inkjet printer this is not hard to make. An inkjet printer is any printer that places extremely small droplets of ink onto paper to create an image.",
-                                style: TextStyle(
-                                  height: 1.5,
-                                ),
-                              ),
-                            ]),
-                          ),
+                          ProfileProjects(projects: profile.projectsOwned),
                           Container(
                               height: 100,
                               child: Center(child: Text("Sdfsdfs")))

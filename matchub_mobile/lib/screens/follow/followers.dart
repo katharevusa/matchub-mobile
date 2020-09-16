@@ -49,84 +49,84 @@ class _FollowersScreenState extends State<FollowersScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
           body: Column(
-                children: [
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: TextFormField(
-                        expands: false,
-                        decoration: InputDecoration(
-                          hintText: "Search Profile...",
-                          border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            searchQuery = value;
-                            filteredFollowers = followers
-                                .where((element) => element.name
-                                    .toUpperCase()
-                                    .contains(value.toUpperCase()))
-                                .toList();
-                          });
-                        }),
+        children: [
+          SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: TextFormField(
+                expands: false,
+                decoration: InputDecoration(
+                  hintText: "Search Profile...",
+                  border: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
                   ),
-                  SizedBox(height: 20),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    separatorBuilder: (context, index) => SizedBox(height: 5),
-                    itemBuilder: (context, index) => ListTile(
-                      onTap: () => Navigator.of(context).pushNamed(
-                          ProfileScreen.routeName,
-                          arguments: filteredFollowers[index].accountId),
-                      leading: CircleAvatar(
-                        radius: 25,
-                        backgroundImage:
-                            AssetImage(filteredFollowers[index].profilePhoto),
-                      ),
-                      title: Text(filteredFollowers[index].name),
-                      trailing: FlatButton(
-                        padding: EdgeInsets.symmetric(horizontal: 30),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6)),
-                        child: Text(
-                            (filteredFollowers[index].accountId ==
-                                    myProfile.accountId)
-                                ? "Myself"
-                                : (myProfile.following.indexOf(
-                                            filteredFollowers[index]
-                                                .accountId) !=
-                                        -1)
-                                    ? "Following"
-                                    : "Follow",
-                            style: TextStyle(color: Colors.white)),
-                        onPressed: () async {
-                          if (filteredFollowers[index].accountId ==
-                              myProfile.accountId) return null;
-
-                          int followId = filteredFollowers[index].accountId;
-                          await widget.toggleFollowing(followId);
-
-                          setState(() {
-                            myProfile.toggleFollow(followId);
-                          });
-                        },
-                        color: (myProfile.following.indexOf(
-                                    filteredFollowers[index].accountId) >
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    searchQuery = value;
+                    filteredFollowers = followers
+                        .where((element) => element.name
+                            .toUpperCase()
+                            .contains(value.toUpperCase()))
+                        .toList();
+                  });
+                }),
+          ),
+          SizedBox(height: 20),
+          ListView.separated(
+            shrinkWrap: true,
+            separatorBuilder: (context, index) => SizedBox(height: 5),
+            itemBuilder: (context, index) => ListTile(
+              onTap: () => Navigator.of(context).pushNamed(
+                  ProfileScreen.routeName,
+                  arguments: filteredFollowers[index].accountId),
+              leading: CircleAvatar(
+                radius: 25,
+                backgroundImage:
+                    AssetImage(filteredFollowers[index].profilePhoto),
+              ),
+              title: Text(filteredFollowers[index].name),
+              trailing: FlatButton(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
+                child: Text(
+                    (filteredFollowers[index].accountId == myProfile.accountId)
+                        ? "Myself"
+                        : (myProfile.following.indexOf(
+                                    filteredFollowers[index].accountId) !=
                                 -1)
-                            ? Colors.grey
-                            : kAccentColor,
-                      ),
-                    ),
-                    itemCount: filteredFollowers.length,
-                  ),
-                ],
-              )
+                            ? "Following"
+                            : "Follow",
+                    style: TextStyle(color: Colors.white)),
+                onPressed: () async {
+                  if (filteredFollowers[index].accountId == myProfile.accountId)
+                    return null;
+
+                  int followId = filteredFollowers[index].accountId;
+                  await widget.toggleFollowing(followId);
+
+                  setState(() {
+                    myProfile.toggleFollow(followId);
+                  });
+                },
+                color: (filteredFollowers[index].accountId ==
+                        myProfile.accountId)
+                    ? kSecondaryColor
+                    : (myProfile.following
+                                .indexOf(filteredFollowers[index].accountId) >
+                            -1)
+                        ? Colors.grey
+                        : kAccentColor,
+              ),
             ),
+            itemCount: filteredFollowers.length,
+          ),
+        ],
+      )),
     );
   }
 }

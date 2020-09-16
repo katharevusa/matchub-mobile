@@ -9,7 +9,7 @@ class DescriptionInfo extends StatelessWidget {
   Profile profile;
 
   DescriptionInfo({this.profile});
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
