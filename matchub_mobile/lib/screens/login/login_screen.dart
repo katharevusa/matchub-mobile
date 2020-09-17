@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/screens/login/reset_password.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/rounded_button.dart';
@@ -257,8 +258,12 @@ class _LoginCardState extends State<LoginCard> {
                         color: kAccentColor,
                       ),
                     FlatButton(
-                      child: Text('${'REGISTER'}'),
-                      onPressed: () {},
+                      child: Text('${'Forgot your passowrd?'}'),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ResetPassword(email: _authData['email']),
+                        ));
+                      },
                       padding:
                           EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
