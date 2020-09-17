@@ -14,6 +14,8 @@ import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -55,7 +57,9 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       "fundsCampaign": newProject.fundsCampaign ?? [],
       "meetings": newProject.meetings,
       "listOfRequests": newProject.listOfRequests,
-      "sdgs": newProject.sdgs ?? [],
+      "sdgIds": newProject.sdgs != null
+          ? newProject.sdgs.map((e) => e.sdgId).toList()
+          : [],
       "kpis": newProject.kpis,
       "teamMembers": newProject.teamMembers,
       "channels": newProject.channels,
@@ -74,13 +78,17 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     "Create New Project",
     "Create New Project",
     "Create New Project",
+    "Create New Project",
+    "Create New Project",
   ];
   final List<String> subtitles = [
     "Basic Information",
     "Start Date & Time",
     "End Date & Time",
-    "Upload Photo",
     "Select SDGs",
+    "Upload Profile photo",
+    "Upload Photo",
+    "Upload Documents",
     "Badge Creation",
     "Create Fund Campaign",
   ];
@@ -93,9 +101,12 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     Colors.lime.shade300,
     Colors.brown.shade400,
     Colors.green.shade300,
+    Colors.blue.shade300,
+    Colors.indigo.shade300,
   ];
 
   void createNewProject(context) async {
+    project["projCreatorId"] = Provider.of<Auth>(context).myProfile.accountId;
     project["projectOwnerId"] = Provider.of<Auth>(context).myProfile.accountId;
     final url = "authenticated/createNewProject";
     var accessToken = Provider.of<Auth>(context).accessToken;
@@ -148,7 +159,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                   activeSize: 20.0,
                 ),
               ),
-              itemCount: 6,
+              itemCount: 9,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return IntroItem(
@@ -173,25 +184,37 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                   );
                 } else if (index == 3) {
                   return IntroItem(
+                    title: titles[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: SDG(project),
+                  );
+                } else if (index == 4) {
+                  return IntroItem(
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
                       widget: Document(project));
-                } else if (index == 4) {
-                  return IntroItem(
-                    title: titles[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    //widget: SDGs(project),
-                  );
                 } else if (index == 5) {
+                  return IntroItem(
+                      title: titles[index],
+                      subtitle: subtitles[index],
+                      bg: colors[index],
+                      widget: Document(project));
+                } else if (index == 6) {
+                  return IntroItem(
+                      title: titles[index],
+                      subtitle: subtitles[index],
+                      bg: colors[index],
+                      widget: Document(project));
+                } else if (index == 7) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     // widget: Badge(project),
                   );
-                } else if (index == 6) {
+                } else if (index == 8) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
@@ -213,9 +236,9 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
             alignment: Alignment.bottomRight,
             child: IconButton(
               icon:
-                  Icon(_currentIndex == 6 ? Icons.check : Icons.arrow_forward),
+                  Icon(_currentIndex == 8 ? Icons.check : Icons.arrow_forward),
               onPressed: () {
-                if (_currentIndex != 6) {
+                if (_currentIndex != 8) {
                   _controller.next();
                 }
                 // if (_currentIndex != 5)
@@ -246,6 +269,7 @@ class _Basic_informationState extends State<Basic_information> {
     TextEditingController _descriptionController = new TextEditingController();
     _titleController.text = widget.project["projectTitle"];
     _descriptionController.text = widget.project["projectDescription"];
+    widget.project["country"] = "Singapore";
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
@@ -318,11 +342,18 @@ class _StartState extends State<Start> {
   @override
   Widget build(BuildContext context) {
     print(widget.project["startDate"]);
-    // if (widget.project["startDate"] != "" ||
-    //     widget.project["startDate"] != null) {
-    //   String temp = widget.project["startDate"] + "Z";
-    //   dateTime = DateTime.parse(temp);
-    // }
+    if (widget.project["startDate"] != "" &&
+        widget.project["startDate"] != null) {
+      String temp = widget.project["startDate"] + "Z";
+      dateTime = DateTime.parse(temp);
+    }
+    if (widget.project["startDate"] == "" ||
+        widget.project["startDate"] == null) {
+      widget.project["startDate"] = formatDate(
+          DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
+              dateTime.minute, dateTime.second),
+          [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+    }
     return Column(
       children: <Widget>[
         Text(
@@ -364,10 +395,10 @@ class _EndState extends State<End> {
 
   @override
   Widget build(BuildContext context) {
-    // if (widget.project["endDate"] != "" || widget.project["endDate"] != null) {
-    //   String temp = widget.project["endDate"] + "Z";
-    //   dateTime = DateTime.parse(temp);
-    // }
+    if (widget.project["endDate"] != "" && widget.project["endDate"] != null) {
+      String temp = widget.project["endDate"] + "Z";
+      dateTime = DateTime.parse(temp);
+    }
 
     return Column(
       children: <Widget>[
@@ -396,6 +427,108 @@ class _EndState extends State<End> {
         ),
       ],
     );
+  }
+}
+
+class SDG extends StatefulWidget {
+  Map<String, dynamic> project;
+  SDG(this.project);
+
+  @override
+  _SDGState createState() => _SDGState();
+}
+
+class _SDGState extends State<SDG> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.of(context)
+                  .pushNamed(SDGPicker.routeName)
+                  .then((value) {
+                setState(() {
+                  if (value != null) {
+                    widget.project['sdgIds'].addAll(value);
+                  }
+                  widget.project['sdgIds'] =
+                      widget.project['sdgIds'].toSet().toList();
+                  //    print(widget.project['sdgIds']);
+                });
+              });
+            },
+            child: Container(
+              constraints:
+                  BoxConstraints(minHeight: 20 * SizeConfig.heightMultiplier),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.fromBorderSide(
+                    BorderSide(color: Colors.grey[850]),
+                  )),
+              child: Center(
+                  child: Column(
+                children: [
+                  Text("Select your SDG(s)", style: AppTheme.titleLight),
+                  if (widget.project['sdgIds'] != null) ...[
+                    SizedBox(height: 5),
+                    Text(
+                      "${widget.project['sdgIds'].length} SDG(s) chosen",
+                    )
+                  ]
+                ],
+              )),
+            ),
+          ),
+          SizedBox(height: 20),
+        ],
+      ),
+    );
+    /*  return Container(
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.of(context)
+                  .pushNamed(SDGPicker.routeName)
+                  .then((value) {
+                setState(() {
+                  if (value != null) {
+                    widget.project['sdgIds'].addAll(value);
+                    //   print(widget.project['sdgsIds']);
+                  }
+                  widget.project['sdgIds'] =
+                      widget.project['sdgIds'].toSet().toList();
+                });
+              });
+            },
+            child: Container(
+              constraints:
+                  BoxConstraints(minHeight: 25 * SizeConfig.heightMultiplier),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.fromBorderSide(
+                    BorderSide(color: Colors.grey[850]),
+                  )),
+              child: Center(
+                  child: Column(
+                children: [
+                  Text("Select your SDG(s)", style: AppTheme.titleLight),
+                  if (widget.project['sdgsIds'] != null) ...[
+                    SizedBox(height: 5),
+                    Text(
+                      "${widget.project['sdgsIds'].length} SDG(s) chosen",
+                    )
+                  ]
+                ],
+              )),
+            ),
+          ),
+          SizedBox(height: 20),
+        ],
+      ),
+    );*/
   }
 }
 
@@ -553,147 +686,3 @@ class IntroItem extends StatelessWidget {
     );
   }
 }
-
-/*
-class FileUpload extends StatefulWidget {
-  Resources resource;
-  FileUpload(this.resource);
-  _FileUploadState createState() => _FileUploadState(resource);
-}
-
-class _FileUploadState extends State<FileUpload> {
-  Resources resource;
-  _FileUploadState(this.resource);
-  List<Widget> fileListThumb;
-  List<File> fileList = new List<File>();
-
-  Future pickFiles() async {
-    List<Widget> thumbs = new List<Widget>();
-    fileListThumb.forEach((element) {
-      thumbs.add(element);
-    });
-
-    await FilePicker.getMultiFile(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    ).then((files) {
-      if (files != null && files.length > 0) {
-        files.forEach((element) {
-          List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
-
-          if (picExt.contains(extension(element.path))) {
-            thumbs.add(Padding(
-                padding: EdgeInsets.all(1), child: new Image.file(element)));
-          } else
-            thumbs.add(Container(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                  Icon(Icons.insert_drive_file),
-                  Text(extension(element.path))
-                ])));
-          fileList.add(element);
-          resource.uploadedFiles.add(element.toString());
-          print(resource.uploadedFiles.toList());
-        });
-        setState(() {
-          fileListThumb = thumbs;
-        });
-      }
-    });
-  }
-
-  List<Map> storeNameAndPath(List<File> fileList) {
-    List<Map> s = new List<Map>();
-    if (fileList.length > 0)
-      fileList.forEach((element) {
-        Map a = {
-          'fileName': basename(element.path),
-          'encoded': base64Encode(element.readAsBytesSync())
-        };
-
-        s.add(a);
-      });
-    return s;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (fileListThumb == null)
-      fileListThumb = [
-        InkWell(
-          onTap: pickFiles,
-          child: Container(child: Icon(Icons.add)),
-        )
-      ];
-    // if(!resource.uploadedFiles.isEmpty){
-    //   fileListThumb
-    // }
-    final Map params = new Map();
-    return Scaffold(
-      body: Center(
-          child: Column(
-        children: <Widget>[
-          Expanded(
-            child: Text("Upload documents"),
-          ),
-          Expanded(
-            flex: 4,
-            child: Padding(
-              padding: EdgeInsets.all(5),
-              child: GridView.count(
-                crossAxisCount: 4,
-                children: fileListThumb,
-              ),
-            ),
-          ),
-        ],
-      )),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => createNewResource(
-      //       Provider.of<Auth>(context).accessToken, context),
-      //   child: Text("Create new resource"),
-      // )
-    );
-//     List<Map> attch = toBase64(fileList);
-//     params["attachment"] = jsonEncode(attch);
-//     httpSend(params).then((sukses){
-//       if(sukses==true){
-//           Flushbar(
-//             message: "success :)",
-//             icon: Icon(
-//               Icons.check,
-//               size: 28.0,
-//               color: Colors.blue[300],
-//               ),
-//             duration: Duration(seconds: 3),
-//             leftBarIndicatorColor: Colors.blue[300],
-//           ).show(context);
-//         }
-//         else
-//           Flushbar(
-//             message: "fail :(",
-//             icon: Icon(
-//               Icons.error_outline,
-//               size: 28.0,
-//               color: Colors.blue[300],
-//               ),
-//             duration: Duration(seconds: 3),
-//             leftBarIndicatorColor: Colors.red[300],
-//           ).show(context);
-//     });
-//   },
-//   tooltip: 'Upload File',
-//   child: const Icon(Icons.cloud_upload),
-// ),
-  }
-//   void createNewResource(accessToken, context) async {
-//  if (!_formKey.currentState.validate()) {
-//       // Invalid!
-//       return;
-//     }
-
-//     _formKey.currentState.save();
-}
-*/

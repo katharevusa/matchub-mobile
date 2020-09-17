@@ -74,7 +74,7 @@ class ResetPassword extends StatelessWidget {
                       minLines: 1,
                       maxLines: 1,
                       onChanged: (value) => email = value,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      // autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (enter) {
                          if (enter.length == 0) {
                           return "Please enter your email!";
@@ -86,7 +86,7 @@ class ResetPassword extends StatelessWidget {
                   ),
                   FlatButton(
                     child: Text('Send Confirmation Email'),
-                    onPressed: () async{
+                    onPressed: () async {
                       if (!_formKey.currentState.validate()) return;
                       try {
                         await ApiBaseHelper().post(

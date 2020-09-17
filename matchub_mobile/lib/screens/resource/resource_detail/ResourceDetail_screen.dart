@@ -237,41 +237,6 @@ class Gallery extends StatelessWidget {
     } else {
       imageLinks = resource.photos;
     }
-    return CarouselSlider(
-      // height: 200.0,
-      items: imageLinks.map((imageLink) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.symmetric(horizontal: 5.0),
-              child: Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                  image: AssetImage(imageLink),
-                  fit: BoxFit.cover,
-                )),
-              ),
-            );
-          },
-        );
-      }).toList(),
-
-      // reverse: false, //is false by default (reverses the order of items)
-      // enableInfiniteScroll:
-      //     true, //is true by default (it scrolls back to item 1 after the last item)
-      // autoPlay: true, //is false by default
-      // initialPage: 0, //allows you to set the first item to be displayed
-      // scrollDirection: Axis.horizontal, //can be set to Axis.vertical
-      // pauseAutoPlayOnTouch:
-      //     Duration(seconds: 5), //it pauses the sliding if carousel is touched,
-      // onPageChanged: (int pageNumber) {
-      //   //this triggers everytime a slide changes
-      // },
-      // viewportFraction: 0.8,
-      // enlargeCenterPage: true, //is false by default
-      // aspectRatio: 16 / 9, //if height is not specified, then this value is used
-    );
   }
 }
 

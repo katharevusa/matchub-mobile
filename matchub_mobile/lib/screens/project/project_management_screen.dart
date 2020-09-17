@@ -157,7 +157,7 @@ class _ProjectManagementState extends State<ProjectManagement> {
                 padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
+                  scrollDirection: Axis.vertical,
                   itemCount: collections.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Material(
@@ -202,15 +202,15 @@ class _ProjectManagementState extends State<ProjectManagement> {
             ],
           ),
           const SizedBox(height: 16.0),
-          SliverPadding(
-            padding: const EdgeInsets.all(26.0),
-            sliver: SliverGrid.count(
-              crossAxisCount: 2,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              children: <Widget>[],
-            ),
-          ),
+          // SliverPadding(
+          //   padding: const EdgeInsets.all(26.0),
+          //   sliver: SliverGrid.count(
+          //     crossAxisCount: 2,
+          //     mainAxisSpacing: 10,
+          //     crossAxisSpacing: 10,
+          //     children: <Widget>[],
+          //   ),
+          // ),
         ],
       ),
     );

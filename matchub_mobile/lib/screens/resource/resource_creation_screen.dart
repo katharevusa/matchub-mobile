@@ -496,7 +496,7 @@ class _StartState extends State<Start> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.resource["startTime"] != "" ||
+    if (widget.resource["startTime"] != "" &&
         widget.resource["startTime"] != null) {
       String temp = widget.resource["startTime"] + 'Z';
       dateTime = DateTime.parse(temp);
@@ -543,7 +543,7 @@ class _EndState extends State<End> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.resource["endTime"] != "" ||
+    if (widget.resource["endTime"] != "" &&
         widget.resource["endTime"] != null) {
       String temp = widget.resource["endTime"] + 'Z';
       dateTime = DateTime.parse(temp);

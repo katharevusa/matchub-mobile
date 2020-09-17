@@ -56,7 +56,8 @@ class Profile with ChangeNotifier {
   List projectFollowing;
   List skillSet;
 
-  factory Profile.fromJson(Map<String,dynamic> json) => _$ProfileFromJson(json);
+  factory Profile.fromJson(Map<String, dynamic> json) =>
+      _$ProfileFromJson(json);
   Map<String, dynamic> toJson() => _$ProfileToJson(this);
 
   void toggleFollow(int accountId) {

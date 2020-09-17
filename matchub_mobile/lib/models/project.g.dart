@@ -1,5 +1,3 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'project.dart';
 
 // **************************************************************************
@@ -14,7 +12,7 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..projectDescription = json['projectDescription'] as String
     ..country = json['country'] as String
     ..startDate = DateTime.parse(json['startDate'])
-    ..endDate =  DateTime.parse(json['endDate'])
+    ..endDate = DateTime.parse(json['endDate'])
     ..userFollowers = json['userFollowers'] as List
     ..projStatus = json['projStatus'] as String
     ..upvotes = json['upvotes'] as num
@@ -29,13 +27,17 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..fundsCampaign = json['fundsCampaign'] as List
     ..meetings = json['meetings'] as List
     ..listOfRequests = json['listOfRequests'] as List
-    ..sdgs = json['sdgs'] !=null ?(json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList(): []
+    ..sdgs = json['sdgs'] != null
+        ? (json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList()
+        : []
     ..kpis = json['kpis'] as List
     ..teamMembers = json['teamMembers'] as List
     ..channels = json['channels'] as List
-    ..projectOwners =  json['projectOwners'] !=null ?(json['projectOwners'] as List)
-          .map((i) => TruncatedProfile.fromJson(i))
-          .toList() : [];
+    ..projectOwners = json['projectOwners'] != null
+        ? (json['projectOwners'] as List)
+            .map((i) => TruncatedProfile.fromJson(i))
+            .toList()
+        : [];
 }
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{

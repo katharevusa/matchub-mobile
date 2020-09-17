@@ -7,7 +7,6 @@ class TruncatedProfile {
     TruncatedProfile();
 
     num accountId;
-    String name;
     String uuid;
     String email;
     bool accountLocked;

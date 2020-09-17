@@ -67,8 +67,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
           IconButton(
             color: Colors.black,
             icon: Icon(Icons.add),
-            onPressed: () => Navigator.push(
-                context,
+            onPressed: () => Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                     builder: (context) =>
                         ProjectCreationScreen(newProject: newProject))),

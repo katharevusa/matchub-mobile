@@ -19,21 +19,28 @@ class ProfileProjects extends StatelessWidget {
     return Scaffold(
       body: ListView.builder(
         itemBuilder: (context, index) => ProjectVerticalCard(
-            randomColor: _randomColor, project: projects[index], coverPhoto: coverPhoto[index]),
+            randomColor: _randomColor,
+            project: projects[index],
+            coverPhoto: coverPhoto[index]),
         itemCount: projects.length,
       ),
     );
   }
-  final coverPhoto = ["assets/images/projectdefault1.png","assets/images/projectdefault2.png","assets/images/projectdefault3.png"];
+
+  final coverPhoto = [
+    "assets/images/projectdefault1.png",
+    "assets/images/projectdefault2.png",
+    "assets/images/projectdefault3.png"
+  ];
 }
 
 class ProjectVerticalCard extends StatelessWidget {
-  const ProjectVerticalCard({
-    Key key,
-    @required RandomColor randomColor,
-    @required this.project,
-    this.coverPhoto
-  })  : _randomColor = randomColor,
+  const ProjectVerticalCard(
+      {Key key,
+      @required RandomColor randomColor,
+      @required this.project,
+      this.coverPhoto})
+      : _randomColor = randomColor,
         super(key: key);
 
   final RandomColor _randomColor;
@@ -42,9 +49,9 @@ class ProjectVerticalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context,).pushNamed(
-          ProjectDetailScreen.routeName,
-          arguments: project.projectId),
+      onTap: () => Navigator.of(
+        context,
+      ).pushNamed(ProjectDetailScreen.routeName, arguments: project.projectId),
       child: Container(
         constraints:
             BoxConstraints(minHeight: 20 * SizeConfig.heightMultiplier),
@@ -84,8 +91,7 @@ class ProjectVerticalCard extends StatelessWidget {
                     color: Colors.white,
                     width: 25 * SizeConfig.widthMultiplier,
                     height: 18 * SizeConfig.heightMultiplier,
-                    child:
-                        AttachmentImage(coverPhoto))),
+                    child: AttachmentImage(coverPhoto))),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,7 +146,7 @@ class ProjectVerticalCard extends StatelessWidget {
                               );
                             },
                           )),
-                      Icon(Icons.keyboard_arrow_right_rounded)
+                      Icon(Icons.keyboard_arrow_right)
                     ],
                   )
                 ],

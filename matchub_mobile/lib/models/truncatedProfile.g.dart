@@ -9,8 +9,6 @@ part of 'truncatedProfile.dart';
 TruncatedProfile _$TruncatedProfileFromJson(Map<String, dynamic> json) {
   return TruncatedProfile()
     ..accountId = json['accountId'] as num
-    ..name = json['organizationName'] as String ??
-        (json['firstName'] + " " + json['lastName']) as String
     ..uuid = json['uuid'] as String
     ..email = json['email'] as String
     ..accountLocked = json['accountLocked'] as bool
