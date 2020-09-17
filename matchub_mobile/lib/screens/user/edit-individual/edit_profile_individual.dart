@@ -7,6 +7,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/info_edit_screen.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/interest_edit_screen.dart';
+import 'package:matchub_mobile/screens/user/select_profile_picture.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +35,7 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
       "city": widget.profile.city ?? "",
       "profileDescription": widget.profile.profileDescription ?? "",
       "skillSet": widget.profile.skillSet ?? [],
-      "sdgIds":
-          widget.profile.sdgs.map((e) => e.sdgId).toList() ?? [],
+      "sdgIds": widget.profile.sdgs.map((e) => e.sdgId).toList() ?? [],
     };
   }
 
@@ -100,7 +100,8 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
                     children: <Widget>[
                       InfoEditPage(editedProfile, controller),
                       InterestEditPage(
-                          editedProfile, controller, _updateProfile),
+                          editedProfile, controller,),
+                      ProfilePhotoPicker(editedProfile, controller, _updateProfile)
                     ],
                   ),
                 ),
@@ -119,11 +120,12 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
     _formKey.currentState.save();
     final url = "authenticated/updateIndividual";
     print(url);
-    print(editedProfile['lastName']);
     try {
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(editedProfile));
-      Provider.of<Auth>(context).retrieveUser();
+      // Provider.of<Auth>(context).retrieveUser();
+      Provider.of<Auth>(context).myProfile = Profile.fromJson(response);
+      print(Provider.of<Auth>(context).myProfile.profilePhoto);
       print("Success");
       Navigator.of(context).pop(true);
     } catch (error) {

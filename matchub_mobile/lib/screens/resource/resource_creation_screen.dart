@@ -375,11 +375,17 @@ class _UnitState extends State<Unit> {
   int totalUnit = 0;
   int perUnit;
   int _n = 0;
+  @override
+  initState(){
+    categoryFuture =retrieveCategoryById();
+    super.initState();
+  }
+  
   retrieveCategoryById() async {
     int id = widget.resource["resourceCategoryId"];
     final url = 'authenticated/getResourceCategoryById?resourceCategoryId=$id';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context).accessToken);
+        url, Provider.of<Auth>(this.context, listen: false).accessToken);
     category = ResourceCategory.fromJson(responseData);
     perUnit = category.perUnit;
     print(category.toJson());
@@ -422,7 +428,7 @@ class _UnitState extends State<Unit> {
       );
     } else {
       return FutureBuilder(
-        future: retrieveCategoryById(),
+        future: categoryFuture,
         builder: (context, snapshot) =>
             (snapshot.connectionState == ConnectionState.done)
                 ? Scaffold(
@@ -595,35 +601,35 @@ class _DocumentState extends State<Document> {
       thumbs.add(element);
     });
 
-    await FilePicker.getMultiFile(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    ).then((files) {
-      if (files != null && files.length > 0) {
-        files.forEach((element) {
-          List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
+    // await FilePicker.getMultiFile(
+    //   type: FileType.custom,
+    //   allowedExtensions: ['pdf'],
+    // ).then((files) {
+    //   if (files != null && files.length > 0) {
+    //     files.forEach((element) {
+    //       List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
 
-          if (picExt.contains(extension(element.path))) {
-            thumbs.add(Padding(
-                padding: EdgeInsets.all(1), child: new Image.file(element)));
-          } else
-            thumbs.add(Container(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                  Icon(Icons.insert_drive_file),
-                  Text(basename(element.path)),
-                ])));
-          fileList.add(element);
-          // widget.newResource.uploadedFiles.add(element.toString());
-          // print(widget.newResource.uploadedFiles.toList());
-        });
-        setState(() {
-          fileListThumb = thumbs;
-        });
-      }
-    });
+    //       if (picExt.contains(extension(element.path))) {
+    //         thumbs.add(Padding(
+    //             padding: EdgeInsets.all(1), child: new Image.file(element)));
+    //       } else
+    //         thumbs.add(Container(
+    //             child: Column(
+    //                 crossAxisAlignment: CrossAxisAlignment.center,
+    //                 mainAxisAlignment: MainAxisAlignment.center,
+    //                 children: <Widget>[
+    //               Icon(Icons.insert_drive_file),
+    //               Text(basename(element.path)),
+    //             ])));
+    //       fileList.add(element);
+    //       // widget.newResource.uploadedFiles.add(element.toString());
+    //       // print(widget.newResource.uploadedFiles.toList());
+    //     });
+    //     setState(() {
+    //       fileListThumb = thumbs;
+    //     });
+    //   }
+    // });
   }
 
   List<Map> storeNameAndPath(List<File> fileList) {
@@ -651,7 +657,7 @@ class _DocumentState extends State<Document> {
     // if(!resource.uploadedFiles.isEmpty){
     //   fileListThumb
     // }
-    final Map params = new Map();
+    // final Map params = new Map();
     return Scaffold(
       body: Center(
           child: Column(

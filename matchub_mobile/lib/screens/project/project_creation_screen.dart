@@ -549,35 +549,35 @@ class _DocumentState extends State<Document> {
       thumbs.add(element);
     });
 
-    await FilePicker.getMultiFile(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    ).then((files) {
-      if (files != null && files.length > 0) {
-        files.forEach((element) {
-          List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
+    // await FilePicker.getMultiFile(
+    //   type: FileType.custom,
+    //   allowedExtensions: ['pdf'],
+    // ).then((files) {
+    //   if (files != null && files.length > 0) {
+    //     files.forEach((element) {
+    //       List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
 
-          if (picExt.contains(extension(element.path))) {
-            thumbs.add(Padding(
-                padding: EdgeInsets.all(1), child: new Image.file(element)));
-          } else
-            thumbs.add(Container(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                  Icon(Icons.insert_drive_file),
-                  Text(basename(element.path)),
-                ])));
-          fileList.add(element);
-          // widget.newResource.uploadedFiles.add(element.toString());
-          // print(widget.newResource.uploadedFiles.toList());
-        });
-        setState(() {
-          fileListThumb = thumbs;
-        });
-      }
-    });
+    //       if (picExt.contains(extension(element.path))) {
+    //         thumbs.add(Padding(
+    //             padding: EdgeInsets.all(1), child: new Image.file(element)));
+    //       } else
+    //         thumbs.add(Container(
+    //             child: Column(
+    //                 crossAxisAlignment: CrossAxisAlignment.center,
+    //                 mainAxisAlignment: MainAxisAlignment.center,
+    //                 children: <Widget>[
+    //               Icon(Icons.insert_drive_file),
+    //               Text(basename(element.path)),
+    //             ])));
+    //       fileList.add(element);
+    //       // widget.newResource.uploadedFiles.add(element.toString());
+    //       // print(widget.newResource.uploadedFiles.toList());
+    //     });
+    //     setState(() {
+    //       fileListThumb = thumbs;
+    //     });
+    //   }
+    // });
   }
 
   List<Map> storeNameAndPath(List<File> fileList) {

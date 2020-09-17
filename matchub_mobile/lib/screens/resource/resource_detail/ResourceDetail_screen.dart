@@ -84,11 +84,11 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen>
             ],
             onSelected: (result) {
               if (result == "0") {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ImageCapture(resource)),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => ImageCapture(resource)),
+                // );
               }
               if (result == "1") {
                 // Navigator.push(

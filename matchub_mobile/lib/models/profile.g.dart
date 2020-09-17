@@ -23,8 +23,8 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..country = json['country'] as String ?? ""
     ..city = json['city'] as String ?? ""
     ..address = json['address'] as String ?? ""
-    ..profilePhoto = "assets/images/avatar2.jpg"
-    // ..profilePhoto = json['profilePhoto'] as String
+    // ..profilePhoto = "assets/images/avatar2.jpg"
+    ..profilePhoto = json['profilePhoto'] ?? ""
     ..reputationPoints = json['reputationPoints'] as num
     ..followers = json['followers'] as List
     ..following = json['following'] as List

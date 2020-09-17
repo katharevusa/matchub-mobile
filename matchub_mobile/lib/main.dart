@@ -9,8 +9,10 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 
 void main() {
+    HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -49,5 +51,13 @@ class MyApp extends StatelessWidget {
         );
       });
     });
+  }
+  
+}
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }

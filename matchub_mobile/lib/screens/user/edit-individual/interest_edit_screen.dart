@@ -12,10 +12,9 @@ import 'package:provider/provider.dart';
 
 class InterestEditPage extends StatefulWidget {
   final Map<String, dynamic> profile;
-  Function updateProfile;
   PageController controller;
 
-  InterestEditPage(this.profile, this.controller, this.updateProfile);
+  InterestEditPage(this.profile, this.controller);
   @override
   _InterestEditPageState createState() => _InterestEditPageState();
 }
@@ -155,13 +154,14 @@ class _InterestEditPageState extends State<InterestEditPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("2/2", style: TextStyle(color: Colors.grey)),
+              child: Text("2/3", style: TextStyle(color: Colors.grey)),
             ),
             RaisedButton(
                 color: kSecondaryColor,
-                onPressed: () => widget.updateProfile(
-                    Provider.of<Auth>(context).accessToken, context),
-                child: Text("Submit")),
+                onPressed: () => widget.controller.animateToPage(3,
+                    curve: Curves.decelerate,
+                    duration: Duration(milliseconds: 800)),
+                child: Text("Next")),
           ],
         ),
       ),

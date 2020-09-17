@@ -252,13 +252,13 @@ class _InfoEditPageState extends State<InfoEditPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("1/2", style: TextStyle(color: Colors.grey)),
+              child: Text("1/3", style: TextStyle(color: Colors.grey)),
             ),
             RaisedButton(
                 color: kSecondaryColor,
-                onPressed: () => widget.controller.animateToPage(2,
+                onPressed: () => widget.controller.animateToPage(1,
                     curve: Curves.decelerate,
-                    duration: Duration(milliseconds: 800)),
+                    duration: Duration(milliseconds: 500)),
                 child: Text("Next")),
           ],
         ),

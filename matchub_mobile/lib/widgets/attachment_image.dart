@@ -7,35 +7,38 @@ class AttachmentImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return imageUrl != null
-        ?
-        // Image(
-        //     image: NetworkImage(
-        //     "http://192.168.72.136:8080/api/v1/images/$imageUrl"),
-        //     fit: BoxFit.cover,
-        //     loadingBuilder: (context, child, loadingProgress) {
-        //       if (loadingProgress == null) return child;
-        //       return Image.asset(
-        //         "assets/images/loading.jpg",
-        //         fit: BoxFit.contain,
-        //       );
-        //     },
-        //     errorBuilder: (context, error, stackTrace) => Image.asset(
-        //       "assets/images/loading.jpg",
-        //       fit: BoxFit.cover,
-        //     ),
-        //   )
-        Image(
-            image: AssetImage(
-              imageUrl,
+    print(imageUrl);
+    return imageUrl.isNotEmpty
+        ? Image(
+            image: NetworkImage(
+                "https://192.168.72.136:8443/api/v1/${imageUrl.substring(30)}"),
+            fit: BoxFit.cover,errorBuilder: (context, error, stackTrace) => Image.asset(
+              "assets/images/avatar.png",
+              fit: BoxFit.cover,
             ),
-            fit: BoxFit.cover,
+            // loadingBuilder: (context, child, loadingProgress) {
+            //   if (loadingProgress == null) return child;
+            //   return Image.asset(
+            //     "assets/images/loading.jpg",
+            //     fit: BoxFit.contain,
+            //   );
+            // },
+            // errorBuilder: (context, error, stackTrace) => Image.asset(
+            //   "assets/images/loading.jpg",
+            //   fit: BoxFit.cover,
+            // ),
           )
+        // Image(
+        //     image: AssetImage(
+        //       imageUrl,
+        //     ),
+        //     fit: BoxFit.cover,
+        //   )
         : Image.asset(
-            "assets/images/loading.jpg",
+            "assets/images/avatar.png",
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => Image.asset(
-              "assets/images/loading.jpg",
+              "assets/images/avatar.png",
               fit: BoxFit.cover,
             ),
           );

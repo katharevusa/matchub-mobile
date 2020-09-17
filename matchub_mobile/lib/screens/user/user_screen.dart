@@ -3,6 +3,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:matchub_mobile/helpers/sdgs.dart';
 import 'package:matchub_mobile/models/profile.dart';
+import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'dart:convert';
 // import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
@@ -12,11 +13,18 @@ import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organ
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import 'package:provider/provider.dart';
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
   static const routeName = "/user-screen";
+
+  @override
+  _UserScreenState createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void dismissSnackBar() {
@@ -35,9 +43,12 @@ class UserScreen extends StatelessWidget {
               SizedBox(height: 20),
               ListTile(
                   dense: true,
-                  leading: CircleAvatar(
-                    radius: 25,
-                    backgroundImage: AssetImage("assets/images/avatar2.jpg"),
+                  leading: ClipOval(
+                    child: Container(
+                        height: 50,
+                        width: 50,
+                        child: AttachmentImage(
+                            profile.profilePhoto)),
                   ),
                   title: Text(
                     "${profile.name}",
@@ -51,7 +62,8 @@ class UserScreen extends StatelessWidget {
                       context,
                       rootNavigator: true,
                     ).pushNamed(ProfileScreen.routeName,
-                        arguments: Provider.of<Auth>(context).myProfile.accountId);
+                        arguments:
+                            Provider.of<Auth>(context).myProfile.accountId);
                   }),
               Divider(
                 thickness: 2,
@@ -69,7 +81,7 @@ class UserScreen extends StatelessWidget {
                       Icon(FlutterIcons.edit_fea, color: Color(0xFFa8e6cf)),
                       () {
                     if (!profile.isOrgnisation) {
-                    dismissSnackBar();
+                      dismissSnackBar();
                       Navigator.of(
                         context,
                         rootNavigator: true,
@@ -83,12 +95,13 @@ class UserScreen extends StatelessWidget {
                             content: Text("Profile updated successfully"),
                             duration: Duration(seconds: 1),
                           ));
+                          setState(() {
+                            print("Individual");
+                          });
                         }
                       });
-                      ;
-                      print("Individual");
                     } else {
-                    dismissSnackBar();
+                      dismissSnackBar();
                       Navigator.of(
                         context,
                         rootNavigator: true,
@@ -102,9 +115,11 @@ class UserScreen extends StatelessWidget {
                             content: Text("Profile updated successfully"),
                             duration: Duration(seconds: 1),
                           ));
+                          setState(() {
+                            print("Orgnisation");
+                          });
                         }
                       });
-                      print("Orgnisation");
                     }
                   }),
                   buildSettingCard(
@@ -112,8 +127,13 @@ class UserScreen extends StatelessWidget {
                       Icon(
                         FlutterIcons.user_friends_faw5s,
                         color: Color(0xFFf5f1da),
-                      ),
-                      () {}),
+                      ), () {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                      builder: (context) =>
+                          FollowOverviewScreen(user: profile, initialTab: 0),
+                    ));
+                  }),
                   buildSettingCard(
                       "Privacy",
                       Icon(
@@ -171,13 +191,14 @@ class UserScreen extends StatelessWidget {
                 children: [
                   ListTile(
                     onTap: () {
-                    dismissSnackBar();
+                      dismissSnackBar();
                       Navigator.of(
                         context,
                         rootNavigator: true,
                       ).pushNamed(ChangePasswordScreen.routeName).then((value) {
                         if (value != null && value) {
                           Scaffold.of(context).showSnackBar(new SnackBar(
+                            key: UniqueKey(),
                             content: Text("Password updated successfully"),
                             duration: Duration(seconds: 1),
                           ));
