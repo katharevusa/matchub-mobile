@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:matchub_mobile/models/project.dart';
 import 'package:matchub_mobile/screens/project/drawerMenu.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
+import 'package:matchub_mobile/screens/project/project_creation_screen.dart';
 
 class ProjectScreen extends StatefulWidget {
   static const routeName = "/project-screen";
@@ -27,6 +29,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   Widget build(BuildContext context) {
     final Color primaryColor = Color(0xffE70F0B);
     List<bool> _isSelected = [true, false, false];
+    final newProject = new Project();
     List<String> announcements = [
       "Lorem ipsum dolor sit amet, consecteutur adsd Ut adipisicing dolore incididunt minim",
       "Lorem ipsum dolor sit amet, consecteutur adsd Ut adipisicing dolore incididunt minim",
@@ -64,7 +67,11 @@ class _ProjectScreenState extends State<ProjectScreen> {
           IconButton(
             color: Colors.black,
             icon: Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ProjectCreationScreen(newProject: newProject))),
           )
         ],
         automaticallyImplyLeading: false,

@@ -288,12 +288,12 @@ class _DescriptionState extends State<Description> {
   ResourceCategory category;
   Future categoryFuture;
 
-  Future<bool> getCategoryById(int id) async {
-    final url = 'authenticated/getResourceCategoryById?id=$id';
-    final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context).accessToken);
-    category = ResourceCategory.fromJson(responseData);
-  }
+  // Future<bool> getCategoryById(int id) async {
+  //   final url = 'authenticated/getResourceCategoryById?id=$id';
+  //   final responseData = await _helper.getProtected(
+  //       url, Provider.of<Auth>(this.context).accessToken);
+  //   category = ResourceCategory.fromJson(responseData);
+  // }
 
   Widget build(BuildContext context) {
     String status;
@@ -315,58 +315,52 @@ class _DescriptionState extends State<Description> {
       enddatetime = resource.endTime;
     }
 
-    return FutureBuilder(
-      future: getCategoryById(resource.resourceId),
-      builder: (context, snapshot) => (snapshot.connectionState ==
-              ConnectionState.done)
-          ? SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: Text("Description"),
-                          subtitle: Text(resource.resourceDescription),
-                          leading: Icon(Icons.leak_add),
-                        ),
-                        ListTile(
-                          title: Text("Status"),
-                          subtitle: Text(status),
-                          leading: Icon(Icons.event_available),
-                        ),
-                        ListTile(
-                          title: Text("Start Date & Time"),
-                          subtitle: Text(startdatetime),
-                          leading: Icon(Icons.event_note),
-                        ),
-                        ListTile(
-                          title: Text("End Date & Time"),
-                          subtitle: Text(enddatetime),
-                          leading: Icon(Icons.event_note),
-                        ),
-                        ListTile(
-                          title: Text(category.resourceCategoryName),
-                          subtitle: Text(category.resourceCategoryDescription),
-                          leading: Icon(Icons.category),
-                        ),
-                        ListTile(
-                          title: Text("Unit"),
-                          subtitle: Text(resource.units.toString()),
-                          leading: Icon(Icons.format_underlined),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(child: MatchedProjects(resource)),
-                ],
-              ),
-            )
-          : Center(child: CircularProgressIndicator()),
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  title: Text("Description"),
+                  subtitle: Text(resource.resourceDescription),
+                  leading: Icon(Icons.leak_add),
+                ),
+                ListTile(
+                  title: Text("Status"),
+                  subtitle: Text(status),
+                  leading: Icon(Icons.event_available),
+                ),
+                ListTile(
+                  title: Text("Start Date & Time"),
+                  subtitle: Text(startdatetime),
+                  leading: Icon(Icons.event_note),
+                ),
+                ListTile(
+                  title: Text("End Date & Time"),
+                  subtitle: Text(enddatetime),
+                  leading: Icon(Icons.event_note),
+                ),
+                ListTile(
+                  //      title: Text(category.resourceCategoryName),
+                  //       subtitle: Text(category.resourceCategoryDescription),
+                  leading: Icon(Icons.category),
+                ),
+                ListTile(
+                  title: Text("Unit"),
+                  subtitle: Text(resource.units.toString()),
+                  leading: Icon(Icons.format_underlined),
+                ),
+              ],
+            ),
+          ),
+          Container(child: MatchedProjects(resource)),
+        ],
+      ),
     );
   }
 }

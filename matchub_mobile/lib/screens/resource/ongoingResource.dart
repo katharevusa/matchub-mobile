@@ -30,9 +30,9 @@ class _OngoingResourceState extends State<OngoingResource> {
   String _selected = "All";
 
   void selecteResource(BuildContext ctx, Resources individualResource) {
-    Navigator.of(ctx, rootNavigator: true).pushNamed(
-        ResourceDetailScreen.routeName,
-        arguments: individualResource);
+    Navigator.of(
+      ctx,
+    ).pushNamed(ResourceDetailScreen.routeName, arguments: individualResource);
   }
 
   @override

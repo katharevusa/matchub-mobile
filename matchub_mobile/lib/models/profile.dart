@@ -9,7 +9,7 @@ part 'profile.g.dart';
 
 @JsonSerializable()
 class Profile with ChangeNotifier {
-    Profile();
+  Profile();
 
   num accountId;
   String name;
