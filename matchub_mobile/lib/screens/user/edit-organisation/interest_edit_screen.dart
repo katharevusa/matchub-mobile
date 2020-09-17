@@ -40,7 +40,8 @@ class _InterestEditPageState extends State<InterestEditPage> {
                                 .then((value) {
                               setState(() {
                                 if (value != null) {
-                                  widget.profile['sdgIds'].addAll(value);
+                                  // (widget.profile['sdgIds'] as List)..addAll(value)..toSet();
+                                  widget.profile['sdgIds'] = (value);
                                 }
                                 print(widget.profile['sdgIds']);
                               });
@@ -64,7 +65,29 @@ class _InterestEditPageState extends State<InterestEditPage> {
                                   SizedBox(height: 5),
                                   Text(
                                     "${widget.profile['sdgIds'].length} SDG(s) chosen",
-                                  )
+                                  ),
+                                  SizedBox(height: 5),
+                                  GridView.builder(
+                                      shrinkWrap: true,
+                                      gridDelegate:
+                                          new SliverGridDelegateWithFixedCrossAxisCount(
+                                              // mainAxisSpacing: 10,
+                                              // crossAxisSpacing: 10,
+                                              childAspectRatio: 1,
+                                              crossAxisCount: 3),
+                                      itemCount:
+                                          widget.profile['sdgIds'].length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        int i =
+                                            (widget.profile['sdgIds'][index]);
+                                        i++;
+                                        return Container(
+                                          // height:50,
+                                          child: Image.asset(
+                                              "assets/icons/goal$i.png"),
+                                        );
+                                      }),
                                 ]
                               ],
                             )),

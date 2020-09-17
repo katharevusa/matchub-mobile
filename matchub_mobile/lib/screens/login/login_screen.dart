@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/screens/login/reset_password.dart';
+import 'package:matchub_mobile/screens/login/register_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/rounded_button.dart';
 import 'package:matchub_mobile/widgets/errorDialog.dart';
@@ -161,26 +163,31 @@ class _LoginCardState extends State<LoginCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(
-                  height: deviceSize.height * 0.3,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                          top: deviceSize.height * 0.1,
-                          left: deviceSize.width * 0.1,
-                          child: Text(
-                            'Welcome\nBack',
-                            style: TextStyle(
-                              height: 1.1,
-                              color: Colors.grey[50],
-                              fontSize: 44,
-                            ),
-                          )),
-                    ],
-                  )),
+              Padding(
+                padding: EdgeInsets.all(10 *SizeConfig.widthMultiplier),
+                child: Row(children: [
+                  Expanded(
+                                      child: Text(
+                      'Welcome\nBack',
+                      style: TextStyle(
+                        height: 1.1,
+                        color: Colors.grey[50],
+                        fontSize: 44,
+                      ),
+                      // )),
+                    ),
+                  ),
+                  Image.asset(
+                    "assets/icons/logo.png",
+                    width: SizeConfig.widthMultiplier * 18,
+                  )
+                ]),
+              ),
+
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: deviceSize.width * 0.1,
+                  vertical: deviceSize.height*0.04
                 ),
                 child: Column(
                   children: [
@@ -258,10 +265,24 @@ class _LoginCardState extends State<LoginCard> {
                         color: kAccentColor,
                       ),
                     FlatButton(
-                      child: Text('${'Forgot your passowrd?'}'),
+                      child: Text('${'Forgot your password?'}', style: TextStyle(color: Colors.grey[850])),
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ResetPassword(email: _authData['email']),
+                          builder: (context) =>
+                              ResetPassword(email: _authData['email']),
+                        ));
+                      },
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      textColor: kAccentColor,
+                    ),
+                    FlatButton(
+                      child: Text('${'Dont have an account? Sign up now'}', style: TextStyle(color: Colors.grey[850])),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              RegisterScreen(),
                         ));
                       },
                       padding:

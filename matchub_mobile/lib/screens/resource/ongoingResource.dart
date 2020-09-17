@@ -94,10 +94,9 @@ class _OngoingResourceState extends State<OngoingResource> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FlatButton.icon(
-          onPressed: () => Navigator.push(
-              context,
+          onPressed: () => Navigator.of(context, rootNavigator:true).push(
               MaterialPageRoute(
-                  builder: (context) =>
+                  builder: (context,) =>
                       ResourceCreationScreen(newResource: newResource))),
           icon: Icon(Icons.add),
           label: Text("New")),

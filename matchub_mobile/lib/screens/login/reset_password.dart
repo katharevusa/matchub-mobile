@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
-import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/helpers/validation.dart';
 import 'package:matchub_mobile/widgets/errorDialog.dart';
-import 'package:provider/provider.dart';
 
 class ResetPassword extends StatelessWidget {
   static const routeName = "/reset-password";
@@ -13,7 +12,6 @@ class ResetPassword extends StatelessWidget {
 
   Map<String, String> emailMap = {"password": null};
 
-  sendPasswordReset() async {}
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
@@ -78,8 +76,10 @@ class ResetPassword extends StatelessWidget {
                       onChanged: (value) => email = value,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (enter) {
-                        if (enter.length == 0) {
+                         if (enter.length == 0) {
                           return "Please enter your email!";
+                        } else if(!validateEmail(enter)){
+                          return "Please enter a valid email address";
                         }
                       },
                     ),

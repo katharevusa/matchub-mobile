@@ -44,7 +44,6 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("SDGS: +=============" + editedProfile['sdgs']);
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Stack(

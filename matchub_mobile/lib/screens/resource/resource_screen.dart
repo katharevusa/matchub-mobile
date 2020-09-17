@@ -51,7 +51,6 @@ class _ResourceScreenState extends State<ResourceScreen>
                   drawer: NavDrawer(),
                   appBar: AppBar(
                     title: Text("Resource Overview"),
-                    backgroundColor: Color.fromRGBO(64, 133, 140, 0.8),
                     elevation: 0.0,
                   ),
                   body: DefaultTabController(
