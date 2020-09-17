@@ -22,15 +22,15 @@ class _ResourceScreenState extends State<ResourceScreen>
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     resourcesFuture = retrieveResources();
   }
 
   retrieveResources() async {
     final url = 'authenticated/getAllResources';
     final responseData =
-        await _helper.getProtected(url, Provider.of<Auth>(context).accessToken);
+        await _helper.getProtected(url, Provider.of<Auth>(context, listen: false).accessToken);
     listOfResources = (responseData['content'] as List)
         .map((e) => Resources.fromJson(e))
         .toList();
@@ -44,23 +44,19 @@ class _ResourceScreenState extends State<ResourceScreen>
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: retrieveResources(),
+      future: resourcesFuture,
       builder: (context, snapshot) =>
           (snapshot.connectionState == ConnectionState.done)
-              ? Scaffold(
+              ? DefaultTabController(
+                    length: 3,
+                    child: Scaffold(
                   drawer: NavDrawer(),
                   appBar: AppBar(
                     title: Text("Resource Overview"),
                     backgroundColor: Color.fromRGBO(64, 133, 140, 0.8),
                     elevation: 0.0,
-                  ),
-                  body: DefaultTabController(
-                    length: 3,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          constraints: BoxConstraints.expand(height: 50),
-                          child: TabBar(
+                    bottom:TabBar(
+                      
                             tabs: [
                               Tab(text: "Ongoing"),
                               Tab(text: "Expired"),
@@ -69,10 +65,9 @@ class _ResourceScreenState extends State<ResourceScreen>
                             labelColor: Color.fromRGBO(64, 133, 140, 0.8),
                             indicatorColor: Color.fromRGBO(64, 133, 140, 0.8),
                           ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: TabBarView(children: [
+                  ),
+                  body:  
+                        TabBarView(children: [
                               Container(
                                 child: OngoingResource(listOfResources),
                               ),
@@ -83,10 +78,8 @@ class _ResourceScreenState extends State<ResourceScreen>
                                 child: OngoingResource(listOfResources),
                               ),
                             ]),
-                          ),
-                        )
-                      ],
-                    ),
+                      
+                    
                   ),
                 )
               : Center(child: CircularProgressIndicator()),

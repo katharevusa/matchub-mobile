@@ -21,7 +21,7 @@ class InterestEditPage extends StatefulWidget {
 }
 
 class _InterestEditPageState extends State<InterestEditPage> {
-  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
+  GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>(debugLabel: '_tagStateKey');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +71,7 @@ class _InterestEditPageState extends State<InterestEditPage> {
                             )),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 20), 
                         Tags(
                             textField: TagsTextField(
                           textStyle: TextStyle(fontSize: 16),

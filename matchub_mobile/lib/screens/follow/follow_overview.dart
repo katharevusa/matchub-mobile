@@ -77,7 +77,7 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
         }
         getFollowers();
       });
-      print("backend method" + widget.user.following.length.toString());
+      // print("backend method" + widget.user.following.length.toString());
     } catch (error) {
       print(error.toString());
       showErrorDialog(error.toString(), context);
@@ -98,7 +98,7 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
     following = (responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
         .toList();
-    print("Followers length" + following.length.toString());
+    // print("Followers length" + following.length.toString());
   }
 
   @override

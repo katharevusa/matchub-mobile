@@ -149,7 +149,6 @@ class _FollowingScreenState extends State<FollowingScreen> {
                                           followerIndex, removeFollower);
                                       widget.toggleFollowing(followId);
                                       myProfile.toggleFollow(followId);
-
                                       setState(() {
                                         filteredFollowing = following
                                             .where((element) => element.name
@@ -161,11 +160,15 @@ class _FollowingScreenState extends State<FollowingScreen> {
                                     }),
                               ));
                             },
-                            color: (myProfile.following.indexOf(
-                                        filteredFollowing[index].accountId) >
-                                    -1)
-                                ? Colors.grey
-                                : kAccentColor,
+                            color: (filteredFollowing[index].accountId ==
+                                    myProfile.accountId)
+                                ? kSecondaryColor
+                                : (myProfile.following.indexOf(
+                                            filteredFollowing[index]
+                                                .accountId) >
+                                        -1)
+                                    ? Colors.grey
+                                    : kAccentColor,
                           ),
                         ),
                         itemCount: filteredFollowing.length,

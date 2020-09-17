@@ -8,14 +8,24 @@ import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
-class BasicInfo extends StatelessWidget {
+class BasicInfo extends StatefulWidget {
   Profile profile;
+  Function follow;
+  BasicInfo({this.profile, this.follow});
 
-  BasicInfo({this.profile});
+  @override
+  _BasicInfoState createState() => _BasicInfoState();
+}
+
+class _BasicInfoState extends State<BasicInfo> {
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
+    Profile myProfile = Provider.of<Auth>(context).myProfile;
+    print(myProfile.following);
+    print(widget.profile.accountId);
+
     return Container(
         margin: EdgeInsets.only(top: 20, right: 20, left: 20),
         width: 100 * SizeConfig.widthMultiplier,
@@ -26,12 +36,12 @@ class BasicInfo extends StatelessWidget {
               BoxShadow(
                 offset: Offset(4, 6),
                 blurRadius: 10,
-                color: Colors.blueGrey.withOpacity(0.2),
+                color: Colors.blueGrey.withOpacity(0.1),
               ),
               BoxShadow(
                 offset: Offset(-4, -5),
                 blurRadius: 10,
-                color: Colors.blueGrey.withOpacity(0.2),
+                color: Colors.blueGrey.withOpacity(0.1),
               ),
             ],
             borderRadius: BorderRadius.circular(15)),
@@ -46,7 +56,7 @@ class BasicInfo extends StatelessWidget {
                     child: SizedBox(
                         height: 16 * SizeConfig.heightMultiplier,
                         width: 16 * SizeConfig.heightMultiplier,
-                        child: AttachmentImage(profile.profilePhoto)),
+                        child: AttachmentImage(widget.profile.profilePhoto)),
                   ),
                   Container(
                     width: 48 * SizeConfig.widthMultiplier,
@@ -56,18 +66,18 @@ class BasicInfo extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                         Text(
-                            "${profile.name}",
-                            style: AppTheme.titleLight,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        
+                        Text(
+                          "${widget.profile.name}",
+                          style: AppTheme.titleLight,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         Text("Stakeholder", style: AppTheme.subTitleLight),
                         SizedBox(height: 10),
                         Container(
                             width: 44 * SizeConfig.widthMultiplier,
-                            constraints: BoxConstraints(minHeight: 8 * SizeConfig.heightMultiplier),
+                            constraints: BoxConstraints(
+                                minHeight: 8 * SizeConfig.heightMultiplier),
                             decoration: BoxDecoration(
                               color: Color(0xFF7B89A4).withOpacity(0.1),
                               borderRadius: BorderRadius.circular(10),
@@ -88,7 +98,8 @@ class BasicInfo extends StatelessWidget {
                                         Text(
                                           NumberFormat.compactCurrency(
                                                   decimalDigits: 0, symbol: '')
-                                              .format(profile.reputationPoints),
+                                              .format(widget
+                                                  .profile.reputationPoints),
                                           style: TextStyle(fontSize: 17),
                                         ),
                                       ],
@@ -102,7 +113,7 @@ class BasicInfo extends StatelessWidget {
                                           .pushNamed(
                                         FollowOverviewScreen.routeName,
                                         arguments: {
-                                          "profile": profile,
+                                          "profile": widget.profile,
                                           "initialTab": 0
                                         },
                                       );
@@ -121,7 +132,7 @@ class BasicInfo extends StatelessWidget {
                                                 NumberFormat.compactCurrency(
                                                         decimalDigits: 0,
                                                         symbol: '')
-                                                    .format(profile
+                                                    .format(widget.profile
                                                         .followers.length),
                                                 style: TextStyle(fontSize: 17),
                                               ),
@@ -135,7 +146,7 @@ class BasicInfo extends StatelessWidget {
                                         .pushNamed(
                                             FollowOverviewScreen.routeName,
                                             arguments: {
-                                          "profile": profile,
+                                          "profile": widget.profile,
                                           "initialTab": 1
                                         });
                                   },
@@ -153,8 +164,8 @@ class BasicInfo extends StatelessWidget {
                                               NumberFormat.compactCurrency(
                                                       decimalDigits: 0,
                                                       symbol: '')
-                                                  .format(
-                                                      profile.following.length),
+                                                  .format(widget.profile
+                                                      .following.length),
                                               style: TextStyle(fontSize: 17),
                                             ),
                                           ])),
@@ -175,13 +186,41 @@ class BasicInfo extends StatelessWidget {
                       borderRadius: new BorderRadius.circular(5.0)),
                   child: Text("Contact"),
                 )),
+                 if (widget.profile.accountId != myProfile.accountId) ...[SizedBox(width: 10),
+                Expanded(
+                    child: OutlineButton(
+                  color: (widget.profile.accountId == myProfile.accountId)
+                      ? kSecondaryColor
+                      : (myProfile.following.indexOf(widget.profile.accountId) >
+                              -1)
+                          ? Colors.grey[200]
+                          : kAccentColor,
+                  onPressed: () {
+                    if (widget.profile.accountId == myProfile.accountId)
+                      return null;
+                    widget.follow(widget.profile.accountId);
+                    setState(() => print(widget.profile.accountId));
+                    myProfile.toggleFollow(widget.profile.accountId);
+                    print(myProfile.following);
+                  },
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(5.0)),
+                  child: (widget.profile.accountId == myProfile.accountId)
+                      ? Text("Me")
+                      : (myProfile.following.indexOf(widget.profile.accountId) >
+                              -1)
+                          ? Text("Unfollow") : Text("Follow"),
+                ))],
                 SizedBox(width: 10),
                 Expanded(
                     child: OutlineButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Share.share(
+                        'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this profile, he\'s been doing great work!\nhttp://localhost:3000/profile/${widget.profile.uuid}');
+                  },
                   shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(5.0)),
-                  child: Text("Edit"),
+                  child: Text("Share"),
                 ))
               ],
             )
