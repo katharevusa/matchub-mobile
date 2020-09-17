@@ -70,7 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: PageView(
                   controller: _controller,
                   children: <Widget>[
-                    AuthDetails(newStakeholder),
+                    AuthDetails(newStakeholder, _controller),
                     BasicDetails(isOrganisation, newStakeholder, registerUser)
                   ],
 
@@ -121,7 +121,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 class AuthDetails extends StatefulWidget {
   Map<String, dynamic> newStakeholder;
-  AuthDetails(this.newStakeholder);
+ PageController _controller;
+ 
+  AuthDetails(this.newStakeholder, this._controller);
 
   @override
   _AuthDetailsState createState() => _AuthDetailsState();
@@ -147,7 +149,7 @@ class _AuthDetailsState extends State<AuthDetails> with AutomaticKeepAliveClient
               height: 30 * SizeConfig.heightMultiplier, fit: BoxFit.cover),
         ),
         TextFormField(
-          // autofocus: true,
+          autofocus: true,
           decoration: InputDecoration(
             fillColor: Colors.white,
             filled: true,
@@ -260,7 +262,8 @@ class _AuthDetailsState extends State<AuthDetails> with AutomaticKeepAliveClient
               return "The password you've entered does not match!";
             }
           },
-        )
+        ),SizedBox(height:20),
+        RaisedButton(child:Text("Next"), onPressed: ()=>widget._controller.jumpToPage(1),)
       ],
     ));
   }
