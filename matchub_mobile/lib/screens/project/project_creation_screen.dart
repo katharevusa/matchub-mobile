@@ -14,6 +14,8 @@ import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -55,7 +57,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       "fundsCampaign": newProject.fundsCampaign ?? [],
       "meetings": newProject.meetings,
       "listOfRequests": newProject.listOfRequests,
-      "sdgs": newProject.sdgs ?? [],
+      "sdgIds": newProject.sdgs.map((e) => e.sdgId).toList() ?? [],
       "kpis": newProject.kpis,
       "teamMembers": newProject.teamMembers,
       "channels": newProject.channels,
@@ -182,7 +184,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
-                    //widget: SDGs(project),
+                    widget: SDG(project),
                   );
                 } else if (index == 5) {
                   return IntroItem(
@@ -318,11 +320,11 @@ class _StartState extends State<Start> {
   @override
   Widget build(BuildContext context) {
     print(widget.project["startDate"]);
-    // if (widget.project["startDate"] != "" ||
-    //     widget.project["startDate"] != null) {
-    //   String temp = widget.project["startDate"] + "Z";
-    //   dateTime = DateTime.parse(temp);
-    // }
+    if (widget.project["startDate"] != "" &&
+        widget.project["startDate"] != null) {
+      String temp = widget.project["startDate"] + "Z";
+      dateTime = DateTime.parse(temp);
+    }
     return Column(
       children: <Widget>[
         Text(
@@ -364,10 +366,10 @@ class _EndState extends State<End> {
 
   @override
   Widget build(BuildContext context) {
-    // if (widget.project["endDate"] != "" || widget.project["endDate"] != null) {
-    //   String temp = widget.project["endDate"] + "Z";
-    //   dateTime = DateTime.parse(temp);
-    // }
+    if (widget.project["endDate"] != "" && widget.project["endDate"] != null) {
+      String temp = widget.project["endDate"] + "Z";
+      dateTime = DateTime.parse(temp);
+    }
 
     return Column(
       children: <Widget>[
@@ -489,6 +491,63 @@ class _DocumentState extends State<Document> {
           ),
         ],
       )),
+    );
+  }
+}
+
+class SDG extends StatefulWidget {
+  Map<String, dynamic> project;
+  SDG(this.project);
+
+  @override
+  _SDGState createState() => _SDGState();
+}
+
+class _SDGState extends State<SDG> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.of(context)
+                  .pushNamed(SDGPicker.routeName)
+                  .then((value) {
+                setState(() {
+                  if (value != null) {
+                    widget.project['sdgIds'].addAll(value);
+                    // widget.project['sdgIds'].addAll(value);
+                  }
+                  print(widget.project['sdgsIds']);
+                });
+              });
+            },
+            child: Container(
+              constraints:
+                  BoxConstraints(minHeight: 25 * SizeConfig.heightMultiplier),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.fromBorderSide(
+                    BorderSide(color: Colors.grey[850]),
+                  )),
+              child: Center(
+                  child: Column(
+                children: [
+                  Text("Select your SDG(s)", style: AppTheme.titleLight),
+                  if (widget.project['sdgsIds'] != null) ...[
+                    SizedBox(height: 5),
+                    Text(
+                      "${widget.project['sdgsIds'].length} SDG(s) chosen",
+                    )
+                  ]
+                ],
+              )),
+            ),
+          ),
+          SizedBox(height: 20),
+        ],
+      ),
     );
   }
 }
