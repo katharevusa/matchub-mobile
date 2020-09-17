@@ -19,11 +19,12 @@ class ProfileProjects extends StatelessWidget {
     return Scaffold(
       body: ListView.builder(
         itemBuilder: (context, index) => ProjectVerticalCard(
-            randomColor: _randomColor, project: projects[index]),
+            randomColor: _randomColor, project: projects[index], coverPhoto: coverPhoto[index]),
         itemCount: projects.length,
       ),
     );
   }
+  final coverPhoto = ["assets/images/projectdefault1.png","assets/images/projectdefault2.png","assets/images/projectdefault3.png"];
 }
 
 class ProjectVerticalCard extends StatelessWidget {
@@ -31,12 +32,13 @@ class ProjectVerticalCard extends StatelessWidget {
     Key key,
     @required RandomColor randomColor,
     @required this.project,
+    this.coverPhoto
   })  : _randomColor = randomColor,
         super(key: key);
 
   final RandomColor _randomColor;
   final Project project;
-
+  final String coverPhoto;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -58,7 +60,7 @@ class ProjectVerticalCard extends StatelessWidget {
                   colorHue: ColorHue.multiple(
                       colorHues: [ColorHue.green, ColorHue.blue]),
                   colorSaturation: ColorSaturation.lowSaturation)
-              .withOpacity(0.3),
+              .withAlpha(50),
           boxShadow: [
             BoxShadow(
               offset: Offset(4, 3),
@@ -83,7 +85,7 @@ class ProjectVerticalCard extends StatelessWidget {
                     width: 25 * SizeConfig.widthMultiplier,
                     height: 18 * SizeConfig.heightMultiplier,
                     child:
-                        AttachmentImage("assets/images/projectdefault.png"))),
+                        AttachmentImage(coverPhoto))),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -49,6 +49,8 @@ dependencies:
   image_cropper: 1.0.2
   image_picker: 0.6.0+17
   password_strength: ^0.1.2
+  cached_network_image: ^2.2.0+1
+  shimmer: ^1.1.1
   share: ^0.6.4+3
 
   expandable_text: ^0.1.0

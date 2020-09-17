@@ -105,7 +105,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
                 onPressed: () async {
                   if (filteredFollowers[index].accountId == myProfile.accountId)
                     return null;
-
+ 
                   int followId = filteredFollowers[index].accountId;
                   await widget.toggleFollowing(followId);
 

@@ -34,7 +34,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   getProjects() async {
     final responseData = await ApiBaseHelper().getProtected(
-        "authenticated/getProject?projectId=1",
+        "authenticated/getProject?projectId=${widget.projectId}",
         Provider.of<Auth>(context, listen: false).accessToken);
 
     project = Project.fromJson(responseData);
@@ -90,6 +90,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                 fontSize: 3.2 * SizeConfig.textMultiplier),
                           ),
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 1 * SizeConfig.heightMultiplier,
+                              left: 8.0 * SizeConfig.widthMultiplier),
+                          child: Text(
+                              "${project.upvotes} upvotes | ${project.userFollowers.length} following",
+                              style: AppTheme.unSelectedTabLight),
+                        ),
                         CarouselSlider(
                           options: CarouselOptions(
                             autoPlay: false,
@@ -99,6 +107,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                           ),
                           items: imageSliders,
                         ),
+
                         // ExpandableText(
                         //   project.projectDescription,
                         //   expandText: 'show more',
@@ -108,7 +117,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         // ),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                              vertical: 1 * SizeConfig.heightMultiplier,
+                              vertical: 0.5 * SizeConfig.heightMultiplier,
                               horizontal: 8.0 * SizeConfig.widthMultiplier),
                           child: Text(
                             "PROJECT DESCRIPTION",
@@ -119,7 +128,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                              vertical: 1 * SizeConfig.heightMultiplier,
+                              vertical: 0.5 * SizeConfig.heightMultiplier,
                               horizontal: 8.0 * SizeConfig.widthMultiplier),
                           child: ReadMoreText(
                             project.projectDescription +
@@ -136,12 +145,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                             colorClickableText: kSecondaryColor,
                             trimMode: TrimMode.Line,
                             trimCollapsedText: '...Show more',
-                            trimExpandedText: ' show less',
+                            trimExpandedText: 'show less',
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                              top: 1 * SizeConfig.heightMultiplier,
+                              top: 1.5 * SizeConfig.heightMultiplier,
                               right: 8.0 * SizeConfig.widthMultiplier,
                               left: 8.0 * SizeConfig.widthMultiplier),
                           child: Text(
@@ -356,22 +365,24 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
 final List<Widget> imageSliders = imgList
     .map((item) => Container(
-          child: Container(
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                offset: Offset(4, 10),
-                blurRadius: 10,
-                color: Colors.grey[300].withOpacity(0.2),
-              ),
-              BoxShadow(
-                offset: Offset(-4, 10),
-                blurRadius: 30,
-                color: Colors.grey[300].withOpacity(0.2),
-              ),
-            ]),
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.widthMultiplier * 6,
-                vertical: SizeConfig.heightMultiplier * 2),
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(
+              offset: Offset(4, 10),
+              blurRadius: 10,
+              color: Colors.grey[300].withOpacity(0.2),
+            ),
+            BoxShadow(
+              offset: Offset(-4, 10),
+              blurRadius: 30,
+              color: Colors.grey[300].withOpacity(0.2),
+            ),
+          ]),
+          margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.widthMultiplier * 6,
+              vertical: SizeConfig.heightMultiplier * 2),
+          child: Material(
+            elevation: 1*SizeConfig.heightMultiplier,
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
             child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: Stack(

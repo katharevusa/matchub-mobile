@@ -38,13 +38,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
           context,
         ).accessToken);
     setState(() {
-      if(widget.accountId == Provider.of<Auth>(context).myProfile.accountId){
+      if (widget.accountId == Provider.of<Auth>(context).myProfile.accountId) {
         profile = Provider.of<Auth>(context).myProfile;
-      } else{
-      profile = Profile.fromJson(responseData);
+      } else {
+        profile = Profile.fromJson(responseData);
       }
     });
     print("user loaded");
+  }
+
+  toggleFollowing(int followId) async {
+    Profile myProfile = Provider.of<Auth>(context, listen: false).myProfile;
+    try {
+      var responseData;
+      if (myProfile.following.indexOf(followId) != -1) {
+        responseData = await ApiBaseHelper().postProtected(
+            "authenticated/unfollowProfile?unfollowId=${followId}&accountId=${myProfile.accountId}",
+            accessToken: Provider.of<Auth>(context).accessToken);
+      } else {
+        responseData = await ApiBaseHelper().postProtected(
+            "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
+            accessToken: Provider.of<Auth>(context).accessToken);
+      }
+      getUser();
+      await loadUser;
+      setState(() {});
+    } catch (error) {
+      print(error.toString());
+      showErrorDialog(error.toString(), context);
+    }
   }
 
   @override
@@ -81,7 +103,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: SingleChildScrollView(
                                   child: Column(
                                 children: [
-                                  BasicInfo(profile: profile),
+                                  BasicInfo(
+                                      profile: profile,
+                                      follow: toggleFollowing),
                                   DescriptionInfo(profile: profile),
                                   Wall(profile: profile)
                                 ],
