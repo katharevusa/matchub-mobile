@@ -12,6 +12,7 @@ class ResourceCategory {
     List resources;
     num communityPointsGuideline;
     num perUnit;
+    String unitName;
     
     factory ResourceCategory.fromJson(Map<String,dynamic> json) => _$ResourceCategoryFromJson(json);
     Map<String, dynamic> toJson() => _$ResourceCategoryToJson(this);

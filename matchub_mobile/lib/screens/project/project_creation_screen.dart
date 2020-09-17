@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:country_list_pick/country_list_pick.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -12,68 +13,76 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:date_format/date_format.dart';
 
-class ResourceCreationScreen extends StatefulWidget {
-  static const routeName = "/resource-creation-screen";
-  Resources newResource;
-  ResourceCreationScreen({this.newResource});
+class ProjectCreationScreen extends StatefulWidget {
+  static const routeName = "/project-creation-screen";
+  Project newProject;
+  ProjectCreationScreen({this.newProject});
   @override
-  _ResourceCreationScreenState createState() => _ResourceCreationScreenState();
+  _ProjectCreationScreenState createState() =>
+      _ProjectCreationScreenState(newProject);
 }
 
-class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
-  Map<String, dynamic> resource;
+class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
+  Project newProject;
+  _ProjectCreationScreenState(this.newProject);
+  Map<String, dynamic> project;
   @override
   void initState() {
-    resource = {
-      "resourceId": widget.newResource.resourceId,
-      "resourceName": widget.newResource.resourceName ?? "",
-      "resourceDescription": widget.newResource.resourceDescription ?? "",
-      "uploadedFiles": widget.newResource.uploadedFiles ?? [],
-      "available": widget.newResource.available ?? true,
-      "startTime": widget.newResource.startTime ?? "",
-      "endTime": widget.newResource.endTime ?? "",
-      "listOfRequests": widget.newResource.listOfRequests ?? [],
-      "resourceCategoryId": widget.newResource.resourceCategoryId,
-      "resourceOwnerId": widget.newResource.resourceOwnerId,
-      "units": widget.newResource.units ?? 0,
-      "photos": widget.newResource.photos ?? [],
-      "spotlight": widget.newResource.spotlight,
-      "spotlightEndTime": widget.newResource.spotlightEndTime,
-      "matchedProjectId": widget.newResource.matchedProjectId,
+    project = {
+      "projectId": newProject.projectId,
+      "projectTitle": newProject.projectTitle ?? "",
+      "projectDescription": newProject.projectDescription ?? "",
+      "country": newProject.country ?? "",
+      "startDate": newProject.startDate ?? "",
+      "endDate": newProject.endDate ?? "",
+      "userFollowers": newProject.userFollowers ?? [],
+      "projStatus": newProject.projStatus ?? "ON_HOLD",
+      "upvotes": newProject.upvotes ?? 0,
+      "photos": newProject.photos ?? [],
+      "relatedResources": newProject.relatedResources ?? [],
+      "projCreatorId": newProject.projCreatorId,
+      "spotlight": newProject.spotlight,
+      "spotlightEndTime": newProject.spotlightEndTime,
+      "joinRequests": newProject.joinRequests ?? [],
+      "reviews": newProject.reviews ?? [],
+      "projectBadge": newProject.projectBadge,
+      "fundsCampaign": newProject.fundsCampaign ?? [],
+      "meetings": newProject.meetings,
+      "listOfRequests": newProject.listOfRequests,
+      "sdgs": newProject.sdgs ?? [],
+      "kpis": newProject.kpis,
+      "teamMembers": newProject.teamMembers,
+      "channels": newProject.channels,
+      "projectOwners": newProject.projectOwners ?? [],
     };
   }
 
   SwiperController _controller = SwiperController();
   int _currentIndex = 0;
-  Map<int, bool> swiperControl = {
-    0: false,
-    1: false,
-    2: false,
-    3: true,
-    4: true,
-    5: true
-  };
-  bool _complete;
+
   final List<String> titles = [
-    "Create New Resource",
-    "Create New Resource",
-    "Create New Resource",
-    "Create New Resource",
-    "Create New Resource",
-    "Create New Resource",
+    "Create New Project",
+    "Create New Project",
+    "Create New Project",
+    "Create New Project",
+    "Create New Project",
+    "Create New Project",
+    "Create New Project",
   ];
   final List<String> subtitles = [
-    "Title & Description",
-    "Select Category",
-    "Input your unit",
-    "Start Date",
-    "End Date",
-    "Upload Documents",
+    "Basic Information",
+    "Start Date & Time",
+    "End Date & Time",
+    "Upload Photo",
+    "Select SDGs",
+    "Badge Creation",
+    "Create Fund Campaign",
   ];
   final List<Color> colors = [
     Colors.green.shade300,
@@ -82,16 +91,17 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     Colors.deepOrange.shade300,
     Colors.pinkAccent.shade100,
     Colors.lime.shade300,
+    Colors.brown.shade400,
+    Colors.green.shade300,
   ];
 
-  void createNewResource(context) async {
-    resource["resourceOwnerId"] =
-        Provider.of<Auth>(context).myProfile.accountId;
-    final url = "authenticated/createNewResource";
+  void createNewProject(context) async {
+    project["projectOwnerId"] = Provider.of<Auth>(context).myProfile.accountId;
+    final url = "authenticated/createNewProject";
     var accessToken = Provider.of<Auth>(context).accessToken;
     try {
       final response = await ApiBaseHelper().postProtected(url,
-          accessToken: accessToken, body: json.encode(resource));
+          accessToken: accessToken, body: json.encode(project));
       print("Success");
       Navigator.of(context).pop(true);
     } catch (error) {
@@ -145,42 +155,48 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
-                    widget: Title_description(resource),
+                    widget: Basic_information(project),
                   );
                 } else if (index == 1) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
-                    widget: Category(resource),
+                    widget: Start(project),
                   );
                 } else if (index == 2) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
-                    widget: Unit(resource),
+                    widget: End(project),
                   );
                 } else if (index == 3) {
                   return IntroItem(
-                    title: titles[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: Start(resource),
-                  );
+                      title: titles[index],
+                      subtitle: subtitles[index],
+                      bg: colors[index],
+                      widget: Document(project));
                 } else if (index == 4) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
-                    widget: End(resource),
+                    //widget: SDGs(project),
                   );
                 } else if (index == 5) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
-                    widget: Document(resource),
+                    // widget: Badge(project),
+                  );
+                } else if (index == 6) {
+                  return IntroItem(
+                    title: titles[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    //    widget: FundCampaign(project),
                   );
                 }
               }),
@@ -197,15 +213,15 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
             alignment: Alignment.bottomRight,
             child: IconButton(
               icon:
-                  Icon(_currentIndex == 5 ? Icons.check : Icons.arrow_forward),
+                  Icon(_currentIndex == 6 ? Icons.check : Icons.arrow_forward),
               onPressed: () {
-                if (_currentIndex != 5) {
+                if (_currentIndex != 6) {
                   _controller.next();
                 }
                 // if (_currentIndex != 5)
                 //   _controller.next();
                 else
-                  createNewResource(context);
+                  createNewProject(context);
               },
             ),
           )
@@ -215,26 +231,21 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
   }
 }
 
-class Title_description extends StatefulWidget {
-  Map<String, dynamic> resource;
-  // Map<int, bool> swiperControl;
-  Title_description(this.resource);
+class Basic_information extends StatefulWidget {
+  Map<String, dynamic> project;
+  Basic_information(this.project);
 
   @override
-  _Title_descriptionState createState() => _Title_descriptionState();
+  _Basic_informationState createState() => _Basic_informationState();
 }
 
-class _Title_descriptionState extends State<Title_description> {
+class _Basic_informationState extends State<Basic_information> {
   @override
   Widget build(BuildContext context) {
     TextEditingController _titleController = new TextEditingController();
     TextEditingController _descriptionController = new TextEditingController();
-    _titleController.text = widget.resource["resourceName"];
-    _descriptionController.text = widget.resource['resourceDescription'];
-    // if (widget.resource["resourceName"] != null ||
-    //     widget.resource["resourceName"] != "") {
-
-    // }
+    _titleController.text = widget.project["projectTitle"];
+    _descriptionController.text = widget.project["projectDescription"];
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
@@ -250,9 +261,8 @@ class _Title_descriptionState extends State<Title_description> {
                 autofocus: true,
                 onChanged: (text) {
                   if (text != null) {
-                    widget.resource["resourceName"] = text;
+                    widget.project["projectTitle"] = text;
                   }
-                  print(widget.resource["resourceName"]);
                 },
               ),
             ),
@@ -264,229 +274,40 @@ class _Title_descriptionState extends State<Title_description> {
                 controller: _descriptionController,
                 autofocus: true,
                 onChanged: (text) {
-                  widget.resource['resourceDescription'] = text;
-                  print(widget.resource['resourceDescription']);
+                  widget.project["projectDescription"] = text;
                 },
               ),
             ),
+            Container(
+              padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Select country",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  CountryListPick(
+                      isShowFlag: true,
+                      isShowTitle: true,
+                      isDownIcon: true,
+                      showEnglishName: true,
+                      initialSelection: '+65',
+                      buttonColor: Colors.transparent,
+                      onChanged: (CountryCode code) {
+                        widget.project["country"] = code.name;
+                      }),
+                ],
+              ),
+            )
           ],
         )));
   }
 }
 
-class Category extends StatefulWidget {
-  Map<String, dynamic> resource;
-  Category(this.resource);
-  @override
-  _CategoryState createState() => _CategoryState();
-}
-
-class _CategoryState extends State<Category> {
-  ApiBaseHelper _helper = ApiBaseHelper();
-  List<ResourceCategory> listOfCategories;
-  Future categoriesFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    categoriesFuture = retrieveAllCategories();
-  }
-
-//retrieve all categories
-  retrieveAllCategories() async {
-    final url = 'authenticated/getAllResourceCategories';
-    final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context).accessToken);
-    listOfCategories = (responseData['content'] as List)
-        .map((e) => ResourceCategory.fromJson(e))
-        .toList();
-    print(listOfCategories[0].toJson());
-  }
-
-  Widget build(BuildContext context) {
-    bool _checked = true;
-    bool _unchecked = false;
-    return FutureBuilder(
-      future: retrieveAllCategories(),
-      builder: (context, snapshot) => (snapshot.connectionState ==
-              ConnectionState.done)
-          ? Scaffold(
-              body: Center(
-                  child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: listOfCategories.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return widget.resource["resourceCategoryId"] ==
-                                listOfCategories[index].resourceCategoryId
-                            ? CheckboxListTile(
-                                title: Text(listOfCategories[index]
-                                    .resourceCategoryName),
-                                controlAffinity:
-                                    ListTileControlAffinity.platform,
-                                value: _checked,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    _checked = value;
-                                    widget.resource["resourceCategoryId"] =
-                                        null;
-                                    print(
-                                        widget.resource["resourceCategoryId"]);
-                                  });
-                                })
-                            : CheckboxListTile(
-                                title: Text(listOfCategories[index]
-                                    .resourceCategoryName),
-                                controlAffinity:
-                                    ListTileControlAffinity.platform,
-                                value: _unchecked,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    widget.resource["resourceCategoryId"] =
-                                        listOfCategories[index]
-                                            .resourceCategoryId;
-                                    _unchecked = value;
-                                    print(
-                                        widget.resource["resourceCategoryId"]);
-                                  });
-                                });
-                      }),
-                )
-              ],
-            )))
-          : Center(child: CircularProgressIndicator()),
-    );
-  }
-}
-
-class Unit extends StatefulWidget {
-  Map<String, dynamic> resource;
-  Unit(this.resource);
-  @override
-  _UnitState createState() => _UnitState();
-}
-
-class _UnitState extends State<Unit> {
-  ApiBaseHelper _helper = ApiBaseHelper();
-  Future categoryFuture;
-  ResourceCategory category;
-  int totalUnit = 0;
-  int perUnit;
-  int _n = 0;
-  retrieveCategoryById() async {
-    int id = widget.resource["resourceCategoryId"];
-    final url = 'authenticated/getResourceCategoryById?resourceCategoryId=$id';
-    final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context).accessToken);
-    category = ResourceCategory.fromJson(responseData);
-    perUnit = category.perUnit;
-    print(category.toJson());
-    if (widget.resource["units"] != 0 || widget.resource["units"] != null) {
-      _n = widget.resource["units"];
-      totalUnit = _n * perUnit;
-    }
-  }
-
-  void add() {
-    setState(() {
-      _n++;
-      widget.resource["units"] = _n;
-      totalUnit = _n * perUnit;
-    });
-  }
-
-  void minus() {
-    setState(() {
-      if (_n != 0) _n--;
-      widget.resource["units"] = _n;
-      totalUnit = _n * perUnit;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //get resource from resourceId
-    if (widget.resource["resourceCategoryId"] == null) {
-      return Scaffold(
-        body: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(60, 120, 30, 0),
-              child: new Text('You need to select a category first. ',
-                  style: new TextStyle(fontSize: 30.0)),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return FutureBuilder(
-        future: retrieveCategoryById(),
-        builder: (context, snapshot) =>
-            (snapshot.connectionState == ConnectionState.done)
-                ? Scaffold(
-                    body: Column(
-                      children: [
-                        new Container(
-                          padding: EdgeInsets.fromLTRB(10, 60, 10, 50),
-                          child: new Center(
-                            child: new Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                new FloatingActionButton(
-                                  onPressed: add,
-                                  child: new Icon(
-                                    Icons.add,
-                                    color: Colors.black,
-                                  ),
-                                  backgroundColor: Colors.white,
-                                ),
-                                new Text('$_n',
-                                    style: new TextStyle(fontSize: 60.0)),
-                                new FloatingActionButton(
-                                  onPressed: minus,
-                                  child: new Icon(
-                                      const IconData(0xe15b,
-                                          fontFamily: 'MaterialIcons'),
-                                      color: Colors.black),
-                                  backgroundColor: Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          child: new Center(
-                            child: new Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Text('$totalUnit ',
-                                    style: new TextStyle(fontSize: 60.0)),
-                                new Text(category.unitName,
-                                    style: new TextStyle(fontSize: 60.0)),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
-                          child: Text(
-                              'The unit is following our community guidelines, you can checkout the guideline details by clicking here',
-                              style: new TextStyle(fontSize: 13.0)),
-                        ),
-                      ],
-                    ),
-                  )
-                : Center(child: CircularProgressIndicator()),
-      );
-    }
-  }
-}
-
 class Start extends StatefulWidget {
-  Map<String, dynamic> resource;
-  Start(this.resource);
+  Map<String, dynamic> project;
+  Start(this.project);
   @override
   _StartState createState() => _StartState();
 }
@@ -496,11 +317,12 @@ class _StartState extends State<Start> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.resource["startTime"] != "" ||
-        widget.resource["startTime"] != null) {
-      String temp = widget.resource["startTime"] + 'Z';
-      dateTime = DateTime.parse(temp);
-    }
+    print(widget.project["startDate"]);
+    // if (widget.project["startDate"] != "" ||
+    //     widget.project["startDate"] != null) {
+    //   String temp = widget.project["startDate"] + "Z";
+    //   dateTime = DateTime.parse(temp);
+    // }
     return Column(
       children: <Widget>[
         Text(
@@ -515,13 +337,12 @@ class _StartState extends State<Start> {
               setState(() {
                 dateTime = newDateTime;
                 print(dateTime);
-                widget.resource["startTime"] = formatDate(
+                widget.project["startDate"] = formatDate(
                     DateTime(dateTime.year, dateTime.month, dateTime.day,
                         dateTime.hour, dateTime.minute, dateTime.second),
                     [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
 
-                print("hello");
-                print(widget.resource["startTime"]);
+                print(widget.project["startDate"]);
               });
             },
           ),
@@ -532,8 +353,8 @@ class _StartState extends State<Start> {
 }
 
 class End extends StatefulWidget {
-  Map<String, dynamic> resource;
-  End(this.resource);
+  Map<String, dynamic> project;
+  End(this.project);
   @override
   _EndState createState() => _EndState();
 }
@@ -543,11 +364,11 @@ class _EndState extends State<End> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.resource["endTime"] != "" ||
-        widget.resource["endTime"] != null) {
-      String temp = widget.resource["endTime"] + 'Z';
-      dateTime = DateTime.parse(temp);
-    }
+    // if (widget.project["endDate"] != "" || widget.project["endDate"] != null) {
+    //   String temp = widget.project["endDate"] + "Z";
+    //   dateTime = DateTime.parse(temp);
+    // }
+
     return Column(
       children: <Widget>[
         Text(
@@ -562,13 +383,13 @@ class _EndState extends State<End> {
               setState(() {
                 dateTime = newDateTime;
                 print(dateTime);
-                widget.resource["endTime"] = formatDate(
+                widget.project["endDate"] = formatDate(
                     DateTime(dateTime.year, dateTime.month, dateTime.day,
                         dateTime.hour, dateTime.minute, dateTime.second),
                     [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
 
                 print("hello");
-                print(widget.resource["endTime"]);
+                print(widget.project["endDate"]);
               });
             },
           ),

@@ -7,6 +7,7 @@ import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
@@ -213,10 +214,12 @@ class _TabsScreenState extends State<TabsScreen> {
                   accountId: settings.arguments as int,
                 ),
             settings: settings);
+
       case EditIndividualScreen.routeName:
         return MaterialPageRoute(
-            builder: (context) =>
-                ProfileScreen(accountId: settings.arguments as int,),
+            builder: (context) => ProfileScreen(
+                  accountId: settings.arguments as int,
+                ),
             settings: settings);
       case EditIndividualScreen.routeName:
         return MaterialPageRoute(
@@ -248,9 +251,11 @@ class _TabsScreenState extends State<TabsScreen> {
       case FollowOverviewScreen.routeName:
         final user =
             (settings.arguments as Map<String, dynamic>)['profile'] as Profile;
-        final initialTab = (settings.arguments as Map<String, dynamic>)['initialTab'] as int;
+        final initialTab =
+            (settings.arguments as Map<String, dynamic>)['initialTab'] as int;
         return MaterialPageRoute(
-            builder: (context) => FollowOverviewScreen(user: user, initialTab: initialTab),
+            builder: (context) =>
+                FollowOverviewScreen(user: user, initialTab: initialTab),
             settings: settings);
       case EditOrganisationScreen.routeName:
         return MaterialPageRoute(
@@ -261,6 +266,11 @@ class _TabsScreenState extends State<TabsScreen> {
       case UserScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => UserScreen(), settings: settings);
+      case ResourceDetailScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ResourceDetailScreen(),
+            // fullscreenDialog: true,
+            settings: settings);
       default:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);

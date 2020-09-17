@@ -14,7 +14,8 @@ ResourceCategory _$ResourceCategoryFromJson(Map<String, dynamic> json) {
         json['resourceCategoryDescription'] as String
     ..resources = json['resources'] as List
     ..communityPointsGuideline = json['communityPointsGuideline'] as num
-    ..perUnit = json['perUnit'] as num;
+    ..perUnit = json['perUnit'] as num
+    ..unitName = json['unitName'] as String;
 }
 
 Map<String, dynamic> _$ResourceCategoryToJson(ResourceCategory instance) =>
@@ -24,5 +25,6 @@ Map<String, dynamic> _$ResourceCategoryToJson(ResourceCategory instance) =>
       'resourceCategoryDescription': instance.resourceCategoryDescription,
       'resources': instance.resources,
       'communityPointsGuideline': instance.communityPointsGuideline,
-      'perUnit': instance.perUnit
+      'perUnit': instance.perUnit,
+      'unitName': instance.unitName
     };
