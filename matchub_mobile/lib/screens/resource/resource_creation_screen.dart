@@ -7,13 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/data.dart';
-import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'dart:convert';
-import 'dart:io';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -35,12 +31,14 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     "Create New Resource",
     "Create New Resource",
     "Create New Resource",
+    "Create New Resource",
   ];
   final List<String> subtitles = [
     "Title & Description",
     "Select Category",
     "Input your unit",
-    "Start Date & End Date",
+    "Start Date",
+    "End Date",
     "Upload Documents",
   ];
   final List<Color> colors = [
@@ -48,6 +46,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     Colors.blue.shade300,
     Colors.indigo.shade300,
     Colors.deepOrange.shade300,
+    Colors.pinkAccent.shade100,
     Colors.lime.shade300,
   ];
   @override
@@ -70,7 +69,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                   activeSize: 20.0,
                 ),
               ),
-              itemCount: 5,
+              itemCount: 6,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return IntroItem(
@@ -85,6 +84,34 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: Category(widget.newResource),
+                  );
+                } else if (index == 2) {
+                  return IntroItem(
+                    title: titles[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Unit(widget.newResource),
+                  );
+                } else if (index == 3) {
+                  return IntroItem(
+                    title: titles[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Start(widget.newResource),
+                  );
+                } else if (index == 4) {
+                  return IntroItem(
+                    title: titles[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: End(widget.newResource),
+                  );
+                } else if (index == 5) {
+                  return IntroItem(
+                    title: titles[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Document(widget.newResource),
                   );
                 }
               }),
@@ -178,92 +205,600 @@ class Category extends StatefulWidget {
 class _CategoryState extends State<Category> {
   Resources newResource;
   _CategoryState(this.newResource);
-
-  List<Resources> listOfCategories;
   ApiBaseHelper _helper = ApiBaseHelper();
+  List<ResourceCategory> listOfCategories;
+  Future categoriesFuture;
 
-  // Future<void> retrieveAllCategories() async {
-  //   final url = 'authenticated/getAllResourceCategories';
-  //   final responseData =
-  //       await _helper.getProtected(url, Provider.of<Auth>(context).accessToken);
-  //   listOfCategories = (responseData['content'] as List)
-  //       .map((e) => Resources.fromJson(e))
-  //       .toList();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    categoriesFuture = retrieveAllCategories();
+  }
+
+  retrieveAllCategories() async {
+    final url = 'authenticated/getAllResourceCategories';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(this.context).accessToken);
+    listOfCategories = (responseData['content'] as List)
+        .map((e) => ResourceCategory.fromJson(e))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     bool _checked = true;
     bool _unchecked = false;
     //retrieveAllCategories();
-    return Scaffold(
-        body: Center(
-            child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Expanded(
-          child: ListView.builder(
-            itemCount: DUMMY_RESOURCE_CATEGORY.length,
-            itemBuilder: (BuildContext context, int index) {
-              return newResource.resourceCategory != null &&
-                      newResource.resourceCategory.values.toList()[1] ==
-                          DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName
-                  ? CheckboxListTile(
-                      title: Text(
-                          DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName),
-                      controlAffinity: ListTileControlAffinity.platform,
-                      value: _checked,
-                      onChanged: (bool value) {
-                        setState(() {
-                          newResource.resourceCategory = null;
-                          _checked = value;
-                        });
-                      },
-                    )
-                  : CheckboxListTile(
-                      title: Text(
-                          DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName),
-                      controlAffinity: ListTileControlAffinity.platform,
-                      value: _unchecked,
-                      onChanged: (bool value) {
-                        setState(() {
-                          newResource.resourceCategory.values.toList()[1] =
-                              DUMMY_RESOURCE_CATEGORY[index];
-                          _unchecked = value;
+    return FutureBuilder(
+      future: retrieveAllCategories(),
+      builder: (context, snapshot) => (snapshot.connectionState ==
+              ConnectionState.done)
+          ? Scaffold(
+              body: Center(
+                  child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: listOfCategories.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return CheckboxListTile(
+                            title: Text(
+                                listOfCategories[index].resourceCategoryName),
+                            controlAffinity: ListTileControlAffinity.platform,
+                            value: _unchecked,
+                            onChanged: (bool value) {
+                              setState(() {
+                                // newResource.resourceCategory.values.toList()[1] =
+                                //     DUMMY_RESOURCE_CATEGORY[index];
+                                _unchecked = value;
+                              });
+                            });
+                      }
+                      //    print(resource.resourceCategory.resourceCategoryName);
 
-                          //    print(resource.resourceCategory.resourceCategoryName);
-                        });
-                      },
-                    );
-            },
+                      // return newResource.resourceCategory != null &&
+                      //         newResource.resourceCategory.values.toList()[1] ==
+                      //             DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName
+                      //     ? CheckboxListTile(
+                      //         title: Text(
+                      //             DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName),
+                      //         controlAffinity: ListTileControlAffinity.platform,
+                      //         value: _checked,
+                      //         onChanged: (bool value) {
+                      //           setState(() {
+                      //             newResource.resourceCategory = null;
+                      //             _checked = value;
+                      //           });
+                      //         },
+                      //       )
+                      //     : CheckboxListTile(
+                      //         title: Text(
+                      //             DUMMY_RESOURCE_CATEGORY[index].resourceCategoryName),
+                      //         controlAffinity: ListTileControlAffinity.platform,
+                      //         value: _unchecked,
+                      //         onChanged: (bool value) {
+                      //           setState(() {
+                      //             newResource.resourceCategory.values.toList()[1] =
+                      //                 DUMMY_RESOURCE_CATEGORY[index];
+                      //             _unchecked = value;
+
+                      //             //    print(resource.resourceCategory.resourceCategoryName);
+                      //           });
+                      //         },
+                      //       );
+
+                      ),
+                ),
+              ],
+            )))
+          : Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
+class Unit extends StatefulWidget {
+  Resources newResource;
+  Unit(this.newResource);
+  @override
+  _UnitState createState() => _UnitState();
+}
+
+class _UnitState extends State<Unit> {
+  int _n = 0;
+  void add() {
+    setState(() {
+      _n++;
+      widget.newResource.units = _n;
+    });
+  }
+
+  void minus() {
+    setState(() {
+      if (_n != 0) _n--;
+      widget.newResource.units = _n;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: Column(
+        children: [
+          new Container(
+            padding: EdgeInsets.fromLTRB(10, 60, 10, 50),
+            child: new Center(
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  new FloatingActionButton(
+                    onPressed: add,
+                    child: new Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                    backgroundColor: Colors.white,
+                  ),
+                  new Text('$_n', style: new TextStyle(fontSize: 60.0)),
+                  new FloatingActionButton(
+                    onPressed: minus,
+                    child: new Icon(
+                        const IconData(0xe15b, fontFamily: 'MaterialIcons'),
+                        color: Colors.black),
+                    backgroundColor: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            child: new Center(
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Text('$_n', style: new TextStyle(fontSize: 60.0)),
+                  new Text('KG', style: new TextStyle(fontSize: 60.0)),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
+            child: Text(
+                'The unit is following our community guidelines, you can checkout the guideline details by clicking here',
+                style: new TextStyle(fontSize: 13.0)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Start extends StatefulWidget {
+  Resources newResource;
+  Start(this.newResource);
+  @override
+  _StartState createState() => _StartState();
+}
+
+class _StartState extends State<Start> {
+  String _startDateApp = "Not set";
+  String _startTimeApp = "Not set";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                elevation: 4.0,
+                onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      theme: DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true,
+                      minTime: DateTime(2000, 1, 1),
+                      maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
+                    _startDateApp = '${date.year}-${date.month}-${date.day}';
+                    setState(() {
+                      if (_startTimeApp == 'Not set' &&
+                          _startDateApp != 'Not set') {
+                        String time = "T00:00:00";
+                        widget.newResource.startTime = _startDateApp + time;
+                        print(widget.newResource.startTime);
+                      } else if (_startTimeApp != 'Not set' &&
+                          _startDateApp != 'Not set') {
+                        String temp = widget.newResource.startTime;
+                        var arr = temp.split('T');
+                        String time = arr[1];
+                        widget.newResource.startTime = _startDateApp + time;
+                        print(widget.newResource.startTime);
+                      }
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.en);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 50.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.date_range,
+                                  size: 18.0,
+                                  color: Colors.teal,
+                                ),
+                                Text(
+                                  " $_startDateApp",
+                                  style: TextStyle(
+                                      color: Colors.teal,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        "  Change",
+                        style: TextStyle(
+                            color: Colors.teal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ],
+                  ),
+                ),
+                color: Colors.white,
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                elevation: 4.0,
+                onPressed: () {
+                  DatePicker.showTimePicker(context,
+                      theme: DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true, onConfirm: (time) {
+                    print('confirm $time');
+                    _startTimeApp =
+                        'T${time.hour}:${time.minute}:${time.second}';
+                    setState(() {
+                      if (_startTimeApp != 'Not set' &&
+                          _startDateApp == 'Not set') {
+                        String date = "00-00-00";
+                        widget.newResource.startTime = date + _startTimeApp;
+                        print(widget.newResource.startTime);
+                      } else if (_startTimeApp != 'Not set' &&
+                          _startDateApp != 'Not set') {
+                        var arr = widget.newResource.startTime.split('T');
+                        String date = arr[0];
+                        widget.newResource.startTime = date + _startTimeApp;
+                        print(widget.newResource.startTime);
+                      }
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.en);
+                  setState(() {});
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 50.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.access_time,
+                                  size: 18.0,
+                                  color: Colors.teal,
+                                ),
+                                Text(
+                                  " $_startTimeApp",
+                                  style: TextStyle(
+                                      color: Colors.teal,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        "  Change",
+                        style: TextStyle(
+                            color: Colors.teal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ],
+                  ),
+                ),
+                color: Colors.white,
+              )
+            ],
           ),
         ),
-      ],
-    )));
+      ),
+    );
   }
 }
 
-class unit extends StatelessWidget {
+class End extends StatefulWidget {
+  Resources newResource;
+  End(this.newResource);
+  @override
+  _EndState createState() => _EndState();
+}
+
+class _EndState extends State<End> {
+  @override
+  String _endDateApp = "Not set";
+  String _endTimeApp = "Not set";
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                elevation: 4.0,
+                onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      theme: DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true,
+                      minTime: DateTime(2000, 1, 1),
+                      maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
+                    _endDateApp = '${date.year}-${date.month}-${date.day}';
+                    setState(() {
+                      if (_endTimeApp == 'Not set' &&
+                          _endDateApp != 'Not set') {
+                        String time = "T00:00:00";
+                        widget.newResource.startTime = _endDateApp + time;
+                        print(widget.newResource.startTime);
+                      } else if (_endTimeApp != 'Not set' &&
+                          _endDateApp != 'Not set') {
+                        String temp = widget.newResource.startTime;
+                        var arr = temp.split('T');
+                        String time = arr[1];
+                        widget.newResource.startTime = _endDateApp + time;
+                        print(widget.newResource.startTime);
+                      }
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.en);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 50.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.date_range,
+                                  size: 18.0,
+                                  color: Colors.teal,
+                                ),
+                                Text(
+                                  " $_endDateApp",
+                                  style: TextStyle(
+                                      color: Colors.teal,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        "  Change",
+                        style: TextStyle(
+                            color: Colors.teal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ],
+                  ),
+                ),
+                color: Colors.white,
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                elevation: 4.0,
+                onPressed: () {
+                  DatePicker.showTimePicker(context,
+                      theme: DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true, onConfirm: (time) {
+                    print('confirm $time');
+                    _endTimeApp = 'T${time.hour}:${time.minute}:${time.second}';
+                    setState(() {
+                      if (_endTimeApp != 'Not set' &&
+                          _endDateApp == 'Not set') {
+                        String date = "00-00-00";
+                        widget.newResource.startTime = date + _endTimeApp;
+                        print(widget.newResource.startTime);
+                      } else if (_endTimeApp != 'Not set' &&
+                          _endDateApp != 'Not set') {
+                        var arr = widget.newResource.startTime.split('T');
+                        String date = arr[0];
+                        widget.newResource.startTime = date + _endTimeApp;
+                        print(widget.newResource.startTime);
+                        print(widget.newResource.resourceName);
+                        print(widget.newResource.units);
+                        print(widget.newResource.startTime);
+                      }
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.en);
+                  setState(() {});
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 50.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.access_time,
+                                  size: 18.0,
+                                  color: Colors.teal,
+                                ),
+                                Text(
+                                  " $_endTimeApp",
+                                  style: TextStyle(
+                                      color: Colors.teal,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        "  Change",
+                        style: TextStyle(
+                            color: Colors.teal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ],
+                  ),
+                ),
+                color: Colors.white,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
-class duration extends StatelessWidget {
+class Document extends StatefulWidget {
+  Resources newResource;
+  Document(this.newResource);
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
+  _DocumentState createState() => _DocumentState();
 }
 
-class document extends StatelessWidget {
+class _DocumentState extends State<Document> {
+  List<Widget> fileListThumb;
+  List<File> fileList = new List<File>();
+
+  Future pickFiles() async {
+    List<Widget> thumbs = new List<Widget>();
+    fileListThumb.forEach((element) {
+      thumbs.add(element);
+    });
+
+    await FilePicker.getMultiFile(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    ).then((files) {
+      if (files != null && files.length > 0) {
+        files.forEach((element) {
+          List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
+
+          if (picExt.contains(extension(element.path))) {
+            thumbs.add(Padding(
+                padding: EdgeInsets.all(1), child: new Image.file(element)));
+          } else
+            thumbs.add(Container(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                  Icon(Icons.insert_drive_file),
+                  Text(extension(element.path))
+                ])));
+          fileList.add(element);
+          widget.newResource.uploadedFiles.add(element.toString());
+          print(widget.newResource.uploadedFiles.toList());
+        });
+        setState(() {
+          fileListThumb = thumbs;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    if (fileListThumb == null)
+      fileListThumb = [
+        InkWell(
+          onTap: pickFiles,
+          child: Container(child: Icon(Icons.add)),
+        )
+      ];
+    // if(!resource.uploadedFiles.isEmpty){
+    //   fileListThumb
+    // }
+    final Map params = new Map();
+    return Scaffold(
+      body: Center(
+          child: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 4,
+            child: Padding(
+              padding: EdgeInsets.all(5),
+              child: GridView.count(
+                crossAxisCount: 4,
+                children: fileListThumb,
+              ),
+            ),
+          ),
+        ],
+      )),
+    );
   }
 }
 
@@ -382,43 +917,6 @@ class Title extends StatelessWidget {
   }
 }
 
-class Description extends StatelessWidget {
-  Resources resource;
-  Description(this.resource);
-
-  @override
-  Widget build(BuildContext context) {
-    TextEditingController _descriptionController = new TextEditingController();
-    _descriptionController.text = resource.resourceDescription;
-    return Scaffold(
-        body: Center(
-            child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text("Enter Description:"),
-        Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: TextField(
-            controller: _descriptionController,
-            autofocus: true,
-            onChanged: (text) {
-              resource.resourceDescription = text;
-            },
-          ),
-        ),
-      ],
-    )));
-  }
-}
-
-/*
-class Category extends StatefulWidget {
-  Resources resource;
-  Category(this.resource);
-
-  @override
-  _CategoryState createState() => _CategoryState(resource);
-}
 
 class _CategoryState extends State<Category> {
   Resources resource;
@@ -874,19 +1372,19 @@ class _FileUploadState extends State<FileUpload> {
     });
   }
 
-  List<Map> storeNameAndPath(List<File> fileList) {
-    List<Map> s = new List<Map>();
-    if (fileList.length > 0)
-      fileList.forEach((element) {
-        Map a = {
-          'fileName': basename(element.path),
-          'encoded': base64Encode(element.readAsBytesSync())
-        };
+  // List<Map> storeNameAndPath(List<File> fileList) {
+  //   List<Map> s = new List<Map>();
+  //   if (fileList.length > 0)
+  //     fileList.forEach((element) {
+  //       Map a = {
+  //         'fileName': basename(element.path),
+  //         'encoded': base64Encode(element.readAsBytesSync())
+  //       };
 
-        s.add(a);
-      });
-    return s;
-  }
+  //       s.add(a);
+  //     });
+  //   return s;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -966,4 +1464,3 @@ class _FileUploadState extends State<FileUpload> {
 
 //     _formKey.currentState.save();
 }
-*/

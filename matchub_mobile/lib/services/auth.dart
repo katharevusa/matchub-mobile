@@ -36,8 +36,7 @@ class Auth with ChangeNotifier {
       city: "Singapore",
       likedPosts: [],
       comments: [],
-      sdgs: [
-      ],
+      sdgs: [],
       skillSet: ["MukBang", "Talented Individual", "Sleeping at 4am"],
       profileUrl: "www.matchub.com/profile/users-123",
       posts: [
@@ -195,8 +194,8 @@ class Auth with ChangeNotifier {
     myProfile = Profile.fromJson(responseData);
     _accountId = responseData['accountId'].toString();
     _username = responseData['email'].toString();
-    print("Account Id :   -------------- " + _accountId);
-    print(myProfile.sdgs[0].sdgName);
+    // print("Account Id :   -------------- " + _accountId);
+    // print(myProfile.sdgs[0].sdgName);
     notifyListeners();
   }
 

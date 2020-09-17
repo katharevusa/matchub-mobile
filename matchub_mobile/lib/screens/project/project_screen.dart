@@ -163,10 +163,10 @@ class _ProjectScreenState extends State<ProjectScreen> {
                   itemBuilder: (BuildContext context, int index) {
                     return Material(
                         child: InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => ProjectDetailOverview())),
+                      // onTap: () => Navigator.push(
+                      //     context,
+                      //     new MaterialPageRoute(
+                      //         builder: (context) => ProjectDetailOverview())),
                       child: Container(
                           margin: EdgeInsets.symmetric(
                               vertical: 5.0, horizontal: 10.0),

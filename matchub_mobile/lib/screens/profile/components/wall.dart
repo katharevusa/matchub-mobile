@@ -13,7 +13,7 @@ class Wall extends StatefulWidget {
 
   Wall({this.profile});
 
-  @override 
+  @override
   _WallState createState() => _WallState();
 }
 
@@ -38,8 +38,7 @@ class _WallState extends State<Wall> {
                   radius: 25,
                   backgroundImage: AssetImage(widget.profile.profilePhoto),
                 ),
-                title: Text(
-                    "${widget.profile.name}"),
+                title: Text("${widget.profile.lastName}"),
                 subtitle: Text(
                     "${widget.profile.posts[index].comments.length} comments | ${widget.profile.posts[index].likes} likes"),
                 trailing: Text(
@@ -96,7 +95,8 @@ class _WallState extends State<Wall> {
                             .toggleLikedPost(widget.profile.posts[index]);
                       });
                     },
-                  ),SizedBox(width:20),
+                  ),
+                  SizedBox(width: 20),
                   FlatButton(
                       textColor: Colors.grey,
                       onPressed: () {},
@@ -129,8 +129,8 @@ class _WallState extends State<Wall> {
           ),
           itemCount: widget.profile.posts.length,
         ),
-        if(widget.profile.posts.isEmpty) Text("No Posts Yet"),
-        SizedBox(height:20)
+        if (widget.profile.posts.isEmpty) Text("No Posts Yet"),
+        SizedBox(height: 20)
       ]),
     );
   }

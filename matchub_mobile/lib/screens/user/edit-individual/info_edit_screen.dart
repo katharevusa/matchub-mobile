@@ -164,7 +164,7 @@ class _InfoEditPageState extends State<InfoEditPage> {
                               showCountryFlags: false,
                               border: InputBorder.none,
                               hintText: "eg. 91234567",
-                              enabledCountries: ['+60', '+65','+82', '+1'],
+                              enabledCountries: [],
                               labelText: "Phone Number",
                               labelStyle: TextStyle(
                                   color: Colors.grey[850], fontSize: 14),

@@ -9,7 +9,7 @@ class DescriptionInfo extends StatelessWidget {
   Profile profile;
 
   DescriptionInfo({this.profile});
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -43,13 +43,13 @@ class DescriptionInfo extends StatelessWidget {
                   Text("${profile.country??'No Data'}", style: AppTheme.subTitleLight)
                 ],
               ),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             buildSDGTags(),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             buildSkillset(),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             buildProfileUrl(),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             Column(
               children: [
                 Row(
@@ -119,7 +119,9 @@ class DescriptionInfo extends StatelessWidget {
   }
 
   Row buildSDGTags() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
       Flexible(flex: 1, child: Text("SDG Interests")),
       Flexible(
         flex: 3,

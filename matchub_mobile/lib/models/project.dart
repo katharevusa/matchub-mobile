@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:matchub_mobile/models/index.dart';
 
 part 'project.g.dart';
 
@@ -10,8 +11,8 @@ class Project {
     String projectTitle;
     String projectDescription;
     String country;
-    String startDate;
-    String endDate;
+    DateTime startDate;
+    DateTime endDate;
     List userFollowers;
     String projStatus;
     num upvotes;
@@ -30,7 +31,7 @@ class Project {
     List kpis;
     List teamMembers;
     List channels;
-    List projectOwners;
+    List<TruncatedProfile> projectOwners;
     
     factory Project.fromJson(Map<String,dynamic> json) => _$ProjectFromJson(json);
     Map<String, dynamic> toJson() => _$ProjectToJson(this);
