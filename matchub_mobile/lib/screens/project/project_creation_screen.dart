@@ -45,8 +45,8 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       "projectTitle": newProject.projectTitle ?? "",
       "projectDescription": newProject.projectDescription ?? "",
       "country": newProject.country ?? "",
-      "startDate": newProject.startDate ?? "",
-      "endDate": newProject.endDate ?? "",
+      "startDate": newProject.startDate ?? DateTime.now(),
+      "endDate": newProject.endDate ?? DateTime.now(),
       "userFollowers": newProject.userFollowers ?? [],
       "projStatus": newProject.projStatus ?? "ON_HOLD",
       "upvotes": newProject.upvotes ?? 0,
@@ -125,7 +125,16 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     project["projectOwnerId"] = Provider.of<Auth>(context).myProfile.accountId;
     final url = "authenticated/createNewProject";
     var accessToken = Provider.of<Auth>(context).accessToken;
-
+    var dateTime = project['startDate'];
+    project['startDate'] = formatDate(
+        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
+            dateTime.minute, dateTime.second),
+        [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+    dateTime = project['endDate'];
+    project['endDate'] = formatDate(
+        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
+            dateTime.minute, dateTime.second),
+        [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
     try {
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(project));
@@ -148,7 +157,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       }
       if (documents.isNotEmpty) {
         await uploadMultiFile(
-            photos,
+            documents,
             "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadDocuments?projectId=${newProjectId}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "documents",
@@ -192,6 +201,16 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     final url =
         "authenticated/updateProject?updaterId=${updaterId}&projectId=${projectId}";
     try {
+      var dateTime = project['startDate'];
+      project['startDate'] = formatDate(
+          DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
+              dateTime.minute, dateTime.second),
+          [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+      dateTime = project['endDate'];
+      project['endDate'] = formatDate(
+          DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
+              dateTime.minute, dateTime.second),
+          [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
       var accessToken = Provider.of<Auth>(context).accessToken;
       final response = await ApiBaseHelper().putProtected(url,
           accessToken: accessToken, body: json.encode(project));
@@ -477,42 +496,21 @@ class Start extends StatefulWidget {
 }
 
 class _StartState extends State<Start> {
-  DateTime dateTime = DateTime.now();
-
   @override
   Widget build(BuildContext context) {
-    print(widget.project["startDate"]);
-    if (widget.project["startDate"] != "" &&
-        widget.project["startDate"] != null) {
-      dateTime = DateTime.parse(widget.project["startDate"]);
-      // dateTime = widget.project["startDate"];
-    }
-    if (widget.project["startDate"] == "" ||
-        widget.project["startDate"] == null) {
-      widget.project["startDate"] = formatDate(
-          DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
-              dateTime.minute, dateTime.second),
-          [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
-    }
     return Column(
       children: <Widget>[
         Text(
-          DateFormat.yMMMd().add_jm().format(dateTime),
+          DateFormat.yMMMd().add_jm().format(widget.project['startDate']),
         ),
         Container(
           height: 300,
           child: CupertinoDatePicker(
             mode: CupertinoDatePickerMode.dateAndTime,
-            initialDateTime: dateTime,
+            initialDateTime: widget.project["startDate"],
             onDateTimeChanged: (newDateTime) {
               setState(() {
-                dateTime = newDateTime;
-                print(dateTime);
-                widget.project["startDate"] = formatDate(
-                    DateTime(dateTime.year, dateTime.month, dateTime.day,
-                        dateTime.hour, dateTime.minute, dateTime.second),
-                    [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
-
+                widget.project["startDate"] = newDateTime;
                 print(widget.project["startDate"]);
               });
             },
@@ -531,36 +529,21 @@ class End extends StatefulWidget {
 }
 
 class _EndState extends State<End> {
-  DateTime dateTime = DateTime.now();
-
   @override
   Widget build(BuildContext context) {
-    if (widget.project["endDate"] != "" && widget.project["endDate"] != null) {
-      dateTime = DateTime.parse(widget.project["endDate"]);
-      // dateTime = widget.project["endDate"];
-    }
-
     return Column(
       children: <Widget>[
         Text(
-          DateFormat.yMMMd().add_jm().format(dateTime),
+          DateFormat.yMMMd().add_jm().format(widget.project['endDate']),
         ),
         Container(
           height: 300,
           child: CupertinoDatePicker(
             mode: CupertinoDatePickerMode.dateAndTime,
-            initialDateTime: dateTime,
+            initialDateTime: widget.project['endDate'],
             onDateTimeChanged: (newDateTime) {
               setState(() {
-                dateTime = newDateTime;
-                print(dateTime);
-                widget.project["endDate"] = formatDate(
-                    DateTime(dateTime.year, dateTime.month, dateTime.day,
-                        dateTime.hour, dateTime.minute, dateTime.second),
-                    [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
-
-                print("hello");
-                print(widget.project["endDate"]);
+                widget.project["endDate"] = newDateTime;
               });
             },
           ),
@@ -581,112 +564,71 @@ class SDG extends StatefulWidget {
 class _SDGState extends State<SDG> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              Navigator.of(context)
-                  .pushNamed(SDGPicker.routeName)
-                  .then((value) {
-                setState(() {
-                  if (value != null) {
-                    // (widget.profile['sdgIds'] as List)..addAll(value)..toSet();
-                    widget.project['sdgIds'] = (value);
-                  }
+    return SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      child: Container(
+        child: Column(
+          children: [
+            InkWell(
+              onTap: () {
+                Navigator.of(context)
+                    .pushNamed(SDGPicker.routeName)
+                    .then((value) {
+                  setState(() {
+                    if (value != null) {
+                      // (widget.profile['sdgIds'] as List)..addAll(value)..toSet();
+                      widget.project['sdgIds'] = (value);
+                    }
+                    print(widget.project['sdgIds']);
+                  });
                   print(widget.project['sdgIds']);
                 });
-                print(widget.project['sdgIds']);
-              });
-            },
-            child: Container(
-              constraints:
-                  BoxConstraints(minHeight: 7.5 * SizeConfig.heightMultiplier),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.fromBorderSide(
-                    BorderSide(color: Colors.grey[850]),
-                  )),
-              child: Center(
-                  child: Column(
-                children: [
-                  Text("Select your SDG(s)", style: AppTheme.titleLight),
-                  if (widget.project['sdgIds'] != null) ...[
-                    SizedBox(height: 5),
-                    Text(
-                      "${widget.project['sdgIds'].length} SDG(s) chosen",
-                    ),
-                    SizedBox(height: 5),
-                    GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate:
-                            new SliverGridDelegateWithFixedCrossAxisCount(
-                                // mainAxisSpacing: 10,
-                                // crossAxisSpacing: 10,
-                                childAspectRatio: 1,
-                                crossAxisCount: 3),
-                        itemCount: widget.project['sdgIds'].length,
-                        itemBuilder: (BuildContext context, int index) {
-                          int i = (widget.project['sdgIds'][index]);
-                          i++;
-                          return Container(
-                            // height:50,
-                            child: Image.asset("assets/icons/goal$i.png"),
-                          );
-                        }),
-                  ]
-                ],
-              )),
+              },
+              child: Container(
+                constraints: BoxConstraints(
+                    minHeight: 7.5 * SizeConfig.heightMultiplier),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.fromBorderSide(
+                      BorderSide(color: Colors.grey[850]),
+                    )),
+                child: Center(
+                    child: Column(
+                  children: [
+                    Text("Select your SDG(s)", style: AppTheme.titleLight),
+                    if (widget.project['sdgIds'] != null) ...[
+                      SizedBox(height: 5),
+                      Text(
+                        "${widget.project['sdgIds'].length} SDG(s) chosen",
+                      ),
+                      SizedBox(height: 5),
+                      GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate:
+                              new SliverGridDelegateWithFixedCrossAxisCount(
+                                  // mainAxisSpacing: 10,
+                                  // crossAxisSpacing: 10,
+                                  childAspectRatio: 1,
+                                  crossAxisCount: 3),
+                          itemCount: widget.project['sdgIds'].length,
+                          itemBuilder: (BuildContext context, int index) {
+                            int i = (widget.project['sdgIds'][index]);
+                            i++;
+                            return Container(
+                              // height:50,
+                              child: Image.asset("assets/icons/goal$i.png"),
+                            );
+                          }),
+                    ]
+                  ],
+                )),
+              ),
             ),
-          ),
-          SizedBox(height: 20),
-        ],
+            SizedBox(height: 20),
+          ],
+        ),
       ),
     );
-    /*  return Container(
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              Navigator.of(context)
-                  .pushNamed(SDGPicker.routeName)
-                  .then((value) {
-                setState(() {
-                  if (value != null) {
-                    widget.project['sdgIds'].addAll(value);
-                    //   print(widget.project['sdgsIds']);
-                  }
-                  widget.project['sdgIds'] =
-                      widget.project['sdgIds'].toSet().toList();
-                });
-              });
-            },
-            child: Container(
-              constraints:
-                  BoxConstraints(minHeight: 25 * SizeConfig.heightMultiplier),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.fromBorderSide(
-                    BorderSide(color: Colors.grey[850]),
-                  )),
-              child: Center(
-                  child: Column(
-                children: [
-                  Text("Select your SDG(s)", style: AppTheme.titleLight),
-                  if (widget.project['sdgsIds'] != null) ...[
-                    SizedBox(height: 5),
-                    Text(
-                      "${widget.project['sdgsIds'].length} SDG(s) chosen",
-                    )
-                  ]
-                ],
-              )),
-            ),
-          ),
-          SizedBox(height: 20),
-        ],
-      ),
-    );*/
   }
 }
 

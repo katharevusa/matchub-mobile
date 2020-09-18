@@ -27,6 +27,7 @@ class ResourceCreationScreen extends StatefulWidget {
 
 class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
   Map<String, dynamic> resource;
+  final GlobalKey<FormState> _formKey = GlobalKey();
   @override
   void initState() {
     resource = {
@@ -60,6 +61,16 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     "Create New Resource",
     "Create New Resource",
   ];
+
+  final List<String> titles_edit = [
+    "Edit Resource",
+    "Edit Resource",
+    "Edit Resource",
+    "Edit Resource",
+    "Edit Resource",
+    "Edit Resource",
+    "Edit Resource",
+  ];
   final List<String> subtitles = [
     "Title & Description",
     "Select Category",
@@ -88,6 +99,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(resource));
       print("Success");
+      await Provider.of<Auth>(context).retrieveUser();
       Navigator.of(context).pop(true);
     } catch (error) {
       final responseData = error.body as Map<String, dynamic>;
@@ -112,8 +124,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     }
   }
 
-  /*  void updateResource(context) async {
-  
+  void updateResource(context) async {
     // if (coverPhoto.isNotEmpty) {
     //   await uploadSinglePic(
     //       coverPhoto.first,
@@ -124,16 +135,17 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     // }
 
     var updaterId = Provider.of<Auth>(context).myProfile.accountId;
-    var projectId = project["projectId"];
+    var resourceId = resource["resourceId"];
     final url =
-        "authenticated/updateProject?updaterId=${updaterId}&projectId=${projectId}";
+        "authenticated/updateResource?updaterId=${updaterId}&resourceId=${resourceId}";
     try {
       var accessToken = Provider.of<Auth>(context).accessToken;
       final response = await ApiBaseHelper().putProtected(url,
-          accessToken: accessToken, body: json.encode(project));
+          accessToken: accessToken, body: json.encode(resource));
       Provider.of<Auth>(context).retrieveUser();
       print("Success");
       Navigator.of(context).pop(true);
+      await Provider.of<Auth>(context).retrieveUser();
     } catch (error) {
       final responseData = error.body as Map<String, dynamic>;
       print("Failure");
@@ -153,7 +165,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
               ));
     }
   }
-*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,51 +189,100 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
               ),
               itemCount: 7,
               itemBuilder: (context, index) {
-                if (index == 0) {
+                if (index == 0 && resource["resourceId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: Title_description(resource),
                   );
-                } else if (index == 1) {
+                } else if (index == 0 && resource["resourceId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Title_description(resource),
+                  );
+                } else if (index == 1 && resource["resourceId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: Category(resource),
                   );
-                } else if (index == 2) {
+                } else if (index == 1 && resource["resourceId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Category(resource),
+                  );
+                } else if (index == 2 && resource["resourceId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: Unit(resource),
                   );
-                } else if (index == 3) {
+                } else if (index == 2 && resource["resourceId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Unit(resource),
+                  );
+                } else if (index == 3 && resource["resourceId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: Start(resource),
                   );
-                } else if (index == 4) {
+                } else if (index == 3 && resource["resourceId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Start(resource),
+                  );
+                } else if (index == 4 && resource["resourceId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: End(resource),
                   );
-                } else if (index == 5) {
+                } else if (index == 4 && resource["resourceId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: End(resource),
+                  );
+                } else if (index == 5 && resource["resourceId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: Document(resource),
                   );
-                } else if (index == 6) {
+                } else if (index == 5 && resource["resourceId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Document(resource),
+                  );
+                } else if (index == 6 && resource["resourceId"] == null) {
                   return IntroItem(
                     title: titles[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Document(resource),
+                  );
+                } else if (index == 6 && resource["resourceId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: Document(resource),
@@ -245,11 +306,11 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
               onPressed: () {
                 if (_currentIndex != 6) {
                   _controller.next();
-                }
-                // if (_currentIndex != 5)
-                //   _controller.next();
-                else
+                } else if (resource["resourceId"] == null) {
                   createNewResource(context);
+                } else {
+                  updateResource(context);
+                }
               },
             ),
           )
@@ -275,10 +336,6 @@ class _Title_descriptionState extends State<Title_description> {
     TextEditingController _descriptionController = new TextEditingController();
     _titleController.text = widget.resource["resourceName"];
     _descriptionController.text = widget.resource['resourceDescription'];
-    // if (widget.resource["resourceName"] != null ||
-    //     widget.resource["resourceName"] != "") {
-
-    // }
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
@@ -329,12 +386,6 @@ class _CategoryState extends State<Category> {
   ApiBaseHelper _helper = ApiBaseHelper();
   List<ResourceCategory> listOfCategories;
   Future categoriesFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    categoriesFuture = retrieveAllCategories();
-  }
 
 //retrieve all categories
   retrieveAllCategories() async {
