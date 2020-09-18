@@ -3,12 +3,11 @@ import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/style.dart';
-import 'package:async/async.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -34,7 +33,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
-              child: Container(
+        child: Container(
           width: 100 * SizeConfig.widthMultiplier,
           child: Column(
             children: [
@@ -44,7 +43,8 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                 style: AppTheme.titleLight,
               ),
               SizedBox(height: 20),
-              if (pickedProfilePic == null && myProfile.profilePhoto.isEmpty) ...[
+              if (pickedProfilePic == null &&
+                  myProfile.profilePhoto.isEmpty) ...[
                 Text(
                   "You do not currently have a profile picture",
                   style: TextStyle(fontSize: 16, color: Colors.grey[850]),
@@ -71,8 +71,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                     child: Container(
                         height: 200,
                         width: 200,
-                        child: AttachmentImage(
-                            myProfile.profilePhoto))),
+                        child: AttachmentImage(myProfile.profilePhoto))),
                 SizedBox(height: 20),
                 RaisedButton(
                   color: Colors.red[300],
@@ -113,16 +112,14 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                     setState(() {
                       pickedProfilePic = File(result.files.single.path);
                     });
-                  }
-                  if (result != null) {
-                    //  PlatformFile file = result.files.first;
+                    PlatformFile file = result.files.first;
 
-                    //  print(file.name);
-                    //  print(file.bytes);
-                    //  print(file.size);
-                    //  print(file.extension);
-                    //  print(file.path);
-                    print("==================" + result.count.toString());
+                    print(file.name);
+                    print(file.bytes);
+                    print(file.size);
+                    print(file.extension);
+                    print(file.path);
+                    // print("==================" + result.count.toString());
                   }
                 },
                 child: Container(
@@ -131,7 +128,8 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                     decoration: BoxDecoration(
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey[400], width: 2.0)),
+                        border:
+                            Border.all(color: Colors.grey[400], width: 2.0)),
                     child: Center(child: Icon(Icons.upload_rounded))),
               ),
             ],
@@ -151,7 +149,11 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                 color: kSecondaryColor,
                 onPressed: () async {
                   if (pickedProfilePic != null) {
-                    await uploadProfilePic(pickedProfilePic, context);
+                    await uploadSinglePic(
+                        pickedProfilePic,
+                        "${ApiBaseHelper().baseUrl}authenticated/updateIndividual/updateProfilePic/${Provider.of<Auth>(context, listen: false).myProfile.uuid}",
+                        Provider.of<Auth>(context, listen: false).accessToken, 'file',
+                        context);
                   }
                   widget.updateProfile(
                       Provider.of<Auth>(context).accessToken, context);
@@ -163,36 +165,24 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
     );
   }
 
-  uploadProfilePic(File file, context) async {
-    // var stream = new http.ByteStream(
-    //     DelegatingStream.typed((menuItem['image'] as File).openRead()));
-    // var length = await (menuItem['image'] as File).length();
-    // var uri =
-    //     Uri.parse("${ApiBaseHelper().baseUrl}authenticated/createMenuItem");
-    // create multipart request
+  // uploadProfilePic(File file, url, context) async {
 
-    var request = new http.MultipartRequest(
-        "POST",
-        Uri.parse(
-            "${ApiBaseHelper().baseUrl}authenticated/updateIndividual/updateProfilePic/${Provider.of<Auth>(context).myProfile.uuid}"));
-    request.headers.addAll(
-        {"Authorization": "Bearer " + Provider.of<Auth>(context).accessToken});
-    request.files.add(await http.MultipartFile.fromBytes(
-        'file', file.readAsBytesSync(),
-        filename: file.path));
-    // var multipartFile = new http.MultipartFile('image', stream, length,
-    //     filename: basename((menuItem['image'] as File).path));
-    // // add file to multipart
-    // request.files.add(multipartFile);
-    // print("Uploaded image");
-    await request.send().then((response) async {
-      response.stream.transform(utf8.decoder).listen((value) {
-        print(value);
-        var res = json.decode(value) as Map<String, dynamic>;
-        // widget.uploadedMenu..add(res['menuItemId'].toString())..retainWhere((element) => element!=null);
-      });
-    }).catchError((e) {
-      print(e);
-    });
-  }
+  //   var request = new http.MultipartRequest(
+  //       "POST",
+  //       Uri.parse(
+  //           "${ApiBaseHelper().baseUrl}authenticated/updateIndividual/updateProfilePic/${Provider.of<Auth>(context).myProfile.uuid}"));
+  //   request.headers.addAll(
+  //       {"Authorization": "Bearer " + Provider.of<Auth>(context).accessToken});
+  //   request.files.add(await http.MultipartFile.fromBytes(
+  //       'file', file.readAsBytesSync(),
+  //       filename: file.path));
+  //   await request.send().then((response) async {
+  //     response.stream.transform(utf8.decoder).listen((value) {
+  //       print(value);
+  //       var res = json.decode(value) as Map<String, dynamic>;
+  //     });
+  //   }).catchError((e) {
+  //     print(e);
+  //   });
+  // }
 }

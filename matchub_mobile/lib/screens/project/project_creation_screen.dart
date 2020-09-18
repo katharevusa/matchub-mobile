@@ -19,6 +19,7 @@ import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:date_format/date_format.dart';
 
 class ProjectCreationScreen extends StatefulWidget {
@@ -34,6 +35,9 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
   Project newProject;
   _ProjectCreationScreenState(this.newProject);
   Map<String, dynamic> project;
+  List<File> coverPhoto = [];
+  List<File> photos = [];
+  List<File> documents = [];
   @override
   void initState() {
     project = {
@@ -86,7 +90,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     "Start Date & Time",
     "End Date & Time",
     "Select SDGs",
-    "Upload Profile photo",
+    "Upload Cover Photo",
     "Upload Photo",
     "Upload Documents",
     "Badge Creation",
@@ -144,6 +148,14 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     //   return;
     // }
     // _formKey.currentState.save();
+    if (coverPhoto.isNotEmpty) {
+      await uploadSinglePic(
+          coverPhoto.first,
+         "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
+          Provider.of<Auth>(context, listen: false).accessToken,
+          "profilePic",
+          context);
+    }
     var updaterId = Provider.of<Auth>(context).myProfile.accountId;
     var projectId = project["projectId"];
     final url =
@@ -231,19 +243,19 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project));
+                      widget: Document(project, false, false, coverPhoto));
                 } else if (index == 5) {
                   return IntroItem(
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project));
+                      widget: Document(project, true, true, photos));
                 } else if (index == 6) {
                   return IntroItem(
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project));
+                      widget: Document(project, true, true, documents));
                 } else if (index == 7) {
                   return IntroItem(
                     title: titles[index],
@@ -573,95 +585,176 @@ class _SDGState extends State<SDG> {
 }
 
 class Document extends StatefulWidget {
-  Map<String, dynamic> resource;
-  Document(this.resource);
+  Map<String, dynamic> project;
+  bool toUploadMultiple;
+  bool toUploadDocuments = false;
+  List<File> fileList = new List<File>();
+
+  Document(this.project, this.toUploadMultiple, this.toUploadDocuments,
+      this.fileList);
   @override
   _DocumentState createState() => _DocumentState();
 }
 
 class _DocumentState extends State<Document> {
-  List<Widget> fileListThumb;
-  List<File> fileList = new List<File>();
-
+  List<Widget> fileListThumbnail;
+  Future filesarebeingpicked = Future.delayed(Duration(microseconds: 1));
   Future pickFiles() async {
-    List<Widget> thumbs = new List<Widget>();
-    fileListThumb.forEach((element) {
-      thumbs.add(element);
-    });
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: widget.toUploadDocuments
+          ? ['pdf', 'ppt', 'pptx', 'doc', 'docx', 'xlsx']
+          : ['jpg', 'png'],
+      allowMultiple: widget.toUploadMultiple,
+    );
 
-    // await FilePicker.getMultiFile(
-    //   type: FileType.custom,
-    //   allowedExtensions: ['pdf'],
-    // ).then((files) {
-    //   if (files != null && files.length > 0) {
-    //     files.forEach((element) {
-    //       List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
+    if (result != null) {
+      result.files.forEach((element) {
+        File file = (File(element.path));
 
-    //       if (picExt.contains(extension(element.path))) {
-    //         thumbs.add(Padding(
-    //             padding: EdgeInsets.all(1), child: new Image.file(element)));
-    //       } else
-    //         thumbs.add(Container(
-    //             child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.center,
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 children: <Widget>[
-    //               Icon(Icons.insert_drive_file),
-    //               Text(basename(element.path)),
-    //             ])));
-    //       fileList.add(element);
-    //       // widget.newResource.uploadedFiles.add(element.toString());
-    //       // print(widget.newResource.uploadedFiles.toList());
-    //     });
-    //     setState(() {
-    //       fileListThumb = thumbs;
-    //     });
-    //   }
-    // });
-  }
-
-  List<Map> storeNameAndPath(List<File> fileList) {
-    List<Map> s = new List<Map>();
-    if (fileList.length > 0)
-      fileList.forEach((element) {
-        Map a = {
-          'fileName': basename(element.path),
-          'encoded': base64Encode(element.readAsBytesSync())
-        };
-        s.add(a);
+        print(element.name);
+        print(element.bytes);
+        print(element.size);
+        print(element.extension);
+        print(element.path);
+        widget.fileList.add(file);
+        fileListThumbnail.add(Container(
+          padding: EdgeInsets.all(8),
+          height: 200,
+          width: 200,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.insert_drive_file),
+                Expanded(
+                    child: Text(
+                  basename(file.path),
+                  overflow: TextOverflow.fade,
+                ))
+              ]),
+        ));
+        setState(() {});
       });
-    return s;
+    }
   }
+  // await FilePicker.getMultiFile(
+  //   type: FileType.custom,
+  //   allowedExtensions: ['pdf'],
+  // ).then((files) {
+  //   if (files != null && files.length > 0) {
+  //     files.forEach((element) {
+  //       List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
+
+  //       if (picExt.contains(extension(element.path))) {
+  //         thumbs.add(Padding(
+  //             padding: EdgeInsets.all(1), child: new Image.file(element)));
+  //       } else
+  //         thumbs.add(Container(
+  //             child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: <Widget>[
+  //               Icon(Icons.insert_drive_file),
+  //               Text(basename(element.path)),
+  //             ])));
+  //       fileList.add(element);
+  //       // widget.newResource.uploadedFiles.add(element.toString());
+  //       // print(widget.newResource.uploadedFiles.toList());
+  //     });
+  //     setState(() {
+  //       fileListThumbnail = thumbs;
+  //     });
+  //   }
+  // }
+
+  // List<Map> storeNameAndPath(List<File> fileList) {
+  //   List<Map> s = new List<Map>();
+  //   if (fileList.length > 0)
+  //     fileList.forEach((element) {
+  //       Map a = {
+  //         'fileName': basename(element.path),
+  //         'encoded': base64Encode(element.readAsBytesSync())
+  //       };
+  //       s.add(a);
+  //     });
+  //   return s;
+  // }
 
   @override
   Widget build(BuildContext context) {
-    if (fileListThumb == null)
-      fileListThumb = [
-        InkWell(
-          onTap: pickFiles,
-          child: Container(child: Icon(Icons.add)),
-        )
-      ];
-    // if(!resource.uploadedFiles.isEmpty){
-    //   fileListThumb
-    // }
-    final Map params = new Map();
-    return Scaffold(
-      body: Center(
+    fileListThumbnail = [];
+    widget.fileList.forEach((file) => fileListThumbnail.add(Container(
+          padding: EdgeInsets.all(8),
+          height: 200,
+          width: 200,
           child: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 4,
-            child: Padding(
-              padding: EdgeInsets.all(5),
-              child: GridView.count(
-                crossAxisCount: 4,
-                children: fileListThumb,
-              ),
-            ),
-          ),
-        ],
-      )),
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.insert_drive_file),
+                Expanded(
+                    child: Text(
+                  basename(file.path),
+                  overflow: TextOverflow.fade,
+                ))
+              ]),
+        )));
+    if (!(widget.fileList.isNotEmpty && !widget.toUploadMultiple))
+      fileListThumbnail.add(InkWell(
+        onTap: () {
+          filesarebeingpicked = pickFiles();
+        },
+        child: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey[400], width: 2.0)),
+            height: 200,
+            width: 200,
+            child: Center(child: Icon(Icons.add))),
+      ));
+
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: FutureBuilder(
+          future: filesarebeingpicked,
+          builder: (context, snapshot) =>
+              snapshot.connectionState == ConnectionState.done
+                  ? SingleChildScrollView(
+                      child: Column(children: [
+                      GridView.count(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        childAspectRatio: 1,
+                        crossAxisCount: 4,
+                        children: fileListThumbnail,
+                      ),
+                      if (widget.fileList.isNotEmpty)
+                        FlatButton(
+                          onPressed: () async {
+                            await uploadMultiFile(
+                                widget.fileList,
+                                "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadPhotos?projectId=${widget.project['projectId']}",
+                                Provider.of<Auth>(context, listen: false)
+                                    .accessToken,
+                                "photos",
+                                context);
+
+                                print("Reached here");
+                            // setState(() {
+                            //   fileListThumbnail.clear();
+                            //   widget.fileList.clear();
+                            // });
+                          },
+                          child: Text("Clear",
+                              style: TextStyle(color: Colors.red[400])),
+                        )
+                    ]))
+                  : CircularProgressIndicator(),
+        ),
+      ),
     );
   }
 }
@@ -687,39 +780,42 @@ class IntroItem extends StatelessWidget {
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 40),
-              Text(
-                title,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 35.0,
-                    color: Colors.white),
-              ),
-              if (subtitle != null) ...[
-                const SizedBox(height: 20.0),
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 40),
                 Text(
-                  subtitle,
-                  style: TextStyle(color: Colors.white, fontSize: 24.0),
-                  textAlign: TextAlign.center,
+                  title,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 35.0,
+                      color: Colors.white),
                 ),
-              ],
-              const SizedBox(height: 40.0),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 70),
-                  width: double.infinity,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
-                    child: Material(
-                      elevation: 4.0,
-                      child: widget,
+                if (subtitle != null) ...[
+                  const SizedBox(height: 20.0),
+                  Text(
+                    subtitle,
+                    style: TextStyle(color: Colors.white, fontSize: 24.0),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+                const SizedBox(height: 40.0),
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 70),
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: Material(
+                        elevation: 4.0,
+                        child: widget,
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
