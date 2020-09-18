@@ -138,6 +138,43 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     }
   }
 
+  void updateProject(context) async {
+    // if (!_formKey.currentState.validate()) {
+    //   print("Form is invalid");
+    //   return;
+    // }
+    // _formKey.currentState.save();
+    var updaterId = Provider.of<Auth>(context).myProfile.accountId;
+    var projectId = project["projectId"];
+    final url =
+        "authenticated/updateProject?updaterId=${updaterId}&projectId=${projectId}";
+    try {
+      var accessToken = Provider.of<Auth>(context).accessToken;
+      final response = await ApiBaseHelper().putProtected(url,
+          accessToken: accessToken, body: json.encode(project));
+      Provider.of<Auth>(context).retrieveUser();
+      print("Success");
+      Navigator.of(context).pop(true);
+    } catch (error) {
+      final responseData = error.body as Map<String, dynamic>;
+      print("Failure");
+      showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+                title: Text(responseData['error']),
+                content: Text(responseData['message']),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                  )
+                ],
+              ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -243,8 +280,11 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                 }
                 // if (_currentIndex != 5)
                 //   _controller.next();
-                else
+                else if (project["projectId"] == null) {
                   createNewProject(context);
+                } else {
+                  updateProject(context);
+                }
               },
             ),
           )
@@ -344,8 +384,8 @@ class _StartState extends State<Start> {
     print(widget.project["startDate"]);
     if (widget.project["startDate"] != "" &&
         widget.project["startDate"] != null) {
-      String temp = widget.project["startDate"] + "Z";
-      dateTime = DateTime.parse(temp);
+      dateTime = DateTime.parse(widget.project["startDate"]);
+      // dateTime = widget.project["startDate"];
     }
     if (widget.project["startDate"] == "" ||
         widget.project["startDate"] == null) {
@@ -396,8 +436,8 @@ class _EndState extends State<End> {
   @override
   Widget build(BuildContext context) {
     if (widget.project["endDate"] != "" && widget.project["endDate"] != null) {
-      String temp = widget.project["endDate"] + "Z";
-      dateTime = DateTime.parse(temp);
+      dateTime = DateTime.parse(widget.project["endDate"]);
+      // dateTime = widget.project["endDate"];
     }
 
     return Column(

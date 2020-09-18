@@ -4,6 +4,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/project/project_creation_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -278,7 +279,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   Container buildMorePopUp(BuildContext context) {
     return Container(
-        height: 250,
+        height: 300,
         child: Column(
           children: [
             FlatButton(
@@ -356,6 +357,45 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     Text("Contribute Resource", style: AppTheme.titleLight),
                   ],
                 )),
+            FlatButton(
+                onPressed: () => Navigator.of(context, rootNavigator: true)
+                    .push(MaterialPageRoute(
+                        builder: (context) =>
+                            ProjectCreationScreen(newProject: project))),
+                visualDensity: VisualDensity.comfortable,
+                highlightColor: Colors.transparent,
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Icon(
+                        FlutterIcons.edit_2_fea,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text("Edit Project", style: AppTheme.titleLight),
+                  ],
+                )),
+            FlatButton(
+                onPressed: () {},
+                visualDensity: VisualDensity.comfortable,
+                highlightColor: Colors.transparent,
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Icon(
+                        FlutterIcons.stop_circle_faw,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text("Terminate", style: AppTheme.titleLight),
+                  ],
+                )),
           ],
         ));
   }
@@ -379,7 +419,7 @@ final List<Widget> imageSliders = imgList
               horizontal: SizeConfig.widthMultiplier * 6,
               vertical: SizeConfig.heightMultiplier * 2),
           child: Material(
-            elevation: 1*SizeConfig.heightMultiplier,
+            elevation: 1 * SizeConfig.heightMultiplier,
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
             child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
