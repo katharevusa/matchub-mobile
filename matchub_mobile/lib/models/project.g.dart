@@ -33,6 +33,7 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..kpis = json['kpis'] as List
     ..teamMembers = json['teamMembers'] as List
     ..channels = json['channels'] as List
+    ..documents = json['documents'] as Map<String, dynamic>
     ..projectOwners = json['projectOwners'] != null
         ? (json['projectOwners'] as List)
             .map((i) => TruncatedProfile.fromJson(i))

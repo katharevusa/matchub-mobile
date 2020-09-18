@@ -77,7 +77,7 @@ class _SelectableItemState extends State<SelectableItem>
       },
       child: Container(
         alignment: Alignment.center,
-        child: AttachmentImage(sdgs[widget.index],
+        child: Image.asset(sdgs[widget.index], fit: BoxFit.cover,
         ),
       ),
     );

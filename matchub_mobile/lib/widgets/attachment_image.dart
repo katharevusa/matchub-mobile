@@ -11,7 +11,7 @@ class AttachmentImage extends StatelessWidget {
     return imageUrl.isNotEmpty
         ? Image(
             image: NetworkImage(
-                "https://192.168.72.136:8443/api/v1/${imageUrl.substring(30)}"),
+                "https://192.168.1.55:8443/api/v1/${imageUrl.substring(30)}"),
             fit: BoxFit.cover,errorBuilder: (context, error, stackTrace) => Image.asset(
               "assets/images/avatar.png",
               fit: BoxFit.cover,

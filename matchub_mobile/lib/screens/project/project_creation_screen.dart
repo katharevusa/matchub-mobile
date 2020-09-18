@@ -125,9 +125,36 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     project["projectOwnerId"] = Provider.of<Auth>(context).myProfile.accountId;
     final url = "authenticated/createNewProject";
     var accessToken = Provider.of<Auth>(context).accessToken;
+
     try {
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(project));
+      int newProjectId = response['projectId'];
+      if (coverPhoto.isNotEmpty) {
+        await uploadSinglePic(
+            coverPhoto.first,
+            "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${newProjectId}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "profilePic",
+            context);
+      }
+      if (photos.isNotEmpty) {
+        await uploadMultiFile(
+            photos,
+            "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadPhotos?projectId=${newProjectId}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "photos",
+            context);
+      }
+      if (documents.isNotEmpty) {
+        await uploadMultiFile(
+            photos,
+            "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadDocuments?projectId=${newProjectId}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "documents",
+            context);
+      }
+
       print("Success");
       Navigator.of(context).pop(true);
     } catch (error) {
@@ -159,14 +186,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     //   return;
     // }
     // _formKey.currentState.save();
-    if (coverPhoto.isNotEmpty) {
-      await uploadSinglePic(
-          coverPhoto.first,
-          "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
-          Provider.of<Auth>(context, listen: false).accessToken,
-          "profilePic",
-          context);
-    }
+
     var updaterId = Provider.of<Auth>(context).myProfile.accountId;
     var projectId = project["projectId"];
     final url =
@@ -175,6 +195,31 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       var accessToken = Provider.of<Auth>(context).accessToken;
       final response = await ApiBaseHelper().putProtected(url,
           accessToken: accessToken, body: json.encode(project));
+
+      if (coverPhoto.isNotEmpty) {
+        await uploadSinglePic(
+            coverPhoto.first,
+            "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "profilePic",
+            context);
+      }
+      if (photos.isNotEmpty) {
+        await uploadMultiFile(
+            photos,
+            "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadPhotos?projectId=${project['projectId']}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "photos",
+            context);
+      }
+      if (documents.isNotEmpty) {
+        await uploadMultiFile(
+            photos,
+            "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadDocuments?projectId=${project['projectId']}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "documents",
+            context);
+      }
       Provider.of<Auth>(context).retrieveUser();
       print("Success");
       Navigator.of(context).pop(true);
@@ -294,13 +339,13 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project, true, true, photos));
+                      widget: Document(project, true, false, photos));
                 } else if (index == 5 && project["projectId"] != null) {
                   return IntroItem(
                       title: titles_edit[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project, true, true, photos));
+                      widget: Document(project, true, false, photos));
                 } else if (index == 6 && project["projectId"] == null) {
                   return IntroItem(
                       title: titles[index],
@@ -796,15 +841,6 @@ class _DocumentState extends State<Document> {
                       if (widget.fileList.isNotEmpty)
                         FlatButton(
                           onPressed: () async {
-                            // await uploadMultiFile(
-                            //     widget.fileList,
-                            //     "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadPhotos?projectId=${widget.project['projectId']}",
-                            //     Provider.of<Auth>(context, listen: false)
-                            //         .accessToken,
-                            //     "photos",
-                            //     context);
-
-                            // print("Reached here");
                             setState(() {
                               fileListThumbnail.clear();
                               widget.fileList.clear();

@@ -8,9 +8,10 @@ class TruncatedProfile {
 
     num accountId;
     String uuid;
+    String email;
     String name;
     bool isOrganisation;
-    String email;
+
     bool accountLocked;
     bool accountExpired;
     bool disabled;

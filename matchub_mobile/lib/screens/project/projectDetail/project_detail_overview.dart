@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
@@ -9,9 +10,12 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProjectDetailScreen extends StatefulWidget {
   static const routeName = "/project-details";
@@ -26,22 +30,26 @@ class ProjectDetailScreen extends StatefulWidget {
 class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Future loadProject;
   Project project;
+  List<String> documentKeys;
   @override
-  void initState() {
+  void didChangeDependencies() {
     loadProject = getProjects();
-    super.initState();
+    super.didChangeDependencies();
   }
 
   getProjects() async {
     final responseData = await ApiBaseHelper().getProtected(
         "authenticated/getProject?projectId=${widget.projectId}",
-        Provider.of<Auth>(context, listen: false).accessToken);
+        Provider.of<Auth>(this.context, listen: false).accessToken);
 
     project = Project.fromJson(responseData);
+    documentKeys = project.documents.keys.toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    Profile myProfile = Provider.of<Auth>(context).myProfile;
+
     return Scaffold(
         appBar: AppBar(
           leading: Padding(
@@ -90,14 +98,45 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                 fontSize: 3.2 * SizeConfig.textMultiplier),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 1 * SizeConfig.heightMultiplier,
-                              left: 8.0 * SizeConfig.widthMultiplier),
-                          child: Text(
-                              "${project.upvotes} upvotes | ${project.userFollowers.length} following",
-                              style: AppTheme.unSelectedTabLight),
-                        ),
+                        Row(children: [
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  top: 1 * SizeConfig.heightMultiplier,
+                                  left: 8.0 * SizeConfig.widthMultiplier),
+                              child: Text(
+                                  "${project.upvotes} upvotes | ${project.userFollowers.length} following",
+                                  style: AppTheme.unSelectedTabLight),
+                            ),
+                          ),
+                          IconButton(
+                              icon: Icon(
+                                Icons.thumb_up,
+                                color: myProfile.upvotedProjectIds
+                                        .contains(project.projectId)
+                                    ? kAccentColor
+                                    : Colors.grey[300],
+                              ),
+                              onPressed: () async {
+                                if (!myProfile.upvotedProjectIds
+                                    .contains(project.projectId)) {
+                                  await ApiBaseHelper().postProtected(
+                                      "authenticated/upvoteProject?projectId=${project.projectId}&userId=${myProfile.accountId}",
+                                      accessToken: Provider.of<Auth>(context)
+                                          .accessToken);
+                                } else {
+                                  await ApiBaseHelper().postProtected(
+                                      "authenticated/revokeUpvote?projectId=${project.projectId}&userId=${myProfile.accountId}",
+                                      accessToken: Provider.of<Auth>(context)
+                                          .accessToken);
+                                }
+
+                                await Provider.of<Auth>(context).retrieveUser();
+                                setState(() {
+                                  loadProject = getProjects();
+                                });
+                              })
+                        ]),
                         CarouselSlider(
                           options: CarouselOptions(
                             autoPlay: false,
@@ -180,7 +219,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                   //     2 * SizeConfig.widthMultiplier,
                                   // vertical:
                                   //     1 * SizeConfig.heightMultiplier),
-                                  height: 16 * SizeConfig.heightMultiplier,
+                                  constraints: BoxConstraints(
+                                      minHeight:
+                                          16 * SizeConfig.heightMultiplier),
                                   margin: EdgeInsets.symmetric(
                                       horizontal:
                                           2 * SizeConfig.widthMultiplier,
@@ -233,30 +274,46 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 4.0 * SizeConfig.widthMultiplier),
                               shrinkWrap: true,
-                              itemBuilder: (context, index) => Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal:
-                                            2 * SizeConfig.widthMultiplier,
-                                        vertical:
-                                            2 * SizeConfig.heightMultiplier),
-                                    decoration: BoxDecoration(boxShadow: [
-                                      BoxShadow(
-                                        offset: Offset(4, 10),
-                                        blurRadius: 6,
-                                        color:
-                                            Colors.grey[400].withOpacity(0.15),
-                                      ),
-                                      BoxShadow(
-                                        offset: Offset(-4, 10),
-                                        blurRadius: 6,
-                                        color:
-                                            Colors.grey[400].withOpacity(0.15),
-                                      ),
-                                    ]),
-                                    child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                        child: Container(
+                              itemBuilder: (context, index) => GestureDetector(
+                                    onTap: () async {
+                                      String fileName = (project
+                                          .documents[documentKeys[index]]);
+                                      String url =
+                                          "https://192.168.1.55:8443/api/v1/" +
+                                              fileName.substring(30);
+                                      print(url);
+                                      if (await canLaunch(url)) {
+                                        await launch(url);
+                                      } else {
+                                        throw 'Could not launch $url';
+                                      }
+                                      // OpenFile.open(
+                                      //     "https://192.168.1.55:8443/api/v1/files/att-7062382057131087005.pdf");
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal:
+                                              2 * SizeConfig.widthMultiplier,
+                                          vertical:
+                                              2 * SizeConfig.heightMultiplier),
+                                      decoration: BoxDecoration(boxShadow: [
+                                        BoxShadow(
+                                          offset: Offset(4, 10),
+                                          blurRadius: 6,
+                                          color: Colors.grey[400]
+                                              .withOpacity(0.15),
+                                        ),
+                                        BoxShadow(
+                                          offset: Offset(-4, 10),
+                                          blurRadius: 6,
+                                          color: Colors.grey[400]
+                                              .withOpacity(0.15),
+                                        ),
+                                      ]),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                          child: Container(
                                             padding: EdgeInsets.all(1 *
                                                 SizeConfig.heightMultiplier),
                                             color: Colors.white,
@@ -264,12 +321,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                                 20 * SizeConfig.widthMultiplier,
                                             // height:
                                             //     20 * SizeConfig.widthMultiplier,
-                                            child: Image.asset(
-                                              iconList[index],
-                                              fit: BoxFit.contain,
-                                            ))),
+                                            child: getDocumentImage(
+                                                documentKeys[index]),
+                                          )),
+                                    ),
                                   ),
-                              itemCount: iconList.length),
+                              itemCount:
+                                  project.documents.keys.toList().length),
                         )
                       ]),
                 )
@@ -405,6 +463,36 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         ));
   }
 
+  void terminateProject() async {
+    var profileId = Provider.of<Auth>(this.context).myProfile.accountId;
+    final url =
+        "authenticated/terminateProject?projectId=${widget.projectId}&profileId=${profileId}";
+    try {
+      var accessToken = Provider.of<Auth>(this.context).accessToken;
+      final response =
+          await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+      print("Success");
+      Navigator.of(this.context).pop(true);
+    } catch (error) {
+      final responseData = error.body as Map<String, dynamic>;
+      print("Failure");
+      showDialog(
+          context: this.context,
+          builder: (ctx) => AlertDialog(
+                title: Text(responseData['error']),
+                content: Text(responseData['message']),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                  )
+                ],
+              ));
+    }
+  }
+
   _terminateDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -494,34 +582,37 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     );
   }
 
-  void terminateProject() async {
-    var profileId = Provider.of<Auth>(context).myProfile.accountId;
-    final url =
-        "authenticated/terminateProject?projectId=${widget.projectId}&profileId=${profileId}";
-    try {
-      var accessToken = Provider.of<Auth>(context).accessToken;
-      final response =
-          await ApiBaseHelper().putProtected(url, accessToken: accessToken);
-      print("Success");
-      Navigator.of(context).pop(true);
-    } catch (error) {
-      final responseData = error.body as Map<String, dynamic>;
-      print("Failure");
-      showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                title: Text(responseData['error']),
-                content: Text(responseData['message']),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Okay'),
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                  )
-                ],
-              ));
+  Widget getDocumentImage(String fileName) {
+    int ext = 0;
+    switch (extension(fileName)) {
+      case '.docx':
+        {
+          ext = 0;
+        }
+        break;
+      case '.doc':
+        {
+          ext = 0;
+        }
+        break;
+      case '.ppt':
+        {
+          ext = 1;
+        }
+        break;
+      case '.xlsx':
+        {
+          ext = 2;
+          print(ext.toString() + "ASDASDSDADsd");
+        }
+        break;
+      default:
+        ext = 3;
     }
+    return Image.asset(
+      iconList[ext],
+      fit: BoxFit.contain,
+    );
   }
 }
 
@@ -549,7 +640,7 @@ final List<Widget> imageSliders = imgList
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 child: Stack(
                   children: <Widget>[
-                    Image.network(item, fit: BoxFit.cover, width: 1000.0),
+                    // Image.network(item, fit: BoxFit.cover, width: 1000.0),
                     Positioned(
                       bottom: 0.0,
                       left: 0.0,
@@ -584,8 +675,6 @@ final List<Widget> imageSliders = imgList
         ))
     .toList();
 final List<String> imgList = [
-  // 'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-  // 'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
       'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
   'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
@@ -595,7 +684,5 @@ final List<String> iconList = [
   "assets/icons/word.png",
   "assets/icons/ppt.png",
   "assets/icons/excel.png",
-  "assets/icons/pdf.png",
-  "assets/icons/pdf.png",
   "assets/icons/pdf.png",
 ];
