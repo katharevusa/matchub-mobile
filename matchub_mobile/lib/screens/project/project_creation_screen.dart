@@ -148,14 +148,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     //   return;
     // }
     // _formKey.currentState.save();
-    if (coverPhoto.isNotEmpty) {
-      await uploadSinglePic(
-          coverPhoto.first,
-          "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
-          Provider.of<Auth>(context, listen: false).accessToken,
-          "profilePic",
-          context);
-    }
+
     var updaterId = Provider.of<Auth>(context).myProfile.accountId;
     var projectId = project["projectId"];
     final url =
@@ -164,6 +157,31 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       var accessToken = Provider.of<Auth>(context).accessToken;
       final response = await ApiBaseHelper().putProtected(url,
           accessToken: accessToken, body: json.encode(project));
+
+      if (coverPhoto.isNotEmpty) {
+        await uploadSinglePic(
+            coverPhoto.first,
+            "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "profilePic",
+            context);
+      }
+      if (photos.isNotEmpty) {
+        await uploadMultiFile(
+            photos,
+            "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadPhotos?projectId=${project['projectId']}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "photos",
+            context);
+      }
+      if (documents.isNotEmpty) {
+        await uploadMultiFile(
+            photos,
+            "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadDocuments?projectId=${project['projectId']}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "documents",
+            context);
+      }
       Provider.of<Auth>(context).retrieveUser();
       print("Success");
       Navigator.of(context).pop(true);
@@ -249,7 +267,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project, true, true, photos));
+                      widget: Document(project, true, false, photos));
                 } else if (index == 6) {
                   return IntroItem(
                       title: titles[index],
@@ -609,33 +627,32 @@ class _DocumentState extends State<Document> {
     );
 
     if (result != null) {
-      setState(() {
-        });
-        result.files.forEach((element) {
-          File file = (File(element.path));
+      setState(() {});
+      result.files.forEach((element) {
+        File file = (File(element.path));
 
-          print(element.name);
-          print(element.bytes);
-          print(element.size);
-          print(element.extension);
-          print(element.path);
-          widget.fileList.add(file);
-          fileListThumbnail.add(Container(
-            padding: EdgeInsets.all(8),
-            height: 200,
-            width: 200,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.insert_drive_file),
-                  Expanded(
-                      child: Text(
-                    basename(file.path),
-                    overflow: TextOverflow.fade,
-                  ))
-                ]),
-          ));
+        print(element.name);
+        print(element.bytes);
+        print(element.size);
+        print(element.extension);
+        print(element.path);
+        widget.fileList.add(file);
+        fileListThumbnail.add(Container(
+          padding: EdgeInsets.all(8),
+          height: 200,
+          width: 200,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.insert_drive_file),
+                Expanded(
+                    child: Text(
+                  basename(file.path),
+                  overflow: TextOverflow.fade,
+                ))
+              ]),
+        ));
       });
       setState(() {});
     }
@@ -736,15 +753,6 @@ class _DocumentState extends State<Document> {
                       if (widget.fileList.isNotEmpty)
                         FlatButton(
                           onPressed: () async {
-                            // await uploadMultiFile(
-                            //     widget.fileList,
-                            //     "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadPhotos?projectId=${widget.project['projectId']}",
-                            //     Provider.of<Auth>(context, listen: false)
-                            //         .accessToken,
-                            //     "photos",
-                            //     context);
-
-                            // print("Reached here");
                             setState(() {
                               fileListThumbnail.clear();
                               widget.fileList.clear();
