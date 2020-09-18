@@ -151,7 +151,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     if (coverPhoto.isNotEmpty) {
       await uploadSinglePic(
           coverPhoto.first,
-         "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
+          "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
           Provider.of<Auth>(context, listen: false).accessToken,
           "profilePic",
           context);
@@ -609,33 +609,35 @@ class _DocumentState extends State<Document> {
     );
 
     if (result != null) {
-      result.files.forEach((element) {
-        File file = (File(element.path));
+      setState(() {
+        });
+        result.files.forEach((element) {
+          File file = (File(element.path));
 
-        print(element.name);
-        print(element.bytes);
-        print(element.size);
-        print(element.extension);
-        print(element.path);
-        widget.fileList.add(file);
-        fileListThumbnail.add(Container(
-          padding: EdgeInsets.all(8),
-          height: 200,
-          width: 200,
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.insert_drive_file),
-                Expanded(
-                    child: Text(
-                  basename(file.path),
-                  overflow: TextOverflow.fade,
-                ))
-              ]),
-        ));
-        setState(() {});
+          print(element.name);
+          print(element.bytes);
+          print(element.size);
+          print(element.extension);
+          print(element.path);
+          widget.fileList.add(file);
+          fileListThumbnail.add(Container(
+            padding: EdgeInsets.all(8),
+            height: 200,
+            width: 200,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.insert_drive_file),
+                  Expanded(
+                      child: Text(
+                    basename(file.path),
+                    overflow: TextOverflow.fade,
+                  ))
+                ]),
+          ));
       });
+      setState(() {});
     }
   }
   // await FilePicker.getMultiFile(
@@ -734,25 +736,25 @@ class _DocumentState extends State<Document> {
                       if (widget.fileList.isNotEmpty)
                         FlatButton(
                           onPressed: () async {
-                            await uploadMultiFile(
-                                widget.fileList,
-                                "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadPhotos?projectId=${widget.project['projectId']}",
-                                Provider.of<Auth>(context, listen: false)
-                                    .accessToken,
-                                "photos",
-                                context);
+                            // await uploadMultiFile(
+                            //     widget.fileList,
+                            //     "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadPhotos?projectId=${widget.project['projectId']}",
+                            //     Provider.of<Auth>(context, listen: false)
+                            //         .accessToken,
+                            //     "photos",
+                            //     context);
 
-                                print("Reached here");
-                            // setState(() {
-                            //   fileListThumbnail.clear();
-                            //   widget.fileList.clear();
-                            // });
+                            // print("Reached here");
+                            setState(() {
+                              fileListThumbnail.clear();
+                              widget.fileList.clear();
+                            });
                           },
                           child: Text("Clear",
                               style: TextStyle(color: Colors.red[400])),
                         )
                     ]))
-                  : CircularProgressIndicator(),
+                  : Center(child: CircularProgressIndicator()),
         ),
       ),
     );
