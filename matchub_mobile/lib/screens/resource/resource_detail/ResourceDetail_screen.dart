@@ -77,11 +77,10 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
         child: Column(
           children: [
             FlatButton(
-                onPressed: () {},
-                // onPressed: () => Navigator.of(context, rootNavigator: true)
-                //     .push(MaterialPageRoute(
-                //         builder: (context) =>
-                //             ResourceCreationScreen(newResource: resource))),
+                onPressed: () => Navigator.of(context, rootNavigator: true)
+                    .push(MaterialPageRoute(
+                        builder: (context) =>
+                            ResourceCreationScreen(newResource: resource))),
                 visualDensity: VisualDensity.comfortable,
                 highlightColor: Colors.transparent,
                 child: Row(

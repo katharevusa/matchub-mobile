@@ -50,16 +50,10 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
 
   SwiperController _controller = SwiperController();
   int _currentIndex = 0;
-  Map<int, bool> swiperControl = {
-    0: false,
-    1: false,
-    2: false,
-    3: true,
-    4: true,
-    5: true
-  };
-  bool _complete;
+
   final List<String> titles = [
+    "Create New Resource",
+    "Create New Resource",
     "Create New Resource",
     "Create New Resource",
     "Create New Resource",
@@ -73,6 +67,8 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     "Input your unit",
     "Start Date",
     "End Date",
+    "Upload Cover Photo",
+    "Upload Photo",
     "Upload Documents",
   ];
   final List<Color> colors = [
@@ -82,6 +78,8 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     Colors.deepOrange.shade300,
     Colors.pinkAccent.shade100,
     Colors.lime.shade300,
+    Colors.brown.shade400,
+    Colors.green.shade300,
   ];
 
   void createNewResource(context) async {
@@ -117,6 +115,48 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     }
   }
 
+  /*  void updateResource(context) async {
+  
+    // if (coverPhoto.isNotEmpty) {
+    //   await uploadSinglePic(
+    //       coverPhoto.first,
+    //       "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
+    //       Provider.of<Auth>(context, listen: false).accessToken,
+    //       "profilePic",
+    //       context);
+    // }
+
+    var updaterId = Provider.of<Auth>(context).myProfile.accountId;
+    var projectId = project["projectId"];
+    final url =
+        "authenticated/updateProject?updaterId=${updaterId}&projectId=${projectId}";
+    try {
+      var accessToken = Provider.of<Auth>(context).accessToken;
+      final response = await ApiBaseHelper().putProtected(url,
+          accessToken: accessToken, body: json.encode(project));
+      Provider.of<Auth>(context).retrieveUser();
+      print("Success");
+      Navigator.of(context).pop(true);
+    } catch (error) {
+      final responseData = error.body as Map<String, dynamic>;
+      print("Failure");
+      showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+                title: Text(responseData['error']),
+                content: Text(responseData['message']),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                  )
+                ],
+              ));
+    }
+  }
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,7 +178,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                   activeSize: 20.0,
                 ),
               ),
-              itemCount: 6,
+              itemCount: 8,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return IntroItem(
@@ -182,6 +222,20 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     bg: colors[index],
                     widget: Document(resource),
                   );
+                } else if (index == 6) {
+                  return IntroItem(
+                    title: titles[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Document(resource),
+                  );
+                } else if (index == 7) {
+                  return IntroItem(
+                    title: titles[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Document(resource),
+                  );
                 }
               }),
           Align(
@@ -197,9 +251,9 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
             alignment: Alignment.bottomRight,
             child: IconButton(
               icon:
-                  Icon(_currentIndex == 5 ? Icons.check : Icons.arrow_forward),
+                  Icon(_currentIndex == 7 ? Icons.check : Icons.arrow_forward),
               onPressed: () {
-                if (_currentIndex != 5) {
+                if (_currentIndex != 7) {
                   _controller.next();
                 }
                 // if (_currentIndex != 5)
@@ -376,11 +430,11 @@ class _UnitState extends State<Unit> {
   int perUnit;
   int _n = 0;
   @override
-  initState(){
-    categoryFuture =retrieveCategoryById();
+  initState() {
+    categoryFuture = retrieveCategoryById();
     super.initState();
   }
-  
+
   retrieveCategoryById() async {
     int id = widget.resource["resourceCategoryId"];
     final url = 'authenticated/getResourceCategoryById?resourceCategoryId=$id';
