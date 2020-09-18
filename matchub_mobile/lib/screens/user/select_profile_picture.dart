@@ -130,7 +130,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                         borderRadius: BorderRadius.circular(10),
                         border:
                             Border.all(color: Colors.grey[400], width: 2.0)),
-                    child: Center(child: Icon(Icons.upload_rounded))),
+                    child: Center(child: Icon(Icons.file_upload))),
               ),
             ],
           ),
@@ -152,7 +152,8 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                     await uploadSinglePic(
                         pickedProfilePic,
                         "${ApiBaseHelper().baseUrl}authenticated/updateIndividual/updateProfilePic/${Provider.of<Auth>(context, listen: false).myProfile.uuid}",
-                        Provider.of<Auth>(context, listen: false).accessToken, 'file',
+                        Provider.of<Auth>(context, listen: false).accessToken,
+                        'file',
                         context);
                   }
                   widget.updateProfile(

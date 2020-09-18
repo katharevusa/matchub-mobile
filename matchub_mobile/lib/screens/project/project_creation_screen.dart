@@ -74,6 +74,17 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
   SwiperController _controller = SwiperController();
   int _currentIndex = 0;
 
+  final List<String> titles_edit = [
+    "Edit Project",
+    "Edit Project",
+    "Edit Project",
+    "Edit Project",
+    "Edit Project",
+    "Edit Project",
+    "Edit Project",
+    "Edit Project",
+  ];
+
   final List<String> titles = [
     "Create New Project",
     "Create New Project",
@@ -208,68 +219,100 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                   activeSize: 20.0,
                 ),
               ),
-              itemCount: 9,
+              itemCount: 7,
               itemBuilder: (context, index) {
-                if (index == 0) {
+                if (index == 0 && project["projectId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: Basic_information(project),
                   );
-                } else if (index == 1) {
+                } else if (index == 0 && project["projectId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Basic_information(project),
+                  );
+                } else if (index == 1 && project["projectId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: Start(project),
                   );
-                } else if (index == 2) {
+                } else if (index == 1 && project["projectId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Start(project),
+                  );
+                } else if (index == 2 && project["projectId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: End(project),
                   );
-                } else if (index == 3) {
+                } else if (index == 2 && project["projectId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: End(project),
+                  );
+                } else if (index == 3 && project["projectId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: SDG(project),
                   );
-                } else if (index == 4) {
+                } else if (index == 3 && project["projectId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: SDG(project),
+                  );
+                } else if (index == 4 && project["projectId"] == null) {
                   return IntroItem(
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
                       widget: Document(project, false, false, coverPhoto));
-                } else if (index == 5) {
+                } else if (index == 4 && project["projectId"] != null) {
+                  return IntroItem(
+                      title: titles_edit[index],
+                      subtitle: subtitles[index],
+                      bg: colors[index],
+                      widget: Document(project, false, false, coverPhoto));
+                } else if (index == 5 && project["projectId"] == null) {
                   return IntroItem(
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
                       widget: Document(project, true, true, photos));
-                } else if (index == 6) {
+                } else if (index == 5 && project["projectId"] != null) {
+                  return IntroItem(
+                      title: titles_edit[index],
+                      subtitle: subtitles[index],
+                      bg: colors[index],
+                      widget: Document(project, true, true, photos));
+                } else if (index == 6 && project["projectId"] == null) {
                   return IntroItem(
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
                       widget: Document(project, true, true, documents));
-                } else if (index == 7) {
+                } else if (index == 6 && project["projectId"] != null) {
                   return IntroItem(
-                    title: titles[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    // widget: Badge(project),
-                  );
-                } else if (index == 8) {
-                  return IntroItem(
-                    title: titles[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    //    widget: FundCampaign(project),
-                  );
+                      title: titles_edit[index],
+                      subtitle: subtitles[index],
+                      bg: colors[index],
+                      widget: Document(project, true, true, documents));
                 }
               }),
           Align(
@@ -285,9 +328,9 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
             alignment: Alignment.bottomRight,
             child: IconButton(
               icon:
-                  Icon(_currentIndex == 8 ? Icons.check : Icons.arrow_forward),
+                  Icon(_currentIndex == 6 ? Icons.check : Icons.arrow_forward),
               onPressed: () {
-                if (_currentIndex != 8) {
+                if (_currentIndex != 6) {
                   _controller.next();
                 }
                 // if (_currentIndex != 5)
@@ -503,17 +546,17 @@ class _SDGState extends State<SDG> {
                   .then((value) {
                 setState(() {
                   if (value != null) {
-                    widget.project['sdgIds'].addAll(value);
+                    // (widget.profile['sdgIds'] as List)..addAll(value)..toSet();
+                    widget.project['sdgIds'] = (value);
                   }
-                  widget.project['sdgIds'] =
-                      widget.project['sdgIds'].toSet().toList();
-                  //    print(widget.project['sdgIds']);
+                  print(widget.project['sdgIds']);
                 });
+                print(widget.project['sdgIds']);
               });
             },
             child: Container(
               constraints:
-                  BoxConstraints(minHeight: 20 * SizeConfig.heightMultiplier),
+                  BoxConstraints(minHeight: 7.5 * SizeConfig.heightMultiplier),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                   border: Border.fromBorderSide(
@@ -527,7 +570,25 @@ class _SDGState extends State<SDG> {
                     SizedBox(height: 5),
                     Text(
                       "${widget.project['sdgIds'].length} SDG(s) chosen",
-                    )
+                    ),
+                    SizedBox(height: 5),
+                    GridView.builder(
+                        shrinkWrap: true,
+                        gridDelegate:
+                            new SliverGridDelegateWithFixedCrossAxisCount(
+                                // mainAxisSpacing: 10,
+                                // crossAxisSpacing: 10,
+                                childAspectRatio: 1,
+                                crossAxisCount: 3),
+                        itemCount: widget.project['sdgIds'].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          int i = (widget.project['sdgIds'][index]);
+                          i++;
+                          return Container(
+                            // height:50,
+                            child: Image.asset("assets/icons/goal$i.png"),
+                          );
+                        }),
                   ]
                 ],
               )),
@@ -609,33 +670,32 @@ class _DocumentState extends State<Document> {
     );
 
     if (result != null) {
-      setState(() {
-        });
-        result.files.forEach((element) {
-          File file = (File(element.path));
+      setState(() {});
+      result.files.forEach((element) {
+        File file = (File(element.path));
 
-          print(element.name);
-          print(element.bytes);
-          print(element.size);
-          print(element.extension);
-          print(element.path);
-          widget.fileList.add(file);
-          fileListThumbnail.add(Container(
-            padding: EdgeInsets.all(8),
-            height: 200,
-            width: 200,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.insert_drive_file),
-                  Expanded(
-                      child: Text(
-                    basename(file.path),
-                    overflow: TextOverflow.fade,
-                  ))
-                ]),
-          ));
+        print(element.name);
+        print(element.bytes);
+        print(element.size);
+        print(element.extension);
+        print(element.path);
+        widget.fileList.add(file);
+        fileListThumbnail.add(Container(
+          padding: EdgeInsets.all(8),
+          height: 200,
+          width: 200,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.insert_drive_file),
+                Expanded(
+                    child: Text(
+                  basename(file.path),
+                  overflow: TextOverflow.fade,
+                ))
+              ]),
+        ));
       });
       setState(() {});
     }

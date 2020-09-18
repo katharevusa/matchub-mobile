@@ -6,7 +6,7 @@ import 'package:http/io_client.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = "https://192.168.72.136:8443/api/v1/";
+  final String _baseUrl = "https://192.168.1.43:8443/api/v1/";
 
   IOClient client;
 
@@ -133,7 +133,7 @@ class ApiBaseHelper {
 
   dynamic _returnResponse(http.Response response) {
     print(response.statusCode);
-    if(response.contentLength == 0) return;
+    if (response.contentLength == 0) return;
     print(response.body);
     var responseJson =
         json.decode(response.body.toString()) as Map<String, dynamic>;

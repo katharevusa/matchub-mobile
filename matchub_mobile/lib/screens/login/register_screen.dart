@@ -121,18 +121,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 class AuthDetails extends StatefulWidget {
   Map<String, dynamic> newStakeholder;
- PageController _controller;
- 
+  PageController _controller;
+
   AuthDetails(this.newStakeholder, this._controller);
 
   @override
   _AuthDetailsState createState() => _AuthDetailsState();
 }
 
-class _AuthDetailsState extends State<AuthDetails> with AutomaticKeepAliveClientMixin<AuthDetails> {
+class _AuthDetailsState extends State<AuthDetails>
+    with AutomaticKeepAliveClientMixin<AuthDetails> {
   @override
   bool get wantKeepAlive => true;
-  
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -176,7 +177,7 @@ class _AuthDetailsState extends State<AuthDetails> with AutomaticKeepAliveClient
           minLines: 1,
           maxLines: 1,
           onChanged: (value) => widget.newStakeholder['email'] = value,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (enter) {
             if (enter.length == 0) {
               return "Please enter your email!";
@@ -222,7 +223,7 @@ class _AuthDetailsState extends State<AuthDetails> with AutomaticKeepAliveClient
               return ('This password is weak! Please enter a stronger password');
             }
           },
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             widget.newStakeholder['password'] = value;
           },
@@ -255,15 +256,19 @@ class _AuthDetailsState extends State<AuthDetails> with AutomaticKeepAliveClient
           keyboardType: TextInputType.text,
           minLines: 1,
           maxLines: 1,
-          autovalidateMode:
-              AutovalidateMode.onUserInteraction,
+          // autovalidateMode:
+          // AutovalidateMode.onUserInteraction,
           validator: (reenterPassword) {
             if (reenterPassword != widget.newStakeholder['password']) {
               return "The password you've entered does not match!";
             }
           },
-        ),SizedBox(height:20),
-        RaisedButton(child:Text("Next"), onPressed: ()=>widget._controller.jumpToPage(1),)
+        ),
+        SizedBox(height: 20),
+        RaisedButton(
+          child: Text("Next"),
+          onPressed: () => widget._controller.jumpToPage(1),
+        )
       ],
     ));
   }
@@ -279,10 +284,11 @@ class BasicDetails extends StatefulWidget {
   _BasicDetailsState createState() => _BasicDetailsState();
 }
 
-class _BasicDetailsState extends State<BasicDetails>  with AutomaticKeepAliveClientMixin<BasicDetails>{
-   @override
+class _BasicDetailsState extends State<BasicDetails>
+    with AutomaticKeepAliveClientMixin<BasicDetails> {
+  @override
   bool get wantKeepAlive => true;
- 
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -349,7 +355,7 @@ class _BasicDetailsState extends State<BasicDetails>  with AutomaticKeepAliveCli
           maxLines: 1,
           onChanged: (value) =>
               widget.newStakeholder['organisationName'] = value,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (enter) {
             if (enter.length == 0) {
               return "Please enter your organisation's name!";
@@ -386,7 +392,7 @@ class _BasicDetailsState extends State<BasicDetails>  with AutomaticKeepAliveCli
           minLines: 1,
           maxLines: 1,
           onChanged: (value) => widget.newStakeholder['firstName'] = value,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (enter) {
             if (enter.length == 0) {
               return "Please enter your first name!";
@@ -422,7 +428,7 @@ class _BasicDetailsState extends State<BasicDetails>  with AutomaticKeepAliveCli
           minLines: 1,
           maxLines: 1,
           onChanged: (value) => widget.newStakeholder['lastName'] = value,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
       ],
       FlatButton(

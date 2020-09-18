@@ -29,7 +29,8 @@ class _ResourceScreenState extends State<ResourceScreen>
   }
 
   retrieveResources() async {
-    final url = 'authenticated/getAllResources';
+    var profileId = Provider.of<Auth>(context).myProfile.accountId;
+    final url = 'authenticated/getHostedResources?profileId=${profileId}';
     final responseData = await _helper.getProtected(
         url, Provider.of<Auth>(context, listen: false).accessToken);
     listOfResources = (responseData['content'] as List)
@@ -56,7 +57,8 @@ class _ResourceScreenState extends State<ResourceScreen>
                       title: Text("Resource Overview"),
                       elevation: 0.0,
                       bottom: PreferredSize(
-                        preferredSize: Size.fromHeight(10*SizeConfig.widthMultiplier),
+                        preferredSize:
+                            Size.fromHeight(10 * SizeConfig.widthMultiplier),
                         child: Container(
                           color: Colors.white,
                           child: TabBar(

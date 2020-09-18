@@ -2,14 +2,17 @@ import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/imageCapture_screen.dart';
 
 import 'package:flutter/widgets.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
 class ResourceDetailScreen extends StatefulWidget {
@@ -19,115 +22,42 @@ class ResourceDetailScreen extends StatefulWidget {
   _ResourceDetailScreenState createState() => _ResourceDetailScreenState();
 }
 
-class _ResourceDetailScreenState extends State<ResourceDetailScreen>
-// with TickerProviderStateMixin
-{
-  // double screenSize;
-
-  // double screenRatio;
-
-  // AppBar appBar;
-
-  // List<Tab> tabList = List();
-
-  // TabController _tabController;
-
-  // @override
-  // void initState() {
-  //   tabList.add(new Tab(
-  //     text: 'Basic Information',
-  //   ));
-  //   tabList.add(new Tab(
-  //     text: 'Projects',
-  //   ));
-  //   _tabController = new TabController(vsync: this, length: tabList.length);
-  //   super.initState();
-  // }
-
-  // @override
-  // void dispose() {
-  //   _tabController.dispose();
-  //   super.dispose();
-  // }
+class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
+  Resources resource;
 
   @override
   Widget build(BuildContext context) {
-    final Resources resource = ModalRoute.of(context).settings.arguments;
-    // screenSize = MediaQuery.of(context).size.width;
-    // appBar = AppBar(
-    //   title: Text(resource.resourceName),
-    //   elevation: 0.0,
-    // );
+    resource = ModalRoute.of(context).settings.arguments;
 
-    // return Container(
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            // onSelected: handleClick,
-            itemBuilder: (BuildContext context) => [
-              PopupMenuItem(
-                child: Text("Upload image"),
-                value: "0",
-              ),
-              PopupMenuItem(
-                child: Text("Update resource"),
-                value: "1",
-              ),
-              PopupMenuItem(
-                child: Text("Terminate"),
-                value: "2",
-              ),
-            ],
-            onSelected: (result) {
-              if (result == "0") {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => ImageCapture(resource)),
-                // );
-              }
-              if (result == "1") {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => SettingPage()),
-                // );
-              }
-              if (result == "2") {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => SettingPage()),
-                // );
-
-              }
-            },
+        leading: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: IconButton(
+            color: Colors.grey[850],
+            icon: Icon(Icons.close),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        actions: [
+          IconButton(
+            alignment: Alignment.bottomCenter,
+            visualDensity: VisualDensity.comfortable,
+            icon: Icon(
+              FlutterIcons.ellipsis_v_faw5s,
+              size: 20,
+              color: Colors.grey[800],
+            ),
+            onPressed: () => showModalBottomSheet(
+                context: context,
+                builder: (context) => buildMorePopUp(context)),
           ),
         ],
-        //  title: Text("Resources"),
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppTheme.appBackgroundColor,
         elevation: 0,
-        // bottom: PreferredSize(
-        //     child: Column(
-        //       children: [
-        //         Gallery(resource),
-        //         Container(
-        //           height: 30,
-        //           margin: EdgeInsets.all(11.0),
-        //           child: new Text(resource.resourceName,
-        //               textAlign: TextAlign.center,
-        //               style: TextStyle(fontSize: 18.0)),
-        //         ),
-        //         TabBar(
-        //             controller: _tabController,
-        //             indicatorColor: Colors.pink,
-        //             indicatorSize: TabBarIndicatorSize.tab,
-        //             tabs: tabList),
-        //       ],
-        //     ),
-        //     preferredSize: Size.fromHeight(300))
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -141,30 +71,175 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen>
     );
   }
 
-  Future<bool> _onWillPop() async {
-    return showDialog<bool>(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            content: Text(
-                "Are you sure you want to quit the quiz? All your progress will be lost."),
-            title: Text("Warning!"),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("Yes"),
+  Container buildMorePopUp(BuildContext context) {
+    return Container(
+        height: 300,
+        child: Column(
+          children: [
+            FlatButton(
+                onPressed: () {},
+                // onPressed: () => Navigator.of(context, rootNavigator: true)
+                //     .push(MaterialPageRoute(
+                //         builder: (context) =>
+                //             ResourceCreationScreen(newResource: resource))),
+                visualDensity: VisualDensity.comfortable,
+                highlightColor: Colors.transparent,
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Icon(
+                        FlutterIcons.edit_2_fea,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text("Edit Project", style: AppTheme.titleLight),
+                  ],
+                )),
+            FlatButton(
                 onPressed: () {
-                  Navigator.pop(context, true);
+                  Navigator.pop(context);
+                  _terminateDialog(context);
                 },
+                visualDensity: VisualDensity.comfortable,
+                highlightColor: Colors.transparent,
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Icon(
+                        FlutterIcons.stop_circle_faw,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text("Terminate", style: AppTheme.titleLight),
+                  ],
+                )),
+          ],
+        ));
+  }
+
+  _terminateDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            child: Container(
+              padding: EdgeInsets.only(right: 16.0),
+              height: 150,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(75),
+                      bottomLeft: Radius.circular(75),
+                      topRight: Radius.circular(10),
+                      bottomRight: Radius.circular(10))),
+              child: Row(
+                children: <Widget>[
+                  SizedBox(width: 20.0),
+                  CircleAvatar(
+                    radius: 55,
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                      image: AssetImage(
+                        './././assets/images/info-icon.png',
+                      ),
+                    ))),
+                  ),
+                  SizedBox(width: 20.0),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Alert!",
+                          style: Theme.of(context).textTheme.title,
+                        ),
+                        SizedBox(height: 10.0),
+                        Flexible(
+                          child: Text("Do you want to terminate the resource?"),
+                        ),
+                        SizedBox(height: 10.0),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: RaisedButton(
+                                child: Text("No"),
+                                color: Colors.red,
+                                colorBrightness: Brightness.dark,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0)),
+                              ),
+                            ),
+                            SizedBox(width: 10.0),
+                            Expanded(
+                              child: RaisedButton(
+                                child: Text("Yes"),
+                                color: Colors.green,
+                                colorBrightness: Brightness.dark,
+                                onPressed: () {
+                                  terminateResource();
+                                  Navigator.pop(context);
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0)),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
               ),
-              FlatButton(
-                child: Text("No"),
-                onPressed: () {
-                  Navigator.pop(context, false);
-                },
-              ),
-            ],
-          );
-        });
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void terminateResource() async {
+    var profileId = Provider.of<Auth>(context).myProfile.accountId;
+    final url =
+        "authenticated/terminateResource?resourceId=${resource.resourceId}&terminatorId=${profileId}";
+    try {
+      var accessToken = Provider.of<Auth>(context).accessToken;
+      final response =
+          await ApiBaseHelper().postProtected(url, accessToken: accessToken);
+      print("Success");
+      Navigator.of(context).pop(true);
+    } catch (error) {
+      final responseData = error.body as Map<String, dynamic>;
+      print("Failure");
+      showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+                title: Text(responseData['error']),
+                content: Text(responseData['message']),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                  )
+                ],
+              ));
+    }
   }
 }
 
@@ -174,8 +249,7 @@ class ResourceHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Profile profile = Profile.fromJson(
-        json.decode(json.encode(Provider.of<Auth>(context).myProfile)));
+    Profile profile = Provider.of<Auth>(context).myProfile;
 
     return Stack(
       children: <Widget>[
@@ -207,17 +281,16 @@ class ResourceHeader extends StatelessWidget {
                   Navigator.of(
                     context,
                     rootNavigator: true,
-                  ).pushNamed(ProfileScreen.routeName, arguments: profile);
+                  ).pushNamed(ProfileScreen.routeName,
+                      arguments: profile.accountId);
                 },
-                child: Text("Listed by:"),
+                child: Text(
+                  "Listed by: " + profile.name,
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
               )
-              // if (subtitle != null) ...[
-              //   const SizedBox(height: 5.0),
-              //   Text(
-              //     subtitle,
-              //     style: Theme.of(context).textTheme.subtitle,
-              //   ),
-              // ]
             ],
           ),
         )
@@ -311,8 +384,8 @@ class _DescriptionState extends State<Description> {
                   leading: Icon(Icons.event_note),
                 ),
                 ListTile(
-                  //      title: Text(category.resourceCategoryName),
-                  //       subtitle: Text(category.resourceCategoryDescription),
+                  //  title: Text(category.resourceCategoryName),
+                  //   subtitle: Text(category.resourceCategoryDescription),
                   leading: Icon(Icons.category),
                 ),
                 ListTile(
