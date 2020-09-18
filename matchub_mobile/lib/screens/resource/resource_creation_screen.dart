@@ -59,7 +59,6 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     "Create New Resource",
     "Create New Resource",
     "Create New Resource",
-    "Create New Resource",
   ];
   final List<String> subtitles = [
     "Title & Description",
@@ -67,7 +66,6 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     "Input your unit",
     "Start Date",
     "End Date",
-    "Upload Cover Photo",
     "Upload Photo",
     "Upload Documents",
   ];
@@ -79,7 +77,6 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     Colors.pinkAccent.shade100,
     Colors.lime.shade300,
     Colors.brown.shade400,
-    Colors.green.shade300,
   ];
 
   void createNewResource(context) async {
@@ -178,7 +175,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                   activeSize: 20.0,
                 ),
               ),
-              itemCount: 8,
+              itemCount: 7,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return IntroItem(
@@ -229,13 +226,6 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     bg: colors[index],
                     widget: Document(resource),
                   );
-                } else if (index == 7) {
-                  return IntroItem(
-                    title: titles[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: Document(resource),
-                  );
                 }
               }),
           Align(
@@ -251,9 +241,9 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
             alignment: Alignment.bottomRight,
             child: IconButton(
               icon:
-                  Icon(_currentIndex == 7 ? Icons.check : Icons.arrow_forward),
+                  Icon(_currentIndex == 6 ? Icons.check : Icons.arrow_forward),
               onPressed: () {
-                if (_currentIndex != 7) {
+                if (_currentIndex != 6) {
                   _controller.next();
                 }
                 // if (_currentIndex != 5)
