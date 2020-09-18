@@ -177,7 +177,7 @@ class _AuthDetailsState extends State<AuthDetails>
           minLines: 1,
           maxLines: 1,
           onChanged: (value) => widget.newStakeholder['email'] = value,
-          // autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (enter) {
             if (enter.length == 0) {
               return "Please enter your email!";
@@ -223,7 +223,7 @@ class _AuthDetailsState extends State<AuthDetails>
               return ('This password is weak! Please enter a stronger password');
             }
           },
-          // autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             widget.newStakeholder['password'] = value;
           },
@@ -256,8 +256,8 @@ class _AuthDetailsState extends State<AuthDetails>
           keyboardType: TextInputType.text,
           minLines: 1,
           maxLines: 1,
-          // autovalidateMode:
-          // AutovalidateMode.onUserInteraction,
+          autovalidateMode:
+          AutovalidateMode.onUserInteraction,
           validator: (reenterPassword) {
             if (reenterPassword != widget.newStakeholder['password']) {
               return "The password you've entered does not match!";
@@ -355,7 +355,7 @@ class _BasicDetailsState extends State<BasicDetails>
           maxLines: 1,
           onChanged: (value) =>
               widget.newStakeholder['organisationName'] = value,
-          // autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (enter) {
             if (enter.length == 0) {
               return "Please enter your organisation's name!";
@@ -392,7 +392,7 @@ class _BasicDetailsState extends State<BasicDetails>
           minLines: 1,
           maxLines: 1,
           onChanged: (value) => widget.newStakeholder['firstName'] = value,
-          // autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (enter) {
             if (enter.length == 0) {
               return "Please enter your first name!";
@@ -428,7 +428,7 @@ class _BasicDetailsState extends State<BasicDetails>
           minLines: 1,
           maxLines: 1,
           onChanged: (value) => widget.newStakeholder['lastName'] = value,
-          // autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
       ],
       FlatButton(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
@@ -83,11 +84,13 @@ class _FollowersScreenState extends State<FollowersScreen> {
               onTap: () => Navigator.of(context).pushNamed(
                   ProfileScreen.routeName,
                   arguments: filteredFollowers[index].accountId),
-              leading: CircleAvatar(
-                radius: 25,
-                backgroundImage:
-                    AssetImage(filteredFollowers[index].profilePhoto),
-              ),
+              leading: 
+                    ClipOval(
+                    child: Container(
+                        height: 50,
+                        width: 50,
+                        child: AttachmentImage(filteredFollowers[index].profilePhoto),)),
+              
               title: Text(filteredFollowers[index].name),
               trailing: FlatButton(
                 padding: EdgeInsets.symmetric(horizontal: 30),

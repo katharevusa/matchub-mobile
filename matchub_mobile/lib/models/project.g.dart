@@ -10,6 +10,7 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..projectId = json['projectId'] as num
     ..projectTitle = json['projectTitle'] as String
     ..projectDescription = json['projectDescription'] as String
+    ..projectProfilePic = json['projectProfilePic'] ?? ""
     ..country = json['country'] as String
     ..startDate = DateTime.parse(json['startDate'])
     ..endDate = DateTime.parse(json['endDate'])

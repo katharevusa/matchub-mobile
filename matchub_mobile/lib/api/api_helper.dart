@@ -6,7 +6,7 @@ import 'package:http/io_client.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = "https://192.168.1.43:8443/api/v1/";
+  final String _baseUrl = "https://192.168.1.60:8443/api/v1/";
 
   IOClient client;
 

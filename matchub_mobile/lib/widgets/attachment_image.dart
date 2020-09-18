@@ -8,10 +8,11 @@ class AttachmentImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(imageUrl);
-    return imageUrl.isNotEmpty
+    // print("https://192.168.1.55:8443/api/v1/${imageUrl.substring(30)}");
+    return (imageUrl != null && imageUrl.isNotEmpty)
         ? Image(
             image: NetworkImage(
-                "https://192.168.1.55:8443/api/v1/${imageUrl.substring(30)}"),
+                "https://192.168.1.60:8443/api/v1/${imageUrl.substring(30)}"),
             fit: BoxFit.cover,errorBuilder: (context, error, stackTrace) => Image.asset(
               "assets/images/avatar.png",
               fit: BoxFit.cover,

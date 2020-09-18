@@ -5,6 +5,7 @@ import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/errorDialog.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
 class FollowingScreen extends StatefulWidget {
@@ -89,11 +90,11 @@ class _FollowingScreenState extends State<FollowingScreen> {
                           onTap: () => Navigator.of(context).pushNamed(
                               ProfileScreen.routeName,
                               arguments: filteredFollowing[index].accountId),
-                          leading: CircleAvatar(
-                            radius: 25,
-                            backgroundImage:
-                                AssetImage(following[index].profilePhoto),
-                          ),
+                          leading: ClipOval(
+                    child: Container(
+                        height: 50,
+                        width: 50,
+                        child: AttachmentImage(filteredFollowing[index].profilePhoto),)),
                           title: Text(filteredFollowing[index].name),
                           trailing: FlatButton(
                             padding: EdgeInsets.symmetric(horizontal: 30),

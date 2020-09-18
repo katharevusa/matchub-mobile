@@ -148,13 +148,13 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       }
       if (documents.isNotEmpty) {
         await uploadMultiFile(
-            photos,
+            documents,
             "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadDocuments?projectId=${newProjectId}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "documents",
             context);
       }
-
+      Provider.of<Auth>(context, listen: false).retrieveUser();
       print("Success");
       Navigator.of(context).pop(true);
     } catch (error) {
@@ -484,11 +484,18 @@ class _StartState extends State<Start> {
     print(widget.project["startDate"]);
     if (widget.project["startDate"] != "" &&
         widget.project["startDate"] != null) {
-      dateTime = DateTime.parse(widget.project["startDate"]);
-      // dateTime = widget.project["startDate"];
+          if(widget.project["projectId"] == null){
+            dateTime = DateTime.parse(widget.project["startDate"]);
+    }
+          }
+
+      // dateTime = widget.project["startDate"] ? DateTime.parse(widget.project["startDate"]);
+    if(widget.project["startDate"] != null){
+      dateTime = widget.project["startDate"];
     }
     if (widget.project["startDate"] == "" ||
         widget.project["startDate"] == null) {
+
       widget.project["startDate"] = formatDate(
           DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
               dateTime.minute, dateTime.second),
@@ -508,11 +515,15 @@ class _StartState extends State<Start> {
               setState(() {
                 dateTime = newDateTime;
                 print(dateTime);
+                if(widget.project['projectId'] == null){
                 widget.project["startDate"] = formatDate(
                     DateTime(dateTime.year, dateTime.month, dateTime.day,
                         dateTime.hour, dateTime.minute, dateTime.second),
                     [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
-
+                }
+                else{
+                  widget.project['startDate'] = dateTime;
+                }
                 print(widget.project["startDate"]);
               });
             },

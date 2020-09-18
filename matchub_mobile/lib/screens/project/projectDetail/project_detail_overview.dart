@@ -133,7 +133,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
                                 await Provider.of<Auth>(context).retrieveUser();
                                 setState(() {
-                                  loadProject = getProjects();
+                                  getProjects();
                                 });
                               })
                         ]),
@@ -279,7 +279,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                       String fileName = (project
                                           .documents[documentKeys[index]]);
                                       String url =
-                                          "https://192.168.1.55:8443/api/v1/" +
+                                          "https://192.168.1.60:8443/api/v1/" +
                                               fileName.substring(30);
                                       print(url);
                                       if (await canLaunch(url)) {
@@ -345,7 +345,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
             FlatButton(
                 onPressed: () {
                   Share.share(
-                      'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this project on: ${project.projectTitle}\nhttp://localhost:3000/project/uniqueIdentifier');
+                      'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this project on: ${project.projectTitle}\nhttp://localhost:3000/project/${project.projectId}');
                 },
                 visualDensity: VisualDensity.comfortable,
                 highlightColor: Colors.transparent,

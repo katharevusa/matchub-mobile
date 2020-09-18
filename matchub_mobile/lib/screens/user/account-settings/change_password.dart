@@ -116,8 +116,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   return ('This password is weak! Please enter a stronger password');
                                 }
                               },
-                              // autovalidateMode:
-                              //     AutovalidateMode.onUserInteraction,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               onChanged: (value) {
                                 passwordMap['password'] = value;
                               },
@@ -153,8 +153,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               keyboardType: TextInputType.text,
                               minLines: 1,
                               maxLines: 1,
-                              // autovalidateMode:
-                              //     AutovalidateMode.onUserInteraction,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               validator: (reenterPassword) {
                                 if (reenterPassword !=
                                     passwordMap['password']) {
