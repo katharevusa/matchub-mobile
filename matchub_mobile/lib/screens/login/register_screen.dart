@@ -139,7 +139,7 @@ class _AuthDetailsState extends State<AuthDetails> with AutomaticKeepAliveClient
         child: Column(
       children: [
         Text(
-          "The World's #1 Knowledge Community for Sustainable Development!",
+          "The World's #1 Knowledge Community for Sustainable Development",
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
           overflow: TextOverflow.clip,
         ),

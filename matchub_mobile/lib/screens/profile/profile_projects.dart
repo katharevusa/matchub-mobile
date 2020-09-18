@@ -17,7 +17,7 @@ class ProfileProjects extends StatelessWidget {
     RandomColor _randomColor = RandomColor();
 
     return Scaffold(
-      body: ListView.builder(
+      body: (projects.isEmpty)? Center(child: Text("No Projects Available", style: AppTheme.titleLight)):ListView.builder(
         itemBuilder: (context, index) => ProjectVerticalCard(
             randomColor: _randomColor,
             project: projects[index],

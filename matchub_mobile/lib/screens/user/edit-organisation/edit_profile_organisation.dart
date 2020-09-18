@@ -7,6 +7,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/info_edit_screen.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/interest_edit_screen.dart';
+import 'package:matchub_mobile/screens/user/select_profile_picture.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
@@ -100,6 +101,7 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
                       InfoEditPage(editedProfile, controller),
                       InterestEditPage(
                           editedProfile, controller, _updateProfile),
+                      ProfilePhotoPicker(editedProfile, controller, _updateProfile)
                     ],
                   ),
                 ),
@@ -120,7 +122,8 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
     try {
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(editedProfile));
-      Provider.of<Auth>(context).retrieveUser();
+      Provider.of<Auth>(context).myProfile = Profile.fromJson(response);
+      print(Provider.of<Auth>(context).myProfile.profilePhoto);
       print("Success");
       Navigator.of(context).pop(true);
     } catch (error) {

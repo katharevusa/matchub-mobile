@@ -186,18 +186,17 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                       vertical:
                                           2 * SizeConfig.heightMultiplier),
                                   child: Column(children: [
-                                    ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
+                                    ClipOval(
+                                        // borderRadius: BorderRadius.circular(50),
                                         child: Container(
                                             color: Colors.white,
+                                            height:
+                                                16 * SizeConfig.widthMultiplier,
                                             width:
                                                 16 * SizeConfig.widthMultiplier,
                                             // height:
                                             //     20 * SizeConfig.widthMultiplier,
-                                            child: Image.asset(
-                                              "assets/images/avatar.png",
-                                              fit: BoxFit.contain,
-                                            ))),
+                                            child: AttachmentImage(project.projectOwners[index].profilePhoto))),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                           vertical:

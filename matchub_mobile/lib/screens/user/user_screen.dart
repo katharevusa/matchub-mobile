@@ -47,8 +47,7 @@ class _UserScreenState extends State<UserScreen> {
                     child: Container(
                         height: 50,
                         width: 50,
-                        child: AttachmentImage(
-                            profile.profilePhoto)),
+                        child: AttachmentImage(profile.profilePhoto)),
                   ),
                   title: Text(
                     "${profile.name}",
@@ -81,7 +80,6 @@ class _UserScreenState extends State<UserScreen> {
                       Icon(FlutterIcons.edit_fea, color: Color(0xFFa8e6cf)),
                       () {
                     if (!profile.isOrgnisation) {
-                      dismissSnackBar();
                       Navigator.of(
                         context,
                         rootNavigator: true,
@@ -89,6 +87,7 @@ class _UserScreenState extends State<UserScreen> {
                           .pushNamed(EditIndividualScreen.routeName,
                               arguments: profile)
                           .then((value) {
+                        // dismissSnackBar();
                         if (value != null && value) {
                           Scaffold.of(context).showSnackBar(new SnackBar(
                             key: UniqueKey(),
@@ -96,12 +95,12 @@ class _UserScreenState extends State<UserScreen> {
                             duration: Duration(seconds: 1),
                           ));
                           setState(() {
+                            dismissSnackBar();
                             print("Individual");
                           });
                         }
                       });
                     } else {
-                      dismissSnackBar();
                       Navigator.of(
                         context,
                         rootNavigator: true,
@@ -109,6 +108,7 @@ class _UserScreenState extends State<UserScreen> {
                           .pushNamed(EditOrganisationScreen.routeName,
                               arguments: profile)
                           .then((value) {
+                        // dismissSnackBar();
                         if (value != null && value) {
                           Scaffold.of(context).showSnackBar(new SnackBar(
                             key: UniqueKey(),
@@ -116,7 +116,8 @@ class _UserScreenState extends State<UserScreen> {
                             duration: Duration(seconds: 1),
                           ));
                           setState(() {
-                            print("Orgnisation");
+                            dismissSnackBar();
+                            print("Organisation");
                           });
                         }
                       });

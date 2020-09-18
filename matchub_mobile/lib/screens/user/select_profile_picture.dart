@@ -32,106 +32,110 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
     Profile myProfile = Provider.of<Auth>(context).myProfile;
     print(myProfile.profilePhoto);
     return Scaffold(
-      body: Container(
-        width: 100 * SizeConfig.widthMultiplier,
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            Text(
-              "Profile Picture",
-              style: AppTheme.titleLight,
-            ),
-            SizedBox(height: 20),
-            if (pickedProfilePic == null && myProfile.profilePhoto.isEmpty) ...[
+      backgroundColor: Colors.transparent,
+      body: SingleChildScrollView(
+              child: Container(
+          width: 100 * SizeConfig.widthMultiplier,
+          child: Column(
+            children: [
+              SizedBox(height: 20),
               Text(
-                "You do not currently have a profile picture",
-                style: TextStyle(fontSize: 16, color: Colors.grey[850]),
+                "Profile Picture",
+                style: AppTheme.titleLight,
               ),
               SizedBox(height: 20),
-              ClipOval(
-                child: Container(
-                  height: 200,
-                  width: 200,
-                  color: Colors.grey[200],
-                  child: Center(
-                    child: Text(
-                      "${myProfile.name.substring(0, 1)}",
-                      style: TextStyle(fontSize: 40),
+              if (pickedProfilePic == null && myProfile.profilePhoto.isEmpty) ...[
+                Text(
+                  "You do not currently have a profile picture",
+                  style: TextStyle(fontSize: 16, color: Colors.grey[850]),
+                ),
+                SizedBox(height: 20),
+                ClipOval(
+                  child: Container(
+                    height: 200,
+                    width: 200,
+                    color: Colors.grey[200],
+                    child: Center(
+                      child: Text(
+                        "${myProfile.name.substring(0, 1)}",
+                        style: TextStyle(fontSize: 40),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 20),
-            ],
-            if (pickedProfilePic == null &&
-                myProfile.profilePhoto.isNotEmpty) ...[
-              ClipOval(
+                SizedBox(height: 20),
+              ],
+              if (pickedProfilePic == null &&
+                  myProfile.profilePhoto.isNotEmpty) ...[
+                ClipOval(
+                    child: Container(
+                        height: 200,
+                        width: 200,
+                        child: AttachmentImage(
+                            myProfile.profilePhoto))),
+                SizedBox(height: 20),
+                RaisedButton(
+                  color: Colors.red[300],
+                  elevation: 2,
+                  visualDensity: VisualDensity.comfortable,
+                  child: Text("Remove Profile Picture"),
+                  onPressed: () async {
+                    await ApiBaseHelper().deleteProtected(
+                        "authenticated/deleteProfilePict/${myProfile.accountId}",
+                        accessToken: Provider.of<Auth>(context).accessToken);
+                    setState(() {
+                      myProfile.profilePhoto = "";
+                    });
+                  },
+                ),
+                SizedBox(height: 20),
+              ],
+              if (pickedProfilePic != null)
+                ClipOval(
+                  // borderRadius: BorderRadius.circular(50),
                   child: Container(
                       height: 200,
                       width: 200,
-                      child: AttachmentImage(
-                          myProfile.profilePhoto))),
+                      child: Image.file(
+                        pickedProfilePic,
+                        fit: BoxFit.cover,
+                      )),
+                ),
               SizedBox(height: 20),
-              RaisedButton(
-                elevation: 2,
-                visualDensity: VisualDensity.comfortable,
-                child: Text("Remove Profile Picture"),
-                onPressed: () async {
-                  await ApiBaseHelper().deleteProtected(
-                      "authenticated/deleteProfilePict/${myProfile.accountId}",
-                      accessToken: Provider.of<Auth>(context).accessToken);
-                  setState(() {
-                    myProfile.profilePhoto = "";
-                  });
+              GestureDetector(
+                onTap: () async {
+                  FilePickerResult result = await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: ['jpg', 'png'],
+                  );
+
+                  if (result != null) {
+                    setState(() {
+                      pickedProfilePic = File(result.files.single.path);
+                    });
+                  }
+                  if (result != null) {
+                    //  PlatformFile file = result.files.first;
+
+                    //  print(file.name);
+                    //  print(file.bytes);
+                    //  print(file.size);
+                    //  print(file.extension);
+                    //  print(file.path);
+                    print("==================" + result.count.toString());
+                  }
                 },
-              ),
-              SizedBox(height: 20),
-            ],
-            if (pickedProfilePic != null)
-              ClipOval(
-                // borderRadius: BorderRadius.circular(50),
                 child: Container(
-                    height: 200,
-                    width: 200,
-                    child: Image.file(
-                      pickedProfilePic,
-                      fit: BoxFit.cover,
-                    )),
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.grey[400], width: 2.0)),
+                    child: Center(child: Icon(Icons.upload_rounded))),
               ),
-            SizedBox(height: 20),
-            GestureDetector(
-              onTap: () async {
-                FilePickerResult result = await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['jpg', 'png'],
-                );
-
-                if (result != null) {
-                  setState(() {
-                    pickedProfilePic = File(result.files.single.path);
-                  });
-                }
-                if (result != null) {
-                  //  PlatformFile file = result.files.first;
-
-                  //  print(file.name);
-                  //  print(file.bytes);
-                  //  print(file.size);
-                  //  print(file.extension);
-                  //  print(file.path);
-                  print("==================" + result.count.toString());
-                }
-              },
-              child: Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.grey[400], width: 2.0)),
-                  child: Center(child: Icon(Icons.upload_rounded))),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: Container(
