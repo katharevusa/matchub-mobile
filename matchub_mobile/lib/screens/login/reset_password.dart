@@ -74,11 +74,11 @@ class ResetPassword extends StatelessWidget {
                       minLines: 1,
                       maxLines: 1,
                       onChanged: (value) => email = value,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      // autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (enter) {
-                         if (enter.length == 0) {
+                        if (enter.length == 0) {
                           return "Please enter your email!";
-                        } else if(!validateEmail(enter)){
+                        } else if (!validateEmail(enter)) {
                           return "Please enter a valid email address";
                         }
                       },
