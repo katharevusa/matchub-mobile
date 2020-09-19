@@ -78,7 +78,8 @@ class DescriptionInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Expanded(
-                child: Text(profile.profileDescription??'No Data',
+                child: Text(
+                  "www.linkedin.com" ??'No Data',
                     style: AppTheme.unSelectedTabLight)),
           ],
         )

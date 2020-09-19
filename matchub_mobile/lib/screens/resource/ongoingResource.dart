@@ -6,7 +6,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/resources.dart';
 
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
-import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/resourceDetail_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +31,7 @@ class _OngoingResourceState extends State<OngoingResource> {
 
   void selecteResource(BuildContext ctx, Resources individualResource) {
     Navigator.of(
-      ctx,
+      ctx,rootNavigator: true
     ).pushNamed(ResourceDetailScreen.routeName, arguments: individualResource);
   }
 

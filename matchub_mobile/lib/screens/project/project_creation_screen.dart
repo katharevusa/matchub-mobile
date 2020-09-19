@@ -21,6 +21,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:date_format/date_format.dart';
+import 'package:matchub_mobile/widgets/errorDialog.dart';
 
 class ProjectCreationScreen extends StatefulWidget {
   static const routeName = "/project-creation-screen";
@@ -61,7 +62,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       "fundsCampaign": newProject.fundsCampaign ?? [],
       "meetings": newProject.meetings,
       "listOfRequests": newProject.listOfRequests,
-      "sdgIds": newProject.sdgs != null
+      "sdgs": newProject.sdgs != null
           ? newProject.sdgs.map((e) => e.sdgId).toList()
           : [],
       "kpis": newProject.kpis,
@@ -125,15 +126,20 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     project["projectOwnerId"] = Provider.of<Auth>(context).myProfile.accountId;
     final url = "authenticated/createNewProject";
     var accessToken = Provider.of<Auth>(context).accessToken;
-    var dateTime = project['startDate'];
+    var startProjectTime = project['startDate'];
     project['startDate'] = formatDate(
-        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
-            dateTime.minute, dateTime.second),
+        DateTime(
+            startProjectTime.year,
+            startProjectTime.month,
+            startProjectTime.day,
+            startProjectTime.hour,
+            startProjectTime.minute,
+            startProjectTime.second),
         [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
-    dateTime = project['endDate'];
+    var endProjectTime = project['endDate'];
     project['endDate'] = formatDate(
-        DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
-            dateTime.minute, dateTime.second),
+        DateTime(endProjectTime.year, endProjectTime.month, endProjectTime.day,
+            endProjectTime.hour, endProjectTime.minute, endProjectTime.second),
         [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
     try {
       final response = await ApiBaseHelper().postProtected(url,
@@ -167,25 +173,28 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       print("Success");
       Navigator.of(context).pop(true);
     } catch (error) {
-      final responseData = error.body as Map<String, dynamic>;
-      print("Failure");
-      showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                title: Text(responseData['error']),
-                content: Text(responseData['message']),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Okay'),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => ResourceScreen()));
-                    },
-                  )
-                ],
-              ));
+      project['startDate'] = startProjectTime;
+      project['endDate'] = endProjectTime;
+      showErrorDialog(error.toString(), context);
+      // final responseData = error.body as Map<String, dynamic>;
+      // print("Failure");
+      // showDialog(
+      //     context: context,
+      //     builder: (ctx) => AlertDialog(
+      //           title: Text(responseData['error']),
+      //           content: Text(responseData['message']),
+      //           actions: <Widget>[
+      //             FlatButton(
+      //               child: Text('Okay'),
+      //               onPressed: () {
+      //                 Navigator.push(
+      //                     context,
+      //                     new MaterialPageRoute(
+      //                         builder: (context) => ResourceScreen()));
+      //               },
+      //             )
+      //           ],
+      //         ));
     }
   }
 
@@ -200,17 +209,22 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     var projectId = project["projectId"];
     final url =
         "authenticated/updateProject?updaterId=${updaterId}&projectId=${projectId}";
+    var startProjectTime = project['startDate'];
+    project['startDate'] = formatDate(
+        DateTime(
+            startProjectTime.year,
+            startProjectTime.month,
+            startProjectTime.day,
+            startProjectTime.hour,
+            startProjectTime.minute,
+            startProjectTime.second),
+        [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+    var endProjectTime = project['endDate'];
+    project['endDate'] = formatDate(
+        DateTime(endProjectTime.year, endProjectTime.month, endProjectTime.day,
+            endProjectTime.hour, endProjectTime.minute, endProjectTime.second),
+        [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
     try {
-      var dateTime = project['startDate'];
-      project['startDate'] = formatDate(
-          DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
-              dateTime.minute, dateTime.second),
-          [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
-      dateTime = project['endDate'];
-      project['endDate'] = formatDate(
-          DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour,
-              dateTime.minute, dateTime.second),
-          [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
       var accessToken = Provider.of<Auth>(context).accessToken;
       final response = await ApiBaseHelper().putProtected(url,
           accessToken: accessToken, body: json.encode(project));
@@ -243,171 +257,184 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       print("Success");
       Navigator.of(context).pop(true);
     } catch (error) {
-      final responseData = error.body as Map<String, dynamic>;
+      project['startDate'] = startProjectTime;
+      project['endDate'] = endProjectTime;
+      // final responseData = error.body as Map<String, dynamic>;
+      showErrorDialog(error.toString(), context);
       print("Failure");
-      showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                title: Text(responseData['error']),
-                content: Text(responseData['message']),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Okay'),
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                  )
-                ],
-              ));
+      // showDialog(
+      //     context: context,
+      //     builder: (ctx) => AlertDialog(
+      //           title: Text(responseData['error']),
+      //           content: Text(responseData['message']),
+      //           actions: <Widget>[
+      //             FlatButton(
+      //               child: Text('Okay'),
+      //               onPressed: () {
+      //                 Navigator.of(ctx).pop();
+      //               },
+      //             )
+      //           ],
+      //         ));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Swiper(
-              loop: false,
-              // physics: NeverScrollableScrollPhysics(),
-              index: _currentIndex,
-              onIndexChanged: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              controller: _controller,
-              pagination: SwiperPagination(
-                builder: DotSwiperPaginationBuilder(
-                  activeColor: Colors.red,
-                  activeSize: 20.0,
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Stack(
+          children: <Widget>[
+            Swiper(
+                loop: false,
+                // physics: NeverScrollableScrollPhysics(),
+                index: _currentIndex,
+                onIndexChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                controller: _controller,
+                pagination: SwiperPagination(
+                  builder: DotSwiperPaginationBuilder(
+                    activeColor: Colors.red,
+                    activeSize: 20.0,
+                  ),
                 ),
-              ),
-              itemCount: 7,
-              itemBuilder: (context, index) {
-                if (index == 0 && project["projectId"] == null) {
-                  return IntroItem(
-                    title: titles[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: Basic_information(project),
-                  );
-                } else if (index == 0 && project["projectId"] != null) {
-                  return IntroItem(
-                    title: titles_edit[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: Basic_information(project),
-                  );
-                } else if (index == 1 && project["projectId"] == null) {
-                  return IntroItem(
-                    title: titles[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: Start(project),
-                  );
-                } else if (index == 1 && project["projectId"] != null) {
-                  return IntroItem(
-                    title: titles_edit[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: Start(project),
-                  );
-                } else if (index == 2 && project["projectId"] == null) {
-                  return IntroItem(
-                    title: titles[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: End(project),
-                  );
-                } else if (index == 2 && project["projectId"] != null) {
-                  return IntroItem(
-                    title: titles_edit[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: End(project),
-                  );
-                } else if (index == 3 && project["projectId"] == null) {
-                  return IntroItem(
-                    title: titles[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: SDG(project),
-                  );
-                } else if (index == 3 && project["projectId"] != null) {
-                  return IntroItem(
-                    title: titles_edit[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: SDG(project),
-                  );
-                } else if (index == 4 && project["projectId"] == null) {
-                  return IntroItem(
+                itemCount: 7,
+                itemBuilder: (context, index) {
+                  if (index == 0 && project["projectId"] == null) {
+                    return IntroItem(
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project, false, false, coverPhoto));
-                } else if (index == 4 && project["projectId"] != null) {
-                  return IntroItem(
+                      widget: Basic_information(project),
+                    );
+                  } else if (index == 0 && project["projectId"] != null) {
+                    return IntroItem(
                       title: titles_edit[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project, false, false, coverPhoto));
-                } else if (index == 5 && project["projectId"] == null) {
-                  return IntroItem(
+                      widget: Basic_information(project),
+                    );
+                  } else if (index == 1 && project["projectId"] == null) {
+                    return IntroItem(
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project, true, false, photos));
-                } else if (index == 5 && project["projectId"] != null) {
-                  return IntroItem(
+                      widget: Start(project),
+                    );
+                  } else if (index == 1 && project["projectId"] != null) {
+                    return IntroItem(
                       title: titles_edit[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project, true, false, photos));
-                } else if (index == 6 && project["projectId"] == null) {
-                  return IntroItem(
+                      widget: Start(project),
+                    );
+                  } else if (index == 2 && project["projectId"] == null) {
+                    return IntroItem(
                       title: titles[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project, true, true, documents));
-                } else if (index == 6 && project["projectId"] != null) {
-                  return IntroItem(
+                      widget: End(project),
+                    );
+                  } else if (index == 2 && project["projectId"] != null) {
+                    return IntroItem(
                       title: titles_edit[index],
                       subtitle: subtitles[index],
                       bg: colors[index],
-                      widget: Document(project, true, true, documents));
-                }
-              }),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: FlatButton(
-              child: Text("Skip"),
-              onPressed: () {
-                _controller.next();
-              },
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-              icon:
-                  Icon(_currentIndex == 6 ? Icons.check : Icons.arrow_forward),
-              onPressed: () {
-                if (_currentIndex != 6) {
+                      widget: End(project),
+                    );
+                  } else if (index == 3 && project["projectId"] == null) {
+                    return IntroItem(
+                      title: titles[index],
+                      subtitle: subtitles[index],
+                      bg: colors[index],
+                      widget: SDG(project),
+                    );
+                  } else if (index == 3 && project["projectId"] != null) {
+                    return IntroItem(
+                      title: titles_edit[index],
+                      subtitle: subtitles[index],
+                      bg: colors[index],
+                      widget: SDG(project),
+                    );
+                  } else if (index == 4 && project["projectId"] == null) {
+                    return IntroItem(
+                        title: titles[index],
+                        subtitle: subtitles[index],
+                        bg: colors[index],
+                        widget: Document(project, false, false, coverPhoto));
+                  } else if (index == 4 && project["projectId"] != null) {
+                    return IntroItem(
+                        title: titles_edit[index],
+                        subtitle: subtitles[index],
+                        bg: colors[index],
+                        widget: Document(project, false, false, coverPhoto));
+                  } else if (index == 5 && project["projectId"] == null) {
+                    return IntroItem(
+                        title: titles[index],
+                        subtitle: subtitles[index],
+                        bg: colors[index],
+                        widget: Document(project, true, false, photos));
+                    // } else if (index == 5 && project["projectId"] != null) {
+                    //   return IntroItem(
+                    //       title: titles_edit[index],
+                    //       subtitle: subtitles[index],
+                    //       bg: colors[index],
+                    //       widget: Document(project, true, false, photos));
+                  } else if (index == 6 && project["projectId"] == null) {
+                    return IntroItem(
+                        title: titles[index],
+                        subtitle: subtitles[index],
+                        bg: colors[index],
+                        widget: Document(project, true, true, documents));
+                    // } else if (index == 6 && project["projectId"] != null) {
+                    //   return IntroItem(
+                    //       title: titles_edit[index],
+                    //       subtitle: subtitles[index],
+                    //       bg: colors[index],
+                    //       widget: Document(project, true, true, documents));
+                  }
+                }),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: FlatButton(
+                child: Text("Skip"),
+                onPressed: () {
                   _controller.next();
-                }
-                // if (_currentIndex != 5)
-                //   _controller.next();
-                else if (project["projectId"] == null) {
-                  createNewProject(context);
-                } else {
-                  updateProject(context);
-                }
-              },
+                },
+              ),
             ),
-          )
-        ],
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                icon: Icon(((_currentIndex == 6 &&
+                            project["projectId"] == null) ||
+                        (_currentIndex == 4 && project["projectId"] != null))
+                    ? Icons.check
+                    : Icons.arrow_forward),
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  if (project["projectId"] == null) {
+                    if (_currentIndex != 6) {
+                      _controller.next();
+                    } else {
+                      createNewProject(context);
+                    }
+                  } else {
+                    if (_currentIndex != 4)
+                      _controller.next();
+                    else {
+                      updateProject(context);
+                    }
+                  }
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -441,7 +468,7 @@ class _Basic_informationState extends State<Basic_information> {
               child: TextField(
                 decoration: InputDecoration(hintText: 'Title'),
                 controller: _titleController,
-                autofocus: true,
+                // autofocus: true,
                 onChanged: (text) {
                   if (text != null) {
                     widget.project["projectTitle"] = text;
@@ -498,25 +525,28 @@ class Start extends StatefulWidget {
 class _StartState extends State<Start> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(
-          DateFormat.yMMMd().add_jm().format(widget.project['startDate']),
-        ),
-        Container(
-          height: 300,
-          child: CupertinoDatePicker(
-            mode: CupertinoDatePickerMode.dateAndTime,
-            initialDateTime: widget.project["startDate"],
-            onDateTimeChanged: (newDateTime) {
-              setState(() {
-                widget.project["startDate"] = newDateTime;
-                print(widget.project["startDate"]);
-              });
-            },
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Text(
+            DateFormat.yMMMd().add_jm().format(widget.project['startDate']),
           ),
-        ),
-      ],
+          Container(
+            height: 300,
+            child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.dateAndTime,
+              minimumDate: DateTime.now().subtract(Duration(minutes: 30)),
+              initialDateTime: widget.project["startDate"],
+              onDateTimeChanged: (newDateTime) {
+                setState(() {
+                  widget.project["startDate"] = newDateTime;
+                  print(widget.project["startDate"]);
+                });
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -531,24 +561,28 @@ class End extends StatefulWidget {
 class _EndState extends State<End> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(
-          DateFormat.yMMMd().add_jm().format(widget.project['endDate']),
-        ),
-        Container(
-          height: 300,
-          child: CupertinoDatePicker(
-            mode: CupertinoDatePickerMode.dateAndTime,
-            initialDateTime: widget.project['endDate'],
-            onDateTimeChanged: (newDateTime) {
-              setState(() {
-                widget.project["endDate"] = newDateTime;
-              });
-            },
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Text(
+            DateFormat.yMMMd().add_jm().format(widget.project['endDate']),
           ),
-        ),
-      ],
+          Container(
+            height: 300,
+            child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.dateAndTime,
+              initialDateTime:
+                  widget.project['startDate'].add(Duration(minutes: 10)),
+              minimumDate: widget.project['startDate'],
+              onDateTimeChanged: (newDateTime) {
+                setState(() {
+                  widget.project["endDate"] = newDateTime;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -564,6 +598,7 @@ class SDG extends StatefulWidget {
 class _SDGState extends State<SDG> {
   @override
   Widget build(BuildContext context) {
+    print(widget.project['sdgs']);
     return SingleChildScrollView(
       physics: NeverScrollableScrollPhysics(),
       child: Container(
@@ -576,12 +611,17 @@ class _SDGState extends State<SDG> {
                     .then((value) {
                   setState(() {
                     if (value != null) {
+                      var list = [];
+                      widget.project['sdgs'] = value;
+                      widget.project['sdgs'].forEach((e) => list.add(e + 1));
+                      print(list);
+                      widget.project['sdgs'] = list;
                       // (widget.profile['sdgIds'] as List)..addAll(value)..toSet();
-                      widget.project['sdgIds'] = (value);
+
+                      // widget.project['sdgs'] = (value);
                     }
-                    print(widget.project['sdgIds']);
+                    print(widget.project['sdgs']);
                   });
-                  print(widget.project['sdgIds']);
                 });
               },
               child: Container(
@@ -596,10 +636,10 @@ class _SDGState extends State<SDG> {
                     child: Column(
                   children: [
                     Text("Select your SDG(s)", style: AppTheme.titleLight),
-                    if (widget.project['sdgIds'] != null) ...[
+                    if (widget.project['sdgs'] != null) ...[
                       SizedBox(height: 5),
                       Text(
-                        "${widget.project['sdgIds'].length} SDG(s) chosen",
+                        "${widget.project['sdgs'].length} SDG(s) chosen",
                       ),
                       SizedBox(height: 5),
                       GridView.builder(
@@ -610,10 +650,10 @@ class _SDGState extends State<SDG> {
                                   // crossAxisSpacing: 10,
                                   childAspectRatio: 1,
                                   crossAxisCount: 3),
-                          itemCount: widget.project['sdgIds'].length,
+                          itemCount: widget.project['sdgs'].length,
                           itemBuilder: (BuildContext context, int index) {
-                            int i = (widget.project['sdgIds'][index]);
-                            i++;
+                            int i = (widget.project['sdgs'][index]);
+                            // i++;
                             return Container(
                               // height:50,
                               child: Image.asset("assets/icons/goal$i.png"),
@@ -687,48 +727,6 @@ class _DocumentState extends State<Document> {
       setState(() {});
     }
   }
-  // await FilePicker.getMultiFile(
-  //   type: FileType.custom,
-  //   allowedExtensions: ['pdf'],
-  // ).then((files) {
-  //   if (files != null && files.length > 0) {
-  //     files.forEach((element) {
-  //       List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
-
-  //       if (picExt.contains(extension(element.path))) {
-  //         thumbs.add(Padding(
-  //             padding: EdgeInsets.all(1), child: new Image.file(element)));
-  //       } else
-  //         thumbs.add(Container(
-  //             child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.center,
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 children: <Widget>[
-  //               Icon(Icons.insert_drive_file),
-  //               Text(basename(element.path)),
-  //             ])));
-  //       fileList.add(element);
-  //       // widget.newResource.uploadedFiles.add(element.toString());
-  //       // print(widget.newResource.uploadedFiles.toList());
-  //     });
-  //     setState(() {
-  //       fileListThumbnail = thumbs;
-  //     });
-  //   }
-  // }
-
-  // List<Map> storeNameAndPath(List<File> fileList) {
-  //   List<Map> s = new List<Map>();
-  //   if (fileList.length > 0)
-  //     fileList.forEach((element) {
-  //       Map a = {
-  //         'fileName': basename(element.path),
-  //         'encoded': base64Encode(element.readAsBytesSync())
-  //       };
-  //       s.add(a);
-  //     });
-  //   return s;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -798,6 +796,48 @@ class _DocumentState extends State<Document> {
     );
   }
 }
+// await FilePicker.getMultiFile(
+//   type: FileType.custom,
+//   allowedExtensions: ['pdf'],
+// ).then((files) {
+//   if (files != null && files.length > 0) {
+//     files.forEach((element) {
+//       List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
+
+//       if (picExt.contains(extension(element.path))) {
+//         thumbs.add(Padding(
+//             padding: EdgeInsets.all(1), child: new Image.file(element)));
+//       } else
+//         thumbs.add(Container(
+//             child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.center,
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: <Widget>[
+//               Icon(Icons.insert_drive_file),
+//               Text(basename(element.path)),
+//             ])));
+//       fileList.add(element);
+//       // widget.newResource.uploadedFiles.add(element.toString());
+//       // print(widget.newResource.uploadedFiles.toList());
+//     });
+//     setState(() {
+//       fileListThumbnail = thumbs;
+//     });
+//   }
+// }
+
+// List<Map> storeNameAndPath(List<File> fileList) {
+//   List<Map> s = new List<Map>();
+//   if (fileList.length > 0)
+//     fileList.forEach((element) {
+//       Map a = {
+//         'fileName': basename(element.path),
+//         'encoded': base64Encode(element.readAsBytesSync())
+//       };
+//       s.add(a);
+//     });
+//   return s;
+// }
 
 class IntroItem extends StatelessWidget {
   final String title;

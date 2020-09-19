@@ -12,7 +12,9 @@ import 'package:matchub_mobile/screens/resource/resource_detail/imageCapture_scr
 
 import 'package:flutter/widgets.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
 class ResourceDetailScreen extends StatefulWidget {
@@ -30,7 +32,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
     resource = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppTheme.appBackgroundColor,
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(
@@ -250,25 +252,26 @@ class ResourceHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     Profile profile = Provider.of<Auth>(context).myProfile;
 
-    return Stack(
+    return Column(
       children: <Widget>[
-        Ink(
-          height: 200,
+        Padding(
+          padding:EdgeInsets.only(top:100),
+          // height: 400,
           // decoration: BoxDecoration(
           child: Column(children: <Widget>[
             Gallery(resource),
           ]),
           // ),
         ),
-        Ink(
-          height: 200,
-          decoration: BoxDecoration(
-            color: Colors.black38,
-          ),
-        ),
+        // Ink(
+        //   height: 200,
+        //   decoration: BoxDecoration(
+        //     color: Colors.black38,
+        //   ),
+        // ),
         Container(
           width: double.infinity,
-          margin: const EdgeInsets.only(top: 220),
+          // margin: const EdgeInsets.only(top: 220),
           child: Column(
             children: <Widget>[
               Text(
@@ -305,10 +308,78 @@ class Gallery extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> imageLinks;
     if (resource.photos.isEmpty) {
-      imageLinks = ['./././assets/images/resource-default.png'];
+      imageLinks = ['https://localhost:8443/api/v1/files/init/resource_default.jpg'];
     } else {
       imageLinks = resource.photos;
     }
+    print(imageLinks);
+    return CarouselSlider(
+      options: CarouselOptions(
+        enableInfiniteScroll: false,
+        autoPlay: false,
+        aspectRatio: 1.8,
+        viewportFraction: 1.0,
+        enlargeCenterPage: true,
+      ),
+      items: imageLinks
+          .map((item) => Container(
+                decoration: BoxDecoration(boxShadow: [
+                  // BoxShadow(
+                  //   offset: Offset(4, 10),
+                  //   blurRadius: 10,
+                  //   color: Colors.grey[300].withOpacity(0.2),
+                  // ),
+                  // BoxShadow(
+                  //   offset: Offset(-4, 10),
+                  //   blurRadius: 30,
+                  //   color: Colors.grey[300].withOpacity(0.2),
+                  // ),
+                ]),
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.widthMultiplier * 6,
+                    vertical: SizeConfig.heightMultiplier * 2),
+                child: Material(
+                  elevation: 1 * SizeConfig.heightMultiplier,
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      child: Stack(
+                        children: <Widget>[
+                          AttachmentImage(item),
+                          Positioned(
+                            bottom: 0.0,
+                            left: 0.0,
+                            right: 0.0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color.fromARGB(200, 0, 0, 0),
+                                    Color.fromARGB(0, 0, 0, 0)
+                                  ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 10.0),
+                              child: Text(
+                                // 'No. ${imgList.indexOf(item)} image',
+                                '',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+              ))
+          .toList(),
+    );
   }
 }
 

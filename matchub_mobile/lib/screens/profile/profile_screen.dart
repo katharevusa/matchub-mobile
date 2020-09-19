@@ -38,11 +38,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           context,
         ).accessToken);
     setState(() {
-      if (widget.accountId == Provider.of<Auth>(context).myProfile.accountId) {
-        profile = Provider.of<Auth>(context).myProfile;
-      } else {
+      // if (widget.accountId == Provider.of<Auth>(context).myProfile.accountId) {
+      //   profile = Provider.of<Auth>(context).myProfile;
+      // } else {
         profile = Profile.fromJson(responseData);
-      }
+      // }
     });
     print("user loaded");
   }

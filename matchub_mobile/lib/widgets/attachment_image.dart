@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 
 class AttachmentImage extends StatelessWidget {
   final String imageUrl;
@@ -12,8 +13,9 @@ class AttachmentImage extends StatelessWidget {
     return (imageUrl != null && imageUrl.isNotEmpty)
         ? Image(
             image: NetworkImage(
-                "https://192.168.1.60:8443/api/v1/${imageUrl.substring(30)}"),
-            fit: BoxFit.cover,errorBuilder: (context, error, stackTrace) => Image.asset(
+                "${ApiBaseHelper().baseUrl}${imageUrl.substring(30)}"),
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Image.asset(
               "assets/images/avatar.png",
               fit: BoxFit.cover,
             ),

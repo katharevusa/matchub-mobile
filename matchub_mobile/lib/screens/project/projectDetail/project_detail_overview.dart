@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
@@ -44,6 +45,69 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
     project = Project.fromJson(responseData);
     documentKeys = project.documents.keys.toList();
+  }
+
+  List<Widget> getPhotoList(photos) {
+    List<Widget> finalList = [];
+    photos.forEach((item) {
+      finalList.add(Container(
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            offset: Offset(4, 10),
+            blurRadius: 10,
+            color: Colors.grey[300].withOpacity(0.2),
+          ),
+          BoxShadow(
+            offset: Offset(-4, 10),
+            blurRadius: 30,
+            color: Colors.grey[300].withOpacity(0.2),
+          ),
+        ]),
+        margin: EdgeInsets.symmetric(
+            horizontal: SizeConfig.widthMultiplier * 6,
+            vertical: SizeConfig.heightMultiplier * 2),
+        child: Material(
+          elevation: 1 * SizeConfig.heightMultiplier,
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              child: Stack(
+                children: <Widget>[
+                  Container(width: 100*SizeConfig.widthMultiplier, child: AttachmentImage(item)),
+                  Positioned(
+                    bottom: 0.0,
+                    left: 0.0,
+                    right: 0.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color.fromARGB(200, 0, 0, 0),
+                            Color.fromARGB(0, 0, 0, 0)
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                        ),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 10.0),
+                      child: Text(
+                        // 'No. ${imgList.indexOf(item)} image',
+                        '',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+        ),
+      ));
+    });
+    return finalList;
   }
 
   @override
@@ -98,53 +162,17 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                 fontSize: 3.2 * SizeConfig.textMultiplier),
                           ),
                         ),
-                        Row(children: [
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  top: 1 * SizeConfig.heightMultiplier,
-                                  left: 8.0 * SizeConfig.widthMultiplier),
-                              child: Text(
-                                  "${project.upvotes} upvotes | ${project.userFollowers.length} following",
-                                  style: AppTheme.unSelectedTabLight),
-                            ),
-                          ),
-                          IconButton(
-                              icon: Icon(
-                                Icons.thumb_up,
-                                color: myProfile.upvotedProjectIds
-                                        .contains(project.projectId)
-                                    ? kAccentColor
-                                    : Colors.grey[300],
-                              ),
-                              onPressed: () async {
-                                if (!myProfile.upvotedProjectIds
-                                    .contains(project.projectId)) {
-                                  await ApiBaseHelper().postProtected(
-                                      "authenticated/upvoteProject?projectId=${project.projectId}&userId=${myProfile.accountId}",
-                                      accessToken: Provider.of<Auth>(context)
-                                          .accessToken);
-                                } else {
-                                  await ApiBaseHelper().postProtected(
-                                      "authenticated/revokeUpvote?projectId=${project.projectId}&userId=${myProfile.accountId}",
-                                      accessToken: Provider.of<Auth>(context)
-                                          .accessToken);
-                                }
-
-                                await Provider.of<Auth>(context).retrieveUser();
-                                setState(() {
-                                  getProjects();
-                                });
-                              })
-                        ]),
+                        UpvoteRow(project: project, myProfile: myProfile, getProjects: getProjects),
                         CarouselSlider(
                           options: CarouselOptions(
-                            autoPlay: false,
-                            aspectRatio: 1.8,
-                            viewportFraction: 1.0,
-                            enlargeCenterPage: true,
-                          ),
-                          items: imageSliders,
+                              autoPlay: false,
+                              aspectRatio: 1.8,
+                              viewportFraction: 1.0,
+                              enlargeCenterPage: true,
+                              enableInfiniteScroll: false),
+                          items: (project.photos.isNotEmpty)
+                              ? getPhotoList(project.photos)
+                              : getPhotoList(imgList),
                         ),
 
                         // ExpandableText(
@@ -221,7 +249,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                   //     1 * SizeConfig.heightMultiplier),
                                   constraints: BoxConstraints(
                                       minHeight:
-                                          16 * SizeConfig.heightMultiplier),
+                                          18 * SizeConfig.heightMultiplier),
                                   margin: EdgeInsets.symmetric(
                                       horizontal:
                                           2 * SizeConfig.widthMultiplier,
@@ -241,21 +269,27 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                             child: AttachmentImage(project
                                                 .projectOwners[index]
                                                 .profilePhoto))),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical:
-                                              1 * SizeConfig.heightMultiplier,
-                                          horizontal:
-                                              1 * SizeConfig.widthMultiplier),
-                                      child: Text(
-                                          project.projectOwners[index].name),
+                                    Expanded(
+                                      child: Container(
+                                        constraints: BoxConstraints(
+                                            maxWidth:
+                                                30 * SizeConfig.widthMultiplier,
+                                            minWidth: 15 *
+                                                SizeConfig.widthMultiplier),
+                                        child: Text(
+                                          project.projectOwners[index].name,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
+                                        ),
+                                      ),
                                     )
                                   ]),
                                 );
                               },
                               itemCount: project.projectOwners.length),
                         ),
-                        Padding(
+                        if(project.documents.isNotEmpty)...[Padding(
                           padding: EdgeInsets.symmetric(
                               vertical: 1 * SizeConfig.heightMultiplier,
                               horizontal: 8.0 * SizeConfig.widthMultiplier),
@@ -278,9 +312,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                     onTap: () async {
                                       String fileName = (project
                                           .documents[documentKeys[index]]);
-                                      String url =
-                                          "https://192.168.1.60:8443/api/v1/" +
-                                              fileName.substring(30);
+                                      String url = ApiBaseHelper().baseUrl +
+                                          fileName.substring(30);
                                       print(url);
                                       if (await canLaunch(url)) {
                                         await launch(url);
@@ -328,7 +361,54 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                   ),
                               itemCount:
                                   project.documents.keys.toList().length),
-                        )
+                        )],
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 1.5 * SizeConfig.heightMultiplier,
+                              right: 8.0 * SizeConfig.widthMultiplier,
+                              left: 8.0 * SizeConfig.widthMultiplier),
+                          child: Text(
+                            "RELATED SDGS",
+                            style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: SizeConfig.textMultiplier * 2),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          width: 100 * SizeConfig.widthMultiplier,
+                          constraints: BoxConstraints(
+                              minHeight: SizeConfig.heightMultiplier * 10,
+                              maxHeight: SizeConfig.heightMultiplier * 30),
+                          child: Column(children: [
+                            Flexible(
+                              flex: 3,
+                              child: Tags(
+                                itemCount: project.sdgs.length, // required
+                                itemBuilder: (int index) {
+                                  return ItemTags(
+                                    key: Key(index.toString()),
+                                    index: index, // required
+                                    title: project.sdgs[index].sdgName,
+                                    color: kScaffoldColor,
+                                    border: Border.all(color: Colors.grey[400]),
+                                    textColor: Colors.grey[600],
+                                    elevation: 0,
+                                    active: false,
+                                    pressEnabled: false,
+                                    textStyle: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12.0),
+                                  );
+                                },
+                                alignment: WrapAlignment.end,
+                                runAlignment: WrapAlignment.start,
+                                spacing: 6,
+                                runSpacing: 6,
+                              ),
+                            ),
+                          ]),
+                        ),
                       ]),
                 )
               : Center(
@@ -417,7 +497,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     Text("Contribute Resource", style: AppTheme.titleLight),
                   ],
                 )),
-            FlatButton(
+            if(project.projCreatorId == Provider.of<Auth>(context).myProfile.accountId)...[ FlatButton(
                 onPressed: () => Navigator.of(context, rootNavigator: true)
                     .push(MaterialPageRoute(
                         builder: (context) =>
@@ -458,7 +538,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     SizedBox(width: 10),
                     Text("Terminate", style: AppTheme.titleLight),
                   ],
-                )),
+                ))],
           ],
         ));
   }
@@ -616,69 +696,75 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 }
 
-final List<Widget> imageSliders = imgList
-    .map((item) => Container(
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              offset: Offset(4, 10),
-              blurRadius: 10,
-              color: Colors.grey[300].withOpacity(0.2),
-            ),
-            BoxShadow(
-              offset: Offset(-4, 10),
-              blurRadius: 30,
-              color: Colors.grey[300].withOpacity(0.2),
-            ),
-          ]),
-          margin: EdgeInsets.symmetric(
-              horizontal: SizeConfig.widthMultiplier * 6,
-              vertical: SizeConfig.heightMultiplier * 2),
-          child: Material(
-            elevation: 1 * SizeConfig.heightMultiplier,
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                child: Stack(
-                  children: <Widget>[
-                    // Image.network(item, fit: BoxFit.cover, width: 1000.0),
-                    Positioned(
-                      bottom: 0.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color.fromARGB(200, 0, 0, 0),
-                              Color.fromARGB(0, 0, 0, 0)
-                            ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                          ),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 10.0),
-                        child: Text(
-                          // 'No. ${imgList.indexOf(item)} image',
-                          '',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
+class UpvoteRow extends StatefulWidget {
+  UpvoteRow({
+    Key key,
+    @required this.project,
+    @required this.myProfile,
+    @required this.getProjects,
+  }) : super(key: key);
+  Function getProjects;
+  final Project project;
+  final Profile myProfile;
+
+  @override
+  _UpvoteRowState createState() => _UpvoteRowState();
+}
+
+class _UpvoteRowState extends State<UpvoteRow> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Expanded(
+        child: Padding(
+          padding: EdgeInsets.only(
+              top: 1 * SizeConfig.heightMultiplier,
+              left: 8.0 * SizeConfig.widthMultiplier),
+          child: Text(
+              "${widget.project.upvotes} upvotes | ${widget.project.userFollowers.length} following",
+              style: AppTheme.unSelectedTabLight),
+        ),
+      ),
+      IconButton(
+          icon: Icon(
+            Icons.thumb_up,
+            color: widget.myProfile.upvotedProjectIds
+                    .contains(widget.project.projectId)
+                ? kAccentColor
+                : Colors.grey[300],
           ),
-        ))
-    .toList();
+          onPressed: () async {
+            if (!widget.myProfile.upvotedProjectIds
+                .contains(widget.project.projectId)) {
+              await ApiBaseHelper().postProtected(
+                  "authenticated/upvoteProject?projectId=${widget.project.projectId}&userId=${widget.myProfile.accountId}",
+                  accessToken: Provider.of<Auth>(context)
+                      .accessToken);
+            } else {
+              await ApiBaseHelper().postProtected(
+                  "authenticated/revokeUpvote?projectId=${widget.project.projectId}&userId=${widget.myProfile.accountId}",
+                  accessToken: Provider.of<Auth>(context)
+                      .accessToken);
+            }
+
+            await Provider.of<Auth>(context).retrieveUser();
+            setState(() {
+              widget.getProjects();
+            });
+          })
+    ]);
+  }
+}
+
 final List<String> imgList = [
-  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
-      'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+  "https://localhost:8443/api/v1/files/init/project2.jpg",
+  "https://localhost:8443/api/v1/files/init/project3.jpg",
+  "https://localhost:8443/api/v1/files/init/project6.jpg",
+  // "https://localhost:8443/api/v1/files/init/project5.png"
+  // 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+  //     'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+  // 'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+  // 'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
 ];
 final List<String> iconList = [
   "assets/icons/word.png",

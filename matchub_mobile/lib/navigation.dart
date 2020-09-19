@@ -8,7 +8,7 @@ import 'package:matchub_mobile/screens/project/projectDetail/project_detail_over
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
-import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/resourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';

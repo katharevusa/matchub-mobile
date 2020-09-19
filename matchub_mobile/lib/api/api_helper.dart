@@ -6,7 +6,7 @@ import 'package:http/io_client.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = "https://192.168.1.60:8443/api/v1/";
+  final String _baseUrl = "https://192.168.72.105:8443/api/v1/";
 
   IOClient client;
 
@@ -21,6 +21,8 @@ class ApiBaseHelper {
           ((X509Certificate cert, String host, int port) => trustSelfSigned);
     client = new IOClient(httpClient);
   }
+
+  String get item => null;
 
   Future<dynamic> get(String url) async {
     var responseJson;
@@ -146,10 +148,10 @@ class ApiBaseHelper {
             ? errors = responseJson['errors'].join(", ").toString().capitalize
             : errors = "";
         var errorMsg;
-        responseJson['errorMessage'] != null
-            ? errorMsg = responseJson['errorMessage']
-            : errorMsg = responseJson['error_description'];
-        throw BadRequestException(errorMsg + " " + errors);
+        // responseJson['errorMessage'] != null
+        //     ? errorMsg = responseJson['errorMessage']
+        //     : errorMsg = responseJson['error_description'];
+        throw BadRequestException(errors);
       case 404:
         throw BadRequestException(responseJson['errorMessage'].toString());
       case 409:
