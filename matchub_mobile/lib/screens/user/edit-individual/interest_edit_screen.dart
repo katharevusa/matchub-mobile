@@ -40,10 +40,16 @@ class _InterestEditPageState extends State<InterestEditPage> {
                             Navigator.of(context)
                                 .pushNamed(SDGPicker.routeName)
                                 .then((value) {
-                              setState(() {
+                                  print(value);
                                 if (value != null) {
-                                  widget.profile['sdgIds'] = (value);
+                                   var list = [];
+                                  widget.profile['sdgIds'] = value;
+                                  widget.profile['sdgIds'].forEach((e) => list.add(e + 1));
+                                  print(list);
+                                  widget.profile['sdgIds'] = list;
+                                  // widget.profile['sdgIds'] = (value);
                                 }
+                              setState(() {
                                 print(widget.profile['sdgIds']);
                               });
                             });
@@ -79,7 +85,7 @@ class _InterestEditPageState extends State<InterestEditPage> {
                                       itemBuilder:
                                           (BuildContext context, int index) {
                                             int i =(widget.profile['sdgIds'][index]);
-                                            i++;
+                                            // i++;
                                         return Container(
                                           // height:50,
                                           child: Image.asset(

@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -15,6 +14,7 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:matchub_mobile/widgets/errorDialog.dart';
 import 'package:date_format/date_format.dart';
 
 class ResourceCreationScreen extends StatefulWidget {
@@ -36,8 +36,12 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
       "resourceDescription": widget.newResource.resourceDescription ?? "",
       "uploadedFiles": widget.newResource.uploadedFiles ?? [],
       "available": widget.newResource.available ?? true,
-      "startTime": widget.newResource.startTime ?? "",
-      "endTime": widget.newResource.endTime ?? "",
+      "startTime": widget.newResource.startTime != null
+          ? DateTime.parse(widget.newResource.startTime)
+          : DateTime.now(),
+      "endTime": widget.newResource.endTime != null
+          ? DateTime.parse(widget.newResource.endTime)
+          : DateTime.now(),
       "listOfRequests": widget.newResource.listOfRequests ?? [],
       "resourceCategoryId": widget.newResource.resourceCategoryId,
       "resourceOwnerId": widget.newResource.resourceOwnerId,
@@ -59,7 +63,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     "Create New Resource",
     "Create New Resource",
     "Create New Resource",
-    "Create New Resource",
+    // "Create New Resource",
   ];
 
   final List<String> titles_edit = [
@@ -68,17 +72,17 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     "Edit Resource",
     "Edit Resource",
     "Edit Resource",
-    "Edit Resource",
+    // "Edit Resource",
     "Edit Resource",
   ];
   final List<String> subtitles = [
     "Title & Description",
     "Select Category",
-    "Input your unit",
+    "Select No. of units",
     "Start Date",
     "End Date",
     "Upload Photo",
-    "Upload Documents",
+    // "Upload Documents",
   ];
   final List<Color> colors = [
     Colors.green.shade300,
@@ -89,38 +93,54 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     Colors.lime.shade300,
     Colors.brown.shade400,
   ];
-
+  List<File> photos = [];
   void createNewResource(context) async {
-    resource["resourceOwnerId"] =
-        Provider.of<Auth>(context).myProfile.accountId;
-    final url = "authenticated/createNewResource";
-    var accessToken = Provider.of<Auth>(context).accessToken;
+      resource["resourceOwnerId"] =
+          Provider.of<Auth>(context).myProfile.accountId;
+      final url = "authenticated/createNewResource";
+      var accessToken = Provider.of<Auth>(context).accessToken;
+
+      var startResourceTime = resource['startTime'];
+      resource['startTime'] = formatDate(
+          DateTime(startResourceTime.year, startResourceTime.month, startResourceTime.day, startResourceTime.hour,
+              startResourceTime.minute, startResourceTime.second),
+          [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+      var endResourceTime = resource['endTime'];
+      resource['endTime'] = formatDate(
+          DateTime(endResourceTime.year, endResourceTime.month, endResourceTime.day, endResourceTime.hour,
+              endResourceTime.minute, endResourceTime.second),
+          [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
     try {
+
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(resource));
       print("Success");
-      await Provider.of<Auth>(context).retrieveUser();
+      Provider.of<Auth>(context).retrieveUser();
       Navigator.of(context).pop(true);
     } catch (error) {
-      final responseData = error.body as Map<String, dynamic>;
-      print("Failure");
-      showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                title: Text(responseData['error']),
-                content: Text(responseData['message']),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Okay'),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => ResourceScreen()));
-                    },
-                  )
-                ],
-              ));
+      resource['startTime'] = startResourceTime;
+      resource['endTime'] = endResourceTime;
+      showErrorDialog(error.toString(), context);
+
+      // final responseData = error.body as Map<String, dynamic>;
+      // print("Failure");
+      // showDialog(
+      //     context: context,
+      //     builder: (ctx) => AlertDialog(
+      //           title: Text(responseData['error']),
+      //           content: Text(responseData['message']),
+      //           actions: <Widget>[
+      //             FlatButton(
+      //               child: Text('Okay'),
+      //               onPressed: () {
+      //                 Navigator.push(
+      //                     context,
+      //                     new MaterialPageRoute(
+      //                         builder: (context) => ResourceScreen()));
+      //               },
+      //             )
+      //           ],
+      //         ));
     }
   }
 
@@ -138,31 +158,55 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     var resourceId = resource["resourceId"];
     final url =
         "authenticated/updateResource?updaterId=${updaterId}&resourceId=${resourceId}";
+    var accessToken = Provider.of<Auth>(context).accessToken;
+
+    var startResourceTime = resource['startTime'];
+    resource['startTime'] = formatDate(
+        DateTime(
+            startResourceTime.year,
+            startResourceTime.month,
+            startResourceTime.day,
+            startResourceTime.hour,
+            startResourceTime.minute,
+            startResourceTime.second),
+        [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+    var endResourceTime = resource['endTime'];
+    resource['endTime'] = formatDate(
+        DateTime(
+            endResourceTime.year,
+            endResourceTime.month,
+            endResourceTime.day,
+            endResourceTime.hour,
+            endResourceTime.minute,
+            endResourceTime.second),
+        [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
     try {
-      var accessToken = Provider.of<Auth>(context).accessToken;
       final response = await ApiBaseHelper().putProtected(url,
           accessToken: accessToken, body: json.encode(resource));
-      Provider.of<Auth>(context).retrieveUser();
       print("Success");
       Navigator.of(context).pop(true);
-      await Provider.of<Auth>(context).retrieveUser();
+      Provider.of<Auth>(context).retrieveUser();
     } catch (error) {
-      final responseData = error.body as Map<String, dynamic>;
-      print("Failure");
-      showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                title: Text(responseData['error']),
-                content: Text(responseData['message']),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Okay'),
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                  )
-                ],
-              ));
+      resource['startTime'] = startResourceTime;
+      resource['endTime'] = endResourceTime;
+
+      showErrorDialog(error.toString(), context);
+      // final responseData = error.body as Map<String, dynamic>;
+      // print("Failure");
+      // showDialog(
+      //     context: context,
+      //     builder: (ctx) => AlertDialog(
+      //           title: Text(responseData['error']),
+      //           content: Text(responseData['message']),
+      //           actions: <Widget>[
+      //             FlatButton(
+      //               child: Text('Okay'),
+      //               onPressed: () {
+      //                 Navigator.of(ctx).pop();
+      //               },
+      //             )
+      //           ],
+      //         ));
     }
   }
 
@@ -187,7 +231,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                   activeSize: 20.0,
                 ),
               ),
-              itemCount: 7,
+              itemCount: (resource["resourceId"] == null) ? 6 : 5,
               itemBuilder: (context, index) {
                 if (index == 0 && resource["resourceId"] == null) {
                   return IntroItem(
@@ -210,7 +254,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     bg: colors[index],
                     widget: Category(resource),
                   );
-                } else if (index == 1 && resource["resourceId"] != null) {
+                } else if (index == 3 && resource["resourceId"] != null) {
                   return IntroItem(
                     title: titles_edit[index],
                     subtitle: subtitles[index],
@@ -224,7 +268,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     bg: colors[index],
                     widget: Unit(resource),
                   );
-                } else if (index == 2 && resource["resourceId"] != null) {
+                } else if (index == 4 && resource["resourceId"] != null) {
                   return IntroItem(
                     title: titles_edit[index],
                     subtitle: subtitles[index],
@@ -238,7 +282,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     bg: colors[index],
                     widget: Start(resource),
                   );
-                } else if (index == 3 && resource["resourceId"] != null) {
+                } else if (index == 1 && resource["resourceId"] != null) {
                   return IntroItem(
                     title: titles_edit[index],
                     subtitle: subtitles[index],
@@ -252,7 +296,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     bg: colors[index],
                     widget: End(resource),
                   );
-                } else if (index == 4 && resource["resourceId"] != null) {
+                } else if (index == 2 && resource["resourceId"] != null) {
                   return IntroItem(
                     title: titles_edit[index],
                     subtitle: subtitles[index],
@@ -264,52 +308,62 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
-                    widget: Document(resource),
+                    widget: Document(resource, true, false, photos),
                   );
-                } else if (index == 5 && resource["resourceId"] != null) {
-                  return IntroItem(
-                    title: titles_edit[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: Document(resource),
-                  );
-                } else if (index == 6 && resource["resourceId"] == null) {
-                  return IntroItem(
-                    title: titles[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: Document(resource),
-                  );
-                } else if (index == 6 && resource["resourceId"] != null) {
-                  return IntroItem(
-                    title: titles_edit[index],
-                    subtitle: subtitles[index],
-                    bg: colors[index],
-                    widget: Document(resource),
-                  );
+                  // } else if (index == 5 && resource["resourceId"] != null) {
+                  //   return IntroItem(
+                  //     title: titles_edit[index],
+                  //     subtitle: subtitles[index],
+                  //     bg: colors[index],
+                  //     widget: Document(resource, true, false, photos),
+                  //   );
+                  // } else if (index == 6 && resource["resourceId"] == null) {
+                  //   return IntroItem(
+                  //     title: titles[index],
+                  //     subtitle: subtitles[index],
+                  //     bg: colors[index],
+                  //     widget: Document(resource),
+                  //   );
+                  // } else if (index == 6 && resource["resourceId"] != null) {
+                  //   return IntroItem(
+                  //     title: titles_edit[index],
+                  //     subtitle: subtitles[index],
+                  //     bg: colors[index],
+                  //     widget: Document(resource),
+                  //   );
                 }
               }),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: FlatButton(
-              child: Text("Skip"),
-              onPressed: () {
-                _controller.next();
-              },
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.bottomLeft,
+          //   child: FlatButton(
+          //     child: Text("Skip"),
+          //     onPressed: () {
+          //       _controller.next();
+          //     },
+          //   ),
+          // ),
           Align(
             alignment: Alignment.bottomRight,
             child: IconButton(
-              icon:
-                  Icon(_currentIndex == 6 ? Icons.check : Icons.arrow_forward),
+              icon: Icon(((_currentIndex == 5 &&
+                          resource["resourceId"] == null) ||
+                      (_currentIndex == 4 && resource["resourceId"] != null))
+                  ? Icons.check
+                  : Icons.arrow_forward),
               onPressed: () {
-                if (_currentIndex != 6) {
-                  _controller.next();
-                } else if (resource["resourceId"] == null) {
-                  createNewResource(context);
+                FocusScope.of(context).unfocus();
+                if (resource["resourceId"] == null) {
+                  if (_currentIndex != 5) {
+                    _controller.next();
+                  } else {
+                    createNewResource(context);
+                  }
                 } else {
-                  updateResource(context);
+                  if (_currentIndex != 4) {
+                    _controller.next();
+                  } else {
+                    updateResource(context);
+                  }
                 }
               },
             ),
@@ -386,12 +440,17 @@ class _CategoryState extends State<Category> {
   ApiBaseHelper _helper = ApiBaseHelper();
   List<ResourceCategory> listOfCategories;
   Future categoriesFuture;
+  @override
+  initState() {
+    categoriesFuture = retrieveAllCategories();
+    super.initState();
+  }
 
 //retrieve all categories
   retrieveAllCategories() async {
     final url = 'authenticated/getAllResourceCategories';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context).accessToken);
+        url, Provider.of<Auth>(this.context, listen: false).accessToken);
     listOfCategories = (responseData['content'] as List)
         .map((e) => ResourceCategory.fromJson(e))
         .toList();
@@ -402,7 +461,7 @@ class _CategoryState extends State<Category> {
     bool _checked = true;
     bool _unchecked = false;
     return FutureBuilder(
-      future: retrieveAllCategories(),
+      future: categoriesFuture,
       builder: (context, snapshot) => (snapshot.connectionState ==
               ConnectionState.done)
           ? Scaffold(
@@ -514,7 +573,7 @@ class _UnitState extends State<Unit> {
         body: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(60, 120, 30, 0),
+              padding: EdgeInsets.fromLTRB(60, 40, 30, 0),
               child: new Text('You need to select a category first. ',
                   style: new TextStyle(fontSize: 30.0)),
             ),
@@ -524,62 +583,60 @@ class _UnitState extends State<Unit> {
     } else {
       return FutureBuilder(
         future: categoryFuture,
-        builder: (context, snapshot) =>
-            (snapshot.connectionState == ConnectionState.done)
-                ? Scaffold(
-                    body: Column(
-                      children: [
-                        new Container(
-                          padding: EdgeInsets.fromLTRB(10, 60, 10, 50),
-                          child: new Center(
-                            child: new Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                new FloatingActionButton(
-                                  onPressed: add,
-                                  child: new Icon(
-                                    Icons.add,
-                                    color: Colors.black,
-                                  ),
-                                  backgroundColor: Colors.white,
+        builder: (context, snapshot) => (snapshot.connectionState ==
+                ConnectionState.done)
+            ? Scaffold(
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      new Container(
+                        padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                        child: new Center(
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              new FloatingActionButton(
+                                onPressed: minus,
+                                child:
+                                    new Icon(Icons.remove, color: Colors.black),
+                                backgroundColor: Colors.white,
+                              ),
+                              new Text('$_n',
+                                  style: new TextStyle(fontSize: 60.0)),
+                              new FloatingActionButton(
+                                onPressed: add,
+                                child: new Icon(
+                                  Icons.add,
+                                  color: Colors.black,
                                 ),
-                                new Text('$_n',
-                                    style: new TextStyle(fontSize: 60.0)),
-                                new FloatingActionButton(
-                                  onPressed: minus,
-                                  child: new Icon(
-                                      const IconData(0xe15b,
-                                          fontFamily: 'MaterialIcons'),
-                                      color: Colors.black),
-                                  backgroundColor: Colors.white,
-                                ),
-                              ],
-                            ),
+                                backgroundColor: Colors.white,
+                              ),
+                            ],
                           ),
                         ),
-                        Container(
-                          child: new Center(
-                            child: new Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Text('$totalUnit ',
-                                    style: new TextStyle(fontSize: 60.0)),
-                                new Text(category.unitName,
-                                    style: new TextStyle(fontSize: 60.0)),
-                              ],
-                            ),
-                          ),
+                      ),
+                      Container(
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            // new Text('$totalUnit ',
+                            //     style: new TextStyle(fontSize: 60.0)),
+                            new Text(category.unitName,
+                                style: new TextStyle(fontSize: 60.0)),
+                          ],
                         ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
-                          child: Text(
-                              'The unit is following our community guidelines, you can checkout the guideline details by clicking here',
-                              style: new TextStyle(fontSize: 13.0)),
-                        ),
-                      ],
-                    ),
-                  )
-                : Center(child: CircularProgressIndicator()),
+                      ),
+                      // Container(
+                      //   padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
+                      //   child: Text(
+                      //       'The unit is following our community guidelines, you can checkout the guideline details by clicking here',
+                      //       style: new TextStyle(fontSize: 13.0)),
+                      // ),
+                    ],
+                  ),
+                ),
+              )
+            : Center(child: CircularProgressIndicator()),
       );
     }
   }
@@ -593,41 +650,45 @@ class Start extends StatefulWidget {
 }
 
 class _StartState extends State<Start> {
-  DateTime dateTime = DateTime.now();
+  // DateTime dateTime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    if (widget.resource["startTime"] != "" &&
-        widget.resource["startTime"] != null) {
-      String temp = widget.resource["startTime"] + 'Z';
-      dateTime = DateTime.parse(temp);
-    }
-    return Column(
-      children: <Widget>[
-        Text(
-          DateFormat.yMMMd().add_jm().format(dateTime),
-        ),
-        Container(
-          height: 300,
-          child: CupertinoDatePicker(
-            mode: CupertinoDatePickerMode.dateAndTime,
-            initialDateTime: dateTime,
-            onDateTimeChanged: (newDateTime) {
-              setState(() {
-                dateTime = newDateTime;
-                print(dateTime);
-                widget.resource["startTime"] = formatDate(
-                    DateTime(dateTime.year, dateTime.month, dateTime.day,
-                        dateTime.hour, dateTime.minute, dateTime.second),
-                    [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
-
-                print("hello");
-                print(widget.resource["startTime"]);
-              });
-            },
+    // if (widget.resource["startTime"] != "" &&
+    //     widget.resource["startTime"] != null) {
+    //   String temp = widget.resource["startTime"] + 'Z';
+    //   dateTime = DateTime.parse(temp);
+    // }
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Text(
+            DateFormat.yMMMd().add_jm().format(widget.resource['startTime']),
           ),
-        ),
-      ],
+          Container(
+            height: 300,
+            child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.dateAndTime,
+              minimumDate: DateTime.now().subtract(Duration(minutes: 30)),
+              initialDateTime: widget.resource['startTime'],
+              onDateTimeChanged: (newDateTime) {
+                setState(() {
+                  // dateTime = newDateTime;
+                  // print(dateTime);
+                  widget.resource["startTime"] = newDateTime;
+
+                  // formatDate(
+                  //     DateTime(dateTime.year, dateTime.month, dateTime.day,
+                  //         dateTime.hour, dateTime.minute, dateTime.second),
+                  //     [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+
+                  print(widget.resource["startTime"]);
+                });
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -640,135 +701,183 @@ class End extends StatefulWidget {
 }
 
 class _EndState extends State<End> {
-  DateTime dateTime = DateTime.now();
+  // DateTime dateTime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    if (widget.resource["endTime"] != "" &&
-        widget.resource["endTime"] != null) {
-      String temp = widget.resource["endTime"] + 'Z';
-      dateTime = DateTime.parse(temp);
-    }
-    return Column(
-      children: <Widget>[
-        Text(
-          DateFormat.yMMMd().add_jm().format(dateTime),
-        ),
-        Container(
-          height: 300,
-          child: CupertinoDatePicker(
-            mode: CupertinoDatePickerMode.dateAndTime,
-            initialDateTime: dateTime,
-            onDateTimeChanged: (newDateTime) {
-              setState(() {
-                dateTime = newDateTime;
-                print(dateTime);
-                widget.resource["endTime"] = formatDate(
-                    DateTime(dateTime.year, dateTime.month, dateTime.day,
-                        dateTime.hour, dateTime.minute, dateTime.second),
-                    [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
-
-                print("hello");
-                print(widget.resource["endTime"]);
-              });
-            },
+    // if (widget.resource["endTime"] != "" &&
+    //     widget.resource["endTime"] != null) {
+    //   String temp = widget.resource["endTime"] + 'Z';
+    //   dateTime = DateTime.parse(temp);
+    // }
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Text(
+            DateFormat.yMMMd().add_jm().format(widget.resource["endTime"]),
           ),
-        ),
-      ],
+          Container(
+            height: 300,
+            child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.dateAndTime,
+              initialDateTime:
+                  widget.resource['startTime'].add(Duration(minutes: 10)),
+              minimumDate: widget.resource["startTime"],
+              onDateTimeChanged: (newDateTime) {
+                setState(() {
+                  // dateTime = newDateTime;
+
+                  // print(dateTime);
+
+                  // if (widget.resource["startTime"].length > 0 &&
+                  //     newDateTime.isBefore(
+                  //         DateTime.parse(widget.resource["endTime"]))) {
+                  //   showErrorDialog(
+                  //       "Inputed end date must be after the start date!",
+                  //       context);
+                  //       print("asdfadsasfsafda");
+                  //   return;
+                  // }
+                  print("reached here");
+                  widget.resource["endTime"] = newDateTime;
+
+                  // formatDate(
+                  //     DateTime(dateTime.year, dateTime.month, dateTime.day,
+                  //         dateTime.hour, dateTime.minute, dateTime.second),
+                  //     [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+
+                  print(widget.resource["endTime"]);
+                });
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class Document extends StatefulWidget {
-  Map<String, dynamic> resource;
-  Document(this.resource);
+  Map<String, dynamic> project;
+  bool toUploadMultiple;
+  bool toUploadDocuments = false;
+  List<File> fileList = new List<File>();
+
+  Document(this.project, this.toUploadMultiple, this.toUploadDocuments,
+      this.fileList);
   @override
   _DocumentState createState() => _DocumentState();
 }
 
 class _DocumentState extends State<Document> {
-  List<Widget> fileListThumb;
-  List<File> fileList = new List<File>();
-
+  List<Widget> fileListThumbnail;
+  Future filesarebeingpicked = Future.delayed(Duration(microseconds: 1));
   Future pickFiles() async {
-    List<Widget> thumbs = new List<Widget>();
-    fileListThumb.forEach((element) {
-      thumbs.add(element);
-    });
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: widget.toUploadDocuments
+          ? ['pdf', 'ppt', 'pptx', 'doc', 'docx', 'xlsx']
+          : ['jpg', 'png'],
+      allowMultiple: widget.toUploadMultiple,
+    );
 
-    // await FilePicker.getMultiFile(
-    //   type: FileType.custom,
-    //   allowedExtensions: ['pdf'],
-    // ).then((files) {
-    //   if (files != null && files.length > 0) {
-    //     files.forEach((element) {
-    //       List<String> picExt = ['.jpg', '.jpeg', '.bmp'];
+    if (result != null) {
+      setState(() {});
+      result.files.forEach((element) {
+        File file = (File(element.path));
 
-    //       if (picExt.contains(extension(element.path))) {
-    //         thumbs.add(Padding(
-    //             padding: EdgeInsets.all(1), child: new Image.file(element)));
-    //       } else
-    //         thumbs.add(Container(
-    //             child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.center,
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 children: <Widget>[
-    //               Icon(Icons.insert_drive_file),
-    //               Text(basename(element.path)),
-    //             ])));
-    //       fileList.add(element);
-    //       // widget.newResource.uploadedFiles.add(element.toString());
-    //       // print(widget.newResource.uploadedFiles.toList());
-    //     });
-    //     setState(() {
-    //       fileListThumb = thumbs;
-    //     });
-    //   }
-    // });
-  }
-
-  List<Map> storeNameAndPath(List<File> fileList) {
-    List<Map> s = new List<Map>();
-    if (fileList.length > 0)
-      fileList.forEach((element) {
-        Map a = {
-          'fileName': basename(element.path),
-          'encoded': base64Encode(element.readAsBytesSync())
-        };
-        s.add(a);
+        print(element.name);
+        print(element.bytes);
+        print(element.size);
+        print(element.extension);
+        print(element.path);
+        widget.fileList.add(file);
+        fileListThumbnail.add(Container(
+          padding: EdgeInsets.all(8),
+          height: 200,
+          width: 200,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.insert_drive_file),
+                Expanded(
+                    child: Text(
+                  basename(file.path),
+                  overflow: TextOverflow.fade,
+                ))
+              ]),
+        ));
       });
-    return s;
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (fileListThumb == null)
-      fileListThumb = [
-        InkWell(
-          onTap: pickFiles,
-          child: Container(child: Icon(Icons.add)),
-        )
-      ];
-    // if(!resource.uploadedFiles.isEmpty){
-    //   fileListThumb
-    // }
-    // final Map params = new Map();
-    return Scaffold(
-      body: Center(
+    fileListThumbnail = [];
+    widget.fileList.forEach((file) => fileListThumbnail.add(Container(
+          padding: EdgeInsets.all(8),
+          height: 200,
+          width: 200,
           child: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 4,
-            child: Padding(
-              padding: EdgeInsets.all(5),
-              child: GridView.count(
-                crossAxisCount: 4,
-                children: fileListThumb,
-              ),
-            ),
-          ),
-        ],
-      )),
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.insert_drive_file),
+                Expanded(
+                    child: Text(
+                  basename(file.path),
+                  overflow: TextOverflow.fade,
+                ))
+              ]),
+        )));
+    if (!(widget.fileList.isNotEmpty && !widget.toUploadMultiple))
+      fileListThumbnail.add(InkWell(
+        onTap: () {
+          filesarebeingpicked = pickFiles();
+        },
+        child: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey[400], width: 2.0)),
+            height: 200,
+            width: 200,
+            child: Center(child: Icon(Icons.add))),
+      ));
+
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: FutureBuilder(
+          future: filesarebeingpicked,
+          builder: (context, snapshot) =>
+              snapshot.connectionState == ConnectionState.done
+                  ? SingleChildScrollView(
+                      child: Column(children: [
+                      GridView.count(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        childAspectRatio: 1,
+                        crossAxisCount: 4,
+                        children: fileListThumbnail,
+                      ),
+                      if (widget.fileList.isNotEmpty)
+                        FlatButton(
+                          onPressed: () async {
+                            setState(() {
+                              fileListThumbnail.clear();
+                              widget.fileList.clear();
+                            });
+                          },
+                          child: Text("Clear",
+                              style: TextStyle(color: Colors.red[400])),
+                        )
+                    ]))
+                  : Center(child: CircularProgressIndicator()),
+        ),
+      ),
     );
   }
 }

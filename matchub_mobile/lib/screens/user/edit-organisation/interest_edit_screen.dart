@@ -40,8 +40,13 @@ class _InterestEditPageState extends State<InterestEditPage> {
                                 .then((value) {
                               setState(() {
                                 if (value != null) {
+                                   var list = [];
+                                  widget.profile['sdgIds'] = value;
+                                  widget.profile['sdgIds'].forEach((e) => list.add(e + 1));
+                                  print(list);
+                                  widget.profile['sdgIds'] = list;
                                   // (widget.profile['sdgIds'] as List)..addAll(value)..toSet();
-                                  widget.profile['sdgIds'] = (value);
+                                  // widget.profile['sdgIds'] = (value);
                                 }
                                 print(widget.profile['sdgIds']);
                               });
