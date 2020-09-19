@@ -310,8 +310,8 @@ class Gallery extends StatelessWidget {
     if (resource.photos.isEmpty) {
       imageLinks = ['https://localhost:8443/api/v1/files/init/resource_default.jpg'];
     } else {
-      imageLinks = resource.photos;
-    }
+      imageLinks = resource.photos.cast<String>().toList();
+    }imageLinks.add(resource.resourceProfilePic);
     print(imageLinks);
     return CarouselSlider(
       options: CarouselOptions(

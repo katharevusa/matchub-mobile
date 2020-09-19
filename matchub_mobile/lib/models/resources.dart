@@ -9,6 +9,7 @@ class Resources {
     num resourceId;
     String resourceName;
     String resourceDescription;
+    String resourceProfilePic;
     List uploadedFiles;
     bool available;
     String startTime;
