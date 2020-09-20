@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/resources.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:path/path.dart';
@@ -95,23 +96,32 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
   ];
   List<File> photos = [];
   void createNewResource(context) async {
-      resource["resourceOwnerId"] =
-          Provider.of<Auth>(context).myProfile.accountId;
-      final url = "authenticated/createNewResource";
-      var accessToken = Provider.of<Auth>(context).accessToken;
+    resource["resourceOwnerId"] =
+        Provider.of<Auth>(context).myProfile.accountId;
+    final url = "authenticated/createNewResource";
+    var accessToken = Provider.of<Auth>(context).accessToken;
 
-      var startResourceTime = resource['startTime'];
-      resource['startTime'] = formatDate(
-          DateTime(startResourceTime.year, startResourceTime.month, startResourceTime.day, startResourceTime.hour,
-              startResourceTime.minute, startResourceTime.second),
-          [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
-      var endResourceTime = resource['endTime'];
-      resource['endTime'] = formatDate(
-          DateTime(endResourceTime.year, endResourceTime.month, endResourceTime.day, endResourceTime.hour,
-              endResourceTime.minute, endResourceTime.second),
-          [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+    var startResourceTime = resource['startTime'];
+    resource['startTime'] = formatDate(
+        DateTime(
+            startResourceTime.year,
+            startResourceTime.month,
+            startResourceTime.day,
+            startResourceTime.hour,
+            startResourceTime.minute,
+            startResourceTime.second),
+        [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+    var endResourceTime = resource['endTime'];
+    resource['endTime'] = formatDate(
+        DateTime(
+            endResourceTime.year,
+            endResourceTime.month,
+            endResourceTime.day,
+            endResourceTime.hour,
+            endResourceTime.minute,
+            endResourceTime.second),
+        [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
     try {
-
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(resource));
       print("Success");
@@ -186,6 +196,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
       print("Success");
       Navigator.of(context).pop(true);
       Provider.of<Auth>(context).retrieveUser();
+      Navigator.of(context).pop(true);
     } catch (error) {
       resource['startTime'] = startResourceTime;
       resource['endTime'] = endResourceTime;
@@ -363,6 +374,13 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     _controller.next();
                   } else {
                     updateResource(context);
+                    Navigator.of(context).pop(true);
+                    // Navigator.of(this.context, rootNavigator: true).pushNamed(
+                    //     ResourceDetailScreen.routeName,
+                    //     arguments: widget.newResource);
+                    // Navigator.of(this.context, rootNavigator: true).pushNamed(
+                    //     ResourceDetailScreen.routeName,
+                    //     arguments: widget.newResource);
                   }
                 }
               },
@@ -596,6 +614,7 @@ class _UnitState extends State<Unit> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               new FloatingActionButton(
+                                heroTag: null,
                                 onPressed: minus,
                                 child:
                                     new Icon(Icons.remove, color: Colors.black),
@@ -604,6 +623,7 @@ class _UnitState extends State<Unit> {
                               new Text('$_n',
                                   style: new TextStyle(fontSize: 60.0)),
                               new FloatingActionButton(
+                                heroTag: null,
                                 onPressed: add,
                                 child: new Icon(
                                   Icons.add,

@@ -30,7 +30,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
   @override
   Widget build(BuildContext context) {
     resource = ModalRoute.of(context).settings.arguments;
-
+    // Provider.of<Auth>(context).retrieveUser();
     return Scaffold(
       backgroundColor: AppTheme.appBackgroundColor,
       extendBodyBehindAppBar: true,
@@ -80,9 +80,15 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
           children: [
             FlatButton(
                 onPressed: () => Navigator.of(context, rootNavigator: true)
-                    .push(MaterialPageRoute(
-                        builder: (context) =>
-                            ResourceCreationScreen(newResource: resource))),
+                        .push(MaterialPageRoute(
+                            builder: (context) =>
+                                ResourceCreationScreen(newResource: resource)))
+                        .then((value) {
+                      setState(() {
+                        Provider.of<Auth>(context).retrieveUser();
+                        // build(context);
+                      });
+                    }),
                 visualDensity: VisualDensity.comfortable,
                 highlightColor: Colors.transparent,
                 child: Row(
@@ -222,6 +228,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
       final response =
           await ApiBaseHelper().postProtected(url, accessToken: accessToken);
       print("Success");
+      Provider.of<Auth>(context).retrieveUser();
       Navigator.of(context).pop(true);
     } catch (error) {
       final responseData = error.body as Map<String, dynamic>;
@@ -255,7 +262,7 @@ class ResourceHeader extends StatelessWidget {
     return Column(
       children: <Widget>[
         Padding(
-          padding:EdgeInsets.only(top:100),
+          padding: EdgeInsets.only(top: 100),
           // height: 400,
           // decoration: BoxDecoration(
           child: Column(children: <Widget>[
@@ -308,10 +315,13 @@ class Gallery extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> imageLinks;
     if (resource.photos.isEmpty) {
-      imageLinks = ['https://localhost:8443/api/v1/files/init/resource_default.jpg'];
+      imageLinks = [
+        'https://localhost:8443/api/v1/files/init/resource_default.jpg'
+      ];
     } else {
       imageLinks = resource.photos.cast<String>().toList();
-    }imageLinks.add(resource.resourceProfilePic);
+    }
+    imageLinks.add(resource.resourceProfilePic);
     print(imageLinks);
     return CarouselSlider(
       options: CarouselOptions(
