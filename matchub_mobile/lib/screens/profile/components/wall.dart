@@ -55,47 +55,47 @@ class _WallState extends State<Wall> {
                 // alignment: MainAxisAlignment.spaceBetween,
                 buttonTextTheme: ButtonTextTheme.primary,
                 children: [
-                  FlatButton(
-                    visualDensity: VisualDensity.comfortable,
-                    highlightColor: Colors.transparent,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.thumb_up,
-                          color: Provider.of<Auth>(context)
-                                      .user
-                                      .likedPosts
-                                      .indexWhere((element) =>
-                                          widget.profile.posts[index].postId ==
-                                          element.postId) >=
-                                  0
-                              ? kAccentColor
-                              : Colors.grey,
-                        ),
-                        Text("  Like",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Provider.of<Auth>(context)
-                                          .user
-                                          .likedPosts
-                                          .indexWhere((element) =>
-                                              widget.profile.posts[index]
-                                                  .postId ==
-                                              element.postId) >=
-                                      0
-                                  ? kAccentColor
-                                  : Colors.grey,
-                            ))
-                      ],
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        Provider.of<Auth>(context)
-                            .user
-                            .toggleLikedPost(widget.profile.posts[index]);
-                      });
-                    },
-                  ),
+                  // FlatButton(
+                  //   visualDensity: VisualDensity.comfortable,
+                  //   highlightColor: Colors.transparent,
+                  //   child: Row(
+                  //     children: [
+                  //       Icon(
+                  //         Icons.thumb_up,
+                  //         color: Provider.of<Auth>(context)
+                  //                     .zzZ
+                  //                     .likedPosts
+                  //                     .indexWhere((element) =>
+                  //                         widget.profile.posts[index].postId ==
+                  //                         element.postId) >=
+                  //                 0
+                  //             ? kAccentColor
+                  //             : Colors.grey,
+                  //       ),
+                  //       Text("  Like",
+                  //           style: TextStyle(
+                  //             fontSize: 15,
+                  //             color: Provider.of<Auth>(context)
+                  //                         .user
+                  //                         .likedPosts
+                  //                         .indexWhere((element) =>
+                  //                             widget.profile.posts[index]
+                  //                                 .postId ==
+                  //                             element.postId) >=
+                  //                     0
+                  //                 ? kAccentColor
+                  //                 : Colors.grey,
+                  //           ))
+                  //     ],
+                  //   ),
+                  //   onPressed: () {
+                  //     setState(() {
+                  //       Provider.of<Auth>(context)
+                  //           .user
+                  //           .toggleLikedPost(widget.profile.posts[index]);
+                  //     });
+                  //   },
+                  // ),
                   SizedBox(width: 20),
                   FlatButton(
                       textColor: Colors.grey,

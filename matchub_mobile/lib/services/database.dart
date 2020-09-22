@@ -24,41 +24,68 @@ class DatabaseMethods {
         .getDocuments();
   }
 
-  Future<bool> addChatRoom(chatRoom, chatRoomId) {
+  Future<bool> addChatRoom(chatRoom, [chatRoomId]) {
     Firestore.instance
         .collection("groups")
-        .document(chatRoomId)
-        .setData(chatRoom)
+        .add(chatRoom)
+        .then((value) => Firestore.instance
+            .collection("groups")
+            .doc(value.id)
+            .set({"id": value.id}, SetOptions(merge: true)))
         .catchError((e) {
       print(e);
     });
   }
 
-  getChatMessages(String chatRoomId) async{
+  checkChatRoomExists(fromUUID, toUUID) async {
+    print([fromUUID, toUUID]);
+
+    final result = await Firestore.instance
+        .collection("groups")
+        .where('members', whereIn: [
+      [fromUUID, toUUID]..sort()
+    ]).getDocuments();
+    print(result.size > 0);
+    return result.size > 0;
+  }
+
+  getChatMessages(String chatRoomId) async {
     return Firestore.instance
-        .collection("chatRoom")
+        .collection("message")
         .document(chatRoomId)
-        .collection("chats")
-        .orderBy('time')
+        .collection("messages")
+        .orderBy('sentAt')
         .snapshots();
   }
 
+  getChatRoomId(fromUUID, toUUID) async {
+  final result = await Firestore.instance
+        .collection("groups")
+        .where('members', whereIn: [
+      [fromUUID, toUUID]..sort()
+    ]).getDocuments();
+    return result.docs.first.id;
+  }
 
-  Future<void> addMessage(String chatRoomId, chatMessageData){
-
-    Firestore.instance.collection("chatRoom")
-        .document(chatRoomId)
-        .collection("chats")
-        .add(chatMessageData).catchError((e){
-          print(e.toString());
+  Future<void> sendMessage(String chatRoomId, chatMessageData) {
+    FirebaseFirestore.instance
+        .collection("message")
+        .doc(chatRoomId)
+        .collection("messages")
+        .add(chatMessageData)
+        .catchError((e) {
+      print(e.toString());
+      print("reached here -2");
     });
+    FirebaseFirestore.instance.collection("groups")
+    .doc(chatRoomId)
+    .set({"recentMessage": chatMessageData}, SetOptions(merge: true));
   }
 
-  getUserChats(String itIsMyName) async {
-    return await Firestore.instance
-        .collection("chatRoom")
-        .where('users', arrayContains: itIsMyName)
+  getUserChats(String userUUID) async {
+    return Firestore.instance
+        .collection("groups")
+        .where('members', arrayContains: userUUID)
         .snapshots();
   }
-
 }

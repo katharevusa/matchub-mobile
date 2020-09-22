@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:matchub_mobile/models/profile.dart';
@@ -11,8 +12,8 @@ import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 
-void main() {
-    HttpOverrides.global = new MyHttpOverrides();
+void main() async {
+  HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -52,12 +53,13 @@ class MyApp extends StatelessWidget {
       });
     });
   }
-  
 }
-class MyHttpOverrides extends HttpOverrides{
+
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context){
+  HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

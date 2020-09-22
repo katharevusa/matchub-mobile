@@ -2,13 +2,14 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
-import 'package:matchub_mobile/screens/resource/resource_detail/resourceDetail_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
@@ -116,7 +117,7 @@ class _TabsScreenState extends State<TabsScreen> {
     switch (index) {
       case 0:
         _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => HomeScreen()));
+            TabRouteBuilder(builder: (context) => ChatScreen()));
         break;
       case 1:
         _navigatorKey.currentState.pushReplacement(

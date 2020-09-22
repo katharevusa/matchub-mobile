@@ -213,11 +213,6 @@ class _LoginCardState extends State<LoginCard> {
                           ),
                         ),
                         keyboardType: TextInputType.emailAddress,
-                        // validator: (value) {
-                        //   if (value.isEmpty || !value.contains('@')) {
-                        //     return 'Invalid email!';
-                        //   }
-                        // },
                         onSaved: (value) {
                           _authData['username'] = value;
                         },
