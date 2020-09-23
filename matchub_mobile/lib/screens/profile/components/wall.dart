@@ -18,13 +18,58 @@ class Wall extends StatefulWidget {
 }
 
 class _WallState extends State<Wall> {
+//   TextEditingController _textFieldController = TextEditingController();
+//    @override
+//   void initState() {
+//     super.initState();
+
+//     _textFieldController.addListener(_printLatestValue);
+//   }
+
+//  _printLatestValue() {
+//     print("Second text field: ${_textFieldController.text}");
+//   }
+
+  _post() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    //  _textFieldController.text = '';
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8 * SizeConfig.widthMultiplier),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text("Activity", style: AppTheme.titleLight),
-        SizedBox(height: 10),
+        SizedBox(height: 20),
+        //post new activity here
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Write a post',
+            hintText: 'What do you want to talk about?',
+            labelStyle: TextStyle(color: Colors.grey[850], fontSize: 14),
+            fillColor: Colors.grey[100],
+            hoverColor: Colors.grey[100],
+            suffix: IconButton(
+              icon: Icon(Icons.send),
+              onPressed: _post(),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: kSecondaryColor),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.grey[850],
+              ),
+            ),
+          ),
+          keyboardType: TextInputType.multiline,
+          minLines: 1,
+          maxLines: 5,
+          maxLength: 500,
+          maxLengthEnforced: true,
+          onChanged: (text) {},
+        ),
         ListView.separated(
           separatorBuilder: (ctx, index) => Divider(height: 40, thickness: 1),
           physics: NeverScrollableScrollPhysics(),

@@ -40,9 +40,10 @@ class _InterestEditPageState extends State<InterestEditPage> {
                                 .then((value) {
                               setState(() {
                                 if (value != null) {
-                                   var list = [];
+                                  var list = [];
                                   widget.profile['sdgIds'] = value;
-                                  widget.profile['sdgIds'].forEach((e) => list.add(e + 1));
+                                  widget.profile['sdgIds']
+                                      .forEach((e) => list.add(e + 1));
                                   print(list);
                                   widget.profile['sdgIds'] = list;
                                   // (widget.profile['sdgIds'] as List)..addAll(value)..toSet();
@@ -163,13 +164,14 @@ class _InterestEditPageState extends State<InterestEditPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("2/2", style: TextStyle(color: Colors.grey)),
+              child: Text("2/4", style: TextStyle(color: Colors.grey)),
             ),
             RaisedButton(
                 color: kSecondaryColor,
-                onPressed: () => widget.updateProfile(
-                    Provider.of<Auth>(context).accessToken, context),
-                child: Text("Submit")),
+                onPressed: () => widget.controller.animateToPage(2,
+                    curve: Curves.decelerate,
+                    duration: Duration(milliseconds: 800)),
+                child: Text("Next")),
           ],
         ),
       ),

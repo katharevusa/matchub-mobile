@@ -143,7 +143,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("3/3", style: TextStyle(color: Colors.grey)),
+              child: Text("3/4", style: TextStyle(color: Colors.grey)),
             ),
             RaisedButton(
                 color: kSecondaryColor,
@@ -156,10 +156,13 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                         'file',
                         context);
                   }
-                  widget.updateProfile(
-                      Provider.of<Auth>(context).accessToken, context);
+                  // widget.updateProfile(
+                  //     Provider.of<Auth>(context).accessToken, context);
+                  widget.controller.animateToPage(3,
+                      curve: Curves.decelerate,
+                      duration: Duration(milliseconds: 800));
                 },
-                child: Text("Submit")),
+                child: Text("Next")),
           ],
         ),
       ),

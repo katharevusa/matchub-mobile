@@ -6,6 +6,8 @@ import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/components/basicInfo.dart';
 import 'package:matchub_mobile/screens/profile/components/wall.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
+import 'package:matchub_mobile/screens/profile/profile_resource.dart';
+import 'package:matchub_mobile/screens/profile/profile_reviews.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/widgets/errorDialog.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // if (widget.accountId == Provider.of<Auth>(context).myProfile.accountId) {
       //   profile = Provider.of<Auth>(context).myProfile;
       // } else {
-        profile = Profile.fromJson(responseData);
+      profile = Profile.fromJson(responseData);
       // }
     });
     print("user loaded");
@@ -72,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 3,
+        length: 4,
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: true,
@@ -87,7 +89,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: Icon(FlutterIcons.tasks_faw5s),
                 ),
                 Tab(
-                  icon: Icon(FlutterIcons.briefcase_fea),
+                  icon: Icon(FlutterIcons.lightbulb_outline_mco),
+                ),
+                Tab(
+                  icon: Icon(FlutterIcons.rate_review_mdi),
                 ),
               ],
             ),
@@ -111,9 +116,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ))),
                           ProfileProjects(projects: profile.projectsOwned),
-                          Container(
-                              height: 100,
-                              child: Center(child: Text("Sdfsdfs")))
+                          ProfileResource(),
+                          ProfileReviews(),
                         ],
                       )
                     : Center(child: CircularProgressIndicator()),
