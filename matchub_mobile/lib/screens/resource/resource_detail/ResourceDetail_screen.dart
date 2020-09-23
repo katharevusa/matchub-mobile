@@ -321,7 +321,6 @@ class Gallery extends StatelessWidget {
     } else {
       imageLinks = resource.photos.cast<String>().toList();
     }
-    imageLinks.add(resource.resourceProfilePic);
     print(imageLinks);
     return CarouselSlider(
       options: CarouselOptions(

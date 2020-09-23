@@ -10,6 +10,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
+import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:path/path.dart';
@@ -124,7 +125,16 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     try {
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(resource));
+      int newResourceId = response['resourceId'];
       print("Success");
+      if (photos.isNotEmpty) {
+        await uploadMultiFile(
+            photos,
+            "${ApiBaseHelper().baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "photos",
+            context);
+      }
       Provider.of<Auth>(context).retrieveUser();
       Navigator.of(context).pop(true);
     } catch (error) {
@@ -194,7 +204,16 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
       final response = await ApiBaseHelper().putProtected(url,
           accessToken: accessToken, body: json.encode(resource));
       print("Success");
-      Navigator.of(context).pop(true);
+      int newResourceId = response['resourceId'];
+      print("Success");
+      if (photos.isNotEmpty) {
+        await uploadMultiFile(
+            photos,
+            "${ApiBaseHelper().baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "photos",
+            context);
+      }
       Provider.of<Auth>(context).retrieveUser();
       Navigator.of(context).pop(true);
     } catch (error) {
