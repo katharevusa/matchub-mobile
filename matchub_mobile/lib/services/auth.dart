@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/individual.dart';
-import 'package:matchub_mobile/model/post.dart';
+import 'package:matchub_mobile/models/post.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,32 +35,11 @@ class Auth with ChangeNotifier {
       country: "Singapore",
       city: "Singapore",
       likedPosts: [],
-      comments: [],
+      //comments: [],
       sdgs: [],
       skillSet: ["MukBang", "Talented Individual", "Sleeping at 4am"],
       profileUrl: "www.matchub.com/profile/users-123",
-      posts: [
-        Post(
-            postId: 1,
-            content: "We are the champions my friends",
-            timeCreated: DateTime.now(),
-            likes: 25,
-            comments: [
-              Comment(content: "My First Comment", timeCreated: DateTime.now())
-            ]),
-        Post(
-            postId: 2,
-            content: "We are the champions my friends",
-            timeCreated: DateTime.now()),
-        Post(
-            postId: 3,
-            content: "We are the champions my friends",
-            timeCreated: DateTime.now()),
-        Post(
-            postId: 4,
-            content: "We are the champions my friends",
-            timeCreated: DateTime.now())
-      ]);
+      posts: []);
 
   bool get isAuth {
     return _accessToken != null;

@@ -1,16 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:matchub_mobile/helpers/extensions.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/profile/components/activities.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
+import 'package:matchub_mobile/widgets/errorDialog.dart';
 import 'package:provider/provider.dart';
 
 class Wall extends StatefulWidget {
   Profile profile;
-
   Wall({this.profile});
 
   @override
@@ -18,165 +22,108 @@ class Wall extends StatefulWidget {
 }
 
 class _WallState extends State<Wall> {
-//   TextEditingController _textFieldController = TextEditingController();
-//    @override
-//   void initState() {
-//     super.initState();
+  Map<String, dynamic> post;
+  Post newPost = new Post();
+  List<Post> listOfPosts;
+  @override
+  void initState() {
+    post = {
+      'postId': newPost.postId,
+      'content': newPost.content ?? "",
+      'timeCreated': newPost.timeCreated,
+      'photos': newPost.photos ?? [],
+      'originalPostId': newPost.originalPostId,
+      'previousPostId': newPost.previousPostId,
+      'postCreatorId': newPost.postCreatorId,
+      'likes': newPost.likes,
+      'listOfComments': newPost.listOfComments ?? [],
+    };
+  }
 
-//     _textFieldController.addListener(_printLatestValue);
-//   }
+  _post(context) async {
+    post['postCreatorId'] = Provider.of<Auth>(context).myProfile.accountId;
+    final url = "authenticated/createPost";
+    var accessToken = Provider.of<Auth>(context).accessToken;
+    try {
+      final response = await ApiBaseHelper().postProtected(url,
+          accessToken: accessToken, body: json.encode(post));
+    } catch (error) {
+      showErrorDialog(error.toString(), context);
+    }
+  }
 
-//  _printLatestValue() {
-//     print("Second text field: ${_textFieldController.text}");
-//   }
-
-  _post() {
-    setState(() {});
+  retrieveAllPosts() async {
+    ApiBaseHelper _helper = ApiBaseHelper();
+    var profileId = Provider.of<Auth>(context).myProfile.accountId;
+    final url = 'authenticated/getPostsByAccountId/${profileId}';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(context, listen: false).accessToken);
+    listOfPosts =
+        (responseData['content'] as List).map((e) => Post.fromJson(e)).toList();
+    listOfPosts = new List.from(listOfPosts.reversed);
+    print(listOfPosts[0].content);
   }
 
   @override
   Widget build(BuildContext context) {
-    //  _textFieldController.text = '';
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8 * SizeConfig.widthMultiplier),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text("Activity", style: AppTheme.titleLight),
-        SizedBox(height: 20),
-        //post new activity here
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Write a post',
-            hintText: 'What do you want to talk about?',
-            labelStyle: TextStyle(color: Colors.grey[850], fontSize: 14),
-            fillColor: Colors.grey[100],
-            hoverColor: Colors.grey[100],
-            suffix: IconButton(
-              icon: Icon(Icons.send),
-              onPressed: _post(),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: kSecondaryColor),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey[850],
-              ),
-            ),
-          ),
-          keyboardType: TextInputType.multiline,
-          minLines: 1,
-          maxLines: 5,
-          maxLength: 500,
-          maxLengthEnforced: true,
-          onChanged: (text) {},
-        ),
-        ListView.separated(
-          separatorBuilder: (ctx, index) => Divider(height: 40, thickness: 1),
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (context, index) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                leading: CircleAvatar(
-                  radius: 25,
-                  backgroundImage: AssetImage(widget.profile.profilePhoto),
-                ),
-                title: Text("${widget.profile.lastName}"),
-                subtitle: Text(
-                    "${widget.profile.posts[index].comments.length} comments | ${widget.profile.posts[index].likes} likes"),
-                trailing: Text(
-                    DateTime.now().differenceFrom(
-                      widget.profile.posts[index].timeCreated,
-                    ),
-                    style: AppTheme.unSelectedTabLight),
-              ),
-              SizedBox(height: 10),
-              Text("${widget.profile.posts[index].content}",
-                  style: AppTheme.unSelectedTabLight),
-              SizedBox(height: 10),
-              ButtonBar(
-                // alignment: MainAxisAlignment.spaceBetween,
-                buttonTextTheme: ButtonTextTheme.primary,
-                children: [
-                  FlatButton(
-                    visualDensity: VisualDensity.comfortable,
-                    highlightColor: Colors.transparent,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.thumb_up,
-                          color: Provider.of<Auth>(context)
-                                      .user
-                                      .likedPosts
-                                      .indexWhere((element) =>
-                                          widget.profile.posts[index].postId ==
-                                          element.postId) >=
-                                  0
-                              ? kAccentColor
-                              : Colors.grey,
+    TextEditingController _textFieldController = new TextEditingController();
+    _textFieldController.text = post['content'];
+    return FutureBuilder(
+      future: retrieveAllPosts(),
+      builder: (context, snapshot) => (snapshot.connectionState ==
+              ConnectionState.done)
+          ? Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: 8 * SizeConfig.widthMultiplier),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Activity", style: AppTheme.titleLight),
+                    SizedBox(height: 20),
+                    //post new activity here
+                    TextFormField(
+                      controller: _textFieldController,
+                      decoration: InputDecoration(
+                        labelText: 'Write a post',
+                        hintText: 'What do you want to talk about?',
+                        labelStyle:
+                            TextStyle(color: Colors.grey[850], fontSize: 14),
+                        fillColor: Colors.grey[100],
+                        hoverColor: Colors.grey[100],
+                        suffix: IconButton(
+                          icon: Icon(Icons.send),
+                          onPressed: () {
+                            _post(context);
+                            _textFieldController.clear();
+                            FocusScope.of(context).unfocus();
+                          },
                         ),
-                        Text("  Like",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Provider.of<Auth>(context)
-                                          .user
-                                          .likedPosts
-                                          .indexWhere((element) =>
-                                              widget.profile.posts[index]
-                                                  .postId ==
-                                              element.postId) >=
-                                      0
-                                  ? kAccentColor
-                                  : Colors.grey,
-                            ))
-                      ],
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        Provider.of<Auth>(context)
-                            .user
-                            .toggleLikedPost(widget.profile.posts[index]);
-                      });
-                    },
-                  ),
-                  SizedBox(width: 20),
-                  FlatButton(
-                      textColor: Colors.grey,
-                      onPressed: () {},
-                      child: Row(
-                        children: [
-                          Icon(Icons.comment, color: Colors.grey),
-                          Text(
-                            "  Comment",
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: kSecondaryColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[850],
                           ),
-                        ],
-                      )),
-                  FlatButton(
-                      textColor: Colors.grey,
-                      onPressed: () {},
-                      child: Row(
-                        children: [
-                          Icon(Icons.share, color: Colors.grey),
-                          Text("  Share",
-                              style: TextStyle(
-                                fontSize: 15,
-                              )),
-                        ],
-                      )),
-                ],
-              )
-            ],
-          ),
-          itemCount: widget.profile.posts.length,
-        ),
-        if (widget.profile.posts.isEmpty) Text("No Posts Yet"),
-        SizedBox(height: 20)
-      ]),
+                        ),
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      minLines: 1,
+                      maxLines: 5,
+                      maxLength: 500,
+                      maxLengthEnforced: true,
+                      onChanged: (text) {
+                        post["content"] = text;
+                        print(post["content"]);
+                      },
+                    ),
+                    Activities(listOfPosts, widget.profile),
+
+                    if (listOfPosts.isEmpty) Text("No Posts Yet"),
+                    SizedBox(height: 20)
+                  ]),
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/profile/components/viewOrganisationMembers.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:path/path.dart';
 
 class DescriptionInfo extends StatelessWidget {
   Profile profile;
@@ -81,97 +83,90 @@ class DescriptionInfo extends StatelessWidget {
               ],
             ),
             SizedBox(height: 20),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(child: Text("Key Appointment Holders")),
-                    FlatButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Manage",
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                    )
-                  ],
-                ),
-                buildKah(),
-              ],
-            ),
+            //return this only if it is organisation user
+            buildKah(context),
             SizedBox(height: 20),
-            Column(
+            buildOrganisationMembers(context),
+          ],
+        ));
+  }
+
+  Column buildOrganisationMembers(BuildContext context) {
+    if (profile.isOrgnisation) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              Expanded(child: Text("Organisation members")),
+              FlatButton(
+                onPressed: () {},
+                child: Text(
+                  "Manage",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              )
+            ],
+          ),
+          Container(
+            height: 60,
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
+                Stack(
                   children: [
-                    Expanded(child: Text("Organisation members")),
-                    FlatButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Manage",
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                    )
+                    ...avatars
+                        .asMap()
+                        .map(
+                          (i, e) => MapEntry(
+                            i,
+                            Transform.translate(
+                              offset: Offset(i * 30.0, 0),
+                              child: SizedBox(
+                                  height: 60,
+                                  width: 60,
+                                  child: _buildAvatar(e, radius: 30)),
+                            ),
+                          ),
+                        )
+                        .values
+                        .toList(),
                   ],
                 ),
-                Container(
-                  height: 60,
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Stack(
-                        children: [
-                          ...avatars
-                              .asMap()
-                              .map(
-                                (i, e) => MapEntry(
-                                  i,
-                                  Transform.translate(
-                                    offset: Offset(i * 30.0, 0),
-                                    child: SizedBox(
-                                        height: 60,
-                                        width: 60,
-                                        child: _buildAvatar(e, radius: 30)),
-                                  ),
-                                ),
-                              )
-                              .values
-                              .toList(),
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          print("Container clicked");
-                        },
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          margin: EdgeInsets.only(right: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(width: 1, color: Colors.black),
-                            image: DecorationImage(
-                                image: AssetImage(
-                                    './././assets/images/view-more-icon.jpg'),
-                                fit: BoxFit.fill),
-                          ),
-                        ),
-                      ),
-                      // CircleAvatar(
-                      //   backgroundColor: Colors.white,
-                      //   radius: 80,
-                      //   child: CircleAvatar(
-                      //     backgroundImage: AssetImage(
-                      //         './././assets/images/view-more-icon.jpg'),
-                      //   ),
-                      // )
-                    ],
+                GestureDetector(
+                  onTap: () {
+                    // Navigator.of(context, rootNavigator: true)
+                    // .push(MaterialPageRoute(
+                    //     builder: (context) =>
+                    //         ViewOrganisationMembersScreem(user:profile)));
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => ViewOrganisationMembersScreen(
+                                user: profile, option: 0)));
+                  },
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    margin: EdgeInsets.only(right: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(width: 1, color: Colors.black),
+                      image: DecorationImage(
+                          image: AssetImage(
+                              './././assets/images/view-more-icon.jpg'),
+                          fit: BoxFit.fill),
+                    ),
                   ),
                 ),
               ],
-            )
-          ],
-        ));
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Column();
+    }
   }
 
   CircleAvatar _buildAvatar(String image, {double radius = 80}) {
@@ -185,56 +180,82 @@ class DescriptionInfo extends StatelessWidget {
     );
   }
 
-  Container buildKah() {
-    return Container(
-      color: Colors.transparent,
-      height: 150.0,
-      // padding: EdgeInsets.symmetric(horizontal: 10.0),
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        itemCount: collections.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Material(
-              child: InkWell(
-            // onTap: () => Navigator.push(
-            //     context,
-            //     new MaterialPageRoute(
-            //         builder: (context) => ProjectDetailOverview())),
-            child: Container(
-                color: Colors.transparent,
-                margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                width: 100.0,
-                height: 50.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: 80,
-                      height: 80,
-                      margin: EdgeInsets.only(right: 15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(width: 3, color: Colors.blueGrey),
-                        image: DecorationImage(
-                            image: AssetImage(
-                              collections[index]['image'],
-                            ),
-                            fit: BoxFit.fill),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Text(collections[index]['title'],
-                        style: TextStyle(
-                            color: Colors.grey.shade600, fontSize: 10))
-                  ],
-                )),
-          ));
-        },
-      ),
-    );
+  Column buildKah(BuildContext context) {
+    if (profile.isOrgnisation) {
+      return Column(children: [
+        Row(
+          children: [
+            Expanded(child: Text("Key Appointment Holder")),
+            FlatButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => ViewOrganisationMembersScreen(
+                            user: profile, option: 1)));
+              },
+              child: Text(
+                "Manage",
+                style: TextStyle(color: Colors.blue),
+              ),
+            )
+          ],
+        ),
+        Container(
+          color: Colors.transparent,
+          height: 150.0,
+          // padding: EdgeInsets.symmetric(horizontal: 10.0),
+          child: ListView.builder(
+            physics: BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: collections.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Material(
+                  child: InkWell(
+                // onTap: () => Navigator.push(
+                //     context,
+                //     new MaterialPageRoute(
+                //         builder: (context) => ProjectDetailOverview())),
+                child: Container(
+                    color: Colors.transparent,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                    width: 100.0,
+                    height: 50.0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          width: 80,
+                          height: 80,
+                          margin: EdgeInsets.only(right: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            border:
+                                Border.all(width: 3, color: Colors.blueGrey),
+                            image: DecorationImage(
+                                image: AssetImage(
+                                  collections[index]['image'],
+                                ),
+                                fit: BoxFit.fill),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5.0,
+                        ),
+                        Text(collections[index]['title'],
+                            style: TextStyle(
+                                color: Colors.grey.shade600, fontSize: 10))
+                      ],
+                    )),
+              ));
+            },
+          ),
+        )
+      ]);
+    } else {
+      return Column();
+    }
   }
 
   Column buildProfileUrl() {

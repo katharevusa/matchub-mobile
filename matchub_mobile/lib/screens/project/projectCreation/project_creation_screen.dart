@@ -11,6 +11,10 @@ import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/resources.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/badge.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/basic_information.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/dateTime.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/sdg.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
@@ -302,7 +306,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                     activeSize: 20.0,
                   ),
                 ),
-                itemCount: 7,
+                itemCount: 8,
                 itemBuilder: (context, index) {
                   if (index == 0 && project["projectId"] == null) {
                     return IntroItem(
@@ -390,12 +394,12 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                         subtitle: subtitles[index],
                         bg: colors[index],
                         widget: Document(project, true, true, documents));
-                    // } else if (index == 6 && project["projectId"] != null) {
-                    //   return IntroItem(
-                    //       title: titles_edit[index],
-                    //       subtitle: subtitles[index],
-                    //       bg: colors[index],
-                    //       widget: Document(project, true, true, documents));
+                  } else if (index == 7 && project["projectId"] == null) {
+                    return IntroItem(
+                        title: titles_edit[index],
+                        subtitle: subtitles[index],
+                        bg: colors[index],
+                        widget: Badge(project));
                   }
                 }),
             Align(
@@ -410,7 +414,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
             Align(
               alignment: Alignment.bottomRight,
               child: IconButton(
-                icon: Icon(((_currentIndex == 6 &&
+                icon: Icon(((_currentIndex == 7 &&
                             project["projectId"] == null) ||
                         (_currentIndex == 4 && project["projectId"] != null))
                     ? Icons.check
@@ -418,13 +422,13 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                 onPressed: () {
                   FocusScope.of(context).unfocus();
                   if (project["projectId"] == null) {
-                    if (_currentIndex != 6) {
+                    if (_currentIndex != 7) {
                       _controller.next();
                     } else {
                       createNewProject(context);
                     }
                   } else {
-                    if (_currentIndex != 4)
+                    if (_currentIndex != 7)
                       _controller.next();
                     else {
                       updateProject(context);
@@ -433,238 +437,6 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                 },
               ),
             )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Basic_information extends StatefulWidget {
-  Map<String, dynamic> project;
-  Basic_information(this.project);
-
-  @override
-  _Basic_informationState createState() => _Basic_informationState();
-}
-
-class _Basic_informationState extends State<Basic_information> {
-  @override
-  Widget build(BuildContext context) {
-    TextEditingController _titleController = new TextEditingController();
-    TextEditingController _descriptionController = new TextEditingController();
-    _titleController.text = widget.project["projectTitle"];
-    _descriptionController.text = widget.project["projectDescription"];
-    widget.project["country"] = "Singapore";
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Center(
-            child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.all(10),
-              child: TextField(
-                decoration: InputDecoration(hintText: 'Title'),
-                controller: _titleController,
-                // autofocus: true,
-                onChanged: (text) {
-                  if (text != null) {
-                    widget.project["projectTitle"] = text;
-                  }
-                },
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.all(10),
-              child: TextField(
-                decoration: InputDecoration(hintText: 'Description'),
-                controller: _descriptionController,
-                autofocus: true,
-                onChanged: (text) {
-                  widget.project["projectDescription"] = text;
-                },
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    "Select country",
-                    style: TextStyle(fontSize: 17),
-                  ),
-                  CountryListPick(
-                      isShowFlag: true,
-                      isShowTitle: true,
-                      isDownIcon: true,
-                      showEnglishName: true,
-                      initialSelection: '+65',
-                      buttonColor: Colors.transparent,
-                      onChanged: (CountryCode code) {
-                        widget.project["country"] = code.name;
-                      }),
-                ],
-              ),
-            )
-          ],
-        )));
-  }
-}
-
-class Start extends StatefulWidget {
-  Map<String, dynamic> project;
-  Start(this.project);
-  @override
-  _StartState createState() => _StartState();
-}
-
-class _StartState extends State<Start> {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          Text(
-            DateFormat.yMMMd().add_jm().format(widget.project['startDate']),
-          ),
-          Container(
-            height: 300,
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.dateAndTime,
-              minimumDate: DateTime.now().subtract(Duration(minutes: 30)),
-              initialDateTime: widget.project["startDate"],
-              onDateTimeChanged: (newDateTime) {
-                setState(() {
-                  widget.project["startDate"] = newDateTime;
-                  print(widget.project["startDate"]);
-                });
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class End extends StatefulWidget {
-  Map<String, dynamic> project;
-  End(this.project);
-  @override
-  _EndState createState() => _EndState();
-}
-
-class _EndState extends State<End> {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          Text(
-            DateFormat.yMMMd().add_jm().format(widget.project['endDate']),
-          ),
-          Container(
-            height: 300,
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.dateAndTime,
-              initialDateTime:
-                  widget.project['startDate'].add(Duration(minutes: 10)),
-              minimumDate: widget.project['startDate'],
-              onDateTimeChanged: (newDateTime) {
-                setState(() {
-                  widget.project["endDate"] = newDateTime;
-                });
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SDG extends StatefulWidget {
-  Map<String, dynamic> project;
-  SDG(this.project);
-
-  @override
-  _SDGState createState() => _SDGState();
-}
-
-class _SDGState extends State<SDG> {
-  @override
-  Widget build(BuildContext context) {
-    print(widget.project['sdgs']);
-    return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
-      child: Container(
-        child: Column(
-          children: [
-            InkWell(
-              onTap: () {
-                Navigator.of(context)
-                    .pushNamed(SDGPicker.routeName)
-                    .then((value) {
-                  setState(() {
-                    if (value != null) {
-                      var list = [];
-                      widget.project['sdgs'] = value;
-                      widget.project['sdgs'].forEach((e) => list.add(e + 1));
-                      print(list);
-                      widget.project['sdgs'] = list;
-                      // (widget.profile['sdgIds'] as List)..addAll(value)..toSet();
-
-                      // widget.project['sdgs'] = (value);
-                    }
-                    print(widget.project['sdgs']);
-                  });
-                });
-              },
-              child: Container(
-                constraints: BoxConstraints(
-                    minHeight: 7.5 * SizeConfig.heightMultiplier),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.fromBorderSide(
-                      BorderSide(color: Colors.grey[850]),
-                    )),
-                child: Center(
-                    child: Column(
-                  children: [
-                    Text("Select your SDG(s)", style: AppTheme.titleLight),
-                    if (widget.project['sdgs'] != null) ...[
-                      SizedBox(height: 5),
-                      Text(
-                        "${widget.project['sdgs'].length} SDG(s) chosen",
-                      ),
-                      SizedBox(height: 5),
-                      GridView.builder(
-                          shrinkWrap: true,
-                          gridDelegate:
-                              new SliverGridDelegateWithFixedCrossAxisCount(
-                                  // mainAxisSpacing: 10,
-                                  // crossAxisSpacing: 10,
-                                  childAspectRatio: 1,
-                                  crossAxisCount: 3),
-                          itemCount: widget.project['sdgs'].length,
-                          itemBuilder: (BuildContext context, int index) {
-                            int i = (widget.project['sdgs'][index]);
-                            // i++;
-                            return Container(
-                              // height:50,
-                              child: Image.asset("assets/icons/goal$i.png"),
-                            );
-                          }),
-                    ]
-                  ],
-                )),
-              ),
-            ),
-            SizedBox(height: 20),
           ],
         ),
       ),

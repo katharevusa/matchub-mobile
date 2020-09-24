@@ -10,9 +10,6 @@ TruncatedProfile _$TruncatedProfileFromJson(Map<String, dynamic> json) {
   return TruncatedProfile()
     ..accountId = json['accountId'] as num
     ..uuid = json['uuid'] as String
-    ..name = json['organizationName'] as String ??
-        (json['firstName'] + " " + json['lastName']) as String
-    ..isOrganisation = json['organizationName'] != null ? true : false
     ..email = json['email'] as String
     ..accountLocked = json['accountLocked'] as bool
     ..accountExpired = json['accountExpired'] as bool
@@ -24,7 +21,7 @@ TruncatedProfile _$TruncatedProfileFromJson(Map<String, dynamic> json) {
     ..phoneNumber = json['phoneNumber'] as String
     ..country = json['country'] as String
     ..city = json['city'] as String
-    ..profilePhoto = json['profilePhoto'] ?? "" 
+    ..profilePhoto = json['profilePhoto'] as String
     ..reputationPoints = json['reputationPoints'] as num
     ..followers = json['followers'] as List
     ..following = json['following'] as List
