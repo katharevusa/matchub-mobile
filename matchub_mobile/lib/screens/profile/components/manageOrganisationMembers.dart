@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
@@ -16,27 +17,103 @@ class ManageOrganisationMembersScreen extends StatefulWidget {
 }
 
 class _ManageOrganisationMembersScreenState
-    extends State<ManageOrganisationMembersScreen>
-    with TickerProviderStateMixin {
+    extends State<ManageOrganisationMembersScreen> {
   Future organisationMembersFuture;
 
+  ApiBaseHelper _helper = ApiBaseHelper();
   List<Profile> members;
   Profile myProfile;
-  String searchQuery = "";
-  List<Profile> filteredMembers;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  void dismissSnackBar() {
-    _scaffoldKey.currentState.removeCurrentSnackBar();
-  }
+  List<Profile> searchResult;
 
   @override
   void initState() {
     super.initState();
-    filteredMembers = members;
+    organisationMembersFuture = getMembers();
   }
 
-  getMembers() async {}
+  getMembers() async {
+    final url =
+        'authenticated/organisation/viewMembers/${widget.user.accountId}';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(context, listen: false).accessToken);
+    members = (responseData['content'] as List)
+        .map((e) => Profile.fromJson(e))
+        .toList();
+    searchResult = members;
+  }
+
+  getSearchedUsers(String value) async {
+    final url = 'authenticated/searchIndividuals?search=${value}';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(context, listen: false).accessToken);
+    setState(() {
+      searchResult = (responseData['content'] as List)
+          .map((e) => Profile.fromJson(e))
+          .toList();
+      print(searchResult[0].name);
+      print(members[0].name);
+    });
+  }
+
+  toggleOrganisationMember(Profile individual, bool isMember) async {
+    if (!isMember) {
+      final url =
+          "authenticated/organisation/addMember/${widget.user.accountId}/${individual.accountId}";
+      try {
+        var accessToken = Provider.of<Auth>(this.context).accessToken;
+        final response =
+            await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+        print("Success");
+        Navigator.of(this.context).pop(true);
+      } catch (error) {
+        final responseData = error.body as Map<String, dynamic>;
+        print("Failure");
+        showDialog(
+            context: this.context,
+            builder: (ctx) => AlertDialog(
+                  title: Text(responseData['error']),
+                  content: Text(responseData['message']),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Okay'),
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                      },
+                    )
+                  ],
+                ));
+      }
+    } else {
+      final url =
+          "authenticated/organisation/removeMember/${widget.user.accountId}/${individual.accountId}";
+      try {
+        var accessToken = Provider.of<Auth>(this.context).accessToken;
+        final response =
+            await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+        print("Success");
+        Navigator.of(this.context).pop(true);
+      } catch (error) {
+        final responseData = error.body as Map<String, dynamic>;
+        print("Failure");
+        showDialog(
+            context: this.context,
+            builder: (ctx) => AlertDialog(
+                  title: Text(responseData['error']),
+                  content: Text(responseData['message']),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Okay'),
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                      },
+                    )
+                  ],
+                ));
+      }
+    }
+  }
+
+  TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -57,26 +134,19 @@ class _ManageOrganisationMembersScreenState
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextFormField(
-                          expands: false,
-                          decoration: InputDecoration(
-                            hintText: "Search Profile...",
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
+                        controller: _textController,
+                        expands: false,
+                        decoration: InputDecoration(
+                          hintText: "Search Profile...",
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              searchQuery = value;
-                              filteredMembers = members
-                                  .where((element) => element.name
-                                      .toUpperCase()
-                                      .contains(value.toUpperCase()))
-                                  .toList();
-                            });
-                          }),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        onChanged: getSearchedUsers,
+                      ),
                     ),
                     SizedBox(height: 20),
                     ListView.separated(
@@ -85,17 +155,51 @@ class _ManageOrganisationMembersScreenState
                       itemBuilder: (context, index) => ListTile(
                         onTap: () => Navigator.of(context).pushNamed(
                             ProfileScreen.routeName,
-                            arguments: filteredMembers[index].accountId),
+                            arguments: searchResult[index].accountId),
                         leading: ClipOval(
                             child: Container(
                           height: 50,
                           width: 50,
-                          child: AttachmentImage(
-                              filteredMembers[index].profilePhoto),
+                          child:
+                              AttachmentImage(searchResult[index].profilePhoto),
                         )),
-                        title: Text(filteredMembers[index].name),
+                        title: Text(searchResult[index].name),
+                        trailing: FlatButton(
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Text(
+                              (members.indexWhere((m) =>
+                                          searchResult[index].accountId ==
+                                          m.accountId) >=
+                                      0)
+                                  ? "Remove"
+                                  : " Add ",
+                              style: TextStyle(color: Colors.white)),
+                          onPressed: () async {
+                            bool isMember;
+                            if (members.indexWhere((m) =>
+                                    searchResult[index].accountId ==
+                                    m.accountId) >=
+                                0) {
+                              isMember = true;
+                            } else {
+                              isMember = false;
+                            }
+                            setState(() {
+                              toggleOrganisationMember(
+                                  searchResult[index], isMember);
+                            });
+                          },
+                          color: (members.indexWhere((m) =>
+                                      searchResult[index].accountId ==
+                                      m.accountId) >=
+                                  0)
+                              ? Colors.red.shade300
+                              : Colors.green.shade400,
+                        ),
                       ),
-                      itemCount: filteredMembers.length,
+                      itemCount: searchResult.length,
                     ),
                   ],
                 )),
@@ -104,24 +208,4 @@ class _ManageOrganisationMembersScreenState
       ),
     );
   }
-
-  // Widget membersList() {
-  //   return Column(
-  //     children: [
-  //       SizedBox(height: 10),
-  //       ListView.separated(
-  //         shrinkWrap: true,
-  //         separatorBuilder: (context, index) => SizedBox(height: 5),
-  //         itemBuilder: (context, index) => ListTile(
-  //           leading: CircleAvatar(
-  //             radius: 25,
-  //             backgroundImage: AssetImage(members[index].profilePhoto),
-  //           ),
-  //           title: Text(members[index].name),
-  //         ),
-  //         itemCount: members.length,
-  //       ),
-  //     ],
-  //   );
-  // }
 }

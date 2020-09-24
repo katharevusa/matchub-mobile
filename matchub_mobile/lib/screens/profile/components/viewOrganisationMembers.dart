@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
@@ -9,38 +10,50 @@ import 'package:provider/provider.dart';
 class ViewOrganisationMembersScreen extends StatefulWidget {
   static const routeName = "/view-organisation-members-screen";
   Profile user;
-  int option;
-  ViewOrganisationMembersScreen({this.user, this.option});
+  ViewOrganisationMembersScreen({
+    this.user,
+  });
   @override
   _ViewOrganisationMembersScreenState createState() =>
       _ViewOrganisationMembersScreenState();
 }
 
 class _ViewOrganisationMembersScreenState
-    extends State<ViewOrganisationMembersScreen> with TickerProviderStateMixin {
+    extends State<ViewOrganisationMembersScreen> {
   Future organisationMembersFuture;
 
+  ApiBaseHelper _helper = ApiBaseHelper();
   List<Profile> members;
   Profile myProfile;
-  String searchQuery = "";
-  List<Profile> filteredMembers;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  void dismissSnackBar() {
-    _scaffoldKey.currentState.removeCurrentSnackBar();
-  }
-
+  List<Profile> newMembersList;
   @override
   void initState() {
     super.initState();
-    filteredMembers = members;
+    organisationMembersFuture = getMembers();
   }
 
-  getMembers() async {}
+  getMembers() async {
+    final url =
+        'authenticated/organisation/viewMembers/${widget.user.accountId}';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(context, listen: false).accessToken);
+    members = (responseData['content'] as List)
+        .map((e) => Profile.fromJson(e))
+        .toList();
+    newMembersList = List.from(members);
+  }
 
-  addMemberToKah() async {}
+  TextEditingController _textController = TextEditingController();
 
-  removeMemberFromKah() async {}
+  onItemChanged(String value) {
+    print(value);
+    setState(() {
+      newMembersList = members
+          .where((element) =>
+              element.name.toUpperCase().contains(value.toUpperCase()))
+          .toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,26 +74,19 @@ class _ViewOrganisationMembersScreenState
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextFormField(
-                          expands: false,
-                          decoration: InputDecoration(
-                            hintText: "Search Profile...",
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
+                        controller: _textController,
+                        expands: false,
+                        decoration: InputDecoration(
+                          hintText: "Search Profile...",
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              searchQuery = value;
-                              filteredMembers = members
-                                  .where((element) => element.name
-                                      .toUpperCase()
-                                      .contains(value.toUpperCase()))
-                                  .toList();
-                            });
-                          }),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        onChanged: onItemChanged,
+                      ),
                     ),
                     SizedBox(height: 20),
                     ListView.separated(
@@ -89,19 +95,17 @@ class _ViewOrganisationMembersScreenState
                       itemBuilder: (context, index) => ListTile(
                         onTap: () => Navigator.of(context).pushNamed(
                             ProfileScreen.routeName,
-                            arguments: filteredMembers[index].accountId),
+                            arguments: newMembersList[index].accountId),
                         leading: ClipOval(
                             child: Container(
                           height: 50,
                           width: 50,
                           child: AttachmentImage(
-                              filteredMembers[index].profilePhoto),
+                              newMembersList[index].profilePhoto),
                         )),
-                        title: Text(filteredMembers[index].name),
-                        trailing: buildAddRemoveButton(
-                            widget.option, filteredMembers[index]),
+                        title: Text(newMembersList[index].name),
                       ),
-                      itemCount: filteredMembers.length,
+                      itemCount: newMembersList.length,
                     ),
                   ],
                 )),
@@ -110,50 +114,4 @@ class _ViewOrganisationMembersScreenState
       ),
     );
   }
-
-  FlatButton buildAddRemoveButton(int option, Profile member) {
-    if (option == 1) {
-      return FlatButton(
-        padding: EdgeInsets.symmetric(horizontal: 30),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-        child: Text(
-            //(!myProfile.kah.contains(member))
-            // ? "Add"
-            // : "Remove",
-            "hello",
-            style: TextStyle(color: Colors.white)),
-        onPressed: () async {
-          //add member is not kah, then add to kah
-          //otherwise, remove from kah
-
-          setState(() {});
-        },
-        // color:
-        //   (if it is added)
-        //         ? Colors.grey
-        //         : kAccentColor,
-      );
-    } else {
-      return FlatButton();
-    }
-  }
-  // Widget membersList() {
-  //   return Column(
-  //     children: [
-  //       SizedBox(height: 10),
-  //       ListView.separated(
-  //         shrinkWrap: true,
-  //         separatorBuilder: (context, index) => SizedBox(height: 5),
-  //         itemBuilder: (context, index) => ListTile(
-  //           leading: CircleAvatar(
-  //             radius: 25,
-  //             backgroundImage: AssetImage(members[index].profilePhoto),
-  //           ),
-  //           title: Text(members[index].name),
-  //         ),
-  //         itemCount: members.length,
-  //       ),
-  //     ],
-  //   );
-  // }
 }

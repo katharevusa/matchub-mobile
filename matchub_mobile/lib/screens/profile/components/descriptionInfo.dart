@@ -1,105 +1,155 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/profile/components/manageOrganisationMembers.dart';
 import 'package:matchub_mobile/screens/profile/components/viewOrganisationMembers.dart';
+import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
-class DescriptionInfo extends StatelessWidget {
+class DescriptionInfo extends StatefulWidget {
   Profile profile;
+  DescriptionInfo({this.profile});
+
+  @override
+  _DescriptionInfoState createState() => _DescriptionInfoState();
+}
+
+class _DescriptionInfoState extends State<DescriptionInfo> {
+  ApiBaseHelper _helper = ApiBaseHelper();
+  List<Profile> members;
+  List<Profile> kahs;
+  Future membersFuture;
+  Future kahsFuture;
   final List<Map> collections = [
     {"title": "Tan Wee Kee", "image": './././assets/images/pancake.jpg'},
     {"title": "Tan Wek Kek", "image": './././assets/images/fries.jpg'},
     {"title": "Tan Wee Kek", "image": './././assets/images/fishtail.jpg'},
     {"title": "Tan Wee Kok", "image": './././assets/images/kathmandu1.jpg'},
   ];
-  List<String> avatars = [
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F1.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F4.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F6.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F7.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2Fdev_damodar.jpg?alt=media&token=aaf47b41-3485-4bab-bcb6-2e472b9afee6',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2Fdev_sudip.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2Fdev_sid.png?alt=media',
-  ];
-  DescriptionInfo({this.profile});
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        padding: EdgeInsets.all(20),
-        // height: 29 * SizeConfig.heightMultiplier,
-        width: 100 * SizeConfig.widthMultiplier,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(4, 3),
-                blurRadius: 10,
-                color: kSecondaryColor.withOpacity(0.1),
-              ),
-              BoxShadow(
-                offset: Offset(-4, -3),
-                blurRadius: 10,
-                color: kSecondaryColor.withOpacity(0.1),
-              ),
-            ],
-            borderRadius: BorderRadius.circular(15)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (profile.country != null)
-              Row(
-                children: [
-                  Expanded(child: Text("Based In")),
-                  if (profile.city != null)
-                    Text("${profile.city ?? 'No Data'}, ",
-                        style: AppTheme.subTitleLight),
-                  Text("${profile.country ?? 'No Data'}",
-                      style: AppTheme.subTitleLight)
-                ],
-              ),
-            SizedBox(height: 20),
-            buildSDGTags(),
-            SizedBox(height: 20),
-            buildSkillset(),
-            SizedBox(height: 20),
-            buildProfileUrl(),
-            SizedBox(height: 20),
-            Column(
-              children: [
-                Row(
-                  children: [Expanded(child: Text("Description"))],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                        child: Text(profile.profileDescription ?? 'No Data',
-                            style: AppTheme.unSelectedTabLight))
-                  ],
-                )
-              ],
-            ),
-            SizedBox(height: 20),
-            //return this only if it is organisation user
-            buildKah(context),
-            SizedBox(height: 20),
-            buildOrganisationMembers(context),
-          ],
-        ));
+  void initState() {
+    super.initState();
+    membersFuture = getMembers();
+    kahsFuture = getKah();
   }
 
-  Column buildOrganisationMembers(BuildContext context) {
-    if (profile.isOrgnisation) {
+  getMembers() async {
+    final url =
+        'authenticated/organisation/viewMembers/${widget.profile.accountId}';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(this.context, listen: false).accessToken);
+    members = (responseData['content'] as List)
+        .map((e) => Profile.fromJson(e))
+        .toList();
+  }
+
+  getKah() async {
+    final url =
+        'authenticated/organisation/viewKAHs/${widget.profile.accountId}';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(this.context, listen: false).accessToken);
+    kahs = (responseData['content'] as List)
+        .map((e) => Profile.fromJson(e))
+        .toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Future.wait([membersFuture, kahsFuture]),
+      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) =>
+          (snapshot.connectionState == ConnectionState.done)
+              ? Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding: EdgeInsets.all(20),
+                  // height: 29 * SizeConfig.heightMultiplier,
+                  width: 100 * SizeConfig.widthMultiplier,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(4, 3),
+                          blurRadius: 10,
+                          color: kSecondaryColor.withOpacity(0.1),
+                        ),
+                        BoxShadow(
+                          offset: Offset(-4, -3),
+                          blurRadius: 10,
+                          color: kSecondaryColor.withOpacity(0.1),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (widget.profile.country != null)
+                        Row(
+                          children: [
+                            Expanded(child: Text("Based In")),
+                            if (widget.profile.city != null)
+                              Text("${widget.profile.city ?? 'No Data'}, ",
+                                  style: AppTheme.subTitleLight),
+                            Text("${widget.profile.country ?? 'No Data'}",
+                                style: AppTheme.subTitleLight)
+                          ],
+                        ),
+                      SizedBox(height: 20),
+                      buildSDGTags(),
+                      SizedBox(height: 20),
+                      buildSkillset(),
+                      SizedBox(height: 20),
+                      buildProfileUrl(),
+                      SizedBox(height: 20),
+                      Column(
+                        children: [
+                          Row(
+                            children: [Expanded(child: Text("Description"))],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                      widget.profile.profileDescription ??
+                                          'No Data',
+                                      style: AppTheme.unSelectedTabLight))
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      //return this only if it is organisation user
+                      buildKah(context),
+                      SizedBox(height: 20),
+                      buildOrganisationMembers(context, members),
+                    ],
+                  ))
+              : Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  Column buildOrganisationMembers(BuildContext context, List<Profile> members) {
+    if (widget.profile.isOrgnisation) {
       return Column(
         children: [
           Row(
             children: [
               Expanded(child: Text("Organisation members")),
               FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => ManageOrganisationMembersScreen(
+                                user: widget.profile,
+                              )));
+                },
                 child: Text(
                   "Manage",
                   style: TextStyle(color: Colors.blue),
@@ -115,7 +165,7 @@ class DescriptionInfo extends StatelessWidget {
               children: [
                 Stack(
                   children: [
-                    ...avatars
+                    ...members
                         .asMap()
                         .map(
                           (i, e) => MapEntry(
@@ -135,15 +185,11 @@ class DescriptionInfo extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Navigator.of(context, rootNavigator: true)
-                    // .push(MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         ViewOrganisationMembersScreem(user:profile)));
                     Navigator.push(
                         context,
                         new MaterialPageRoute(
                             builder: (context) => ViewOrganisationMembersScreen(
-                                user: profile, option: 0)));
+                                user: widget.profile)));
                   },
                   child: Container(
                     width: 50,
@@ -169,90 +215,120 @@ class DescriptionInfo extends StatelessWidget {
     }
   }
 
-  CircleAvatar _buildAvatar(String image, {double radius = 80}) {
+  Widget _buildAvatar(Profile profile, {double radius = 80}) {
     return CircleAvatar(
       backgroundColor: Colors.white,
       radius: radius,
-      child: CircleAvatar(
-        radius: radius - 2,
-        backgroundImage: NetworkImage(image),
+      child: ClipOval(
+        child: AttachmentImage(profile.profilePhoto),
       ),
     );
   }
 
   Column buildKah(BuildContext context) {
-    if (profile.isOrgnisation) {
-      return Column(children: [
-        Row(
-          children: [
-            Expanded(child: Text("Key Appointment Holder")),
-            FlatButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => ViewOrganisationMembersScreen(
-                            user: profile, option: 1)));
-              },
-              child: Text(
-                "Manage",
-                style: TextStyle(color: Colors.blue),
-              ),
-            )
-          ],
-        ),
-        Container(
-          color: Colors.transparent,
-          height: 150.0,
-          // padding: EdgeInsets.symmetric(horizontal: 10.0),
-          child: ListView.builder(
-            physics: BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            itemCount: collections.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Material(
-                  child: InkWell(
-                // onTap: () => Navigator.push(
-                //     context,
-                //     new MaterialPageRoute(
-                //         builder: (context) => ProjectDetailOverview())),
-                child: Container(
-                    color: Colors.transparent,
-                    margin:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                    width: 100.0,
-                    height: 50.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          width: 80,
-                          height: 80,
-                          margin: EdgeInsets.only(right: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            border:
-                                Border.all(width: 3, color: Colors.blueGrey),
-                            image: DecorationImage(
-                                image: AssetImage(
-                                  collections[index]['image'],
-                                ),
-                                fit: BoxFit.fill),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5.0,
-                        ),
-                        Text(collections[index]['title'],
-                            style: TextStyle(
-                                color: Colors.grey.shade600, fontSize: 10))
-                      ],
-                    )),
-              ));
-            },
+    if (widget.profile.isOrgnisation) {
+      if (kahs.isNotEmpty) {
+        return Column(children: [
+          Row(
+            children: [
+              Expanded(child: Text("Key Appointment Holder")),
+              FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => ViewOrganisationMembersScreen(
+                              user: widget.profile)));
+                },
+                child: Text(
+                  "Manage",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              )
+            ],
           ),
-        )
-      ]);
+          Container(
+            color: Colors.transparent,
+            height: 150.0,
+            // padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: collections.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Material(
+                    child: InkWell(
+                  // onTap: () => Navigator.push(
+                  //     context,
+                  //     new MaterialPageRoute(
+                  //         builder: (context) => ProjectDetailOverview())),
+                  child: Container(
+                      color: Colors.transparent,
+                      margin: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 10.0),
+                      width: 100.0,
+                      height: 50.0,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            width: 80,
+                            height: 80,
+                            margin: EdgeInsets.only(right: 15),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              border:
+                                  Border.all(width: 3, color: Colors.blueGrey),
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                    kahs[index].profilePhoto,
+                                  ),
+                                  fit: BoxFit.fill),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Text(kahs[index].name,
+                              style: TextStyle(
+                                  color: Colors.grey.shade600, fontSize: 10))
+                        ],
+                      )),
+                ));
+              },
+            ),
+          )
+        ]);
+      } else {
+        return Column(children: [
+          Row(
+            children: [
+              Expanded(child: Text("Key Appointment Holder")),
+              FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => ViewOrganisationMembersScreen(
+                              user: widget.profile)));
+                },
+                child: Text(
+                  "Manage",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              )
+            ],
+          ),
+          Container(
+              color: Colors.transparent,
+              height: 18.0,
+              // padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(
+                "No Key appointment holders yet",
+                style: TextStyle(color: Colors.blueGrey.shade200, fontSize: 10),
+              ))
+        ]);
+      }
     } else {
       return Column();
     }
@@ -285,14 +361,14 @@ class DescriptionInfo extends StatelessWidget {
           Flexible(
             flex: 3,
             child: Tags(
-              itemCount: profile.skillSet.length, // required
+              itemCount: widget.profile.skillSet.length, // required
               itemBuilder: (int index) {
                 return ItemTags(
                   // Each ItemTags must contain a Key. Keys allow Flutter to
                   // uniquely identify widgets.
                   key: Key(index.toString()),
                   index: index, // required
-                  title: profile.skillSet[index],
+                  title: widget.profile.skillSet[index],
                   color: kScaffoldColor,
                   border: Border.all(color: Colors.grey[400]),
                   textColor: Colors.grey[600],
@@ -321,12 +397,12 @@ class DescriptionInfo extends StatelessWidget {
           Flexible(
             flex: 3,
             child: Tags(
-              itemCount: profile.sdgs.length, // required
+              itemCount: widget.profile.sdgs.length, // required
               itemBuilder: (int index) {
                 return ItemTags(
                   key: Key(index.toString()),
                   index: index, // required
-                  title: profile.sdgs[index].sdgName,
+                  title: widget.profile.sdgs[index].sdgName,
                   color: kScaffoldColor,
                   border: Border.all(color: Colors.grey[400]),
                   textColor: Colors.grey[600],
