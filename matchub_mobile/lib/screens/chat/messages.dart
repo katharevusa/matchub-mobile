@@ -8,6 +8,7 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:provider/provider.dart';
 
 class Messages extends StatefulWidget {
@@ -44,7 +45,13 @@ class _MessagesState extends State<Messages> {
     // });
     // SchedulerBinding.instance.addPostFrameCallback(
   }
-
+  @override
+  void dispose(){
+    messageEditingController.dispose();
+    _scrollController.dispose();
+    myFocusNode.dispose();
+    super.dispose();
+  }
   loadMessages() async {
     await DatabaseMethods().getChatMessages(widget.chatRoomId).then((val) {
       setState(() {
@@ -142,8 +149,9 @@ class _MessagesState extends State<Messages> {
                           onTap: () {
                             
                           },
+                          dense: true,
                           leading: Icon(FlutterIcons.trash_alt_faw5s),
-                          title: Text("Delete Chat"),
+                          title: Text("Delete Chat",style: TextStyle(fontSize:SizeConfig.textMultiplier*1.8),),
                         ),
                       )
                     ]),
