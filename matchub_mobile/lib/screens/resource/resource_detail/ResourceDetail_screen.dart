@@ -8,9 +8,9 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
-import 'package:matchub_mobile/screens/resource/resource_detail/imageCapture_screen.dart';
 
 import 'package:flutter/widgets.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/ResourceRequest.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -78,37 +78,59 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
         height: 300,
         child: Column(
           children: [
-            FlatButton(
-                onPressed: () => Navigator.of(context, rootNavigator: true)
-                        .push(MaterialPageRoute(
-                            builder: (context) =>
-                                ResourceCreationScreen(newResource: resource)))
-                        .then((value) {
-                      setState(() {
-                        Provider.of<Auth>(context).retrieveUser();
-                        // build(context);
-                      });
-                    }),
-                visualDensity: VisualDensity.comfortable,
-                highlightColor: Colors.transparent,
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Icon(
-                        FlutterIcons.edit_2_fea,
-                        color: Colors.grey[700],
+            if (resource.resourceOwnerId ==
+                Provider.of<Auth>(context).myProfile.accountId) ...[
+              FlatButton(
+                  onPressed: () => Navigator.of(context, rootNavigator: true)
+                          .push(MaterialPageRoute(
+                              builder: (context) => ResourceCreationScreen(
+                                  newResource: resource)))
+                          .then((value) {
+                        setState(() {
+                          Provider.of<Auth>(context).retrieveUser();
+                          // build(context);
+                        });
+                      }),
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          FlutterIcons.edit_2_fea,
+                          color: Colors.grey[700],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text("Edit Resource", style: AppTheme.titleLight),
-                  ],
-                )),
+                      SizedBox(width: 10),
+                      Text("Edit Resource", style: AppTheme.titleLight),
+                    ],
+                  )),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _terminateDialog(context);
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          FlutterIcons.stop_circle_faw,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text("Terminate", style: AppTheme.titleLight),
+                    ],
+                  )),
+            ],
             FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  _terminateDialog(context);
                 },
                 visualDensity: VisualDensity.comfortable,
                 highlightColor: Colors.transparent,
@@ -118,12 +140,55 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Icon(
-                        FlutterIcons.stop_circle_faw,
+                        FlutterIcons.save_ant,
                         color: Colors.grey[700],
                       ),
                     ),
                     SizedBox(width: 10),
-                    Text("Terminate", style: AppTheme.titleLight),
+                    Text("Save", style: AppTheme.titleLight),
+                  ],
+                )),
+            FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(
+                          builder: (context) => RequestFormScreen(resource)));
+                },
+                visualDensity: VisualDensity.comfortable,
+                highlightColor: Colors.transparent,
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Icon(
+                        FlutterIcons.application_export_mco,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text("Request", style: AppTheme.titleLight),
+                  ],
+                )),
+            FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                visualDensity: VisualDensity.comfortable,
+                highlightColor: Colors.transparent,
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Icon(
+                        FlutterIcons.share_2_fea,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text("Share", style: AppTheme.titleLight),
                   ],
                 )),
           ],
@@ -251,59 +316,79 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
   }
 }
 
-class ResourceHeader extends StatelessWidget {
+class ResourceHeader extends StatefulWidget {
   Resources resource;
   ResourceHeader(this.resource);
 
   @override
+  _ResourceHeaderState createState() => _ResourceHeaderState();
+}
+
+class _ResourceHeaderState extends State<ResourceHeader> {
+  Profile resourceOwner;
+
+  Future resourceOwnerFuture;
+
+  ApiBaseHelper _helper = ApiBaseHelper();
+
+  @override
+  void initState() {
+    super.initState();
+    resourceOwnerFuture = getResourceOwner();
+  }
+
+  getResourceOwner() async {
+    final url = 'authenticated/getAccount/${widget.resource.resourceOwnerId}';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(context, listen: false).accessToken);
+    resourceOwner = Profile.fromJson(responseData);
+  }
+
+  @override
   Widget build(BuildContext context) {
     Profile profile = Provider.of<Auth>(context).myProfile;
-
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 100),
-          // height: 400,
-          // decoration: BoxDecoration(
-          child: Column(children: <Widget>[
-            Gallery(resource),
-          ]),
-          // ),
-        ),
-        // Ink(
-        //   height: 200,
-        //   decoration: BoxDecoration(
-        //     color: Colors.black38,
-        //   ),
-        // ),
-        Container(
-          width: double.infinity,
-          // margin: const EdgeInsets.only(top: 220),
-          child: Column(
-            children: <Widget>[
-              Text(
-                resource.resourceName,
-                style: Theme.of(context).textTheme.title,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(
-                    context,
-                    rootNavigator: true,
-                  ).pushNamed(ProfileScreen.routeName,
-                      arguments: profile.accountId);
-                },
-                child: Text(
-                  "Listed by: " + profile.name,
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              )
-            ],
-          ),
-        )
-      ],
+    return FutureBuilder(
+      future: resourceOwnerFuture,
+      builder: (context, snapshot) =>
+          (snapshot.connectionState == ConnectionState.done)
+              ? Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 100),
+                      child: Column(children: <Widget>[
+                        Gallery(widget.resource),
+                      ]),
+                      // ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            widget.resource.resourceName,
+                            style: Theme.of(context).textTheme.title,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                                rootNavigator: true,
+                              ).pushNamed(ProfileScreen.routeName,
+                                  arguments: widget.resource.resourceOwnerId);
+                            },
+                            child: Text(
+                              "Listed by: " + resourceOwner.name,
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              : Center(child: CircularProgressIndicator()),
     );
   }
 }

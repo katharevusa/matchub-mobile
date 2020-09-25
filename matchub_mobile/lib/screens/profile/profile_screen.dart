@@ -3,16 +3,16 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/models/profile.dart';
-import 'package:matchub_mobile/screens/profile/components/basicInfo.dart';
-import 'package:matchub_mobile/screens/profile/components/wall.dart';
+
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
 import 'package:matchub_mobile/screens/profile/profile_resource.dart';
 import 'package:matchub_mobile/screens/profile/profile_reviews.dart';
+import 'package:matchub_mobile/screens/profile/wall_components/basicInfo.dart';
+import 'package:matchub_mobile/screens/profile/wall_components/descriptionInfo.dart';
+import 'package:matchub_mobile/screens/profile/wall_components/wall.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/widgets/errorDialog.dart';
 import 'package:provider/provider.dart';
-
-import 'components/descriptionInfo.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const routeName = "/profile-screen";
@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ))),
                           ProfileProjects(projects: profile.projectsOwned),
-                          ProfileResource(),
+                          ProfileResource(profile),
                           ProfileReviews(),
                         ],
                       )

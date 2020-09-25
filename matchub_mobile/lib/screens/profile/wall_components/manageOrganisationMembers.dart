@@ -50,6 +50,7 @@ class _ManageOrganisationMembersScreenState
       searchResult = (responseData['content'] as List)
           .map((e) => Profile.fromJson(e))
           .toList();
+      print("search");
       print(searchResult[0].name);
       print(members[0].name);
     });

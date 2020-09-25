@@ -3,6 +3,7 @@ export 'resourceCategory.dart' ;
 export 'stakeholder.dart' ; 
 export 'project.dart' ; 
 export 'resources.dart' ; 
+export 'resourceRequest.dart' ; 
 export 'truncatedProfile.dart' ; 
 export 'profile.dart' ; 
 export 'post.dart' ; 

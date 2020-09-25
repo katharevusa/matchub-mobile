@@ -16,10 +16,13 @@ import 'package:random_color/random_color.dart';
 class ProfileResource extends StatelessWidget {
   List<Resources> listOfResources;
   ApiBaseHelper _helper = ApiBaseHelper();
+  Profile profile;
 
+  ProfileResource(this.profile);
   retrieveResources(BuildContext context) async {
-    var profileId = Provider.of<Auth>(context).myProfile.accountId;
-    final url = 'authenticated/getHostedResources?profileId=${profileId}';
+    // var profileId = Provider.of<Auth>(context).myProfile.accountId;
+    final url =
+        'authenticated/getHostedResources?profileId=${profile.accountId}';
     final responseData = await _helper.getProtected(
         url, Provider.of<Auth>(context, listen: false).accessToken);
     listOfResources = (responseData['content'] as List)
