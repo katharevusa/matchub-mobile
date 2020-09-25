@@ -4,6 +4,7 @@ import 'package:matchub_mobile/models/post.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 
@@ -28,9 +29,11 @@ class _ActivitiesState extends State<Activities> {
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 0),
             leading: CircleAvatar(
-              radius: 25,
-              backgroundImage: AssetImage(widget.profile.profilePhoto),
-            ),
+                backgroundColor: Colors.white,
+                radius: 25,
+                child: ClipOval(
+                  child: AttachmentImage(widget.profile.profilePhoto),
+                )),
             title: Text("${widget.profile.lastName}"),
             subtitle: Text(
                 "${widget.listOfPosts[index].listOfComments.length} comments | ${widget.listOfPosts[index].likes} likes"),

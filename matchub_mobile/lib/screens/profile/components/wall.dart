@@ -6,6 +6,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/profile/components/activities.dart';
+import 'package:matchub_mobile/screens/profile/components/createPost.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -40,7 +41,7 @@ class _WallState extends State<Wall> {
     };
   }
 
-  _post(context) async {
+  postFunc(context) async {
     post['postCreatorId'] = Provider.of<Auth>(context).myProfile.accountId;
     final url = "authenticated/createPost";
     var accessToken = Provider.of<Auth>(context).accessToken;
@@ -66,8 +67,9 @@ class _WallState extends State<Wall> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textFieldController = new TextEditingController();
-    _textFieldController.text = post['content'];
+    TextEditingController textFieldController = new TextEditingController();
+    textFieldController.text = post['content'];
+
     return FutureBuilder(
       future: retrieveAllPosts(),
       builder: (context, snapshot) => (snapshot.connectionState ==
@@ -81,42 +83,8 @@ class _WallState extends State<Wall> {
                     Text("Activity", style: AppTheme.titleLight),
                     SizedBox(height: 20),
                     //post new activity here
-                    TextFormField(
-                      controller: _textFieldController,
-                      decoration: InputDecoration(
-                        labelText: 'Write a post',
-                        hintText: 'What do you want to talk about?',
-                        labelStyle:
-                            TextStyle(color: Colors.grey[850], fontSize: 14),
-                        fillColor: Colors.grey[100],
-                        hoverColor: Colors.grey[100],
-                        suffix: IconButton(
-                          icon: Icon(Icons.send),
-                          onPressed: () {
-                            _post(context);
-                            _textFieldController.clear();
-                            FocusScope.of(context).unfocus();
-                          },
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: kSecondaryColor),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey[850],
-                          ),
-                        ),
-                      ),
-                      keyboardType: TextInputType.multiline,
-                      minLines: 1,
-                      maxLines: 5,
-                      maxLength: 500,
-                      maxLengthEnforced: true,
-                      onChanged: (text) {
-                        post["content"] = text;
-                        print(post["content"]);
-                      },
-                    ),
+                    CreatePost(
+                        textFieldController, post, postFunc, widget.profile),
                     Activities(listOfPosts, widget.profile),
 
                     if (listOfPosts.isEmpty) Text("No Posts Yet"),

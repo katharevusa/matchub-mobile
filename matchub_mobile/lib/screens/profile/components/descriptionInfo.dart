@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
-import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/profile/components/manageKahsScreen.dart';
 import 'package:matchub_mobile/screens/profile/components/manageOrganisationMembers.dart';
 import 'package:matchub_mobile/screens/profile/components/viewOrganisationMembers.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class DescriptionInfo extends StatefulWidget {
@@ -26,12 +25,6 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
   List<Profile> kahs;
   Future membersFuture;
   Future kahsFuture;
-  final List<Map> collections = [
-    {"title": "Tan Wee Kee", "image": './././assets/images/pancake.jpg'},
-    {"title": "Tan Wek Kek", "image": './././assets/images/fries.jpg'},
-    {"title": "Tan Wee Kek", "image": './././assets/images/fishtail.jpg'},
-    {"title": "Tan Wee Kok", "image": './././assets/images/kathmandu1.jpg'},
-  ];
 
   @override
   void initState() {
@@ -237,8 +230,9 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
-                          builder: (context) => ViewOrganisationMembersScreen(
-                              user: widget.profile)));
+                          builder: (context) => ManageKahsScreen(
+                                user: widget.profile,
+                              )));
                 },
                 child: Text(
                   "Manage",
@@ -254,7 +248,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
             child: ListView.builder(
               physics: BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
-              itemCount: collections.length,
+              itemCount: kahs.length,
               itemBuilder: (BuildContext context, int index) {
                 return Material(
                     child: InkWell(
@@ -271,20 +265,8 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Container(
-                            width: 80,
-                            height: 80,
-                            margin: EdgeInsets.only(right: 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border:
-                                  Border.all(width: 3, color: Colors.blueGrey),
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                    kahs[index].profilePhoto,
-                                  ),
-                                  fit: BoxFit.fill),
-                            ),
+                          ClipOval(
+                            child: AttachmentImage(kahs[index].profilePhoto),
                           ),
                           SizedBox(
                             height: 5.0,
@@ -309,8 +291,8 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
-                          builder: (context) => ViewOrganisationMembersScreen(
-                              user: widget.profile)));
+                          builder: (context) =>
+                              ManageKahsScreen(user: widget.profile)));
                 },
                 child: Text(
                   "Manage",
