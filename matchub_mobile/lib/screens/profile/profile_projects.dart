@@ -67,7 +67,7 @@ class ProjectVerticalCard extends StatelessWidget {
         constraints:
             BoxConstraints(minHeight: 20 * SizeConfig.heightMultiplier),
         margin: EdgeInsets.symmetric(
-            vertical: 2 * SizeConfig.heightMultiplier,
+            vertical: 1 * SizeConfig.heightMultiplier,
             horizontal: 2 * SizeConfig.heightMultiplier),
         padding: EdgeInsets.all(2 * SizeConfig.heightMultiplier),
         decoration: BoxDecoration(

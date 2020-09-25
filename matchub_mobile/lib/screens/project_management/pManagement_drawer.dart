@@ -36,7 +36,7 @@ class ProjectManagementDrawer extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pop();
-        Navigator.of(context,rootNavigator: true).push(new MaterialPageRoute(builder: (context) => widget));
+        Navigator.of(context).push(new MaterialPageRoute(builder: (context) => widget));
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 5.0),

@@ -52,7 +52,7 @@ class DatabaseMethods {
   getChatMessages(String chatRoomId) async {
     return Firestore.instance
         .collection("message")
-        .document(chatRoomId)
+        .doc(chatRoomId)
         .collection("messages")
         .orderBy('sentAt')
         .snapshots();

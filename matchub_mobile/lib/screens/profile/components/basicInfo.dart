@@ -197,7 +197,7 @@ class _BasicInfoState extends State<BasicInfo> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Messages(chatRoomId: chatRoomId, user: widget.profile
+                            builder: (context) => Messages(chatRoomId: chatRoomId, recipient: widget.profile
                                 )));
                   },
                   shape: new RoundedRectangleBorder(

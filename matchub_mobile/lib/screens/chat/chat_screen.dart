@@ -204,7 +204,7 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
               print(chatRoomId);
               Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
                   builder: (context) =>
-                      Messages(chatRoomId: chatRoomId, user: user)));
+                      Messages(chatRoomId: chatRoomId, recipient: user)));
             },
             child: ListTile(
                 leading: CircleAvatar(

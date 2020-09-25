@@ -5,7 +5,7 @@ import 'package:matchub_mobile/screens/project/project_management_screen.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 
-import 'channels/chat_drawer.dart';
+import 'channels/channel_messages.dart';
 import 'pManagement_drawer.dart';
 
 class ProjectManagementOverview extends StatefulWidget {
@@ -30,18 +30,18 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview> {
         backgroundColor: kScaffoldColor,
         elevation: 0,
         leadingWidth: 199,
-        // leading: IconButton(
-        //   icon: Row(
-        //     children: [
-        //       Icon(
-        //         Icons.chevron_left_rounded,
-        //         color: Colors.black,
-        //       ),
-        //       Text("Projects", style: TextStyle(color: Colors.black))
-        //     ],
-        //   ),
-        //   onPressed: () => Navigator.of(context).pop(),
-        // ),
+        leading: IconButton(
+          icon: Row(
+            children: [
+              Icon(
+                Icons.chevron_left_rounded,
+                color: Colors.black,
+              ),
+              Text("Projects", style: TextStyle(color: Colors.black))
+            ],
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: [
           IconButton(
             icon: Icon(

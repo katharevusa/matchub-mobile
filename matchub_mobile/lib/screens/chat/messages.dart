@@ -14,9 +14,9 @@ import 'package:provider/provider.dart';
 
 class Messages extends StatefulWidget {
   final String chatRoomId;
-  final Profile user;
+  final Profile recipient;
 
-  Messages({this.chatRoomId, this.user});
+  Messages({this.chatRoomId, this.recipient});
 
   @override
   _MessagesState createState() => _MessagesState();
@@ -130,13 +130,13 @@ class _MessagesState extends State<Messages> {
             contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
             leading: CircleAvatar(
               radius: 25,
-              backgroundImage: widget.user.profilePhoto.isEmpty
+              backgroundImage: widget.recipient.profilePhoto.isEmpty
                   ? AssetImage("assets/images/avatar2.jpg")
                   : NetworkImage(
-                      "${ApiBaseHelper().baseUrl}${widget.user.profilePhoto.substring(30)}"),
+                      "${ApiBaseHelper().baseUrl}${widget.recipient.profilePhoto.substring(30)}"),
             ),
             title:
-                Text(widget.user.name, style: TextStyle(color: Colors.white)),
+                Text(widget.recipient.name, style: TextStyle(color: Colors.white)),
           ),
           actions: [
             popupmenu.PopupMenuButton(

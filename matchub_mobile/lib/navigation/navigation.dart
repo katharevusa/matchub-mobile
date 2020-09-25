@@ -2,6 +2,8 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/navigation/profile_navigator.dart';
+import 'package:matchub_mobile/navigation/resource_navigator.dart';
 import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
@@ -15,10 +17,7 @@ import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_s
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
-import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
-import 'package:matchub_mobile/screens/project/project_screen.dart';
-import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/screens/login/reset_password.dart';
 import 'package:matchub_mobile/screens/login/register_screen.dart';
 
@@ -27,8 +26,7 @@ import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individ
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/screens/user/user_screen.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
-
-import 'model/individual.dart';
+import './project_navigator.dart';
 
 class TabsScreen extends StatefulWidget {
   @override
@@ -39,10 +37,10 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  List<Map<String, Object>> _pages;
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  // List<Map<String, Object>> _pages;
+  // final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   int _selectedPageIndex = 0;
-  Future<void> _retrieveUserData;
+  // Future<void> _retrieveUserData;
   final Connectivity _connectivity = Connectivity();
   BuildContext context;
 
@@ -62,36 +60,39 @@ class _TabsScreenState extends State<TabsScreen> {
   //   }
   // }
 
-  @override
-  void initState() {
-    // _retrieveUserData = fetchData();
-    super.initState();
-  }
+  List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    bookNavigatorKey1,
+    bookNavigatorKey2,
+    projectNavigatorKey,
+    resourceNavigatorKey,
+    profileNavigatorKey,
+  ];
 
-  @override
-  dispose() {
-    super.dispose();
-  }
-
-  Future<bool> _onWillPop() async {
-    return (await showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text('Do you wish to exit MatcHub...'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text('Yes'),
-              ),
-            ],
-          ),
-        )) ??
-        false;
+  Future<bool> _systemBackButtonPressed() async {
+    if (_navigatorKeys[_selectedPageIndex].currentState.canPop()) {
+      _navigatorKeys[_selectedPageIndex]
+          .currentState
+          .pop(_navigatorKeys[_selectedPageIndex].currentContext);
+    } else {
+      return (await showDialog(
+            context: context,
+            builder: (context) => new AlertDialog(
+              title: Text('Are you sure?'),
+              content: Text('Do you wish to exit MatcHub...'),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text('No'),
+                ),
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('Yes'),
+                ),
+              ],
+            ),
+          )) ??
+          false;
+    }
   }
 
   @override
@@ -99,49 +100,60 @@ class _TabsScreenState extends State<TabsScreen> {
     setState(() => this.context = context);
     // able to push new screen to pass arguments
     return WillPopScope(
-      onWillPop: _onWillPop,
+      onWillPop: _systemBackButtonPressed,
       child: Scaffold(
-        body: Navigator(
-          initialRoute: HomeScreen.routeName,
-          key: _navigatorKey,
-          onGenerateRoute: generateRoute,
-          onUnknownRoute: (settings) {
-            return MaterialPageRoute(builder: (context) => HomeScreen());
-          },
+        // body: Navigator(
+        //   initialRoute: HomeScreen.routeName,
+        //   key: _navigatorKey,
+        //   onGenerateRoute: generateRoute,
+        //   onUnknownRoute: (settings) {
+        //     return MaterialPageRoute(builder: (context) => HomeScreen());
+        //   },
+        // ),
+        body: SafeArea(
+          top: false,
+          child: IndexedStack(
+            index: _selectedPageIndex,
+            children: <Widget>[
+              BookNavigator(1),
+              BookNavigator(2),
+              ProjectNavigator(),
+              ResourceNavigator(),
+              ProfileNavigator(),
+            ],
+          ),
         ),
         bottomNavigationBar: buildBottomNavigationBar(context),
       ),
     );
   }
 
-  void _selectPage(int index) {
-    if (_selectedPageIndex == index) return;
-    switch (index) {
-      case 0:
-        _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => ChatScreen()));
-        break;
-      case 1:
-        _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => ExploreScreen()));
-        break;
-      case 2:
-        _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => ProjectOverview()));
-        break;
-      case 3:
-        _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => ResourceScreen()));
-        break;
-      case 4:
-        _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => UserScreen()));
-        break;
-    }
-    setState(() {
-      _selectedPageIndex = index;
-    });
-  }
+  // void _selectPage(int index) {
+  // if (_selectedPageIndex == index) return;
+  // switch (index) {
+  //   case 0:
+  //     _navigatorKey.currentState.pushReplacement(
+  //         TabRouteBuilder(builder: (context) => ChatScreen()));
+  //     break;
+  //   case 1:
+  //     _navigatorKey.currentState.pushReplacement(
+  //         TabRouteBuilder(builder: (context) => ExploreScreen()));
+  //     break;
+  //   case 2:
+  //     _navigatorKey.currentState.pushReplacement(
+  //         TabRouteBuilder(builder: (context) => ProjectOverview()));
+  //     break;
+  //   case 3:
+  //     _navigatorKey.currentState.pushReplacement(
+  //         TabRouteBuilder(builder: (context) => ResourceScreen()));
+  //     break;
+  //   case 4:
+  //     _navigatorKey.currentState.pushReplacement(
+  //         TabRouteBuilder(builder: (context) => UserScreen()));
+  //     break;
+  // }
+
+  // }
 
   SlideTransition standardTransition(
       context, animation, secondaryAnimation, child) {
@@ -159,7 +171,11 @@ class _TabsScreenState extends State<TabsScreen> {
 
   BottomNavigationBar buildBottomNavigationBar(BuildContext context) {
     return BottomNavigationBar(
-      onTap: _selectPage,
+      onTap: (index) {
+        setState(() {
+          _selectedPageIndex = index;
+        });
+      },
       backgroundColor: Colors.white,
       unselectedItemColor: Colors.grey,
       selectedItemColor: Theme.of(context).primaryColor,
@@ -221,11 +237,6 @@ class _TabsScreenState extends State<TabsScreen> {
                   accountId: settings.arguments as int,
                 ),
             settings: settings);
-      // case EditIndividualScreen.routeName:
-      //   return MaterialPageRoute(
-      //       builder: (context) =>
-      //           ProfileScreen(accountId: settings.arguments as int,),
-      //       settings: settings);
       case EditIndividualScreen.routeName:
         return MaterialPageRoute(
             builder: (context) =>
@@ -285,7 +296,8 @@ class _TabsScreenState extends State<TabsScreen> {
             settings: settings);
       case ProjectManagementOverview.routeName:
         return MaterialPageRoute(
-            builder: (context) => ProjectManagementOverview(settings.arguments as Project),
+            builder: (context) =>
+                ProjectManagementOverview(settings.arguments as Project),
             // fullscreenDialog: true,
             settings: settings);
       default:

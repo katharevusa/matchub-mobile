@@ -11,17 +11,17 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:provider/provider.dart';
 
-class ChatDrawer extends StatefulWidget {
-  final String chatRoomId;
+class ChannelMessages extends StatefulWidget {
+  final String channelId;
   final Profile user;
 
-  ChatDrawer({this.chatRoomId, this.user});
+  ChannelMessages({this.channelId, this.user});
 
   @override
-  _ChatDrawerState createState() => _ChatDrawerState();
+  _ChannelMessagesState createState() => _ChannelMessagesState();
 }
 
-class _ChatDrawerState extends State<ChatDrawer> {
+class _ChannelMessagesState extends State<ChannelMessages> {
   Stream<QuerySnapshot> chats;
   TextEditingController messageEditingController = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -53,7 +53,7 @@ class _ChatDrawerState extends State<ChatDrawer> {
     super.dispose();
   }
   loadMessages() async {
-    await DatabaseMethods().getChatMessages(widget.chatRoomId).then((val) {
+    await DatabaseMethods().getChatMessages(widget.channelId).then((val) {
       setState(() {
         print('rached herer');
         chats = val;
@@ -101,8 +101,8 @@ class _ChatDrawerState extends State<ChatDrawer> {
         'sentAt': DateTime.now()
       };
       print("reached here -1");
-      print(widget.chatRoomId);
-      DatabaseMethods().sendMessage(widget.chatRoomId, chatMessageMap);
+      print(widget.channelId);
+      DatabaseMethods().sendMessage(widget.channelId, chatMessageMap);
 
       setState(() {
         messageEditingController.text = "";

@@ -6,7 +6,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/project.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/chat/messages.dart';
-import 'package:matchub_mobile/screens/project_management/channels/chat_drawer.dart';
+import 'package:matchub_mobile/screens/project_management/channels/channel_messages.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/database.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
@@ -48,32 +48,27 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
       stream: chatRooms,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
-          return Container(child: Text("asdfasdfsdfaf"));
+          return Container(child: Text(""));
         }
 
-        return Expanded(
-          child: ListView.builder(
-              // separatorBuilder: (ctx, idx) => Divider(),
-              itemCount: snapshot.data.documents.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                final channelGroupSnapshot = snapshot.data.documents[index];
-
-                print("123123123");
-                print(snapshot.data.documents.length);
-                return ChannelTile(
-                  name: channelGroupSnapshot.data()['name'],
-                  // recentMessage: channelGroupSnapshot.data()['recentMessage'] !=
-                  //         null
-                  //     ? channelGroupSnapshot.data()['recentMessage']['messageText']
-                  //     : "",
-                  // recentDate: channelGroupSnapshot.data()['recentMessage'] != null
-                  //     ? channelGroupSnapshot.data()['recentMessage']['sentAt']
-                  //     : null,
-                  // chatRoomId: "aasdf",
-                );
-              }),
-        );
+        return ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              final channelGroupSnapshot = snapshot.data.documents[index];
+              return ChannelTile(
+                name: channelGroupSnapshot.data()['name'],
+                channelId: channelGroupSnapshot.data()['id'],
+                // recentMessage: channelGroupSnapshot.data()['recentMessage'] !=
+                //         null
+                //     ? channelGroupSnapshot.data()['recentMessage']['messageText']
+                //     : "",
+                // recentDate: channelGroupSnapshot.data()['recentMessage'] != null
+                //     ? channelGroupSnapshot.data()['recentMessage']['sentAt']
+                //     : null,
+                // chatRoomId: "aasdf",
+              );
+            });
       },
     );
   }
@@ -138,6 +133,9 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
           SizedBox(height: 5),
           channelsList(),
+          SizedBox(height: 5),
+          Text("Direct Messages",
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
         ]),
       ),
       floatingActionButton: FloatingActionButton(
@@ -156,13 +154,13 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
 
 class ChannelTile extends StatefulWidget {
   final String name;
-  // final String chatRoomId;
+  final String channelId;
   final Timestamp recentDate;
   final String recentMessage;
 
   ChannelTile(
       {this.name,
-      // @required this.chatRoomId,
+      @required this.channelId,
       this.recentDate,
       this.recentMessage});
 
@@ -180,9 +178,9 @@ class _ChannelTileState extends State<ChannelTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () async {
-          // Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-          //     builder: (context) =>
-          //         Messages(chatRoomId: chatRoomId, user: user)));
+          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+              builder: (context) =>
+                  ChannelMessages(channelId: widget.channelId)));
         },
         child: ListTile(
           dense: true,
@@ -190,7 +188,7 @@ class _ChannelTileState extends State<ChannelTile> {
           title: Row(children: [
             Icon(
               FlutterIcons.hashtag_faw5s,
-              size: 18,
+              size: 16,
             ),
             SizedBox(width: 8),
             Text(widget.name, style: TextStyle(fontSize: 18)),

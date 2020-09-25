@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:matchub_mobile/models/profile.dart';
-import 'package:matchub_mobile/navigation.dart';
+import 'package:matchub_mobile/navigation/navigation.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 // import 'package:matchub_mobile/screens/login/auth_screen.dart';
 import 'package:matchub_mobile/screens/login/login_screen.dart';
