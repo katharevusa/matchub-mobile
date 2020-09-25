@@ -31,9 +31,9 @@ class Project {
     List listOfRequests;
     List sdgs;
     List kpis;
-    List teamMembers;
+    List<TruncatedProfile> teamMembers;
     List channels;
-    List projectOwners;
+    List<TruncatedProfile> projectOwners;
     
     factory Project.fromJson(Map<String,dynamic> json) => _$ProjectFromJson(json);
     Map<String, dynamic> toJson() => _$ProjectToJson(this);

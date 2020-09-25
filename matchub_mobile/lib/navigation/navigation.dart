@@ -6,8 +6,10 @@ import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
+import 'package:matchub_mobile/screens/project/project_overview.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
+import 'package:matchub_mobile/screens/project_management/project_management.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
@@ -125,7 +127,7 @@ class _TabsScreenState extends State<TabsScreen> {
         break;
       case 2:
         _navigatorKey.currentState.pushReplacement(
-            TabRouteBuilder(builder: (context) => ProjectScreen()));
+            TabRouteBuilder(builder: (context) => ProjectOverview()));
         break;
       case 3:
         _navigatorKey.currentState.pushReplacement(
@@ -270,11 +272,20 @@ class _TabsScreenState extends State<TabsScreen> {
         return MaterialPageRoute(
             builder: (context) => UserScreen(), settings: settings);
       case ProjectDetailScreen.routeName:
-        return MaterialPageRoute(fullscreenDialog: true,
-            builder: (context) => ProjectDetailScreen(projectId: settings.arguments as int,), settings: settings);
+        return MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) => ProjectDetailScreen(
+                  projectId: settings.arguments as int,
+                ),
+            settings: settings);
       case ResourceDetailScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ResourceDetailScreen(),
+            // fullscreenDialog: true,
+            settings: settings);
+      case ProjectManagementOverview.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ProjectManagementOverview(settings.arguments as Project),
             // fullscreenDialog: true,
             settings: settings);
       default:

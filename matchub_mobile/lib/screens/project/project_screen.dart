@@ -6,7 +6,7 @@ import 'package:matchub_mobile/screens/project/projectDetail/project_detail_over
 import 'package:matchub_mobile/screens/project/project_creation_screen.dart';
 
 class ProjectScreen extends StatefulWidget {
-  static const routeName = "/project-screen";
+  static const routeName = "/project-screens";
   @override
   _ProjectScreenState createState() => _ProjectScreenState();
 }
@@ -209,11 +209,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
             ],
           ),
           const SizedBox(height: 16.0),
-          Expanded(
-            child: Text(
-              "Project Announcement",
-              style: TextStyle(color: Colors.black, fontSize: 18.0),
-            ),
+          Text(
+            "Project Announcement",
+            style: TextStyle(color: Colors.black, fontSize: 18.0),
           ),
           Column(
             children: [

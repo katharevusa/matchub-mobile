@@ -3,7 +3,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
-import 'package:matchub_mobile/widgets/popupmenubutton.dart' as popupmenu;
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/database.dart';
@@ -12,17 +11,17 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:provider/provider.dart';
 
-class Messages extends StatefulWidget {
+class ChatDrawer extends StatefulWidget {
   final String chatRoomId;
   final Profile user;
 
-  Messages({this.chatRoomId, this.user});
+  ChatDrawer({this.chatRoomId, this.user});
 
   @override
-  _MessagesState createState() => _MessagesState();
+  _ChatDrawerState createState() => _ChatDrawerState();
 }
 
-class _MessagesState extends State<Messages> {
+class _ChatDrawerState extends State<ChatDrawer> {
   Stream<QuerySnapshot> chats;
   TextEditingController messageEditingController = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -46,15 +45,13 @@ class _MessagesState extends State<Messages> {
     // });
     // SchedulerBinding.instance.addPostFrameCallback(
   }
-
   @override
-  void dispose() {
+  void dispose(){
     messageEditingController.dispose();
     _scrollController.dispose();
     myFocusNode.dispose();
     super.dispose();
   }
-
   loadMessages() async {
     await DatabaseMethods().getChatMessages(widget.chatRoomId).then((val) {
       setState(() {
@@ -139,9 +136,7 @@ class _MessagesState extends State<Messages> {
                 Text(widget.user.name, style: TextStyle(color: Colors.white)),
           ),
           actions: [
-            popupmenu.PopupMenuButton(
-                // onSelected: (value) => FocusScope.of(context).unfocus(),
-                // onCanceled: () => FocusScope.of(context).unfocus(),
+            PopupMenuButton(
                 offset: Offset(0, 50),
                 icon: Icon(
                   FlutterIcons.ellipsis_v_faw5s,
@@ -149,16 +144,14 @@ class _MessagesState extends State<Messages> {
                   color: Colors.white,
                 ),
                 itemBuilder: (BuildContext context) => [
-                      popupmenu.PopupMenuItem(
+                      PopupMenuItem(
                         child: ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            
+                          },
                           dense: true,
                           leading: Icon(FlutterIcons.trash_alt_faw5s),
-                          title: Text(
-                            "Delete Chat",
-                            style: TextStyle(
-                                fontSize: SizeConfig.textMultiplier * 1.8),
-                          ),
+                          title: Text("Delete Chat",style: TextStyle(fontSize:SizeConfig.textMultiplier*1.8),),
                         ),
                       )
                     ]),

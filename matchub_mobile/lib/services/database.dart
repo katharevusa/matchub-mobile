@@ -59,7 +59,7 @@ class DatabaseMethods {
   }
 
   getChatRoomId(fromUUID, toUUID) async {
-  final result = await Firestore.instance
+    final result = await Firestore.instance
         .collection("groups")
         .where('members', whereIn: [
       [fromUUID, toUUID]..sort()
@@ -77,9 +77,10 @@ class DatabaseMethods {
       print(e.toString());
       print("reached here -2");
     });
-    FirebaseFirestore.instance.collection("groups")
-    .doc(chatRoomId)
-    .set({"recentMessage": chatMessageData}, SetOptions(merge: true));
+    FirebaseFirestore.instance
+        .collection("groups")
+        .doc(chatRoomId)
+        .set({"recentMessage": chatMessageData}, SetOptions(merge: true));
   }
 
   getUserChats(String userUUID) async {
@@ -87,5 +88,26 @@ class DatabaseMethods {
         .collection("groups")
         .where('members', arrayContains: userUUID)
         .snapshots();
+  }
+
+  getProjectChannels(projectId) async {
+    print("fdsafsdfa");
+    return Firestore.instance
+        .collection("channels")
+        .where('projectId', isEqualTo: projectId)
+        .snapshots();
+  }
+
+  createChannel(Map<String, dynamic> channelMap) async {
+    Firestore.instance
+        .collection("channels")
+        .add(channelMap)
+        .then((value) => Firestore.instance
+            .collection("channels")
+            .doc(value.id)
+            .set({"id": value.id}, SetOptions(merge: true)))
+        .catchError((e) {
+      print(e);
+    });
   }
 }
