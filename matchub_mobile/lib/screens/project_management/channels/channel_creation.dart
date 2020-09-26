@@ -25,18 +25,20 @@ class _ChannelCreationState extends State<ChannelCreation> {
     "projectId": null,
     "members": [],
     "admins": [],
+    "recentMessage":{}
   };
 
   @override
   void initState() {
+    Profile myProfile = Provider.of<Auth>(context, listen: false).myProfile;
     contributors = [];
     contributors..addAll(widget.project.teamMembers);
+    contributors..addAll(widget.project.projectOwners);
+    contributors.removeWhere((element) => element.uuid == myProfile.uuid);
     filteredContributors = contributors;
     channelMap['projectId'] = "${widget.project.projectId}";
-    channelMap['createdBy'] =
-        Provider.of<Auth>(context, listen: false).myProfile.uuid;
-    channelMap['admins']
-        .add(Provider.of<Auth>(context, listen: false).myProfile.uuid);
+    channelMap['createdBy'] = myProfile.uuid;
+    channelMap['members'].add(myProfile.uuid);
     super.initState();
   }
 
