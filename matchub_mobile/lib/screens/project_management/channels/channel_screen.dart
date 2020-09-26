@@ -139,7 +139,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
         ]),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: widget.project.projCreatorId == Provider.of<Auth>(context).myProfile.accountId ?  FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(
@@ -148,7 +148,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                   builder: (context) =>
                       ChannelCreation(project: widget.project)));
         },
-      ),
+      ) : SizedBox.shrink(),
     );
   }
 }

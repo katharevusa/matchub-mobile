@@ -34,11 +34,12 @@ class _ChannelMessagesState extends State<ChannelMessages> {
     initialScrollOffset: 0.0,
     keepScrollOffset: true,
   );
-
+  List allContributors;
   FocusNode myFocusNode;
+  bool isLoaded = false;
   @override
   void initState() {
-    super.initState();
+    // retrieveAllContributors();
     loadMessages();
     Future.delayed(Duration(milliseconds: 100), () {
       _scrollController.animateTo(_scrollController.position.maxScrollExtent,
@@ -48,6 +49,7 @@ class _ChannelMessagesState extends State<ChannelMessages> {
     //   myFocusNode.requestFocus();
     // });
     // SchedulerBinding.instance.addPostFrameCallback(
+    super.initState();
   }
 
   @override
@@ -55,6 +57,19 @@ class _ChannelMessagesState extends State<ChannelMessages> {
     messageEditingController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  retrieveAllContributors() async {
+    final response = await ApiBaseHelper().getProtected(
+        "authenticated/getWholeProjectGroup?projectId=${widget.project.projectId}",
+        Provider.of<Auth>(context, listen: false).accessToken);
+    print(response);
+    allContributors =
+        (response as List).map((e) => Profile.fromJson(e)).toList();
+    print(allContributors);
+    // setState(() {
+    //   isLoaded = true;
+    // });
   }
 
   loadMessages() async {
@@ -81,14 +96,16 @@ class _ChannelMessagesState extends State<ChannelMessages> {
         // );
 
         Profile myProfile = Provider.of<Auth>(context).myProfile;
+        // if(!isLoaded){
+        //   return Container();
+        // }
         return ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
               print("s=============== ${index.toString()}");
-              return 
-              MessageTile(
+              return MessageTile(
                 project: widget.project,
                 sentAt: snapshot.data.documents[index].data()["sentAt"],
                 sentBy: snapshot.data.documents[index].data()["sentBy"],
@@ -141,15 +158,19 @@ class _ChannelMessagesState extends State<ChannelMessages> {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) =>
-                        ChannelSettings(channelData: widget.channelData, project: widget.project))),
+                    builder: (_) => ChannelSettings(
+                        channelData: widget.channelData,
+                        project: widget.project))),
             contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
             title: Text(
               widget.channelData['name'],
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             subtitle: Text("${widget.channelData['members'].length} Members",
-                style: TextStyle(color: Colors.grey[300],)),
+                style: TextStyle(
+                  color: Colors.grey[300],
+                )),
           ),
           // IconButton(
           //   alignment: Alignment.bottomCenter,
@@ -270,18 +291,22 @@ class _MessageTileState extends State<MessageTile> {
 
   @override
   void initState() {
-    print("cahasdfasdf");
+    print(widget.project.teamMembers);
     var allContributors = [];
     allContributors..addAll(widget.project.teamMembers)..addAll(widget.project.projectOwners);
     messageSender = allContributors
         .firstWhere((element) => element.uuid == widget.sentBy);
-        print(messageSender.name);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     DateTime date = widget.sentAt.toDate();
+    print(date.toString());
+    print(messageSender.toJson());
+    print(widget.sendByMe);
+    print(widget.message);
+    
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 2 * SizeConfig.widthMultiplier),
       child: Row(

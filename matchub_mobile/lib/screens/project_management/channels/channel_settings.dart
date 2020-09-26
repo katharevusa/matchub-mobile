@@ -100,6 +100,8 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                                   widget.channelData, widget.project),
                             ),
                           ).then((value) {
+                            print("==============");
+                            print(value);
                             if (value != null && value) {
                               Navigator.of(context)
                                   .popUntil(ModalRoute.withName("/"));

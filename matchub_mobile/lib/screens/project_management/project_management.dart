@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/drawerMenu.dart';
 import 'package:matchub_mobile/screens/project/project_management_screen.dart';
+import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:provider/provider.dart';
 
 import 'channels/channel_messages.dart';
 import 'pManagement_drawer.dart';
@@ -21,6 +24,26 @@ class ProjectManagementOverview extends StatefulWidget {
 
 class _ProjectManagementOverviewState extends State<ProjectManagementOverview> {
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
+  bool isLoaded;
+  @override
+  void initState() {
+    setState(() {
+      isLoaded = false;
+    });
+    loadProject();
+    super.initState();
+  }
+
+  loadProject() async {
+    final response = await ApiBaseHelper().getProtected(
+        "authenticated/getProject?projectId=${widget.project.projectId}",
+        Provider.of<Auth>(context, listen: false).accessToken);
+    widget.project = Project.fromJson(response);
+    setState(() {
+      isLoaded = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,17 +77,19 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              widget.project.projectTitle,
-              style: TextStyle(fontSize: 2.7 * SizeConfig.textMultiplier),
-            ),
-          )
-        ],
-      ),
+      body: isLoaded
+          ? Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    widget.project.projectTitle,
+                    style: TextStyle(fontSize: 2.7 * SizeConfig.textMultiplier),
+                  ),
+                )
+              ],
+            )
+          : Container(),
     );
   }
 }
