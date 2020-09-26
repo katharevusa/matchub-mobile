@@ -91,7 +91,6 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle subtitle = TextStyle(fontSize: 12.0, color: Colors.grey);
     final TextStyle label = TextStyle(fontSize: 14.0, color: Colors.grey);
     projects = Provider.of<Auth>(context).myProfile.projectsOwned;
     return FutureBuilder(
