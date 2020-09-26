@@ -129,4 +129,13 @@ class DatabaseMethods {
       print(e);
     });
   }
+  deleteChannel(String channelId) async {
+    firestoreInstance
+        .collection("channels")
+        .doc(channelId)
+        .delete()
+        .catchError((e) {
+      print(e);
+    });
+  }
 }

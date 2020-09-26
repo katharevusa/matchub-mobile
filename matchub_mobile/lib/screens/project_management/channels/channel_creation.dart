@@ -39,6 +39,7 @@ class _ChannelCreationState extends State<ChannelCreation> {
     channelMap['projectId'] = "${widget.project.projectId}";
     channelMap['createdBy'] = myProfile.uuid;
     channelMap['members'].add(myProfile.uuid);
+    channelMap['admins'].add(myProfile.uuid);
     super.initState();
   }
 
