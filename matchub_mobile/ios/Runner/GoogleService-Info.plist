@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>611273809883-8p8nlu14hhn6fqq3g5kb9iqup87s1t5r.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.611273809883-8p8nlu14hhn6fqq3g5kb9iqup87s1t5r</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAgqAzQXT6DdzSCzbNvZ9990Sm7O125L1A</string>
+	<key>GCM_SENDER_ID</key>
+	<string>611273809883</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.matchubMobile</string>
+	<key>PROJECT_ID</key>
+	<string>matchub-ff3a7</string>
+	<key>STORAGE_BUCKET</key>
+	<string>matchub-ff3a7.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:611273809883:ios:aa80f2c7ee9217951891fe</string>
+	<key>DATABASE_URL</key>
+	<string>https://matchub-ff3a7.firebaseio.com</string>
+</dict>
+</plist>
