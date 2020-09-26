@@ -18,8 +18,8 @@ class _ChannelCreationState extends State<ChannelCreation> {
   List<TruncatedProfile> filteredContributors;
   PageController controller = PageController(initialPage: 0, keepPage: true);
   Map<String, dynamic> channelMap = {
-    "name": null,
-    "description": null,
+    "name": "",
+    "description": "",
     "createdAt": null,
     "createdBy": null,
     "projectId": null,
@@ -29,7 +29,8 @@ class _ChannelCreationState extends State<ChannelCreation> {
 
   @override
   void initState() {
-    contributors = widget.project.teamMembers;
+    contributors = [];
+    contributors..addAll(widget.project.teamMembers);
     filteredContributors = contributors;
     channelMap['projectId'] = "${widget.project.projectId}";
     channelMap['createdBy'] =
@@ -72,7 +73,9 @@ class _ChannelCreationState extends State<ChannelCreation> {
               contributors: contributors,
               filteredContributors: filteredContributors,
               channelMap: channelMap),
-          InfoPage(channelMap: channelMap),
+          InfoPage(
+              channelMap: channelMap,
+              functionChannel: DatabaseMethods().createChannel),
         ],
       ),
     );
@@ -83,7 +86,7 @@ class SelectMembers extends StatefulWidget {
   SelectMembers({
     Key key,
     @required this.contributors,
-    @required this.filteredContributors,
+    this.filteredContributors,
     @required this.channelMap,
   }) : super(key: key);
 
@@ -125,7 +128,8 @@ class _SelectMembersState extends State<SelectMembers> {
                       .toList();
                 });
               }),
-        ),SizedBox(height:10),
+        ),
+        SizedBox(height: 10),
         ListView.separated(
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -168,100 +172,111 @@ class InfoPage extends StatelessWidget {
   InfoPage({
     Key key,
     @required this.channelMap,
+    @required this.functionChannel,
   }) : super(key: key);
 
   final Map<String, dynamic> channelMap;
   final GlobalKey<FormState> _formKey = GlobalKey();
-
+  final Function functionChannel;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Channel Name',
-                  hintText: 'Fill in your channel\'s name here.',
-                  labelStyle: TextStyle(color: Colors.grey[850], fontSize: 14),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: kSecondaryColor),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.redAccent, width: 0.5),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.redAccent, width: 0.5),
-                  ),enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey[850],
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          padding: EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Channel Name',
+                      hintText: 'Fill in your channel\'s name here.',
+                      labelStyle:
+                          TextStyle(color: Colors.grey[850], fontSize: 14),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: kSecondaryColor),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.redAccent, width: 0.5),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.redAccent, width: 0.5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey[850],
+                        ),
+                      ),
                     ),
+                    keyboardType: TextInputType.multiline,
+                    minLines: 1,
+                    maxLines: 2,
+                    initialValue: channelMap['name'],
+                    onChanged: (value) {
+                      channelMap['name'] = value;
+                    },
+                    autovalidateMode: AutovalidateMode.always,
+                    validator: (newName) {
+                      if (newName.isEmpty) {
+                        return "Please enter a channel name";
+                      }
+                    },
                   ),
-                ),
-                keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 2,
-                initialValue: channelMap['name'],
-                onChanged: (value) {
-                  channelMap['name'] = value;
-                },
-                autovalidateMode: AutovalidateMode.always,
-                validator: (newName) {
-                  if (newName.isEmpty) {
-                    return "Please enter a channel name";
-                  }
-                },
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Description',
-                  hintText: 'Fill in your channel\'s description here.',
-                  labelStyle: TextStyle(color: Colors.grey[850], fontSize: 14),
-                  fillColor: Colors.grey[100],
-                  hoverColor: Colors.grey[100],
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: kSecondaryColor, width: 0.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: kSecondaryColor),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey[850],
+                  SizedBox(height: 20),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Description',
+                      hintText: 'Fill in your channel\'s description here.',
+                      labelStyle:
+                          TextStyle(color: Colors.grey[850], fontSize: 14),
+                      fillColor: Colors.grey[100],
+                      hoverColor: Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: kSecondaryColor, width: 0.5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: kSecondaryColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey[850],
+                        ),
+                      ),
                     ),
+                    keyboardType: TextInputType.multiline,
+                    minLines: 8,
+                    maxLines: 10,
+                    maxLength: 200,
+                    maxLengthEnforced: true,
+                    initialValue: channelMap['description'],
+                    onChanged: (value) {
+                      channelMap['description'] = value;
+                    },
                   ),
-                ),
-                keyboardType: TextInputType.multiline,
-                minLines: 8,
-                maxLines: 10,
-                maxLength: 200,
-                maxLengthEnforced: true,
-                initialValue: channelMap['description'],
-                onChanged: (value) {
-                  channelMap['description'] = value;
-                },
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: RaisedButton(
+                      color: kAccentColor,
+                      onPressed: () async {
+                        if(channelMap['createdAt']==null) {channelMap['createdAt']= DateTime.now();}
+                        if (!_formKey.currentState.validate()) {
+                          return;
+                        }
+                        await functionChannel(channelMap);
+                        Navigator.pop(context, true);
+                      },
+                      child: Text("Submit",
+                          style: TextStyle(color: Colors.white, fontSize: 14)),
+                    ),
+                  )
+                ],
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: RaisedButton(
-                  color: kAccentColor,
-                  onPressed: () async {
-                    channelMap['createdAt'] = DateTime.now();
-                    if (!_formKey.currentState.validate()) {
-                      return;
-                    }
-                    await DatabaseMethods().createChannel(channelMap);
-                    Navigator.pop(context);
-                  },
-                  child: Text("Create Channel",
-                      style: TextStyle(color: Colors.white, fontSize: 14)),
-                ),
-              )
-            ],
+            ),
           ),
         ),
       ),

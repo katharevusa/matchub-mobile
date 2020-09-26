@@ -105,11 +105,17 @@ class _MessagesState extends State<Messages> {
       };
       print("reached here -1");
       print(widget.chatRoomId);
-      DatabaseMethods().sendMessage(widget.chatRoomId, chatMessageMap);
+      DatabaseMethods().sendMessage(widget.chatRoomId, chatMessageMap, false);
 
       setState(() {
         messageEditingController.text = "";
         print("reached here -3");
+        Future.delayed(Duration(milliseconds: 200), () {
+          _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.ease);
+        });
       });
     }
   }
@@ -135,8 +141,8 @@ class _MessagesState extends State<Messages> {
                   : NetworkImage(
                       "${ApiBaseHelper().baseUrl}${widget.recipient.profilePhoto.substring(30)}"),
             ),
-            title:
-                Text(widget.recipient.name, style: TextStyle(color: Colors.white)),
+            title: Text(widget.recipient.name,
+                style: TextStyle(color: Colors.white)),
           ),
           actions: [
             popupmenu.PopupMenuButton(

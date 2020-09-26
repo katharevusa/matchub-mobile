@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseMethods {
+  final firestoreInstance = FirebaseFirestore.instance;
   Future<void> addUserInfo(userData) async {
     Firestore.instance.collection("users").add(userData).catchError((e) {
       print(e.toString());
@@ -67,8 +68,8 @@ class DatabaseMethods {
     return result.docs.first.id;
   }
 
-  Future<void> sendMessage(String chatRoomId, chatMessageData) {
-    FirebaseFirestore.instance
+  Future<void> sendMessage(String chatRoomId, chatMessageData, bool isChannel) {
+    firestoreInstance
         .collection("message")
         .doc(chatRoomId)
         .collection("messages")
@@ -77,14 +78,22 @@ class DatabaseMethods {
       print(e.toString());
       print("reached here -2");
     });
-    FirebaseFirestore.instance
-        .collection("groups")
-        .doc(chatRoomId)
-        .set({"recentMessage": chatMessageData}, SetOptions(merge: true));
+
+    if (isChannel) {
+      firestoreInstance
+          .collection("channels")
+          .doc(chatRoomId)
+          .set({"recentMessage": chatMessageData}, SetOptions(merge: true));
+    } else {
+      firestoreInstance
+          .collection("groups")
+          .doc(chatRoomId)
+          .set({"recentMessage": chatMessageData}, SetOptions(merge: true));
+    }
   }
 
   getUserChats(String userUUID) async {
-    return Firestore.instance
+    return firestoreInstance
         .collection("groups")
         .where('members', arrayContains: userUUID)
         .snapshots();
@@ -92,20 +101,30 @@ class DatabaseMethods {
 
   getProjectChannels(projectId) async {
     print("fdsafsdfa");
-    return Firestore.instance
+    return firestoreInstance
         .collection("channels")
         .where('projectId', isEqualTo: projectId)
         .snapshots();
   }
 
   createChannel(Map<String, dynamic> channelMap) async {
-    Firestore.instance
+    firestoreInstance
         .collection("channels")
         .add(channelMap)
-        .then((value) => Firestore.instance
+        .then((value) => firestoreInstance
             .collection("channels")
             .doc(value.id)
             .set({"id": value.id}, SetOptions(merge: true)))
+        .catchError((e) {
+      print(e);
+    });
+  }
+
+  updateChannel(Map<String, dynamic> channelMap) async {
+    firestoreInstance
+        .collection("channels")
+        .doc(channelMap["id"])
+        .set(channelMap, SetOptions(merge: true))
         .catchError((e) {
       print(e);
     });

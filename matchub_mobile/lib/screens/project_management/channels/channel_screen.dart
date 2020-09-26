@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'channel_creation.dart';
 
 class ChannelsScreen extends StatefulWidget {
+  static const routeName = "/channel-screen";
   Project project;
   ChannelsScreen({this.project});
 
@@ -57,17 +58,17 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
             itemBuilder: (context, index) {
               final channelGroupSnapshot = snapshot.data.documents[index];
               return ChannelTile(
-                name: channelGroupSnapshot.data()['name'],
-                channelId: channelGroupSnapshot.data()['id'],
-                // recentMessage: channelGroupSnapshot.data()['recentMessage'] !=
-                //         null
-                //     ? channelGroupSnapshot.data()['recentMessage']['messageText']
-                //     : "",
-                // recentDate: channelGroupSnapshot.data()['recentMessage'] != null
-                //     ? channelGroupSnapshot.data()['recentMessage']['sentAt']
-                //     : null,
-                // chatRoomId: "aasdf",
-              );
+                  channelData: channelGroupSnapshot.data(),
+                  project: widget.project
+                  // recentMessage: channelGroupSnapshot.data()['recentMessage'] !=
+                  //         null
+                  //     ? channelGroupSnapshot.data()['recentMessage']['messageText']
+                  //     : "",
+                  // recentDate: channelGroupSnapshot.data()['recentMessage'] != null
+                  //     ? channelGroupSnapshot.data()['recentMessage']['sentAt']
+                  //     : null,
+                  // chatRoomId: "aasdf",
+                  );
             });
       },
     );
@@ -153,16 +154,12 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
 }
 
 class ChannelTile extends StatefulWidget {
-  final String name;
-  final String channelId;
-  final Timestamp recentDate;
-  final String recentMessage;
+  final Project project;
+  final Map<String, dynamic> channelData;
+  // final Timestamp recentDate;
+  // final String recentMessage;
 
-  ChannelTile(
-      {this.name,
-      @required this.channelId,
-      this.recentDate,
-      this.recentMessage});
+  ChannelTile({this.channelData, this.project});
 
   @override
   _ChannelTileState createState() => _ChannelTileState();
@@ -179,8 +176,8 @@ class _ChannelTileState extends State<ChannelTile> {
     return GestureDetector(
         onTap: () async {
           Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-              builder: (context) =>
-                  ChannelMessages(channelId: widget.channelId)));
+              builder: (context) => ChannelMessages(
+                  channelData: widget.channelData, project: widget.project)));
         },
         child: ListTile(
           dense: true,
@@ -191,7 +188,7 @@ class _ChannelTileState extends State<ChannelTile> {
               size: 16,
             ),
             SizedBox(width: 8),
-            Text(widget.name, style: TextStyle(fontSize: 18)),
+            Text(widget.channelData['name'], style: TextStyle(fontSize: 18)),
           ]),
         ));
   }

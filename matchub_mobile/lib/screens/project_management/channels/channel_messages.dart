@@ -2,20 +2,25 @@ import 'dart:io';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:intl/intl.dart';
+import 'package:matchub_mobile/models/truncatedProfile.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/helpers/extensions.dart';
 import 'package:provider/provider.dart';
+import 'package:string_to_hex/string_to_hex.dart';
+
+import 'channel_settings.dart';
 
 class ChannelMessages extends StatefulWidget {
-  final String channelId;
-  final Profile user;
-
-  ChannelMessages({this.channelId, this.user});
+  final Map<String, dynamic> channelData;
+  final Project project;
+  ChannelMessages({this.channelData, this.project});
 
   @override
   _ChannelMessagesState createState() => _ChannelMessagesState();
@@ -34,26 +39,28 @@ class _ChannelMessagesState extends State<ChannelMessages> {
   @override
   void initState() {
     super.initState();
-    myFocusNode = FocusNode();
     loadMessages();
-    Future.delayed(Duration(milliseconds: 200), () {
+    Future.delayed(Duration(milliseconds: 100), () {
       _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300), curve: Curves.ease);
+          duration: Duration(milliseconds: 200), curve: Curves.ease);
     });
     // Future.delayed(Duration(milliseconds: 10), () {
     //   myFocusNode.requestFocus();
     // });
     // SchedulerBinding.instance.addPostFrameCallback(
   }
+
   @override
-  void dispose(){
+  void dispose() {
     messageEditingController.dispose();
     _scrollController.dispose();
-    myFocusNode.dispose();
     super.dispose();
   }
+
   loadMessages() async {
-    await DatabaseMethods().getChatMessages(widget.channelId).then((val) {
+    await DatabaseMethods()
+        .getChatMessages(widget.channelData['id'])
+        .then((val) {
       setState(() {
         print('rached herer');
         chats = val;
@@ -80,7 +87,9 @@ class _ChannelMessagesState extends State<ChannelMessages> {
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
               print("s=============== ${index.toString()}");
-              return MessageTile(
+              return 
+              MessageTile(
+                project: widget.project,
                 sentAt: snapshot.data.documents[index].data()["sentAt"],
                 sentBy: snapshot.data.documents[index].data()["sentBy"],
                 sendByMe: myProfile.uuid ==
@@ -100,13 +109,18 @@ class _ChannelMessagesState extends State<ChannelMessages> {
         "messageText": messageEditingController.text,
         'sentAt': DateTime.now()
       };
-      print("reached here -1");
-      print(widget.channelId);
-      DatabaseMethods().sendMessage(widget.channelId, chatMessageMap);
+      print(widget.channelData['id']);
+      DatabaseMethods()
+          .sendMessage(widget.channelData['id'], chatMessageMap, true);
 
       setState(() {
         messageEditingController.text = "";
-        print("reached here -3");
+        Future.delayed(Duration(milliseconds: 200), () {
+          _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.ease);
+        });
       });
     }
   }
@@ -116,7 +130,7 @@ class _ChannelMessagesState extends State<ChannelMessages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
+        // key: _scaffoldKey,
         appBar: AppBar(
           toolbarHeight: 60,
           titleSpacing: 10,
@@ -124,53 +138,34 @@ class _ChannelMessagesState extends State<ChannelMessages> {
           elevation: 5,
           centerTitle: false,
           title: ListTile(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) =>
+                        ChannelSettings(channelData: widget.channelData, project: widget.project))),
             contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-            leading: CircleAvatar(
-              radius: 25,
-              backgroundImage: widget.user.profilePhoto.isEmpty
-                  ? AssetImage("assets/images/avatar2.jpg")
-                  : NetworkImage(
-                      "${ApiBaseHelper().baseUrl}${widget.user.profilePhoto.substring(30)}"),
+            title: Text(
+              widget.channelData['name'],
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
-            title:
-                Text(widget.user.name, style: TextStyle(color: Colors.white)),
+            subtitle: Text("${widget.channelData['members'].length} Members",
+                style: TextStyle(color: Colors.grey[300],)),
           ),
-          actions: [
-            PopupMenuButton(
-                offset: Offset(0, 50),
-                icon: Icon(
-                  FlutterIcons.ellipsis_v_faw5s,
-                  size: 20,
-                  color: Colors.white,
-                ),
-                itemBuilder: (BuildContext context) => [
-                      PopupMenuItem(
-                        child: ListTile(
-                          onTap: () {
-                            
-                          },
-                          dense: true,
-                          leading: Icon(FlutterIcons.trash_alt_faw5s),
-                          title: Text("Delete Chat",style: TextStyle(fontSize:SizeConfig.textMultiplier*1.8),),
-                        ),
-                      )
-                    ]),
-            // IconButton(
-            //   alignment: Alignment.bottomCenter,
-            //   visualDensity: VisualDensity.comfortable,
-            //   icon: Icon(
-            //     FlutterIcons.ellipsis_v_faw5s,
-            //     size: 20,
-            //     color: Colors.grey[800],
-            //   ),
-            //   onPressed: () => showModalBottomSheet(
-            //           context: context,
-            //           builder: (context) => buildMorePopUp(context))
-            //       .then((value) => setState(() {
-            //             loadProject = getProjects();
-            //           })),
-            // ),
-          ],
+          // IconButton(
+          //   alignment: Alignment.bottomCenter,
+          //   visualDensity: VisualDensity.comfortable,
+          //   icon: Icon(
+          //     FlutterIcons.ellipsis_v_faw5s,
+          //     size: 20,
+          //     color: Colors.grey[800],
+          //   ),
+          //   onPressed: () => showModalBottomSheet(
+          //           context: context,
+          //           builder: (context) => buildMorePopUp(context))
+          //       .then((value) => setState(() {
+          //             loadProject = getProjects();
+          //           })),
+          // ),
         ),
         body: Stack(children: [
           Container(
@@ -180,6 +175,7 @@ class _ChannelMessagesState extends State<ChannelMessages> {
             child: SingleChildScrollView(
               controller: _scrollController,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   chatMessages(),
                   SizedBox(height: 70),
@@ -251,58 +247,118 @@ class _ChannelMessagesState extends State<ChannelMessages> {
   }
 }
 
-class MessageTile extends StatelessWidget {
+class MessageTile extends StatefulWidget {
+  final Project project;
   final String message;
   final String sentBy;
   final Timestamp sentAt;
   final bool sendByMe;
 
   MessageTile(
-      {@required this.message,
+      {@required this.project,
+      @required this.message,
       @required this.sendByMe,
       @required this.sentBy,
       @required this.sentAt});
 
   @override
+  _MessageTileState createState() => _MessageTileState();
+}
+
+class _MessageTileState extends State<MessageTile> {
+  TruncatedProfile messageSender;
+
+  @override
+  void initState() {
+    print("cahasdfasdf");
+    var allContributors = [];
+    allContributors..addAll(widget.project.teamMembers)..addAll(widget.project.projectOwners);
+    messageSender = allContributors
+        .firstWhere((element) => element.uuid == widget.sentBy);
+        print(messageSender.name);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    DateTime date = sentAt.toDate();
+    DateTime date = widget.sentAt.toDate();
     return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: sendByMe ? EdgeInsets.only(left: 30) : EdgeInsets.only(right: 30),
-      padding: EdgeInsets.only(
-          top: 8, bottom: 8, left: sendByMe ? 0 : 12, right: sendByMe ? 12 : 0),
-      alignment: sendByMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Stack(children: [
-        Container(
-            padding: EdgeInsets.only(top: 10, bottom: 12, left: 14, right: 40),
-            decoration: BoxDecoration(
-              color: sendByMe ? Color(0xFFe6f2f1) : Colors.grey[50],
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
+      padding: EdgeInsets.symmetric(horizontal: 2 * SizeConfig.widthMultiplier),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (!widget.sendByMe)
+              CircleAvatar(
+                radius: 25,
+                backgroundImage: messageSender.profilePhoto.isEmpty
+                    ? AssetImage("assets/images/avatar2.jpg")
+                    : NetworkImage(
+                        "${ApiBaseHelper().baseUrl}${messageSender.profilePhoto.substring(30)}"),
+              ),
+            Container(
+              margin: widget.sendByMe
+                  ? EdgeInsets.only(left: 8 * SizeConfig.widthMultiplier)
+                  : EdgeInsets.only(right: 8 * SizeConfig.widthMultiplier),
+              padding: EdgeInsets.only(
+                  top: 8,
+                  bottom: 8,
+                  left: widget.sendByMe ? 0 : 2.5 * SizeConfig.widthMultiplier,
+                  right:
+                      widget.sendByMe ? 2.5 * SizeConfig.widthMultiplier : 0),
+              width: widget.sendByMe
+                  ? SizeConfig.widthMultiplier * 85
+                  : SizeConfig.widthMultiplier * 75,
+              alignment: widget.sendByMe
+                  ? Alignment.centerRight
+                  : Alignment.centerLeft,
+              child: Stack(children: [
+                Container(
+                    padding: EdgeInsets.only(
+                        top: 10, bottom: 12, left: 14, right: 40),
+                    decoration: BoxDecoration(
+                      color:
+                          widget.sendByMe ? Color(0xFFe6f2f1) : Colors.grey[50],
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (!widget.sendByMe)
+                            Text(messageSender.name,
+                                style: TextStyle(
+                                    color: Color(StringToHex.toColor(
+                                        messageSender.name.length > 10
+                                            ? messageSender.name
+                                                .substring(0, 10)
+                                            : messageSender.name)))),
+                          Text(widget.message,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontFamily: 'OverpassRegular',
+                                  fontWeight: FontWeight.w300)),
+                        ])),
+                Positioned(
+                  bottom: 1 * SizeConfig.widthMultiplier,
+                  right: 1.5 * SizeConfig.widthMultiplier,
+                  child: Text(DateFormat('kk:mm').format(date),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 10)),
                 ),
-              ],
+              ]),
             ),
-            child: Text(message,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontFamily: 'OverpassRegular',
-                    fontWeight: FontWeight.w300))),
-        Positioned(
-          bottom: 4,
-          right: 6,
-          child: Text(DateFormat('kk:mm').format(date),
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 10)),
-        ),
-      ]),
+          ]),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
 import 'package:matchub_mobile/screens/project/drawerMenu.dart';
@@ -19,6 +20,8 @@ class _ProjectOverviewState extends State<ProjectOverview> {
   @override
   Widget build(BuildContext context) {
     Profile myProfile = Provider.of<Auth>(context).myProfile;
+    List<Project> allProjects = [];
+    allProjects..addAll(myProfile.projectsOwned)..addAll(myProfile.projectsJoined);
 
     return DefaultTabController(
       length: 3,
@@ -90,7 +93,7 @@ class _ProjectOverviewState extends State<ProjectOverview> {
           ),
           body: TabBarView(children: [
             ProfileProjects(
-              projects: myProfile.projectsOwned,
+              projects: allProjects,
               isOwner: true,
             ),
             Icon(Icons.movie),

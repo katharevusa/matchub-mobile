@@ -19,7 +19,14 @@ class ProjectManagementDrawer extends StatelessWidget {
               children: <Widget>[
                 SizedBox(height: 5.0),
                 SizedBox(height: 30.0),
-                _buildRow(Icons.home, "Channels", ChannelsScreen(project:project), context),
+                _buildRow(
+                    Icons.home,
+                    "Channels",
+                    MaterialPageRoute(
+                      settings: RouteSettings(name: "/specific"),
+                      builder: (_) => ChannelsScreen(project: project),
+                    ),
+                    context),
                 Divider()
               ],
             ),
@@ -30,13 +37,13 @@ class ProjectManagementDrawer extends StatelessWidget {
   }
 
   Widget _buildRow(
-      IconData icon, String title, Widget widget, BuildContext context,
+      IconData icon, String title, Route route, BuildContext context,
       {bool showBadge = false}) {
     final TextStyle tStyle = TextStyle(fontSize: 16.0);
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pop();
-        Navigator.of(context).push(new MaterialPageRoute(builder: (context) => widget));
+        Navigator.of(context).push(route);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
