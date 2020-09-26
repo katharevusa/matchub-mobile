@@ -38,6 +38,7 @@ class _CreatePostState extends State<CreatePost> {
                 onPressed: () {
                   widget.postFunc(context);
                   widget.textEditingController.clear();
+                  widget.post["content"] = "";
                   FocusScope.of(context).unfocus();
                 },
               ),

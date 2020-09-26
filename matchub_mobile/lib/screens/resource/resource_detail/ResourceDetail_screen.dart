@@ -394,6 +394,7 @@ class _ResourceHeaderState extends State<ResourceHeader> {
 }
 
 class Gallery extends StatelessWidget {
+  CarouselController c = CarouselController();
   Resources resource;
   Gallery(this.resource);
   @override
@@ -408,12 +409,15 @@ class Gallery extends StatelessWidget {
     }
     print(imageLinks);
     return CarouselSlider(
+      key: UniqueKey(),
       options: CarouselOptions(
+        
         enableInfiniteScroll: false,
         autoPlay: false,
         aspectRatio: 1.8,
         viewportFraction: 1.0,
         enlargeCenterPage: true,
+        carouselController: c
       ),
       items: imageLinks
           .map((item) => Container(

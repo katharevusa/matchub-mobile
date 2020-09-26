@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/api/api_helper.dart';
@@ -18,28 +21,8 @@ class Auth with ChangeNotifier {
   String _accountId;
   String _username;
   bool _isIndividual;
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _apiHelper = ApiBaseHelper();
   Profile myProfile;
-
-  Individual user = Individual(
-      firstName: "Wee Kek",
-      lastName: "Tan",
-      email: "tanwk@comp.edu",
-      genderEnum: GenderEnum.MALE,
-      profileDescription:
-          'Best Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years RunningBest Teacher Award 5 Years Running',
-      followers: [1, 2, 3, 4, 5, 5],
-      following: [1, 2, 3, 4, 5, 5, 9, 9, 9],
-      reputationPoints: 124,
-      profilePhoto: ("assets/images/avatar2.jpg"),
-      country: "Singapore",
-      city: "Singapore",
-      likedPosts: [],
-      //comments: [],
-      sdgs: [],
-      skillSet: ["MukBang", "Talented Individual", "Sleeping at 4am"],
-      profileUrl: "www.matchub.com/profile/users-123",
-      posts: []);
 
   bool get isAuth {
     return _accessToken != null;
@@ -80,7 +63,7 @@ class Auth with ChangeNotifier {
         "email": email,
         "roles": roles
       });
-      final responseData = await _helper.post(url, body: body);
+      final responseData = await _apiHelper.post(url, body: body);
 
       login(username, password);
     } catch (error) {
@@ -108,7 +91,7 @@ class Auth with ChangeNotifier {
   Future<bool> login(String username, String password) async {
     final url =
         'oauth/token?password=$password&username=$username&grant_type=password';
-    final responseData = await _helper.post(
+    final responseData = await _apiHelper.post(
       url,
     );
     await saveTokens(responseData);
@@ -120,7 +103,7 @@ class Auth with ChangeNotifier {
     try {
       final url =
           'oauth/token?grant_type=refresh_token&refresh_token=$_refreshToken';
-      final responseData = await _helper.post(
+      final responseData = await _apiHelper.post(
         url,
       );
       await saveTokens(responseData);
@@ -169,43 +152,40 @@ class Auth with ChangeNotifier {
 
   Future<void> retrieveUser() async {
     final url = 'authenticated/me';
-    final responseData = await _helper.getProtected(url, _accessToken);
+    final responseData = await _apiHelper.getProtected(url, _accessToken);
     myProfile = Profile.fromJson(responseData);
     _accountId = responseData['accountId'].toString();
     _username = responseData['email'].toString();
-    // print("Account Id :   -------------- " + _accountId);
-    // print(myProfile.sdgs[0].sdgName);
+    print(myProfile.uuid);
+    await signInToFirebase();
     notifyListeners();
   }
 
-  // List<Review> userReviews = [];
-  // Future<List<Review>> retrieveUserReviews() async {
-  //   final url = ApiBaseHelper().baseUrl + 'retrieveUserReviews?userId=$userId';
-  //   try {
-  //     final response = await http.get(
-  //       url,
-  //     );
-  //     print(userId);
-  //     print(response.statusCode);
-  //     print(response.body);
-  //     final responseData = json.decode(response.body) as Map<String, dynamic>;
-  //     if (responseData.containsKey("errorMessage")) {
-  //       throw HttpException(responseData['errorMessage']);
-  //     }
+  Future<void> signInToFirebase() async {
+    await Firebase.initializeApp();
 
-  //     userReviews = responseData['reviews'].map<Review>((r) {
-  //       return new Review(
-  //         author: _username,
-  //         date: DateTime.parse(r['date']),
-  //         reviewId: r['reviewId'],
-  //         rating: r['rating'],
-  //         reviewTitle: r['reviewTitle'],
-  //         reviewText: r['reviewText'],
-  //       );
-  //     }).toList();
-  //     return [];
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+    final response = http
+        .get(
+            "${_apiHelper.baseUrl}authenticated/firebaseToken/${myProfile.uuid}",
+            headers: {
+          "Authorization": "Bearer $accessToken"
+        }).then((value) => {
+              FirebaseAuth.instance
+                  .signInWithCustomToken(value.body)
+                  .then((userInfo) => {
+                        if (userInfo.additionalUserInfo.isNewUser)
+                          {
+                            Firestore.instance
+                                .collection("users")
+                                .doc(myProfile.uuid)
+                                .set({
+                              "name": myProfile.name,
+                              "email": myProfile.email,
+                              "uid": myProfile.uuid,
+                              "groups": []
+                            })
+                          }
+                      })
+            });
+  }
 }

@@ -55,29 +55,29 @@ class _ActivitiesState extends State<Activities> {
                 visualDensity: VisualDensity.comfortable,
                 highlightColor: Colors.transparent,
                 child: Row(
-                  children: [
-                    Icon(
-                      Icons.thumb_up,
-                      size: 13,
-                      color: Provider.of<Auth>(context)
-                                  .user
-                                  .likedPosts
-                                  .indexWhere((element) =>
-                                      widget.profile.posts[index].postId ==
-                                      element.postId) >=
-                              0
-                          ? kAccentColor
-                          : Colors.grey,
+                    // children: [
+                    //   Icon(
+                    //     Icons.thumb_up,
+                    //     size: 13,
+                    //     color: Provider.of<Auth>(context)
+                    //                 .user
+                    //                 .likedPosts
+                    //                 .indexWhere((element) =>
+                    //                     widget.profile.posts[index].postId ==
+                    //                     element.postId) >=
+                    //             0
+                    //         ? kAccentColor
+                    //         : Colors.grey,
+                    //   ),
+                    // ],
                     ),
-                  ],
-                ),
-                onPressed: () {
-                  setState(() {
-                    Provider.of<Auth>(context)
-                        .user
-                        .toggleLikedPost(widget.profile.posts[index]);
-                  });
-                },
+                // onPressed: () {
+                //   setState(() {
+                //     Provider.of<Auth>(context)
+                //         .user
+                //         .toggleLikedPost(widget.profile.posts[index]);
+                //   });
+                // },
               ),
               FlatButton(
                   textColor: Colors.grey,

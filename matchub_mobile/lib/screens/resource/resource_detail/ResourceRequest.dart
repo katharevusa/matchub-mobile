@@ -25,6 +25,7 @@ class RequestFormScreen extends StatefulWidget {
 class _RequestFormScreenState extends State<RequestFormScreen> {
   Profile resourceOwner;
   Future resourceOwnerFuture;
+  // Future categoryFuture;
   ApiBaseHelper _helper = ApiBaseHelper();
   ResourceCategory category;
   ResourceRequest newResourceRequest = new ResourceRequest();
@@ -39,6 +40,7 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
   void initState() {
     super.initState();
     resourceOwnerFuture = getResourceOwner();
+    // categoryFuture = getCategoryById();
     resourceRequest = {
       'requestId': newResourceRequest.requestId,
       'requestCreationTime': newResourceRequest.requestCreationTime,
@@ -66,7 +68,7 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
     final responseData = await _helper.getProtected(
         url, Provider.of<Auth>(context, listen: false).accessToken);
     resourceOwner = Profile.fromJson(responseData);
-    getCategoryById();
+    await getCategoryById();
   }
 
   request() async {
@@ -84,6 +86,7 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
       showErrorDialog(error.toString(), context);
     }
   }
+
 /* End of Backend method*/
 
   @override

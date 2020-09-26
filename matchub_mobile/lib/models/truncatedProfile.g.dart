@@ -37,7 +37,9 @@ TruncatedProfile _$TruncatedProfileFromJson(Map<String, dynamic> json) {
     ..genderEnum = json['genderEnum'] as String
     ..profileDescription = json['profileDescription'] as String
     ..projectFollowing = json['projectFollowing'] as List
-    ..skillSet = json['skillSet'] as List;
+    ..skillSet = json['skillSet'] as List
+    ..name = json['organizationName'] as String ??
+        (json['firstName'] + " " + json['lastName']) as String;
 }
 
 Map<String, dynamic> _$TruncatedProfileToJson(TruncatedProfile instance) =>

@@ -300,8 +300,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
               scrollDirection: Axis.horizontal,
               itemCount: kahs.length,
               itemBuilder: (BuildContext context, int index) {
-                return Material(
-                    child: InkWell(
+                return InkWell(
                   // onTap: () => Navigator.push(
                   //     context,
                   //     new MaterialPageRoute(
@@ -326,7 +325,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
                                   color: Colors.grey.shade600, fontSize: 10))
                         ],
                       )),
-                ));
+                );
               },
             ),
           )

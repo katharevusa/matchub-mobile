@@ -39,8 +39,8 @@ class Profile with ChangeNotifier {
   List hostedResources;
   List sdgs;
   List meetings;
-  List projectsJoined;
-  List projectsOwned;
+  List<Project> projectsJoined;
+  List<Project> projectsOwned;
   List joinRequests;
   List reviewsReceived;
   List badges;

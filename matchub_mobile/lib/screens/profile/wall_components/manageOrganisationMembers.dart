@@ -51,8 +51,8 @@ class _ManageOrganisationMembersScreenState
           .map((e) => Profile.fromJson(e))
           .toList();
       print("search");
-      print(searchResult[0].name);
-      print(members[0].name);
+      // print(searchResult[0].name);
+      // print(members[0].name);
     });
   }
 
@@ -65,7 +65,7 @@ class _ManageOrganisationMembersScreenState
         final response =
             await ApiBaseHelper().putProtected(url, accessToken: accessToken);
         print("Success");
-        Navigator.of(this.context).pop(true);
+        // Navigator.of(this.context).pop(true);
       } catch (error) {
         final responseData = error.body as Map<String, dynamic>;
         print("Failure");
@@ -92,7 +92,7 @@ class _ManageOrganisationMembersScreenState
         final response =
             await ApiBaseHelper().putProtected(url, accessToken: accessToken);
         print("Success");
-        Navigator.of(this.context).pop(true);
+        // Navigator.of(this.context).pop(true);
       } catch (error) {
         final responseData = error.body as Map<String, dynamic>;
         print("Failure");
@@ -111,6 +111,7 @@ class _ManageOrganisationMembersScreenState
                   ],
                 ));
       }
+      setState(() {});
     }
   }
 

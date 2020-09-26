@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/models/profile.dart';
+import 'package:matchub_mobile/screens/chat/messages.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/database.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -23,8 +26,6 @@ class _BasicInfoState extends State<BasicInfo> {
   @override
   Widget build(BuildContext context) {
     Profile myProfile = Provider.of<Auth>(context).myProfile;
-    print(myProfile.following);
-    print(widget.profile.accountId);
 
     return Container(
         margin: EdgeInsets.only(top: 20, right: 20, left: 20),
@@ -181,36 +182,58 @@ class _BasicInfoState extends State<BasicInfo> {
               children: [
                 Expanded(
                     child: OutlineButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (!await DatabaseMethods().checkChatRoomExists(
+                        myProfile.uuid, widget.profile.uuid)) {
+                      DatabaseMethods().addChatRoom({
+                        "createdAt": DateTime.now(),
+                        "createdBy": myProfile.uuid,
+                        "members": [myProfile.uuid, widget.profile.uuid]
+                          ..sort(),
+                      });
+                    }
+                    String chatRoomId = await DatabaseMethods().getChatRoomId(myProfile.uuid, widget.profile.uuid);
+                    print(chatRoomId);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Messages(chatRoomId: chatRoomId, recipient: widget.profile
+                                )));
+                  },
                   shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(5.0)),
                   child: Text("Contact"),
                 )),
-                 if (widget.profile.accountId != myProfile.accountId) ...[SizedBox(width: 10),
-                Expanded(
-                    child: OutlineButton(
-                  color: (widget.profile.accountId == myProfile.accountId)
-                      ? kSecondaryColor
-                      : (myProfile.following.indexOf(widget.profile.accountId) >
-                              -1)
-                          ? Colors.grey[200]
-                          : kAccentColor,
-                  onPressed: () {
-                    if (widget.profile.accountId == myProfile.accountId)
-                      return null;
-                    widget.follow(widget.profile.accountId);
-                    setState(() => print(widget.profile.accountId));
-                    myProfile.toggleFollow(widget.profile.accountId);
-                    print(myProfile.following);
-                  },
-                  shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(5.0)),
-                  child: (widget.profile.accountId == myProfile.accountId)
-                      ? Text("Me")
-                      : (myProfile.following.indexOf(widget.profile.accountId) >
-                              -1)
-                          ? Text("Unfollow") : Text("Follow"),
-                ))],
+                if (widget.profile.accountId != myProfile.accountId) ...[
+                  SizedBox(width: 10),
+                  Expanded(
+                      child: OutlineButton(
+                    color: (widget.profile.accountId == myProfile.accountId)
+                        ? kSecondaryColor
+                        : (myProfile.following
+                                    .indexOf(widget.profile.accountId) >
+                                -1)
+                            ? Colors.grey[200]
+                            : kAccentColor,
+                    onPressed: () {
+                      if (widget.profile.accountId == myProfile.accountId)
+                        return null;
+                      widget.follow(widget.profile.accountId);
+                      setState(() => print(widget.profile.accountId));
+                      myProfile.toggleFollow(widget.profile.accountId);
+                      print(myProfile.following);
+                    },
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(5.0)),
+                    child: (widget.profile.accountId == myProfile.accountId)
+                        ? Text("Me")
+                        : (myProfile.following
+                                    .indexOf(widget.profile.accountId) >
+                                -1)
+                            ? Text("Unfollow")
+                            : Text("Follow"),
+                  ))
+                ],
                 SizedBox(width: 10),
                 Expanded(
                     child: OutlineButton(
