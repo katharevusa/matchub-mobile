@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/screens/resource/expiredResource.dart';
-import 'package:matchub_mobile/screens/resource/navDrawer.dart';
+// import 'package:matchub_mobile/screens/resource/navDrawer.dart';
 import 'package:matchub_mobile/screens/resource/ongoingResource.dart';
+import 'package:matchub_mobile/screens/resource/resourceDrawer.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +53,7 @@ class _ResourceScreenState extends State<ResourceScreen>
               ? DefaultTabController(
                   length: 3,
                   child: Scaffold(
-                    drawer: NavDrawer(),
+                    drawer: ResourceDrawer(),
                     appBar: AppBar(
                       title: Text("Resource Overview"),
                       elevation: 0.0,

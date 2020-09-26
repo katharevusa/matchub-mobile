@@ -6,7 +6,7 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/project/project_creation_screen.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -73,7 +73,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
               child: Stack(
                 children: <Widget>[
-                  Container(width: 100*SizeConfig.widthMultiplier, child: AttachmentImage(item)),
+                  Container(
+                      width: 100 * SizeConfig.widthMultiplier,
+                      child: AttachmentImage(item)),
                   Positioned(
                     bottom: 0.0,
                     left: 0.0,
@@ -162,7 +164,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                 fontSize: 3.2 * SizeConfig.textMultiplier),
                           ),
                         ),
-                        UpvoteRow(project: project, myProfile: myProfile, getProjects: getProjects),
+                        UpvoteRow(
+                            project: project,
+                            myProfile: myProfile,
+                            getProjects: getProjects),
                         CarouselSlider(
                           options: CarouselOptions(
                               autoPlay: false,
@@ -289,79 +294,83 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               },
                               itemCount: project.projectOwners.length),
                         ),
-                        if(project.documents.isNotEmpty)...[Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 1 * SizeConfig.heightMultiplier,
-                              horizontal: 8.0 * SizeConfig.widthMultiplier),
-                          child: Text(
-                            "ATTACHMENTS",
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: SizeConfig.textMultiplier * 2),
+                        if (project.documents.isNotEmpty) ...[
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 1 * SizeConfig.heightMultiplier,
+                                horizontal: 8.0 * SizeConfig.widthMultiplier),
+                            child: Text(
+                              "ATTACHMENTS",
+                              style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: SizeConfig.textMultiplier * 2),
+                            ),
                           ),
-                        ),
-                        Container(
-                          color: AppTheme.appBackgroundColor,
-                          height: 28 * SizeConfig.widthMultiplier,
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 4.0 * SizeConfig.widthMultiplier),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => GestureDetector(
-                                    onTap: () async {
-                                      String fileName = (project
-                                          .documents[documentKeys[index]]);
-                                      String url = ApiBaseHelper().baseUrl +
-                                          fileName.substring(30);
-                                      print(url);
-                                      if (await canLaunch(url)) {
-                                        await launch(url);
-                                      } else {
-                                        throw 'Could not launch $url';
-                                      }
-                                      // OpenFile.open(
-                                      //     "https://192.168.1.55:8443/api/v1/files/att-7062382057131087005.pdf");
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal:
-                                              2 * SizeConfig.widthMultiplier,
-                                          vertical:
-                                              2 * SizeConfig.heightMultiplier),
-                                      decoration: BoxDecoration(boxShadow: [
-                                        BoxShadow(
-                                          offset: Offset(4, 10),
-                                          blurRadius: 6,
-                                          color: Colors.grey[400]
-                                              .withOpacity(0.15),
-                                        ),
-                                        BoxShadow(
-                                          offset: Offset(-4, 10),
-                                          blurRadius: 6,
-                                          color: Colors.grey[400]
-                                              .withOpacity(0.15),
-                                        ),
-                                      ]),
-                                      child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(15.0),
-                                          child: Container(
-                                            padding: EdgeInsets.all(1 *
+                          Container(
+                            color: AppTheme.appBackgroundColor,
+                            height: 28 * SizeConfig.widthMultiplier,
+                            child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        4.0 * SizeConfig.widthMultiplier),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) =>
+                                    GestureDetector(
+                                      onTap: () async {
+                                        String fileName = (project
+                                            .documents[documentKeys[index]]);
+                                        String url = ApiBaseHelper().baseUrl +
+                                            fileName.substring(30);
+                                        print(url);
+                                        if (await canLaunch(url)) {
+                                          await launch(url);
+                                        } else {
+                                          throw 'Could not launch $url';
+                                        }
+                                        // OpenFile.open(
+                                        //     "https://192.168.1.55:8443/api/v1/files/att-7062382057131087005.pdf");
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal:
+                                                2 * SizeConfig.widthMultiplier,
+                                            vertical: 2 *
                                                 SizeConfig.heightMultiplier),
-                                            color: Colors.white,
-                                            width:
-                                                20 * SizeConfig.widthMultiplier,
-                                            // height:
-                                            //     20 * SizeConfig.widthMultiplier,
-                                            child: getDocumentImage(
-                                                documentKeys[index]),
-                                          )),
+                                        decoration: BoxDecoration(boxShadow: [
+                                          BoxShadow(
+                                            offset: Offset(4, 10),
+                                            blurRadius: 6,
+                                            color: Colors.grey[400]
+                                                .withOpacity(0.15),
+                                          ),
+                                          BoxShadow(
+                                            offset: Offset(-4, 10),
+                                            blurRadius: 6,
+                                            color: Colors.grey[400]
+                                                .withOpacity(0.15),
+                                          ),
+                                        ]),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0),
+                                            child: Container(
+                                              padding: EdgeInsets.all(1 *
+                                                  SizeConfig.heightMultiplier),
+                                              color: Colors.white,
+                                              width: 20 *
+                                                  SizeConfig.widthMultiplier,
+                                              // height:
+                                              //     20 * SizeConfig.widthMultiplier,
+                                              child: getDocumentImage(
+                                                  documentKeys[index]),
+                                            )),
+                                      ),
                                     ),
-                                  ),
-                              itemCount:
-                                  project.documents.keys.toList().length),
-                        )],
+                                itemCount:
+                                    project.documents.keys.toList().length),
+                          )
+                        ],
                         Padding(
                           padding: EdgeInsets.only(
                               top: 1.5 * SizeConfig.heightMultiplier,
@@ -497,48 +506,51 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     Text("Contribute Resource", style: AppTheme.titleLight),
                   ],
                 )),
-            if(project.projCreatorId == Provider.of<Auth>(context).myProfile.accountId)...[ FlatButton(
-                onPressed: () => Navigator.of(context, rootNavigator: true)
-                    .push(MaterialPageRoute(
-                        builder: (context) =>
-                            ProjectCreationScreen(newProject: project))),
-                visualDensity: VisualDensity.comfortable,
-                highlightColor: Colors.transparent,
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Icon(
-                        FlutterIcons.edit_2_fea,
-                        color: Colors.grey[700],
+            if (project.projCreatorId ==
+                Provider.of<Auth>(context).myProfile.accountId) ...[
+              FlatButton(
+                  onPressed: () => Navigator.of(context, rootNavigator: true)
+                      .push(MaterialPageRoute(
+                          builder: (context) =>
+                              ProjectCreationScreen(newProject: project))),
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          FlutterIcons.edit_2_fea,
+                          color: Colors.grey[700],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text("Edit Project", style: AppTheme.titleLight),
-                  ],
-                )),
-            FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _terminateDialog(context);
-                },
-                visualDensity: VisualDensity.comfortable,
-                highlightColor: Colors.transparent,
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Icon(
-                        FlutterIcons.stop_circle_faw,
-                        color: Colors.grey[700],
+                      SizedBox(width: 10),
+                      Text("Edit Project", style: AppTheme.titleLight),
+                    ],
+                  )),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _terminateDialog(context);
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          FlutterIcons.stop_circle_faw,
+                          color: Colors.grey[700],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text("Terminate", style: AppTheme.titleLight),
-                  ],
-                ))],
+                      SizedBox(width: 10),
+                      Text("Terminate", style: AppTheme.titleLight),
+                    ],
+                  ))
+            ],
           ],
         ));
   }
@@ -738,13 +750,11 @@ class _UpvoteRowState extends State<UpvoteRow> {
                 .contains(widget.project.projectId)) {
               await ApiBaseHelper().postProtected(
                   "authenticated/upvoteProject?projectId=${widget.project.projectId}&userId=${widget.myProfile.accountId}",
-                  accessToken: Provider.of<Auth>(context)
-                      .accessToken);
+                  accessToken: Provider.of<Auth>(context).accessToken);
             } else {
               await ApiBaseHelper().postProtected(
                   "authenticated/revokeUpvote?projectId=${widget.project.projectId}&userId=${widget.myProfile.accountId}",
-                  accessToken: Provider.of<Auth>(context)
-                      .accessToken);
+                  accessToken: Provider.of<Auth>(context).accessToken);
             }
 
             await Provider.of<Auth>(context).retrieveUser();

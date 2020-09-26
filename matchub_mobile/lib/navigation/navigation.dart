@@ -2,6 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/navigation/explore_navigator.dart';
 import 'package:matchub_mobile/navigation/profile_navigator.dart';
 import 'package:matchub_mobile/navigation/resource_navigator.dart';
 import 'package:matchub_mobile/screens/chat/chat_screen.dart';
@@ -12,10 +13,10 @@ import 'package:matchub_mobile/screens/project/project_overview.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/project_management/project_management.dart';
+import 'package:matchub_mobile/screens/resource/resourceRequest/Incoming_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
-import 'package:matchub_mobile/screens/resource/resource_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/login/reset_password.dart';
@@ -62,7 +63,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
   List<GlobalKey<NavigatorState>> _navigatorKeys = [
     bookNavigatorKey1,
-    bookNavigatorKey2,
+    exploreNavigatorKey,
     projectNavigatorKey,
     resourceNavigatorKey,
     profileNavigatorKey,
@@ -116,7 +117,7 @@ class _TabsScreenState extends State<TabsScreen> {
             index: _selectedPageIndex,
             children: <Widget>[
               BookNavigator(1),
-              BookNavigator(2),
+              ExploreNavigator(),
               ProjectNavigator(),
               ResourceNavigator(),
               ProfileNavigator(),
@@ -223,7 +224,7 @@ class _TabsScreenState extends State<TabsScreen> {
             builder: (context) => ResourceScreen(), settings: settings);
       case ResourceScreen.routeName:
         return MaterialPageRoute(
-            builder: (context) => ResourceRequestScreen(), settings: settings);
+            builder: (context) => IncomingRequestScreen(), settings: settings);
       case ResourceScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ResourceDonationHistoryScreen(),

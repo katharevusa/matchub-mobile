@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:matchub_mobile/models/project.dart';
 import 'package:matchub_mobile/screens/project/drawerMenu.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
-import 'package:matchub_mobile/screens/project/project_creation_screen.dart';
 
 class ProjectScreen extends StatefulWidget {
   static const routeName = "/project-screens";

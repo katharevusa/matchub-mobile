@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/model/individual.dart';
-import 'package:matchub_mobile/model/post.dart';
+import 'package:matchub_mobile/models/post.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

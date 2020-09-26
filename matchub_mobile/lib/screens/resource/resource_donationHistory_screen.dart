@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/model/donationInfo.dart';
-import 'package:matchub_mobile/screens/resource/navDrawer.dart';
+// import 'package:matchub_mobile/screens/resource/navDrawer.dart';
+import 'package:matchub_mobile/screens/resource/resourceDrawer.dart';
 
 class ResourceDonationHistoryScreen extends StatefulWidget {
   static const routeName = "/resource-request-screen";
@@ -21,7 +22,7 @@ class _ResourceDonationHistoryScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: NavDrawer(),
+        drawer: ResourceDrawer(),
         appBar: AppBar(
           backgroundColor: Colors.blueGrey,
           elevation: 0.0,

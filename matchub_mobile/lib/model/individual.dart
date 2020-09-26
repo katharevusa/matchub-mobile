@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/model/post.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/models/post.dart';
 
 class Individual with ChangeNotifier {
   String firstName;
@@ -22,7 +22,7 @@ class Individual with ChangeNotifier {
   String city;
   List<Post> posts = [];
   List<Post> likedPosts = [];
-  List<Comment> comments = [];
+  // List<Comment> comments = [];
 
   Individual({
     this.firstName,
@@ -42,7 +42,7 @@ class Individual with ChangeNotifier {
     this.country,
     this.city,
     this.profileUrl,
-    this.comments
+    // this.comments
   });
 
   void addPostToWall(Post post) {
@@ -57,14 +57,17 @@ class Individual with ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleLikedPost(Post post){
-    if(this.likedPosts == null){
+  void toggleLikedPost(Post post) {
+    if (this.likedPosts == null) {
       this.likedPosts = [];
     }
-    if(this.likedPosts.indexWhere((element) => element.postId == post.postId) >=0){
+    if (this
+            .likedPosts
+            .indexWhere((element) => element.postId == post.postId) >=
+        0) {
       this.likedPosts.remove(post);
-    } else{
-    this.likedPosts.add(post);
+    } else {
+      this.likedPosts.add(post);
     }
     notifyListeners();
   }

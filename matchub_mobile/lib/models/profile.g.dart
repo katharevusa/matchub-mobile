@@ -10,6 +10,9 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..name = json['organizationName'] as String ??
         (json['firstName'] + " " + json['lastName']) as String
     ..isOrgnisation = json['organizationName'] != null ? true : false
+    ..verificationDocuments =
+        json['verificationDocuments'] as Map<String, dynamic>
+    ..employees = json['employees'] as List
     ..uuid = json['uuid'] as String
     ..email = json['email'] as String
     ..accountLocked = json['accountLocked'] as bool

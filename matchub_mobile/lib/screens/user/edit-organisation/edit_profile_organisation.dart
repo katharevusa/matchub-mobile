@@ -7,6 +7,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/info_edit_screen.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/interest_edit_screen.dart';
+import 'package:matchub_mobile/screens/user/edit-organisation/uploadVerificationDocument.dart';
 import 'package:matchub_mobile/screens/user/select_profile_picture.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
@@ -101,7 +102,11 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
                       InfoEditPage(editedProfile, controller),
                       InterestEditPage(
                           editedProfile, controller, _updateProfile),
-                      ProfilePhotoPicker(editedProfile, controller, _updateProfile)
+                      ProfilePhotoPicker(
+                          editedProfile, controller, _updateProfile),
+                      //is organisation then return this
+                      UploadVerificationDocument(
+                          editedProfile, controller, _updateProfile),
                     ],
                   ),
                 ),

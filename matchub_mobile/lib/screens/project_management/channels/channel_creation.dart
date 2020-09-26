@@ -221,7 +221,7 @@ class InfoPage extends StatelessWidget {
                     onChanged: (value) {
                       channelMap['name'] = value;
                     },
-                    autovalidateMode: AutovalidateMode.always,
+                    // autovalidateMode: AutovalidateMode.always,
                     validator: (newName) {
                       if (newName.isEmpty) {
                         return "Please enter a channel name";
@@ -265,7 +265,9 @@ class InfoPage extends StatelessWidget {
                     child: RaisedButton(
                       color: kAccentColor,
                       onPressed: () async {
-                        if(channelMap['createdAt']==null) {channelMap['createdAt']= DateTime.now();}
+                        if (channelMap['createdAt'] == null) {
+                          channelMap['createdAt'] = DateTime.now();
+                        }
                         if (!_formKey.currentState.validate()) {
                           return;
                         }

@@ -41,7 +41,7 @@ class _InfoEditPageState extends State<InfoEditPage> {
       String number, String internationalizedPhoneNumber, String isoCode) {
     setState(() {
       widget.profile['phoneNumber'] = internationalizedPhoneNumber;
-      print("sdfsd"+ internationalizedPhoneNumber);
+      print("sdfsd" + internationalizedPhoneNumber);
     });
   }
 
@@ -132,12 +132,15 @@ class _InfoEditPageState extends State<InfoEditPage> {
                                 )),
                             child: InternationalPhoneInput(
                               onPhoneNumberChange: onPhoneNumberChange,
-                              initialPhoneNumber: widget.profile['phoneNumber'].length>2 ? widget.profile['phoneNumber'] : null,
+                              initialPhoneNumber:
+                                  widget.profile['phoneNumber'].length > 2
+                                      ? widget.profile['phoneNumber']
+                                      : null,
                               initialSelection: widget.profile['countryCode'],
                               showCountryFlags: false,
                               border: InputBorder.none,
                               hintText: "eg. 91234567",
-                              enabledCountries: ['+60', '+65','+82', '+1'],
+                              enabledCountries: ['+60', '+65', '+82', '+1'],
                               labelText: "Phone Number",
                               labelStyle: TextStyle(
                                   color: Colors.grey[850], fontSize: 14),
@@ -206,7 +209,9 @@ class _InfoEditPageState extends State<InfoEditPage> {
                                 // isShowCode: true,
                                 isDownIcon: true,
                                 showEnglishName: true,
-                                initialSelection: "+${countryCode}".length>2? "+${countryCode}": null,
+                                initialSelection: "+${countryCode}".length > 2
+                                    ? "+${countryCode}"
+                                    : null,
                                 buttonColor: Colors.transparent,
                                 onChanged: (CountryCode code) {
                                   widget.profile['country'] = code.name;
@@ -223,11 +228,11 @@ class _InfoEditPageState extends State<InfoEditPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("1/2", style: TextStyle(color: Colors.grey)),
+              child: Text("1/4", style: TextStyle(color: Colors.grey)),
             ),
             RaisedButton(
                 color: kSecondaryColor,
-                onPressed: () => widget.controller.animateToPage(2,
+                onPressed: () => widget.controller.animateToPage(1,
                     curve: Curves.decelerate,
                     duration: Duration(milliseconds: 800)),
                 child: Text("Next")),

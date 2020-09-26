@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:matchub_mobile/models/project.dart';
 import 'package:matchub_mobile/screens/project/drawerMenu.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 
 class ProjectManagement extends StatefulWidget {
@@ -24,6 +26,7 @@ class _ProjectManagementState extends State<ProjectManagement> {
 
   @override
   Widget build(BuildContext context) {
+    final newProject = new Project();
     final Color primaryColor = Color(0xffE70F0B);
     List<bool> _isSelected = [true, false, false];
     List<String> announcements = [
@@ -63,7 +66,10 @@ class _ProjectManagementState extends State<ProjectManagement> {
           IconButton(
             color: Colors.black,
             icon: Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () => Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ProjectCreationScreen(newProject: newProject))),
           )
         ],
         automaticallyImplyLeading: false,
