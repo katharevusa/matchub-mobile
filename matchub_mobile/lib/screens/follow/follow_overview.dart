@@ -6,7 +6,7 @@ import 'package:matchub_mobile/screens/follow/followers.dart';
 import 'package:matchub_mobile/screens/follow/following.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
-import 'package:matchub_mobile/widgets/errorDialog.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
 
 class FollowOverviewScreen extends StatefulWidget {

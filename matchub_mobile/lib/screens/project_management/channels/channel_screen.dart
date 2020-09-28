@@ -35,7 +35,8 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
 
   getProjectChannels() async {
     await DatabaseMethods()
-        .getProjectChannels("${widget.project.projectId}")
+        .getProjectChannels("${widget.project.projectId}",
+            Provider.of<Auth>(context, listen: false).myProfile.uuid)
         .then((snapshots) {
       setState(() {
         chatRooms = snapshots;
@@ -133,6 +134,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
       floatingActionButton: widget.project.projCreatorId ==
               Provider.of<Auth>(context).myProfile.accountId
           ? FloatingActionButton(
+              heroTag: "channelCreateBtn",
               child: Icon(Icons.add),
               onPressed: () {
                 Navigator.push(
@@ -182,7 +184,12 @@ class _ChannelTileState extends State<ChannelTile> {
               size: 16,
             ),
             SizedBox(width: 8),
-            Expanded(child: Text(widget.channelData['name'], style: TextStyle(fontSize: 18), overflow: TextOverflow.ellipsis,)),
+            Expanded(
+                child: Text(
+              widget.channelData['name'],
+              style: TextStyle(fontSize: 18),
+              overflow: TextOverflow.ellipsis,
+            )),
           ]),
         ));
   }

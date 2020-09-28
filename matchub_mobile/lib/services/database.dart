@@ -99,11 +99,12 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  getProjectChannels(projectId) async {
+  getProjectChannels(projectId, userUUID) async {
     print("fdsafsdfa");
     return firestoreInstance
         .collection("channels")
         .where('projectId', isEqualTo: projectId)
+        .where('members', arrayContains: userUUID)
         .snapshots();
   }
 

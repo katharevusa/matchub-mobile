@@ -6,7 +6,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
-import 'package:matchub_mobile/widgets/errorDialog.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
 
 class CreatePost extends StatefulWidget {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/style.dart';
 
-
 class RoundedButton extends StatelessWidget {
   final String text;
   final Function press;
@@ -18,6 +17,13 @@ class RoundedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.4),
+          spreadRadius: 2,
+          blurRadius: 10,
+        ),
+      ]),
       margin: EdgeInsets.symmetric(vertical: 7),
       width: size.width * 0.8,
       child: ClipRRect(

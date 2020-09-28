@@ -11,7 +11,7 @@ import 'package:matchub_mobile/screens/profile/wall_components/basicInfo.dart';
 import 'package:matchub_mobile/screens/profile/wall_components/descriptionInfo.dart';
 import 'package:matchub_mobile/screens/profile/wall_components/wall.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/widgets/errorDialog.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {

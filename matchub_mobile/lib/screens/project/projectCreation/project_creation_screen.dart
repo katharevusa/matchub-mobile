@@ -25,7 +25,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:date_format/date_format.dart';
-import 'package:matchub_mobile/widgets/errorDialog.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 
 class ProjectCreationScreen extends StatefulWidget {
   static const routeName = "/project-creation-screen";

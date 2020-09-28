@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
-import 'package:matchub_mobile/widgets/errorDialog.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:password_strength/password_strength.dart';
 import 'package:matchub_mobile/helpers/validation.dart';
 import 'package:matchub_mobile/api/api_helper.dart';

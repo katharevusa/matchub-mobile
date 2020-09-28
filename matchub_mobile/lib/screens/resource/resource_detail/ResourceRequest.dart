@@ -10,7 +10,7 @@ import 'package:matchub_mobile/models/resourceRequest.dart';
 import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
-import 'package:matchub_mobile/widgets/errorDialog.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
 import 'package:meta/meta.dart';
 

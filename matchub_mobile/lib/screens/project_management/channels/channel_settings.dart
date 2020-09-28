@@ -23,6 +23,8 @@ class ChannelSettings extends StatefulWidget {
 class _ChannelSettingsState extends State<ChannelSettings> {
   List<Profile> members = [];
   bool _isLoading;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   initState() {
     _isLoading = true;
@@ -54,6 +56,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
     bool loggedInUserIsOwner =
         widget.channelData['createdBy'] == myProfile.uuid;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Channel Info"),
         actions: [
@@ -138,7 +141,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
           Divider(
             thickness: 1.5,
           ),
-          ListTile(
+          if(widget.channelData['description'].isNotEmpty) ...[ListTile(
             leading: Icon(
               FlutterIcons.info_circle_faw5s,
               color: Colors.grey[400],
@@ -151,7 +154,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
           ),
           Divider(
             thickness: 1.5,
-          ),
+          ),],
           ListTile(
             leading: Icon(
               FlutterIcons.user_friends_faw5s,
@@ -211,9 +214,21 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                                   if (memberIsAdmin) {
                                     widget.channelData['admins']
                                         .remove(members[idx].uuid);
+                                    _scaffoldKey.currentState
+                                        .showSnackBar(new SnackBar(
+                                      content: Text(
+                                          "Demoted ${members[idx].name} to member"),
+                                      duration: Duration(seconds: 1),
+                                    ));
                                   } else {
                                     widget.channelData['admins']
                                         .add(members[idx].uuid);
+                                    _scaffoldKey.currentState
+                                        .showSnackBar(new SnackBar(
+                                      content: Text(
+                                          "Promoted ${members[idx].name} to admin"),
+                                      duration: Duration(seconds: 1),
+                                    ));
                                   }
                                   DatabaseMethods()
                                       .updateChannel(widget.channelData);

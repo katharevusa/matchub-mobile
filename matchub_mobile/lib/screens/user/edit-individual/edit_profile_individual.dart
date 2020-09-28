@@ -9,7 +9,7 @@ import 'package:matchub_mobile/screens/user/edit-individual/info_edit_screen.dar
 import 'package:matchub_mobile/screens/user/edit-individual/interest_edit_screen.dart';
 import 'package:matchub_mobile/screens/user/select_profile_picture.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/widgets/errorDialog.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
