@@ -11,6 +11,7 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Future loadProject;
   Project project;
   List<String> documentKeys;
+  Profile myProfile;
   @override
   void didChangeDependencies() {
     loadProject = getProjects();
@@ -114,7 +116,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Profile myProfile = Provider.of<Auth>(context).myProfile;
+    myProfile = Provider.of<Auth>(context).myProfile;
 
     return Scaffold(
         appBar: AppBar(
@@ -182,6 +184,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                             ),
                             ...buildDescription(),
                             ...buildFoundersRow(),
+                            ...buildTeamMemberRow(project.teamMembers),
                             ...buildAttachments(),
                             ...buildSDGRow()
                           ]),
@@ -315,9 +318,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         ),
       ),
       Container(
-        padding: EdgeInsets.all(0),
-        margin: EdgeInsets.all(0),
-        color: AppTheme.appBackgroundColor,
+        // padding: EdgeInsets.all(0),
+        // margin: EdgeInsets.all(0),
+        // color: AppTheme.appBackgroundColor,
         height: 16 * SizeConfig.heightMultiplier,
         child: ListView.builder(
             cacheExtent: 20,
@@ -326,7 +329,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 horizontal: 6.0 * SizeConfig.widthMultiplier),
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              // print(project.projectOwners[index].name);
               return Container(
                 padding: EdgeInsets.all(0),
                 // padding: EdgeInsets.symmetric(
@@ -334,8 +336,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 //     2 * SizeConfig.widthMultiplier,
                 // vertical:
                 //     1 * SizeConfig.heightMultiplier),
-                constraints:
-                    BoxConstraints(minHeight: 18 * SizeConfig.heightMultiplier),
+                // constraints:
+                //     BoxConstraints(minHeight: 18 * SizeConfig.heightMultiplier),
                 margin: EdgeInsets.symmetric(
                     horizontal: 2 * SizeConfig.widthMultiplier,
                     vertical: 2 * SizeConfig.heightMultiplier),
@@ -346,14 +348,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                           color: Colors.white,
                           height: 16 * SizeConfig.widthMultiplier,
                           width: 16 * SizeConfig.widthMultiplier,
-                          // height:
-                          //     20 * SizeConfig.widthMultiplier,
                           child: AttachmentImage(
                               project.projectOwners[index].profilePhoto))),
                   Expanded(
                     child: Container(
                       constraints: BoxConstraints(
-                          maxWidth: 30 * SizeConfig.widthMultiplier,
+                          maxWidth: 20 * SizeConfig.widthMultiplier,
                           minWidth: 15 * SizeConfig.widthMultiplier),
                       child: Text(
                         project.projectOwners[index].name,
@@ -369,6 +369,89 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
             itemCount: project.projectOwners.length),
       )
     ];
+  }
+
+  Widget _buildAvatar(profile, {double radius = 80}) {
+    return CircleAvatar(
+      backgroundColor: Colors.white,
+      radius: radius,
+      child: ClipOval(
+        child: AttachmentImage(profile.profilePhoto),
+      ),
+    );
+  }
+
+  List<Widget> buildTeamMemberRow(List<TruncatedProfile> members) {
+    return (members.isNotEmpty)
+        ? [
+            Padding(
+              padding: EdgeInsets.only(
+                  top: 1.5 * SizeConfig.heightMultiplier,
+                  right: 8.0 * SizeConfig.widthMultiplier,
+                  left: 8.0 * SizeConfig.widthMultiplier),
+              child: Text(
+                "MEET THE TEAM MEMBERS",
+                style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: SizeConfig.textMultiplier * 2),
+              ),
+            ),
+            Container(
+                // height: 60,
+                width: SizeConfig.widthMultiplier * 100,
+                padding: EdgeInsets.symmetric(
+                    horizontal: 5 * SizeConfig.widthMultiplier),
+                margin: EdgeInsets.symmetric(
+                    vertical: 5 * SizeConfig.widthMultiplier),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Stack(
+                      children: [
+                        ...members
+                            .asMap()
+                            .map(
+                              (i, e) => MapEntry(
+                                i,
+                                Transform.translate(
+                                  offset: Offset(i * 40.0, 0),
+                                  child: SizedBox(
+                                      height: 60,
+                                      width: 60,
+                                      child: _buildAvatar(e, radius: 30)),
+                                ),
+                              ),
+                            )
+                            .values
+                            .toList(),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     new MaterialPageRoute(
+                        //         builder: (context) => ViewOrganisationMembersScreen(
+                        //             user: widget.profile)));
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        margin: EdgeInsets.only(right: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(width: 1, color: Colors.black),
+                          image: DecorationImage(
+                              image: AssetImage(
+                                  './././assets/images/view-more-icon.jpg'),
+                              fit: BoxFit.fill),
+                        ),
+                      ),
+                    ),
+                  ],
+                ))
+          ]
+        : [];
   }
 
   List<Widget> buildSDGRow() {
@@ -465,7 +548,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   ],
                 )),
             FlatButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await joinProject();
+                },
                 visualDensity: VisualDensity.comfortable,
                 highlightColor: Colors.transparent,
                 child: Row(
@@ -549,10 +634,25 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         ));
   }
 
-  void terminateProject() async {
-    var profileId = Provider.of<Auth>(this.context).myProfile.accountId;
+  void joinProject() async {
     final url =
-        "authenticated/terminateProject?projectId=${widget.projectId}&profileId=${profileId}";
+        "authenticated/createJoinRequest?projectId=${widget.projectId}&profileId=${myProfile.accountId}";
+    try {
+      var accessToken = Provider.of<Auth>(this.context).accessToken;
+      final response =
+          await ApiBaseHelper().postProtected(url, accessToken: accessToken);
+      print("Success");
+      setState(() {});
+      // Navigator.of(this.context).pop(true);
+    } catch (error) {
+      showErrorDialog(error.toString(), this.context);
+      print("Failure");
+    }
+  }
+
+  void terminateProject() async {
+    final url =
+        "authenticated/terminateProject?projectId=${widget.projectId}&profileId=${myProfile.accountId}";
     try {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =

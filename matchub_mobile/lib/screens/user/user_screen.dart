@@ -84,7 +84,7 @@ class _UserScreenState extends State<UserScreen> {
                   buildSettingCard("Edit Profile",
                       Icon(FlutterIcons.edit_fea, color: Color(0xFFa8e6cf)),
                       () {
-                    if (!profile.isOrgnisation) {
+                    if (!profile.isOrganisation) {
                       Navigator.of(
                         context,
                         rootNavigator: true,

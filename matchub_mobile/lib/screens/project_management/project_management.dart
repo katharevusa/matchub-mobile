@@ -4,6 +4,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/drawerMenu.dart';
 import 'package:matchub_mobile/screens/project/project_management_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
@@ -35,10 +36,8 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview> {
   }
 
   loadProject() async {
-    final response = await ApiBaseHelper().getProtected(
-        "authenticated/getProject?projectId=${widget.project.projectId}",
+    await Provider.of<ManageProject>(context, listen: false).getProject(widget.project.projectId,
         Provider.of<Auth>(context, listen: false).accessToken);
-    widget.project = Project.fromJson(response);
     setState(() {
       isLoaded = true;
     });
@@ -46,50 +45,54 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _key,
-      drawer: ProjectManagementDrawer(project: widget.project),
-      appBar: AppBar(
-        backgroundColor: kScaffoldColor,
-        elevation: 0,
-        leadingWidth: 199,
-        leading: IconButton(
-          icon: Row(
-            children: [
-              Icon(
-                Icons.chevron_left_rounded,
-                color: Colors.black,
+
+    return Consumer<ManageProject>(
+      builder: (context, project, child)=> Scaffold(
+          key: _key,
+          drawer: ProjectManagementDrawer(project: project.managedProject),
+          appBar: AppBar(
+            backgroundColor: kScaffoldColor,
+            elevation: 0,
+            leadingWidth: 199,
+            leading: IconButton(
+              icon: Row(
+                children: [
+                  Icon(
+                    Icons.chevron_left_rounded,
+                    color: Colors.black,
+                  ),
+                  Text("Projects", style: TextStyle(color: Colors.black))
+                ],
               ),
-              Text("Projects", style: TextStyle(color: Colors.black))
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  _key.currentState.openDrawer();
+                },
+              ),
             ],
           ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              _key.currentState.openDrawer();
-            },
-          ),
-        ],
-      ),
-      body: isLoaded
-          ? Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    widget.project.projectTitle,
-                    style: TextStyle(fontSize: 2.7 * SizeConfig.textMultiplier),
-                  ),
+          body: isLoaded
+              ? Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        project.managedProject.projectTitle,
+                        style:
+                            TextStyle(fontSize: 2.7 * SizeConfig.textMultiplier),
+                      ),
+                    )
+                  ],
                 )
-              ],
-            )
-          : Container(),
+              : Container(),
+      ),
     );
   }
 }

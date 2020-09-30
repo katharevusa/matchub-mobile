@@ -32,19 +32,25 @@ class _ProjectOverviewState extends State<ProjectOverview> {
         child: Scaffold(
           key: _key,
           drawer: DrawerMenu(),
+          endDrawer: DrawerMenu(),
           appBar: AppBar(
             leading: IconButton(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              icon: Icon(
-                Icons.menu,
-                color: Colors.black,
-              ),
+              icon: Image.asset("assets/icons/menu.png"),
               onPressed: () {
                 _key.currentState.openDrawer();
               },
             ),
+            actions: [IconButton(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              icon: Image.asset("assets/icons/menu.png"),
+              onPressed: () {
+                _key.currentState.openEndDrawer();
+              },
+            )],
             automaticallyImplyLeading: false,
-            leadingWidth: 40,
+            // leadingWidth: 40,
+            
             title: Text("Projects",
                 style: TextStyle(
                     color: Colors.grey[850],

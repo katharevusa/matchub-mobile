@@ -189,7 +189,7 @@ class _LoginCardState extends State<LoginCard> {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: 4*SizeConfig.widthMultiplier),
       child: Form(
         key: _formKey,
         child: Column(

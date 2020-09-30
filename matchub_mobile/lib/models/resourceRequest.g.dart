@@ -9,7 +9,7 @@ part of 'resourceRequest.dart';
 ResourceRequest _$ResourceRequestFromJson(Map<String, dynamic> json) {
   return ResourceRequest()
     ..requestId = json['requestId'] as num
-    ..requestCreationTime = DateTime.parse(json['requestCreationTime'])
+    ..requestCreationTime = json['requestCreationTime'] as String
     ..status = json['status'] as String
     ..requestorId = json['requestorId'] as num
     ..requestorEnum = json['requestorEnum'] as String

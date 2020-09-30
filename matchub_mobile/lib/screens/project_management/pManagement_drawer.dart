@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
+import 'package:matchub_mobile/screens/project_management/team_members/team_members.dart';
 
 import 'channels/channel_screen.dart';
 
@@ -23,8 +24,16 @@ class ProjectManagementDrawer extends StatelessWidget {
                     Icons.home,
                     "Channels",
                     MaterialPageRoute(
-                      settings: RouteSettings(name: "/specific"),
+                      settings: RouteSettings(name: "/channels"),
                       builder: (_) => ChannelsScreen(project: project),
+                    ),
+                    context),
+                _buildRow(
+                    Icons.home,
+                    "Team Members",
+                    MaterialPageRoute(
+                      settings: RouteSettings(name: "/team-members"),
+                      builder: (_) => TeamMembers(project: project),
                     ),
                     context),
                 Divider()
