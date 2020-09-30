@@ -6,6 +6,7 @@ import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/customAlertDialog.dart';
 import 'package:matchub_mobile/widgets/rounded_bordered_container.dart';
 import 'package:provider/provider.dart';
@@ -153,6 +154,7 @@ class _RequestTicketState extends State<RequestTicket> {
                 animationDuration: Duration(seconds: 1),
                 expandedHeight: 450,
                 expandIcon: CircleAvatar(
+                  backgroundColor: kSecondaryColor,
                   maxRadius: 10,
                   child: Icon(
                     Icons.keyboard_arrow_down,
@@ -171,10 +173,11 @@ class _RequestTicketState extends State<RequestTicket> {
                 separatorHeight: 2.0,
                 color: Colors.white,
                 curve: Curves.easeOut,
-                titleColor: Colors.blue.shade900,
+                titleColor: kSecondaryColor,
                 shrinkIcon: Align(
                   alignment: Alignment.centerRight,
                   child: CircleAvatar(
+                    backgroundColor: kSecondaryColor,
                     maxRadius: 10,
                     child: Icon(
                       Icons.keyboard_arrow_up,

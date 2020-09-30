@@ -3,6 +3,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
 import 'package:matchub_mobile/screens/project/drawerMenu.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:provider/provider.dart';
@@ -17,11 +18,14 @@ class ProjectOverview extends StatefulWidget {
 
 class _ProjectOverviewState extends State<ProjectOverview> {
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
+  final newProject = new Project();
   @override
   Widget build(BuildContext context) {
     Profile myProfile = Provider.of<Auth>(context).myProfile;
     List<Project> allProjects = [];
-    allProjects..addAll(myProfile.projectsOwned)..addAll(myProfile.projectsJoined);
+    allProjects
+      ..addAll(myProfile.projectsOwned)
+      ..addAll(myProfile.projectsJoined);
 
     return DefaultTabController(
       length: 3,
@@ -99,6 +103,14 @@ class _ProjectOverviewState extends State<ProjectOverview> {
             Icon(Icons.movie),
             Icon(Icons.games),
           ]),
+          floatingActionButton: IconButton(
+            color: Colors.black,
+            icon: Icon(Icons.add),
+            onPressed: () => Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ProjectCreationScreen(newProject: newProject))),
+          ),
         ),
       ),
     );
