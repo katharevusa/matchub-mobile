@@ -21,7 +21,7 @@ TruncatedProfile _$TruncatedProfileFromJson(Map<String, dynamic> json) {
     ..phoneNumber = json['phoneNumber'] as String
     ..country = json['country'] as String
     ..city = json['city'] as String
-    ..profilePhoto = json['profilePhoto'] as String
+    ..profilePhoto = json['profilePhoto'] ?? ""
     ..reputationPoints = json['reputationPoints'] as num
     ..followers = json['followers'] as List
     ..following = json['following'] as List

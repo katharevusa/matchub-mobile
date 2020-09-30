@@ -32,25 +32,26 @@ class _ProjectOverviewState extends State<ProjectOverview> {
         child: Scaffold(
           key: _key,
           drawer: DrawerMenu(),
-          endDrawer: DrawerMenu(),
+          // endDrawer: DrawerMenu(),
           appBar: AppBar(
-            leading: IconButton(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              icon: Image.asset("assets/icons/menu.png"),
-              onPressed: () {
-                _key.currentState.openDrawer();
-              },
-            ),
-            actions: [IconButton(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              icon: Image.asset("assets/icons/menu.png"),
-              onPressed: () {
-                _key.currentState.openEndDrawer();
-              },
-            )],
-            automaticallyImplyLeading: false,
+            iconTheme: IconThemeData(color: Colors.black),
+            // leading: IconButton(
+            //   padding: EdgeInsets.symmetric(horizontal: 20),
+            //   icon: Image.asset("assets/icons/menu.png"),
+            //   onPressed: () {
+            //     _key.currentState.openDrawer();
+            //   },
+            // ),
+            // actions: [IconButton(
+            //   padding: EdgeInsets.symmetric(horizontal: 20),
+            //   icon: Image.asset("assets/icons/menu.png"),
+            //   onPressed: () {
+            //     _key.currentState.openEndDrawer();
+            //   },
+            // )],
+            // automaticallyImplyLeading: false,
             // leadingWidth: 40,
-            
+
             title: Text("Projects",
                 style: TextStyle(
                     color: Colors.grey[850],
@@ -106,8 +107,14 @@ class _ProjectOverviewState extends State<ProjectOverview> {
               projects: allProjects,
               isOwner: true,
             ),
-            Icon(Icons.movie),
-            Icon(Icons.games),
+            ProfileProjects(
+              projects: myProfile.projectsOwned,
+              isOwner: true,
+            ),
+            ProfileProjects(
+              projects: myProfile.projectsJoined,
+              isOwner: false,
+            ),
           ]),
         ),
       ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:matchub_mobile/navigation/navigation.dart';
 import 'package:matchub_mobile/screens/login/reset_password.dart';
 import 'package:matchub_mobile/screens/login/register_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
@@ -7,6 +9,7 @@ import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/rounded_button.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -152,11 +155,27 @@ class _LoginCardState extends State<LoginCard> {
     'username': '',
     'password': '',
   };
-  var _isLoading = false;
+  var _isSubmitLoading = false;
   final _passwordController = TextEditingController();
+  bool hasBiometrics = false;
+  var _isLoading;
 
   @override
-  void initState() {}
+  void initState() {
+    setState(() => _isLoading = true);
+    initialiseBiometrics();
+  }
+
+  initialiseBiometrics() async {
+    final prefs = await SharedPreferences.getInstance();
+    hasBiometrics = prefs.get(
+          "biometricsEnabled",
+        ) ??
+        false;
+    print("Log in screen: Biometrics setting: " +
+        prefs.getBool("biometricsEnabled").toString());
+    setState(() => _isLoading = false);
+  }
 
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
@@ -166,7 +185,7 @@ class _LoginCardState extends State<LoginCard> {
 
     _formKey.currentState.save();
     setState(() {
-      _isLoading = true;
+      _isSubmitLoading = true;
     });
     try {
       // Log user in
@@ -181,151 +200,187 @@ class _LoginCardState extends State<LoginCard> {
     }
 
     setState(() {
-      _isLoading = false;
+      _isSubmitLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 4*SizeConfig.widthMultiplier),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(1 * SizeConfig.widthMultiplier),
-              child: Text(
-                'Welcome Back',
-                style: TextStyle(
-                    height: 1.1,
-                    color: Colors.grey[800],
-                    fontSize: 30,
-                    fontFamily: 'Quicksand'),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(1 * SizeConfig.widthMultiplier),
-              child: Text(
-                'Map. Match. Motivate.',
-                style: TextStyle(
-                    height: 1.1,
-                    color: Colors.grey[500],
-                    fontSize: 16,
-                    fontFamily: 'Quicksand'),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: deviceSize.width * 0.1,
-              ),
+    return _isLoading
+        ? Container()
+        : Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: 4 * SizeConfig.widthMultiplier),
+            child: Form(
+              key: _formKey,
               child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  Container(
-                    color: Colors.grey[200].withOpacity(0.1),
-                    child: TextFormField(
-                      style: TextStyle(color: Colors.grey[700]),
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: TextStyle(
-                          color: Colors.grey[700],
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[700]),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                      onSaved: (value) {
-                        _authData['username'] = value;
-                      },
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(1 * SizeConfig.widthMultiplier),
+                    child: Text(
+                      'Welcome Back',
+                      style: TextStyle(
+                          height: 1.1,
+                          color: Colors.grey[800],
+                          fontSize: 30,
+                          fontFamily: 'Quicksand'),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Container(
-                    color: Colors.grey[200].withOpacity(0.1),
-                    child: TextFormField(
-                      style: TextStyle(color: Colors.grey[700]),
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        labelStyle: TextStyle(
-                          color: Colors.grey[700],
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ),
-                      obscureText: true,
-                      validator: (value) {
-                        if (value.isEmpty || value.length < 8) {
-                          return 'Password is too short!';
-                        }
-                      },
-                      onSaved: (value) {
-                        _authData['password'] = value;
-                      },
+                  Padding(
+                    padding: EdgeInsets.all(1 * SizeConfig.widthMultiplier),
+                    child: Text(
+                      'Map. Match. Motivate.',
+                      style: TextStyle(
+                          height: 1.1,
+                          color: Colors.grey[500],
+                          fontSize: 16,
+                          fontFamily: 'Quicksand'),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  if (_isLoading)
-                    CircularProgressIndicator()
-                  else
-                    RoundedButton(
-                      text: 'LOGIN',
-                      press: _submit,
-                      color: kSecondaryColor,
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: deviceSize.width * 0.1,
                     ),
-                  FlatButton(
-                    child: Text('${'Forgot your password?'}',
-                        style: TextStyle(
-                            color: Colors.grey[850],
-                            decoration: TextDecoration.underline)),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            ResetPassword(email: _authData['email']),
-                      ));
-                    },
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    textColor: kAccentColor,
-                  ),
-                  FlatButton(
-                    child: Text('${'Dont have an account? Sign up now'}',
-                        style: TextStyle(
-                            color: Colors.grey[850],
-                            decoration: TextDecoration.underline)),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RegisterScreen(),
-                      ));
-                    },
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    textColor: kAccentColor,
-                  ),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20),
+                        Container(
+                          color: Colors.grey[200].withOpacity(0.1),
+                          child: TextFormField(
+                            style: TextStyle(color: Colors.grey[700]),
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: TextStyle(
+                                color: Colors.grey[700],
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey[700]),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            onSaved: (value) {
+                              _authData['username'] = value;
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          color: Colors.grey[200].withOpacity(0.1),
+                          child: TextFormField(
+                            style: TextStyle(color: Colors.grey[700]),
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: TextStyle(
+                                color: Colors.grey[700],
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ),
+                            obscureText: true,
+                            validator: (value) {
+                              if (value.isEmpty || value.length < 8) {
+                                return 'Password is too short!';
+                              }
+                            },
+                            onSaved: (value) {
+                              _authData['password'] = value;
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        if (_isSubmitLoading)
+                          CircularProgressIndicator()
+                        else
+                          RoundedButton(
+                            text: 'LOGIN',
+                            press: _submit,
+                            color: kSecondaryColor,
+                          ),
+                        Row(children: [
+                          Expanded(
+                            child: FlatButton(
+                              child: Text('${'Forgot password?'}',
+                                  style: TextStyle(
+                                      color: Colors.grey[850],
+                                      decoration: TextDecoration.underline)),
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      ResetPassword(email: _authData['email']),
+                                ));
+                              },
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30.0, vertical: 4),
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              textColor: kAccentColor,
+                            ),
+                          ),
+                          if (hasBiometrics)
+                            FlatButton(
+                              child: Text('${'Fingerprint'}',
+                                  style: TextStyle(
+                                      color: Colors.grey[850],
+                                      decoration: TextDecoration.underline)),
+                              onPressed: () async {
+                                final LocalAuthentication auth =
+                                    LocalAuthentication();
+                                {
+                                  bool authenticateViaBiometrics = false;
+                                  authenticateViaBiometrics =
+                                      await auth.authenticateWithBiometrics(
+                                          localizedReason:
+                                              'Use biometrics to verify your identity',
+                                          useErrorDialogs: true,
+                                          stickyAuth: false);
+
+                                  if (authenticateViaBiometrics) {
+                                    await Provider.of<Auth>(context).tryAutoLogin(biometricBypass: true);
+                                  }
+                                }
+                              },
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30.0, vertical: 4),
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              textColor: kAccentColor,
+                            ),
+                        ]),
+                        FlatButton(
+                          child: Text('${'Dont have an account? Sign up now'}',
+                              style: TextStyle(color: Colors.grey[850])),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => RegisterScreen(),
+                            ));
+                          },
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30.0, vertical: 4),
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          textColor: kAccentColor,
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
-            )
-          ],
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

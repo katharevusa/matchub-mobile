@@ -55,13 +55,6 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
     super.dispose();
   }
 
-  // update() {
-  //   setState(() {
-  //     print("Reached here");
-  //     print(widget.user.following.length);
-  //   });
-  // }
-
   toggleFollowing(int followId) async {
     try {
       var responseData;

@@ -139,11 +139,26 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 color: Colors.grey[800],
               ),
               onPressed: () => showModalBottomSheet(
-                      context: context,
-                      builder: (context) => buildMorePopUp(context))
-                  .then((value) => setState(() {
-                        loadProject = getProjects();
-                      })),
+                  context: context,
+                  builder: (context) => buildMorePopUp(context)).then((value) {
+                setState(() {
+                  loadProject = getProjects();
+                });
+                switch (value) {
+                  case "Joined-Project":
+                    Scaffold.of(context).showSnackBar(new SnackBar(
+                      content: Text(
+                        "You've applied to join ${project.projectTitle}",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      duration: Duration(seconds: 3),
+                    ));
+                    break;
+                  default:
+                    break;
+                }
+              }),
             ),
           ],
           backgroundColor: AppTheme.appBackgroundColor,
@@ -548,26 +563,31 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     Text("Follow", style: AppTheme.titleLight),
                   ],
                 )),
-            FlatButton(
-                onPressed: () async {
-                  await joinProject();
-                },
-                visualDensity: VisualDensity.comfortable,
-                highlightColor: Colors.transparent,
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Icon(
-                        FlutterIcons.user_friends_faw5s,
-                        color: Colors.grey[700],
+            if ((myProfile.projectsJoined.indexWhere(
+                        (element) => element.projectId == project.projectId) ==
+                    -1) &&
+                (myProfile.projectsOwned.indexWhere(
+                        (element) => element.projectId == project.projectId) ==
+                    -1))
+              FlatButton(
+                  onPressed: () async {
+                    await joinProject();
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          FlutterIcons.user_friends_faw5s,
+                          color: Colors.grey[700],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text("Join Team", style: AppTheme.titleLight),
-                  ],
-                )),
+                      SizedBox(width: 10),
+                      Text("Join Team", style: AppTheme.titleLight),
+                    ],
+                  )),
             if (project.projCreatorId !=
                 Provider.of<Auth>(context).myProfile.accountId) ...[
               FlatButton(
@@ -651,8 +671,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       final response =
           await ApiBaseHelper().postProtected(url, accessToken: accessToken);
       print("Success");
-      setState(() {});
-      // Navigator.of(this.context).pop(true);
+
+      Navigator.of(this.context).pop("Joined-Project");
     } catch (error) {
       showErrorDialog(error.toString(), this.context);
       print("Failure");

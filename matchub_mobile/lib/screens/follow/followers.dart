@@ -30,7 +30,6 @@ class _FollowersScreenState extends State<FollowersScreen> {
     super.initState();
     // followersFuture = getFollowers();
     followers = widget.follow;
-    myProfile = Provider.of<Auth>(context, listen: false).myProfile;
     filteredFollowers = followers;
   }
 
@@ -46,6 +45,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    myProfile = Provider.of<Auth>(context).myProfile;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(

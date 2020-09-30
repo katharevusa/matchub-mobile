@@ -46,7 +46,7 @@ class ProjectVerticalCard extends StatelessWidget {
       @required this.isOwner})
       : _randomColor = randomColor,
         super(key: key);
-  final isOwner;
+  final bool isOwner;
   final RandomColor _randomColor;
   final Project project;
   @override
