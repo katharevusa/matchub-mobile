@@ -428,7 +428,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                       createNewProject(context);
                     }
                   } else {
-                    if (_currentIndex != 7)
+                    if (_currentIndex != 4)
                       _controller.next();
                     else {
                       updateProject(context);

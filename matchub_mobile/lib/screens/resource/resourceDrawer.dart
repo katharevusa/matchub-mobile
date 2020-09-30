@@ -4,8 +4,9 @@ import 'package:matchub_mobile/models/index.dart';
 // import 'package:matchub_mobile/screens/project/oval-right-clipper.dart';
 import 'package:matchub_mobile/screens/project/project_management_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
-import 'package:matchub_mobile/screens/resource/resourceRequest/Incoming_request_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_incoming/resource_incoming_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_outgoing/resource_outgoing_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/widgets/oval-right-clipper.dart';
 import 'package:path/path.dart';
@@ -36,7 +37,7 @@ class ResourceDrawer extends StatelessWidget {
                       IncomingRequestScreen(), context),
                   _buildDivider(),
                   _buildRow(Icons.calendar_today, "Outgoing Request",
-                      IncomingRequestScreen(), context),
+                      OutgoingRequestScreen(), context),
                   _buildDivider(),
                   _buildRow(
                     Icons.track_changes,

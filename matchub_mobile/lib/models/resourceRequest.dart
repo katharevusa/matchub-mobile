@@ -7,7 +7,7 @@ class ResourceRequest {
     ResourceRequest();
 
     num requestId;
-    String requestCreationTime;
+    DateTime requestCreationTime;
     String status;
     num requestorId;
     String requestorEnum;

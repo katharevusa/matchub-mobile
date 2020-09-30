@@ -22,8 +22,8 @@ Resources _$ResourcesFromJson(Map<String, dynamic> json) {
     ..units = json['units'] as num
     ..photos = json['photos'] as List
     ..spotlight = json['spotlight'] as bool
-    ..spotlightEndTime = json['spotlightEndTime'] as String
-    ..matchedProjectId = json['matchedProjectId'] as String;
+    ..spotlightEndTime = json['spotlightEndTime'] ?? ""
+    ..matchedProjectId = json['matchedProjectId'] as num;
 }
 
 Map<String, dynamic> _$ResourcesToJson(Resources instance) => <String, dynamic>{

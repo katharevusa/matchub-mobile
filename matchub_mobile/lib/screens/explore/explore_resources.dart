@@ -7,23 +7,38 @@ import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
-class ExploreResources extends StatelessWidget {
-  List<Resources> allResources;
+class ExploreResources extends StatefulWidget {
+  @override
+  _ExploreResourcesState createState() => _ExploreResourcesState();
+}
+
+class _ExploreResourcesState extends State<ExploreResources> {
+  List<Resources> allResources = [];
+  Future allResourcesFuture;
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  retrieveAllResources(BuildContext context) async {
+  @override
+  void initState() {
+    allResourcesFuture = retrieveAllResources();
+    super.initState();
+  }
+
+  retrieveAllResources() async {
     final url = 'authenticated/getAllAvailableResources';
     final responseData = await _helper.getProtected(
         url, Provider.of<Auth>(context, listen: false).accessToken);
+    print("======================");
+    print(responseData['first']);
     allResources = (responseData['content'] as List)
         .map((e) => Resources.fromJson(e))
         .toList();
+    print(allResources.length.toString() + " =====================");
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: retrieveAllResources(context),
+      future: allResourcesFuture,
       builder: (context, snapshot) =>
           (snapshot.connectionState == ConnectionState.done)
               ? Scaffold(
@@ -40,6 +55,7 @@ class ExploreResources extends StatelessWidget {
   }
 
   Widget buildResourceList(BuildContext context, List<Resources> allResources) {
+    // print(allResources.length);
     return Container(
       height: 500.0,
       padding: EdgeInsets.symmetric(horizontal: 10.0),

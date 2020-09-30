@@ -40,6 +40,21 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getWODecode(String url, String accessToken) async {
+    var responseJson;
+    print(_baseUrl + url);
+    try {
+      final response = await client.get(_baseUrl + url, headers: {
+        "Authorization": "Bearer $accessToken"
+      }).timeout(Duration(seconds: 10));
+      //responseJson //= _returnResponse(response);
+      print(response.body);
+    return json.decode(response.body);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+  }
+
   Future<dynamic> getProtected(String url, String accessToken) async {
     var responseJson;
     print(_baseUrl + url);

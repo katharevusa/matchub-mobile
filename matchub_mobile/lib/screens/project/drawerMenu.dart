@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/screens/project/project_incoming/project_incoming_screen.dart';
 // import 'package:matchub_mobile/screens/project/oval-right-clipper.dart';
 import 'package:matchub_mobile/screens/project/project_management_screen.dart';
+import 'package:matchub_mobile/screens/project/project_outgoing/project_outgoing_screen.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/widgets/oval-right-clipper.dart';
 import 'package:path/path.dart';
@@ -40,6 +42,12 @@ class DrawerMenu extends StatelessWidget {
                   _buildDivider(),
                   _buildRow(Icons.chat, "Project management",
                       ProjectManagement(), context),
+                  _buildDivider(),
+                  _buildRow(Icons.chat, "Incoming request",
+                      ProjectIncomingScreen(), context),
+                  _buildDivider(),
+                  _buildRow(Icons.chat, "Outgoing request",
+                      OutgoingProjectScreen(), context),
                   _buildDivider(),
                 ],
               ),

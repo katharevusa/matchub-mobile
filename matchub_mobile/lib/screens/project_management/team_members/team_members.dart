@@ -49,7 +49,8 @@ class _TeamMembersState extends State<TeamMembers> {
     }
   }
 
-  sendMessage(myProfile, TruncatedProfile recipient) async {
+  sendMessage(TruncatedProfile recipient) async {
+    Profile myProfile = Provider.of<Auth>(context, listen: false).myProfile;
     if (!await DatabaseMethods()
         .checkChatRoomExists(myProfile.uuid, recipient.uuid)) {
       DatabaseMethods().addChatRoom({
@@ -72,10 +73,9 @@ class _TeamMembersState extends State<TeamMembers> {
   @override
   Widget build(BuildContext context) {
     widget.project = Provider.of<ManageProject>(context).managedProject;
-    Profile myProfile = Provider.of<Auth>(context, listen: false).myProfile;
     return DefaultTabController(
-      length: 2,
-          child: Scaffold(
+        length: 2,
+        child: Scaffold(
           appBar: AppBar(
             backgroundColor: kScaffoldColor,
             elevation: 0,
@@ -125,131 +125,142 @@ class _TeamMembersState extends State<TeamMembers> {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Theme(
-                      data: ThemeData(
-                        accentColor: kSecondaryColor,
-                      ),
-                      child: ExpansionTile(
-                        tilePadding:
-                            EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                        leading: CircleAvatar(
-                          radius: 25,
-                          backgroundImage: widget.project.joinRequests[index]
-                                  .requestor.profilePhoto.isEmpty
-                              ? AssetImage("assets/images/avatar2.jpg")
-                              : NetworkImage(
-                                  "${ApiBaseHelper().baseUrl}${widget.project.joinRequests[index].requestor.profilePhoto.substring(30)}"),
-                        ),
-                        title: Text(
-                            widget.project.joinRequests[index].requestor.name,
-                            style: TextStyle(
-                              color: Colors.grey[850],
-                            )),
-                        // onExpansionChanged: (bool expanding) =>
-                        //     setState(() => this.isExpanded = expanding),
+          body: TabBarView(
+            children: [
+              buildCurrentTeamMembersView(),
+              buildJoinRequestsView(),
+            ],
+          ),
+        ));
+  }
+
+  buildCurrentTeamMembersView() {
+    return ListView.builder(
+        itemBuilder: (context, index) {
+          return ListTile(
+              leading: CircleAvatar(
+                radius: 25,
+                backgroundImage: widget.project.teamMembers[index].profilePhoto.isEmpty
+                    ? AssetImage("assets/images/avatar2.jpg")
+                    : NetworkImage(
+                        "${ApiBaseHelper().baseUrl}${widget.project.teamMembers[index].profilePhoto.substring(30)}"),
+              ),
+              title: Text(widget.project.teamMembers[index].name,
+                  style: TextStyle(
+                    color: Colors.grey[850],
+                  )));
+        },
+        itemCount: widget.project.teamMembers.length);
+  }
+
+  buildJoinRequestsView() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Theme(
+          data: ThemeData(
+            accentColor: kSecondaryColor,
+          ),
+          child: ExpansionTile(
+            tilePadding:
+                EdgeInsets.only(bottom: 0, left: 16, right: 16, top: 8),
+            leading: CircleAvatar(
+              radius: 25,
+              backgroundImage: widget.project.joinRequests[index].requestor
+                      .profilePhoto.isEmpty
+                  ? AssetImage("assets/images/avatar2.jpg")
+                  : NetworkImage(
+                      "${ApiBaseHelper().baseUrl}${widget.project.joinRequests[index].requestor.profilePhoto.substring(30)}"),
+            ),
+            title: Text(widget.project.joinRequests[index].requestor.name,
+                style: TextStyle(
+                  color: Colors.grey[850],
+                )),
+            // onExpansionChanged: (bool expanding) =>
+            //     setState(() => this.isExpanded = expanding),
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: 5 * SizeConfig.widthMultiplier,
+                    vertical: 2 * SizeConfig.heightMultiplier),
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 5 * SizeConfig.widthMultiplier,
-                                vertical: 2 * SizeConfig.heightMultiplier),
-                            child: Column(
-                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Application Date:"),
-                                            Text(
-                                                "${DateFormat.yMMMd().format(widget.project.joinRequests[index].requestCreationTime)}",
-                                                style: AppTheme.searchLight),
-                                          ]),
-                                      Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Status"),
-                                            Text(
-                                                "${widget.project.joinRequests[index].status}",
-                                                style: AppTheme.searchLight),
-                                          ]),
-                                      Row(children: [
-                                        IconButton(
-                                          visualDensity: VisualDensity.compact,
-                                          icon: Icon(
-                                              FlutterIcons.message_square_fea),
-                                          onPressed: () => sendMessage(
-                                              myProfile,
-                                              widget.project.joinRequests[index]
-                                                  .requestor),
-                                        ),
-                                        IconButton(
-                                            visualDensity: VisualDensity.compact,
-                                            icon: Icon(FlutterIcons.eye_fea),
-                                            onPressed: () => Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pushNamed(
-                                                    ProfileScreen.routeName,
-                                                    arguments: widget
-                                                        .project
-                                                        .joinRequests[index]
-                                                        .requestor
-                                                        .accountId)),
-                                      ])
-                                    ]),
-                                if (widget.project.joinRequests[index].status ==
-                                    "ON_HOLD")
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        FlatButton(
-                                          shape: Border(
-                                              bottom: BorderSide(
-                                                  width: 2,
-                                                  color: Colors.green[300])),
-                                          child: Text("Approve"),
-                                          onPressed: () => respondToJoinRequest(
-                                              widget.project.joinRequests[index]
-                                                  .joinRequestId,
-                                              true),
-                                        ),
-                                        SizedBox(width: 5),
-                                        FlatButton(
-                                          shape: Border(
-                                              bottom: BorderSide(
-                                                  width: 2,
-                                                  color: Colors.red[300])),
-                                          child: Text("Reject"),
-                                          onPressed: () => respondToJoinRequest(
-                                              widget.project.joinRequests[index]
-                                                  .joinRequestId,
-                                              false),
-                                        ),
-                                      ]),
-                              ],
+                                Text("Application Date:"),
+                                Text(
+                                    "${DateFormat.yMMMd().format(widget.project.joinRequests[index].requestCreationTime)}",
+                                    style: AppTheme.searchLight),
+                              ]),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Status"),
+                                Text(
+                                    "${widget.project.joinRequests[index].status}",
+                                    style: AppTheme.searchLight),
+                              ]),
+                          Row(children: [
+                            IconButton(
+                              visualDensity: VisualDensity.compact,
+                              icon: Icon(FlutterIcons.message_square_fea),
+                              onPressed: () => sendMessage(
+                                  widget.project.joinRequests[index].requestor),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  itemCount: widget.project.joinRequests.length,
-                )
-              ],
-            ),
-          )),
+                            IconButton(
+                                visualDensity: VisualDensity.compact,
+                                icon: Icon(FlutterIcons.eye_fea),
+                                onPressed: () =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pushNamed(ProfileScreen.routeName,
+                                            arguments: widget
+                                                .project
+                                                .joinRequests[index]
+                                                .requestor
+                                                .accountId)),
+                          ])
+                        ]),
+                    if (widget.project.joinRequests[index].status == "ON_HOLD")
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FlatButton(
+                              shape: Border(
+                                  bottom: BorderSide(
+                                      width: 2, color: Colors.green[300])),
+                              child: Text("Approve"),
+                              onPressed: () => respondToJoinRequest(
+                                  widget.project.joinRequests[index]
+                                      .joinRequestId,
+                                  true),
+                            ),
+                            SizedBox(width: 5),
+                            FlatButton(
+                              shape: Border(
+                                  bottom: BorderSide(
+                                      width: 2, color: Colors.red[300])),
+                              child: Text("Reject"),
+                              onPressed: () => respondToJoinRequest(
+                                  widget.project.joinRequests[index]
+                                      .joinRequestId,
+                                  false),
+                            ),
+                          ]),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      itemCount: widget.project.joinRequests.length,
     );
   }
 }

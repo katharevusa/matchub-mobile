@@ -30,20 +30,19 @@ class _OngoingResourceState extends State<OngoingResource> {
   String _selected = "All";
 
   void selecteResource(BuildContext ctx, Resources individualResource) {
-    Navigator.of(
-      ctx,rootNavigator: true
-    ).pushNamed(ResourceDetailScreen.routeName, arguments: individualResource);
+    Navigator.of(ctx, rootNavigator: true).pushNamed(
+        ResourceDetailScreen.routeName,
+        arguments: individualResource);
   }
 
   @override
   Widget build(BuildContext context) {
     //new empty resource
-
     final newResource = new Resources();
 
     return Scaffold(
       body: SingleChildScrollView(
-              child: Column(
+        child: Column(
           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -82,7 +81,8 @@ class _OngoingResourceState extends State<OngoingResource> {
                             )
                           : _selected == "All" &&
                                   listOfResources[index].available == true &&
-                                  listOfResources[index].matchedProjectId == null
+                                  listOfResources[index].matchedProjectId ==
+                                      null
                               ? ListTile(
                                   title:
                                       Text(listOfResources[index].resourceName),
@@ -96,9 +96,11 @@ class _OngoingResourceState extends State<OngoingResource> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FlatButton.icon(
-          onPressed: () => Navigator.of(context, rootNavigator:true).push(
-              MaterialPageRoute(
-                  builder: (context,) =>
+          onPressed: () =>
+              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                  builder: (
+                context,
+              ) =>
                       ResourceCreationScreen(newResource: newResource))),
           icon: Icon(Icons.add),
           label: Text("New")),
