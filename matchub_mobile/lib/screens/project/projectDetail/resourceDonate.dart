@@ -1,46 +1,43 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/models/project.dart';
 import 'package:matchub_mobile/models/resourceCategory.dart';
 import 'package:matchub_mobile/models/resourceRequest.dart';
 import 'package:matchub_mobile/models/resources.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/ResourceRequest.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/errorDialog.dart';
 import 'package:provider/provider.dart';
-import 'package:meta/meta.dart';
 
-class RequestFormScreen extends StatefulWidget {
-  Resources resource;
-  RequestFormScreen(this.resource);
-
+class DonateFormScreen extends StatefulWidget {
+  Project project;
+  DonateFormScreen(this.project);
   @override
-  _RequestFormScreenState createState() => _RequestFormScreenState();
+  _DonateFormScreenState createState() => _DonateFormScreenState();
 }
 
-class _RequestFormScreenState extends State<RequestFormScreen> {
-  Profile resourceOwner;
-  Future resourceOwnerFuture;
-  // Future categoryFuture;
+class _DonateFormScreenState extends State<DonateFormScreen> {
   ApiBaseHelper _helper = ApiBaseHelper();
   ResourceCategory category;
+  Future projectOwnerFuture;
   ResourceRequest newResourceRequest = new ResourceRequest();
+  Profile projectOwner;
+  Resources selectedResource;
   Map<String, dynamic> resourceRequest;
-  List<Project> projects;
+  List<Resources> resources;
   final GlobalKey<AppExpansionTileState> expansionTile = new GlobalKey();
-  String foos = 'Select project';
+  String foos = 'Select resource';
   double _n = 0;
   int total = 0;
 
   @override
   void initState() {
-    super.initState();
-    resourceOwnerFuture = getResourceOwner();
-    // categoryFuture = getCategoryById();
+    projectOwnerFuture = getProjectOwner();
+
     resourceRequest = {
       'requestId': newResourceRequest.requestId,
       'requestCreationTime': newResourceRequest.requestCreationTime,
@@ -52,143 +49,100 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
       'unitsRequired': newResourceRequest.unitsRequired ?? 1,
       'message': newResourceRequest.message ?? "",
     };
+    super.initState();
   }
 
-/* Start of Backend method*/
+  getProjectOwner() async {
+    final url = 'authenticated/getAccount/${widget.project.projCreatorId}';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(context, listen: false).accessToken);
+    projectOwner = Profile.fromJson(responseData);
+    await retrieveResources();
+  }
+
+  retrieveResources() async {
+    resources = new List<Resources>();
+    var profileId =
+        Provider.of<Auth>(context, listen: false).myProfile.accountId;
+    final url = 'authenticated/getHostedResources?profileId=${profileId}';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(context, listen: false).accessToken);
+    resources = (responseData['content'] as List)
+        .map((e) => Resources.fromJson(e))
+        .toList();
+  }
+
   getCategoryById() async {
     final url =
-        'authenticated/getResourceCategoryById?resourceCategoryId=${widget.resource.resourceCategoryId}';
+        'authenticated/getResourceCategoryById?resourceCategoryId=${selectedResource.resourceCategoryId}';
     final responseData = await _helper.getProtected(
         url, Provider.of<Auth>(this.context).accessToken);
     category = ResourceCategory.fromJson(responseData);
   }
 
-  getResourceOwner() async {
-    final url = 'authenticated/getAccount/${widget.resource.resourceOwnerId}';
-    final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
-    resourceOwner = Profile.fromJson(responseData);
-    await getCategoryById();
-  }
-
-  request() async {
+  donate() async {
     resourceRequest["requestorId"] =
         Provider.of<Auth>(context).myProfile.accountId;
-    resourceRequest['resourceId'] = widget.resource.resourceId;
-    final url = "authenticated/createNewResourceRequestByProjectOwner";
+    resourceRequest['projectId'] = widget.project.projectId;
+    final url = "authenticated/createNewResourceRequestByResourceOwner";
     var accessToken = Provider.of<Auth>(context).accessToken;
     try {
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(resourceRequest));
       print("Success");
-      Navigator.of(context).pop(true);
     } catch (error) {
       showErrorDialog(error.toString(), context);
     }
   }
 
-/* End of Backend method*/
-
   @override
   Widget build(BuildContext context) {
     final TextStyle label = TextStyle(fontSize: 14.0, color: Colors.grey);
-    projects = Provider.of<Auth>(context).myProfile.projectsOwned;
     return FutureBuilder(
-      future: resourceOwnerFuture,
+      future: projectOwnerFuture,
       builder: (context, snapshot) => (snapshot.connectionState ==
               ConnectionState.done)
           ? Scaffold(
               appBar: AppBar(
-                title: Text("Resource request form"),
+                title: Text("Resource donation form"),
               ),
               body: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "New Request",
+                        "New Donation",
                         style: TextStyle(color: Colors.green),
                       ),
                       Text(
-                        "Please fill in the request form:",
+                        "Please fill in the donation form:",
                         style: label,
                       ),
                       Divider(),
                       SizedBox(height: 20.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            "RESOURCE NAME",
-                            style: label,
-                          ),
-                          Text("OWNER", style: label)
-                        ],
+                      Text(
+                        "PROJECT TO DONATE",
+                        style: label,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(widget.resource.resourceName),
-                          Text(resourceOwner.name),
-                        ],
-                      ),
+                      Text(widget.project.projectTitle),
                       SizedBox(height: 20.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            "AMOUNT WANTED:",
+                            "CREATOR",
                             style: label,
                           ),
-                          Text(
-                              (category.perUnit * _n).toString() +
-                                  category.unitName,
-                              style: label)
+                          Text(projectOwner.name)
                         ],
                       ),
-                      SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: Colors.red[700],
-                          inactiveTrackColor: Colors.red[100],
-                          trackShape: RoundedRectSliderTrackShape(),
-                          trackHeight: 4.0,
-                          thumbShape:
-                              RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                          thumbColor: Colors.redAccent,
-                          overlayColor: Colors.red.withAlpha(32),
-                          overlayShape:
-                              RoundSliderOverlayShape(overlayRadius: 28.0),
-                          tickMarkShape: RoundSliderTickMarkShape(),
-                          activeTickMarkColor: Colors.red[700],
-                          inactiveTickMarkColor: Colors.red[100],
-                          valueIndicatorShape:
-                              PaddleSliderValueIndicatorShape(),
-                          valueIndicatorColor: Colors.redAccent,
-                          valueIndicatorTextStyle: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        child: Slider(
-                          min: 0,
-                          max: widget.resource.units.toDouble(),
-                          value: _n,
-                          label: '$_n',
-                          divisions: 10,
-                          onChanged: (value) {
-                            if (this.mounted) {
-                              setState(() {
-                                _n = value;
-                              });
-                            }
-                            resourceRequest['unitsRequired'] = value;
-                          },
-                        ),
-                      ),
+                      SizedBox(height: 20.0),
                       Row(
                         children: [
                           Text(
-                            "MATCH RESOURCE TO:",
+                            "RESOURCE TO DONATE:",
                             style: label,
                           ),
                         ],
@@ -199,20 +153,80 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
                           backgroundColor:
                               Theme.of(context).accentColor.withOpacity(0.025),
                           children: <Widget>[
-                            for (Project p in projects) ...{
-                              new ListTile(
-                                title: Text(p.projectTitle),
-                                onTap: () {
-                                  setState(() {
-                                    this.foos = p.projectTitle;
-                                    resourceRequest['projectId'] = p.projectId;
-                                    expansionTile.currentState.collapse();
-                                  });
-                                },
-                              ),
+                            for (Resources r in resources) ...{
+                              if (r.available == true) ...{
+                                new ListTile(
+                                  title: Text(r.resourceName),
+                                  onTap: () {
+                                    setState(() {
+                                      this.foos = r.resourceName;
+                                      resourceRequest['resourceId'] =
+                                          r.resourceId;
+                                      selectedResource = r;
+                                      getCategoryById();
+                                      expansionTile.currentState.collapse();
+                                    });
+                                  },
+                                ),
+                              }
                             },
                           ]),
                       SizedBox(height: 10.0),
+                      if (category != null) ...{
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              "AMOUNT WANTED:",
+                              style: label,
+                            ),
+                            Text(
+                                (category.perUnit * _n).toString() +
+                                    category.unitName,
+                                style: label)
+                          ],
+                        )
+                      },
+                      if (category != null) ...{
+                        SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            activeTrackColor: Colors.red[700],
+                            inactiveTrackColor: Colors.red[100],
+                            trackShape: RoundedRectSliderTrackShape(),
+                            trackHeight: 4.0,
+                            thumbShape:
+                                RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                            thumbColor: Colors.redAccent,
+                            overlayColor: Colors.red.withAlpha(32),
+                            overlayShape:
+                                RoundSliderOverlayShape(overlayRadius: 28.0),
+                            tickMarkShape: RoundSliderTickMarkShape(),
+                            activeTickMarkColor: Colors.red[700],
+                            inactiveTickMarkColor: Colors.red[100],
+                            valueIndicatorShape:
+                                PaddleSliderValueIndicatorShape(),
+                            valueIndicatorColor: Colors.redAccent,
+                            valueIndicatorTextStyle: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          child: Slider(
+                            min: 0,
+                            max: selectedResource.units.toDouble(),
+                            value: _n,
+                            label: '$_n',
+                            divisions: 10,
+                            onChanged: (value) {
+                              if (this.mounted) {
+                                setState(() {
+                                  _n = value;
+                                });
+                              }
+                              resourceRequest['unitsRequired'] = value;
+                            },
+                          ),
+                        ),
+                      },
                       TextFormField(
                         decoration: InputDecoration(
                           labelText: 'Message to resource owner',
@@ -245,9 +259,14 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
                         child: FlatButton(
                             child: Text("Send"),
                             onPressed: () {
-                              request();
+                              donate();
                               FocusScope.of(context).unfocus();
-                              Navigator.pop(context, true);
+                              Scaffold.of(context).showSnackBar(new SnackBar(
+                                key: UniqueKey(),
+                                content:
+                                    Text("Your donation form has been sent!"),
+                                duration: Duration(seconds: 3),
+                              ));
                             }),
                       ),
                     ],

@@ -21,7 +21,7 @@ class Resources {
   List photos;
   bool spotlight;
   String spotlightEndTime;
-  String matchedProjectId;
+  num matchedProjectId;
 
   factory Resources.fromJson(Map<String, dynamic> json) =>
       _$ResourcesFromJson(json);

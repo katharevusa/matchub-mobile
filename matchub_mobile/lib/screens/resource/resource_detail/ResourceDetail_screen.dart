@@ -148,29 +148,32 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
                     Text("Save", style: AppTheme.titleLight),
                   ],
                 )),
-            FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(
-                          builder: (context) => RequestFormScreen(resource)));
-                },
-                visualDensity: VisualDensity.comfortable,
-                highlightColor: Colors.transparent,
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Icon(
-                        FlutterIcons.application_export_mco,
-                        color: Colors.grey[700],
+            if (resource.resourceOwnerId !=
+                Provider.of<Auth>(context).myProfile.accountId) ...[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(
+                            builder: (context) => RequestFormScreen(resource)));
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          FlutterIcons.application_export_mco,
+                          color: Colors.grey[700],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text("Request", style: AppTheme.titleLight),
-                  ],
-                )),
+                      SizedBox(width: 10),
+                      Text("Request", style: AppTheme.titleLight),
+                    ],
+                  )),
+            ],
             FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -411,14 +414,12 @@ class Gallery extends StatelessWidget {
     return CarouselSlider(
       key: UniqueKey(),
       options: CarouselOptions(
-        
-        enableInfiniteScroll: false,
-        autoPlay: false,
-        aspectRatio: 1.8,
-        viewportFraction: 1.0,
-        enlargeCenterPage: true,
-        carouselController: c
-      ),
+          enableInfiniteScroll: false,
+          autoPlay: false,
+          aspectRatio: 1.8,
+          viewportFraction: 1.0,
+          enlargeCenterPage: true,
+          carouselController: c),
       items: imageLinks
           .map((item) => Container(
                 decoration: BoxDecoration(boxShadow: [

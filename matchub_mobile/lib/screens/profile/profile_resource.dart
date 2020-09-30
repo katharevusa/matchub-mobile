@@ -13,18 +13,32 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:random_color/random_color.dart';
 
-class ProfileResource extends StatelessWidget {
-  List<Resources> listOfResources;
-  ApiBaseHelper _helper = ApiBaseHelper();
+class ProfileResource extends StatefulWidget {
   Profile profile;
 
   ProfileResource(this.profile);
-  retrieveResources(BuildContext context) async {
+
+  @override
+  _ProfileResourceState createState() => _ProfileResourceState();
+}
+
+class _ProfileResourceState extends State<ProfileResource> {
+  List<Resources> listOfResources = [];
+  Future listOfHostedResourcesFuture;
+  ApiBaseHelper _helper = ApiBaseHelper();
+
+  @override
+  void initState() {
+    listOfHostedResourcesFuture = retrieveResources();
+    super.initState();
+  }
+
+  retrieveResources() async {
     // var profileId = Provider.of<Auth>(context).myProfile.accountId;
     final url =
-        'authenticated/getHostedResources?profileId=${profile.accountId}';
+        'authenticated/getHostedResources?profileId=${widget.profile.accountId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url, Provider.of<Auth>(this.context, listen: false).accessToken);
     listOfResources = (responseData['content'] as List)
         .map((e) => Resources.fromJson(e))
         .toList();
@@ -35,7 +49,7 @@ class ProfileResource extends StatelessWidget {
     RandomColor _randomColor = RandomColor();
     // print(listOfResources.length.toString() + "========================");
     return FutureBuilder(
-      future: retrieveResources(context),
+      future: listOfHostedResourcesFuture,
       builder: (context, snapshot) =>
           (snapshot.connectionState == ConnectionState.done)
               ? Scaffold(

@@ -18,26 +18,31 @@ class ResourceScreen extends StatefulWidget {
 
 class _ResourceScreenState extends State<ResourceScreen>
     with SingleTickerProviderStateMixin {
-  List<Resources> listOfResources;
+  List<Resources> listOfResources = [];
   Future resourcesFuture;
   Resources resources;
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
     resourcesFuture = retrieveResources();
+    super.initState();
   }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   resourcesFuture = retrieveResources();
+  // }
 
   retrieveResources() async {
-    var profileId = Provider.of<Auth>(context).myProfile.accountId;
+    var profileId =
+        Provider.of<Auth>(context, listen: false).myProfile.accountId;
     final url = 'authenticated/getHostedResources?profileId=${profileId}';
     final responseData = await _helper.getProtected(
         url, Provider.of<Auth>(context, listen: false).accessToken);
     listOfResources = (responseData['content'] as List)
         .map((e) => Resources.fromJson(e))
         .toList();
-    //   print(listOfResources[0].resourceName);
   }
 
   void selectOwnResource(BuildContext ctx) {

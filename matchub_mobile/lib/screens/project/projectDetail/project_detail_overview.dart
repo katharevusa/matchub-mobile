@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
+import 'package:matchub_mobile/screens/project/projectDetail/resourceDonate.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -488,24 +489,32 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     Text("Join Team", style: AppTheme.titleLight),
                   ],
                 )),
-            FlatButton(
-                onPressed: () {},
-                visualDensity: VisualDensity.comfortable,
-                highlightColor: Colors.transparent,
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Icon(
-                        FlutterIcons.donate_faw5s,
-                        color: Colors.grey[700],
+            if (project.projCreatorId !=
+                Provider.of<Auth>(context).myProfile.accountId) ...[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(
+                            builder: (context) => DonateFormScreen(project)));
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          FlutterIcons.donate_faw5s,
+                          color: Colors.grey[700],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text("Contribute Resource", style: AppTheme.titleLight),
-                  ],
-                )),
+                      SizedBox(width: 10),
+                      Text("Contribute Resource", style: AppTheme.titleLight),
+                    ],
+                  )),
+            ],
             if (project.projCreatorId ==
                 Provider.of<Auth>(context).myProfile.accountId) ...[
               FlatButton(

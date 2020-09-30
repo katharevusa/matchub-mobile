@@ -6,7 +6,7 @@ import 'package:http/io_client.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = "https://192.168.72.136:8443/api/v1/";
+  final String _baseUrl = "https://192.168.1.102:8443/api/v1/";
 
   IOClient client;
 
@@ -38,6 +38,21 @@ class ApiBaseHelper {
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
+  }
+
+  Future<dynamic> getWODecode(String url, String accessToken) async {
+    var responseJson;
+    print(_baseUrl + url);
+    try {
+      final response = await client.get(_baseUrl + url, headers: {
+        "Authorization": "Bearer $accessToken"
+      }).timeout(Duration(seconds: 10));
+      //responseJson //= _returnResponse(response);
+      print(response.body);
+    return json.decode(response.body);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
   }
 
   Future<dynamic> getProtected(String url, String accessToken) async {
