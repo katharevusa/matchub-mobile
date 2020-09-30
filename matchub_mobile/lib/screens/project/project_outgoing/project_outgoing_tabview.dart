@@ -8,7 +8,6 @@ import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_s
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/widgets/customAlertDialog.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_pass_package/ticket_pass.dart';
 
 class ProjectOutgoingTabview extends StatefulWidget {
   List<ResourceRequest> listOfIncomingRequests;

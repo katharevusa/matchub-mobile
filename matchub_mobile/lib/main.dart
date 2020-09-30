@@ -7,6 +7,7 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 // import 'package:matchub_mobile/screens/login/auth_screen.dart';
 import 'package:matchub_mobile/screens/login/login_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
           providers: [
             ChangeNotifierProvider(create: (_) => Auth()),
             ChangeNotifierProvider(create: (_) => Profile()),
+            ChangeNotifierProvider(create: (_) => ManageProject()),
           ],
           child: Consumer<Auth>(
             builder: (context, auth, widget) => MaterialApp(

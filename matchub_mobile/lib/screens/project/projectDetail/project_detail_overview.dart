@@ -12,6 +12,7 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Future loadProject;
   Project project;
   List<String> documentKeys;
+  Profile myProfile;
   @override
   void didChangeDependencies() {
     loadProject = getProjects();
@@ -115,7 +117,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Profile myProfile = Provider.of<Auth>(context).myProfile;
+    myProfile = Provider.of<Auth>(context).myProfile;
 
     return Scaffold(
         appBar: AppBar(
@@ -149,282 +151,357 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         ),
         body: FutureBuilder(
           future: loadProject,
-          builder: (context, snapshot) => snapshot.connectionState ==
-                  ConnectionState.done
-              ? SingleChildScrollView(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8.0 * SizeConfig.widthMultiplier),
-                          child: Text(
-                            project.projectTitle,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 3.2 * SizeConfig.textMultiplier),
-                          ),
-                        ),
-                        UpvoteRow(
-                            project: project,
-                            myProfile: myProfile,
-                            getProjects: getProjects),
-                        CarouselSlider(
-                          options: CarouselOptions(
-                              autoPlay: false,
-                              aspectRatio: 1.8,
-                              viewportFraction: 1.0,
-                              enlargeCenterPage: true,
-                              enableInfiniteScroll: false),
-                          items: (project.photos.isNotEmpty)
-                              ? getPhotoList(project.photos)
-                              : getPhotoList(imgList),
-                        ),
-
-                        // ExpandableText(
-                        //   project.projectDescription,
-                        //   expandText: 'show more',
-                        //   collapseText: 'show less',
-                        //   maxLines: 3,
-                        //   linkColor: Colors.blue,
-                        // ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 0.5 * SizeConfig.heightMultiplier,
-                              horizontal: 8.0 * SizeConfig.widthMultiplier),
-                          child: Text(
-                            "PROJECT DESCRIPTION",
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: SizeConfig.textMultiplier * 2),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 0.5 * SizeConfig.heightMultiplier,
-                              horizontal: 8.0 * SizeConfig.widthMultiplier),
-                          child: ReadMoreText(
-                            project.projectDescription +
-                                project.projectDescription +
-                                "\n\nStatus: ${project.projStatus}"
-                                    "\nStart Date: ${DateFormat('dd-MMM-yyyy ').format(project.startDate)}" +
-                                "\nEnd Date: ${DateFormat('dd-MMM-yyyy ').format(project.endDate)}\n",
-                            trimLines: 3,
-                            style: TextStyle(
-                              height: 1.6,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            textAlign: TextAlign.justify,
-                            colorClickableText: kSecondaryColor,
-                            trimMode: TrimMode.Line,
-                            trimCollapsedText: '...Show more',
-                            trimExpandedText: 'show less',
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 1.5 * SizeConfig.heightMultiplier,
-                              right: 8.0 * SizeConfig.widthMultiplier,
-                              left: 8.0 * SizeConfig.widthMultiplier),
-                          child: Text(
-                            "MEET THE FOUNDERS",
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: SizeConfig.textMultiplier * 2),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(0),
-                          margin: EdgeInsets.all(0),
-                          color: AppTheme.appBackgroundColor,
-                          height: 16 * SizeConfig.heightMultiplier,
-                          child: ListView.builder(
-                              cacheExtent: 20,
-                              scrollDirection: Axis.horizontal,
+          builder: (context, snapshot) =>
+              snapshot.connectionState == ConnectionState.done
+                  ? SingleChildScrollView(
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 6.0 * SizeConfig.widthMultiplier),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                // print(project.projectOwners[index].name);
-                                return Container(
-                                  padding: EdgeInsets.all(0),
-                                  // padding: EdgeInsets.symmetric(
-                                  // horizontal:
-                                  //     2 * SizeConfig.widthMultiplier,
-                                  // vertical:
-                                  //     1 * SizeConfig.heightMultiplier),
-                                  constraints: BoxConstraints(
-                                      minHeight:
-                                          18 * SizeConfig.heightMultiplier),
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal:
-                                          2 * SizeConfig.widthMultiplier,
-                                      vertical:
-                                          2 * SizeConfig.heightMultiplier),
-                                  child: Column(children: [
-                                    ClipOval(
-                                        // borderRadius: BorderRadius.circular(50),
-                                        child: Container(
-                                            color: Colors.white,
-                                            height:
-                                                16 * SizeConfig.widthMultiplier,
-                                            width:
-                                                16 * SizeConfig.widthMultiplier,
-                                            // height:
-                                            //     20 * SizeConfig.widthMultiplier,
-                                            child: AttachmentImage(project
-                                                .projectOwners[index]
-                                                .profilePhoto))),
-                                    Expanded(
-                                      child: Container(
-                                        constraints: BoxConstraints(
-                                            maxWidth:
-                                                30 * SizeConfig.widthMultiplier,
-                                            minWidth: 15 *
-                                                SizeConfig.widthMultiplier),
-                                        child: Text(
-                                          project.projectOwners[index].name,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                    )
-                                  ]),
-                                );
-                              },
-                              itemCount: project.projectOwners.length),
-                        ),
-                        if (project.documents.isNotEmpty) ...[
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 1 * SizeConfig.heightMultiplier,
-                                horizontal: 8.0 * SizeConfig.widthMultiplier),
-                            child: Text(
-                              "ATTACHMENTS",
-                              style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: SizeConfig.textMultiplier * 2),
-                            ),
-                          ),
-                          Container(
-                            color: AppTheme.appBackgroundColor,
-                            height: 28 * SizeConfig.widthMultiplier,
-                            child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        4.0 * SizeConfig.widthMultiplier),
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) =>
-                                    GestureDetector(
-                                      onTap: () async {
-                                        String fileName = (project
-                                            .documents[documentKeys[index]]);
-                                        String url = ApiBaseHelper().baseUrl +
-                                            fileName.substring(30);
-                                        print(url);
-                                        if (await canLaunch(url)) {
-                                          await launch(url);
-                                        } else {
-                                          throw 'Could not launch $url';
-                                        }
-                                        // OpenFile.open(
-                                        //     "https://192.168.1.55:8443/api/v1/files/att-7062382057131087005.pdf");
-                                      },
-                                      child: Container(
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal:
-                                                2 * SizeConfig.widthMultiplier,
-                                            vertical: 2 *
-                                                SizeConfig.heightMultiplier),
-                                        decoration: BoxDecoration(boxShadow: [
-                                          BoxShadow(
-                                            offset: Offset(4, 10),
-                                            blurRadius: 6,
-                                            color: Colors.grey[400]
-                                                .withOpacity(0.15),
-                                          ),
-                                          BoxShadow(
-                                            offset: Offset(-4, 10),
-                                            blurRadius: 6,
-                                            color: Colors.grey[400]
-                                                .withOpacity(0.15),
-                                          ),
-                                        ]),
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                            child: Container(
-                                              padding: EdgeInsets.all(1 *
-                                                  SizeConfig.heightMultiplier),
-                                              color: Colors.white,
-                                              width: 20 *
-                                                  SizeConfig.widthMultiplier,
-                                              // height:
-                                              //     20 * SizeConfig.widthMultiplier,
-                                              child: getDocumentImage(
-                                                  documentKeys[index]),
-                                            )),
-                                      ),
-                                    ),
-                                itemCount:
-                                    project.documents.keys.toList().length),
-                          )
-                        ],
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 1.5 * SizeConfig.heightMultiplier,
-                              right: 8.0 * SizeConfig.widthMultiplier,
-                              left: 8.0 * SizeConfig.widthMultiplier),
-                          child: Text(
-                            "RELATED SDGS",
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: SizeConfig.textMultiplier * 2),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          width: 100 * SizeConfig.widthMultiplier,
-                          constraints: BoxConstraints(
-                              minHeight: SizeConfig.heightMultiplier * 10,
-                              maxHeight: SizeConfig.heightMultiplier * 30),
-                          child: Column(children: [
-                            Flexible(
-                              flex: 3,
-                              child: Tags(
-                                itemCount: project.sdgs.length, // required
-                                itemBuilder: (int index) {
-                                  return ItemTags(
-                                    key: Key(index.toString()),
-                                    index: index, // required
-                                    title: project.sdgs[index].sdgName,
-                                    color: kScaffoldColor,
-                                    border: Border.all(color: Colors.grey[400]),
-                                    textColor: Colors.grey[600],
-                                    elevation: 0,
-                                    active: false,
-                                    pressEnabled: false,
-                                    textStyle: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12.0),
-                                  );
-                                },
-                                alignment: WrapAlignment.end,
-                                runAlignment: WrapAlignment.start,
-                                spacing: 6,
-                                runSpacing: 6,
+                                  horizontal: 8.0 * SizeConfig.widthMultiplier),
+                              child: Text(
+                                project.projectTitle,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 3.2 * SizeConfig.textMultiplier),
                               ),
                             ),
+                            UpvoteRow(
+                                project: project,
+                                myProfile: myProfile,
+                                getProjects: getProjects),
+                            CarouselSlider(
+                              options: CarouselOptions(
+                                  autoPlay: false,
+                                  aspectRatio: 1.8,
+                                  viewportFraction: 1.0,
+                                  enlargeCenterPage: true,
+                                  enableInfiniteScroll: false),
+                              items: (project.photos.isNotEmpty)
+                                  ? getPhotoList(project.photos)
+                                  : getPhotoList(imgList),
+                            ),
+                            ...buildDescription(),
+                            ...buildFoundersRow(),
+                            ...buildTeamMemberRow(project.teamMembers),
+                            ...buildAttachments(),
+                            ...buildSDGRow()
                           ]),
-                        ),
-                      ]),
-                )
-              : Center(
-                  child: CircularProgressIndicator(),
-                ),
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    ),
         ));
+  }
+
+  List<Widget> buildDescription() {
+    return [
+      Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: 0.5 * SizeConfig.heightMultiplier,
+            horizontal: 8.0 * SizeConfig.widthMultiplier),
+        child: Text(
+          "PROJECT DESCRIPTION",
+          style: TextStyle(
+              color: Colors.grey[600], fontSize: SizeConfig.textMultiplier * 2),
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: 0.5 * SizeConfig.heightMultiplier,
+            horizontal: 8.0 * SizeConfig.widthMultiplier),
+        child: ReadMoreText(
+          project.projectDescription +
+              project.projectDescription +
+              "\n\nStatus: ${project.projStatus}"
+                  "\nStart Date: ${DateFormat('dd-MMM-yyyy ').format(project.startDate)}" +
+              "\nEnd Date: ${DateFormat('dd-MMM-yyyy ').format(project.endDate)}\n",
+          trimLines: 3,
+          style: TextStyle(
+            height: 1.6,
+            fontWeight: FontWeight.w400,
+          ),
+          textAlign: TextAlign.justify,
+          colorClickableText: kSecondaryColor,
+          trimMode: TrimMode.Line,
+          trimCollapsedText: '...Show more',
+          trimExpandedText: 'show less',
+        ),
+      )
+    ];
+  }
+
+  List<Widget> buildAttachments() {
+    return (project.documents.isNotEmpty)
+        ? [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: 1 * SizeConfig.heightMultiplier,
+                  horizontal: 8.0 * SizeConfig.widthMultiplier),
+              child: Text(
+                "ATTACHMENTS",
+                style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: SizeConfig.textMultiplier * 2),
+              ),
+            ),
+            Container(
+              color: AppTheme.appBackgroundColor,
+              height: 28 * SizeConfig.widthMultiplier,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 4.0 * SizeConfig.widthMultiplier),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => GestureDetector(
+                        onTap: () async {
+                          String fileName =
+                              (project.documents[documentKeys[index]]);
+                          String url =
+                              ApiBaseHelper().baseUrl + fileName.substring(30);
+                          print(url);
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                          // OpenFile.open(
+                          //     "https://192.168.1.55:8443/api/v1/files/att-7062382057131087005.pdf");
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 2 * SizeConfig.widthMultiplier,
+                              vertical: 2 * SizeConfig.heightMultiplier),
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(
+                              offset: Offset(4, 10),
+                              blurRadius: 6,
+                              color: Colors.grey[400].withOpacity(0.15),
+                            ),
+                            BoxShadow(
+                              offset: Offset(-4, 10),
+                              blurRadius: 6,
+                              color: Colors.grey[400].withOpacity(0.15),
+                            ),
+                          ]),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15.0),
+                              child: Container(
+                                padding: EdgeInsets.all(
+                                    1 * SizeConfig.heightMultiplier),
+                                color: Colors.white,
+                                width: 20 * SizeConfig.widthMultiplier,
+                                // height:
+                                //     20 * SizeConfig.widthMultiplier,
+                                child: getDocumentImage(documentKeys[index]),
+                              )),
+                        ),
+                      ),
+                  itemCount: project.documents.keys.toList().length),
+            )
+          ]
+        : [SizedBox.shrink()];
+  }
+
+  List<Widget> buildFoundersRow() {
+    return [
+      Padding(
+        padding: EdgeInsets.only(
+            top: 1.5 * SizeConfig.heightMultiplier,
+            right: 8.0 * SizeConfig.widthMultiplier,
+            left: 8.0 * SizeConfig.widthMultiplier),
+        child: Text(
+          "MEET THE FOUNDERS",
+          style: TextStyle(
+              color: Colors.grey[600], fontSize: SizeConfig.textMultiplier * 2),
+        ),
+      ),
+      Container(
+        // padding: EdgeInsets.all(0),
+        // margin: EdgeInsets.all(0),
+        // color: AppTheme.appBackgroundColor,
+        height: 16 * SizeConfig.heightMultiplier,
+        child: ListView.builder(
+            cacheExtent: 20,
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(
+                horizontal: 6.0 * SizeConfig.widthMultiplier),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return Container(
+                padding: EdgeInsets.all(0),
+                // padding: EdgeInsets.symmetric(
+                // horizontal:
+                //     2 * SizeConfig.widthMultiplier,
+                // vertical:
+                //     1 * SizeConfig.heightMultiplier),
+                // constraints:
+                //     BoxConstraints(minHeight: 18 * SizeConfig.heightMultiplier),
+                margin: EdgeInsets.symmetric(
+                    horizontal: 2 * SizeConfig.widthMultiplier,
+                    vertical: 2 * SizeConfig.heightMultiplier),
+                child: Column(children: [
+                  ClipOval(
+                      // borderRadius: BorderRadius.circular(50),
+                      child: Container(
+                          color: Colors.white,
+                          height: 16 * SizeConfig.widthMultiplier,
+                          width: 16 * SizeConfig.widthMultiplier,
+                          child: AttachmentImage(
+                              project.projectOwners[index].profilePhoto))),
+                  Expanded(
+                    child: Container(
+                      constraints: BoxConstraints(
+                          maxWidth: 20 * SizeConfig.widthMultiplier,
+                          minWidth: 15 * SizeConfig.widthMultiplier),
+                      child: Text(
+                        project.projectOwners[index].name,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                      ),
+                    ),
+                  )
+                ]),
+              );
+            },
+            itemCount: project.projectOwners.length),
+      )
+    ];
+  }
+
+  Widget _buildAvatar(profile, {double radius = 80}) {
+    return CircleAvatar(
+      backgroundColor: Colors.white,
+      radius: radius,
+      child: ClipOval(
+        child: AttachmentImage(profile.profilePhoto),
+      ),
+    );
+  }
+
+  List<Widget> buildTeamMemberRow(List<TruncatedProfile> members) {
+    return (members.isNotEmpty)
+        ? [
+            Padding(
+              padding: EdgeInsets.only(
+                  top: 1.5 * SizeConfig.heightMultiplier,
+                  right: 8.0 * SizeConfig.widthMultiplier,
+                  left: 8.0 * SizeConfig.widthMultiplier),
+              child: Text(
+                "MEET THE TEAM MEMBERS",
+                style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: SizeConfig.textMultiplier * 2),
+              ),
+            ),
+            Container(
+                // height: 60,
+                width: SizeConfig.widthMultiplier * 100,
+                padding: EdgeInsets.symmetric(
+                    horizontal: 5 * SizeConfig.widthMultiplier),
+                margin: EdgeInsets.symmetric(
+                    vertical: 5 * SizeConfig.widthMultiplier),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Stack(
+                      children: [
+                        ...members
+                            .asMap()
+                            .map(
+                              (i, e) => MapEntry(
+                                i,
+                                Transform.translate(
+                                  offset: Offset(i * 40.0, 0),
+                                  child: SizedBox(
+                                      height: 60,
+                                      width: 60,
+                                      child: _buildAvatar(e, radius: 30)),
+                                ),
+                              ),
+                            )
+                            .values
+                            .toList(),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     new MaterialPageRoute(
+                        //         builder: (context) => ViewOrganisationMembersScreen(
+                        //             user: widget.profile)));
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        margin: EdgeInsets.only(right: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(width: 1, color: Colors.black),
+                          image: DecorationImage(
+                              image: AssetImage(
+                                  './././assets/images/view-more-icon.jpg'),
+                              fit: BoxFit.fill),
+                        ),
+                      ),
+                    ),
+                  ],
+                ))
+          ]
+        : [];
+  }
+
+  List<Widget> buildSDGRow() {
+    return [
+      Padding(
+        padding: EdgeInsets.only(
+            top: 1.5 * SizeConfig.heightMultiplier,
+            right: 8.0 * SizeConfig.widthMultiplier,
+            left: 8.0 * SizeConfig.widthMultiplier),
+        child: Text(
+          "RELATED SDGS",
+          style: TextStyle(
+              color: Colors.grey[600], fontSize: SizeConfig.textMultiplier * 2),
+        ),
+      ),
+      Container(
+        padding: EdgeInsets.all(20),
+        width: 100 * SizeConfig.widthMultiplier,
+        // constraints: BoxConstraints(
+        //     minHeight: SizeConfig.heightMultiplier * 10,
+        //     maxHeight: SizeConfig.heightMultiplier * 30),
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Expanded(
+            child: Tags(
+              itemCount: project.sdgs.length, // required
+              itemBuilder: (int index) {
+                return ItemTags(
+                  key: Key(index.toString()),
+                  index: index, // required
+                  title: project.sdgs[index].sdgName,
+                  color: kScaffoldColor,
+                  border: Border.all(color: Colors.grey[400]),
+                  textColor: Colors.grey[600],
+                  elevation: 0,
+                  active: false,
+                  pressEnabled: false,
+                  textStyle:
+                      TextStyle(fontWeight: FontWeight.w400, fontSize: 12.0),
+                );
+              },
+              alignment: WrapAlignment.end,
+              runAlignment: WrapAlignment.start,
+              spacing: 6,
+              runSpacing: 6,
+            ),
+          ),
+        ]),
+      )
+    ];
   }
 
   Container buildMorePopUp(BuildContext context) {
@@ -472,7 +549,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   ],
                 )),
             FlatButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await joinProject();
+                },
                 visualDensity: VisualDensity.comfortable,
                 highlightColor: Colors.transparent,
                 child: Row(
@@ -564,10 +643,25 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         ));
   }
 
-  void terminateProject() async {
-    var profileId = Provider.of<Auth>(this.context).myProfile.accountId;
+  void joinProject() async {
     final url =
-        "authenticated/terminateProject?projectId=${widget.projectId}&profileId=${profileId}";
+        "authenticated/createJoinRequest?projectId=${widget.projectId}&profileId=${myProfile.accountId}";
+    try {
+      var accessToken = Provider.of<Auth>(this.context).accessToken;
+      final response =
+          await ApiBaseHelper().postProtected(url, accessToken: accessToken);
+      print("Success");
+      setState(() {});
+      // Navigator.of(this.context).pop(true);
+    } catch (error) {
+      showErrorDialog(error.toString(), this.context);
+      print("Failure");
+    }
+  }
+
+  void terminateProject() async {
+    final url =
+        "authenticated/terminateProject?projectId=${widget.projectId}&profileId=${myProfile.accountId}";
     try {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =

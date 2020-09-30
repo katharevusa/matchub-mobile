@@ -35,12 +35,20 @@ class _UserScreenState extends State<UserScreen> {
   Widget build(BuildContext context) {
     Profile profile = Provider.of<Auth>(context).myProfile;
     return Scaffold(
+      appBar: AppBar(
+          backgroundColor: kScaffoldColor,
+          elevation: 0,
+          title: Text("Account",
+              style: TextStyle(
+                  color: Colors.grey[850],
+                  fontSize: SizeConfig.textMultiplier * 3,
+                  fontWeight: FontWeight.w700))),
       key: _scaffoldKey,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 20),
+              // SizedBox(height: 20),
               ListTile(
                   dense: true,
                   leading: ClipOval(
@@ -64,9 +72,6 @@ class _UserScreenState extends State<UserScreen> {
                         arguments:
                             Provider.of<Auth>(context).myProfile.accountId);
                   }),
-              Divider(
-                thickness: 2,
-              ),
               GridView.count(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
@@ -79,7 +84,7 @@ class _UserScreenState extends State<UserScreen> {
                   buildSettingCard("Edit Profile",
                       Icon(FlutterIcons.edit_fea, color: Color(0xFFa8e6cf)),
                       () {
-                    if (!profile.isOrgnisation) {
+                    if (!profile.isOrganisation) {
                       Navigator.of(
                         context,
                         rootNavigator: true,

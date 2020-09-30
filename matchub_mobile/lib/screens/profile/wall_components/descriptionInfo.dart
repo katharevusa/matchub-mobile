@@ -120,138 +120,139 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
                       //return this only if it is organisation user
                       buildKah(context),
                       SizedBox(height: 20),
-                      buildOrganisationMembers(context, members),
+                      ...buildOrganisationMembers(context, members),
                     ],
                   ))
               : Center(child: CircularProgressIndicator()),
     );
   }
 
-  Column buildOrganisationMembers(BuildContext context, List<Profile> members) {
+  buildOrganisationMembers(BuildContext context, List<Profile> members) {
     Profile currentUser = Provider.of<Auth>(context).myProfile;
-
+    List<Widget> organisationMembers = [];
     print(currentUser.name);
-    if (widget.profile.isOrgnisation) {
-      if (members.isNotEmpty) {
-        return Column(
-          children: [
-            Row(
-              children: [
-                Expanded(child: Text("Organisation members")),
-                if (currentUser.accountId == widget.profile.accountId) ...[
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) =>
-                                  ManageOrganisationMembersScreen(
-                                    user: widget.profile,
-                                  )));
-                    },
-                    child: Text(
-                      "Manage",
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  )
-                ]
-              ],
-            ),
-            SizedBox(height: 20),
-            Container(
-              height: 60,
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Stack(
-                    children: [
-                      ...members
-                          .asMap()
-                          .map(
-                            (i, e) => MapEntry(
-                              i,
-                              Transform.translate(
-                                offset: Offset(i * 30.0, 0),
-                                child: SizedBox(
-                                    height: 60,
-                                    width: 60,
-                                    child: _buildAvatar(e, radius: 30)),
-                              ),
-                            ),
-                          )
-                          .values
-                          .toList(),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) =>
-                                  ViewOrganisationMembersScreen(
-                                      user: widget.profile)));
-                    },
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      margin: EdgeInsets.only(right: 15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(width: 1, color: Colors.black),
-                        image: DecorationImage(
-                            image: AssetImage(
-                                './././assets/images/view-more-icon.jpg'),
-                            fit: BoxFit.fill),
-                      ),
-                    ),
-                  ),
-                ],
+    if (widget.profile.isOrganisation) {
+      organisationMembers.add(Row(
+        children: [
+          Expanded(child: Text("Organisation members")),
+          if (currentUser.accountId == widget.profile.accountId) ...[
+            FlatButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => ManageOrganisationMembersScreen(
+                              user: widget.profile,
+                            )));
+              },
+              child: Text(
+                "Manage",
+                style: TextStyle(color: Colors.blue),
               ),
             ),
-          ],
-        );
-      } else {
-        return Column(
-          children: [
-            Row(
-              children: [
-                Expanded(child: Text("Organisation members")),
-                if (currentUser.accountId == widget.profile.accountId) ...[
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) =>
-                                  ManageOrganisationMembersScreen(
-                                    user: widget.profile,
-                                  )));
-                    },
-                    child: Text(
-                      "Manage",
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  )
-                ]
-              ],
-            ),
             SizedBox(height: 20),
-            Container(
-                height: 18,
-                color: Colors.transparent,
-                child: Text(
-                  "No Members yet",
-                  style:
-                      TextStyle(color: Colors.blueGrey.shade200, fontSize: 10),
-                ))
-          ],
-        );
+          ]
+        ],
+      ));
+      if (members.isNotEmpty) {
+        organisationMembers.add(Container(
+            height: 60,
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Stack(
+                  children: [
+                    ...members
+                        .asMap()
+                        .map(
+                          (i, e) => MapEntry(
+                            i,
+                            Transform.translate(
+                              offset: Offset(i * 30.0, 0),
+                              child: SizedBox(
+                                  height: 60,
+                                  width: 60,
+                                  child: _buildAvatar(e, radius: 30)),
+                            ),
+                          ),
+                        )
+                        .values
+                        .toList(),
+                  ],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => ViewOrganisationMembersScreen(
+                                user: widget.profile)));
+                  },
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    margin: EdgeInsets.only(right: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(width: 1, color: Colors.black),
+                      image: DecorationImage(
+                          image: AssetImage(
+                              './././assets/images/view-more-icon.jpg'),
+                          fit: BoxFit.fill),
+                    ),
+                  ),
+                ),
+              ],
+            )));
+      } else {
+        organisationMembers.add(Container(
+            height: 18,
+            color: Colors.transparent,
+            child: Text(
+              "No Members yet",
+              style: TextStyle(color: Colors.blueGrey.shade200, fontSize: 10),
+            )));
       }
-    } else {
-      return Column();
-    }
+      // } else {
+      //   return Column(
+      //     children: [
+      //       Row(
+      //         children: [
+      //           Expanded(child: Text("Organisation members")),
+      //           if (currentUser.accountId == widget.profile.accountId) ...[
+      //             FlatButton(
+      //               onPressed: () {
+      //                 Navigator.push(
+      //                     context,
+      //                     new MaterialPageRoute(
+      //                         builder: (context) =>
+      //                             ManageOrganisationMembersScreen(
+      //                               user: widget.profile,
+      //                             )));
+      //               },
+      //               child: Text(
+      //                 "Manage",
+      //                 style: TextStyle(color: Colors.blue),
+      //               ),
+      //             )
+      //           ]
+      //         ],
+      //       ),
+      //       SizedBox(height: 20),
+      //       Container(
+      //           height: 18,
+      //           color: Colors.transparent,
+      //           child: Text(
+      //             "No Members yet",
+      //             style:
+      //                 TextStyle(color: Colors.blueGrey.shade200, fontSize: 10),
+      //           ))
+      //     ],
+      //   );
+      // }
+    } 
+    return organisationMembers;
   }
 
   Widget _buildAvatar(Profile profile, {double radius = 80}) {
@@ -266,7 +267,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
 
   Column buildKah(BuildContext context) {
     Profile currentUser = Provider.of<Auth>(context).myProfile;
-    if (widget.profile.isOrgnisation) {
+    if (widget.profile.isOrganisation) {
       if (kahs.isNotEmpty) {
         return Column(children: [
           Row(

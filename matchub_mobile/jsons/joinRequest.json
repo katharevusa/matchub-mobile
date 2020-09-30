@@ -1,0 +1,72 @@
+{
+    "joinRequestId": 1,
+    "requestCreationTime": "2020-09-29T03:51:31",
+    "status": "ON_HOLD",
+    "requestor": {
+        "accountId": 4,
+        "uuid": "08244427-80a4-4342-9a88-aca5bb022a9c",
+        "email": "alexlow@gmail.com",
+        "accountLocked": false,
+        "accountExpired": false,
+        "disabled": false,
+        "roles": [
+            "USER"
+        ],
+        "isVerified": true,
+        "joinDate": "2020-09-29T03:46:57",
+        "countryCode": "+65",
+        "phoneNumber": "91234567",
+        "country": "Singapore",
+        "city": "Singapore",
+        "profilePhoto": "https://localhost:8443/api/v1/files/init/alexlow.jpg",
+        "reputationPoints": 0,
+        "followers": [
+            8,
+            9
+        ],
+        "following": [
+            2,
+            3
+        ],
+        "savedResourceIds": [],
+        "upvotedProjectIds": [],
+        "downvotedProjectIds": [],
+        "spotlightChances": 0,
+        "posts": [],
+        "firstName": "Alex",
+        "lastName": "Low",
+        "genderEnum": "MALE",
+        "profileDescription": "Highly Passionate Individual with a love for contributing back to the society!",
+        "projectFollowing": [
+            1
+        ],
+        "skillSet": [
+            "Good Communication Skills",
+            "Professional Painter",
+            "Project Management Skills",
+            "Leadership Skills"
+        ]
+    },
+    "project": {
+        "projectId": 6,
+        "projectTitle": "Save endangered sea turtles in Panama",
+        "projectDescription": "This project will launch a sea turtle research and conservation program to protect endangered leatherback and hawksbill turtles that were found at Bocas del Drago, Panama.",
+        "country": "Panama",
+        "startDate": "2021-01-05 11:50",
+        "endDate": "2025-06-05 11:50",
+        "userFollowers": [],
+        "projStatus": "ON_HOLD",
+        "upvotes": 19,
+        "relatedResources": [],
+        "projCreatorId": 5,
+        "spotlight": false,
+        "spotlightEndTime": null,
+        "projectProfilePic": "https://localhost:8443/api/v1/files/init/project6.jpg",
+        "photos": [
+            "https://localhost:8443/api/v1/files/init/project6.jpg",
+            "https://localhost:8443/api/v1/files/init/turtles.jpg",
+            "https://localhost:8443/api/v1/files/init/turtles2.jpg"
+        ],
+        "documents": {}
+    }
+}

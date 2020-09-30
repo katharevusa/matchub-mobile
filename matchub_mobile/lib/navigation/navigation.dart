@@ -26,6 +26,7 @@ import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organ
 import 'package:matchub_mobile/screens/user/user_screen.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import './project_navigator.dart';
+import 'home_navigator.dart';
 
 class TabsScreen extends StatefulWidget {
   @override
@@ -114,7 +115,7 @@ class _TabsScreenState extends State<TabsScreen> {
           child: IndexedStack(
             index: _selectedPageIndex,
             children: <Widget>[
-              BookNavigator(1),
+              HomeNavigator(),
               ExploreNavigator(),
               ProjectNavigator(),
               ResourceNavigator(),
@@ -175,9 +176,12 @@ class _TabsScreenState extends State<TabsScreen> {
           _selectedPageIndex = index;
         });
       },
-      backgroundColor: Colors.white,
-      unselectedItemColor: Colors.grey,
-      selectedItemColor: Theme.of(context).primaryColor,
+      // backgroundColor: Colors.white,
+      // unselectedItemColor: Colors.grey,
+      // selectedItemColor: Theme.of(context).primaryColor,
+      backgroundColor: Colors.blueGrey[800],
+      unselectedItemColor: Colors.blueGrey[300],
+      selectedItemColor: Colors.white,
       currentIndex: _selectedPageIndex,
       type: BottomNavigationBarType.fixed,
       items: [
@@ -305,7 +309,7 @@ class _TabsScreenState extends State<TabsScreen> {
     }
   }
 }
-
+//Animation with no Fade
 class TabRouteBuilder<T> extends MaterialPageRoute<T> {
   TabRouteBuilder({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);

@@ -99,11 +99,12 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  getProjectChannels(projectId) async {
+  getProjectChannels(projectId, userUUID) async {
     print("fdsafsdfa");
     return firestoreInstance
         .collection("channels")
         .where('projectId', isEqualTo: projectId)
+        .where('members', arrayContains: userUUID)
         .snapshots();
   }
 
@@ -125,6 +126,15 @@ class DatabaseMethods {
         .collection("channels")
         .doc(channelMap["id"])
         .set(channelMap, SetOptions(merge: true))
+        .catchError((e) {
+      print(e);
+    });
+  }
+  deleteChannel(String channelId) async {
+    firestoreInstance
+        .collection("channels")
+        .doc(channelId)
+        .delete()
         .catchError((e) {
       print(e);
     });

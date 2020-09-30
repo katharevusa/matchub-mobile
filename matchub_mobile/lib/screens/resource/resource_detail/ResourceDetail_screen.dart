@@ -418,8 +418,7 @@ class Gallery extends StatelessWidget {
           autoPlay: false,
           aspectRatio: 1.8,
           viewportFraction: 1.0,
-          enlargeCenterPage: true,
-          carouselController: c),
+          enlargeCenterPage: true),
       items: imageLinks
           .map((item) => Container(
                 decoration: BoxDecoration(boxShadow: [

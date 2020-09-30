@@ -64,7 +64,7 @@ class _Basic_informationState extends State<Basic_information> {
                       isDownIcon: true,
                       showEnglishName: true,
                       initialSelection: '+65',
-                      buttonColor: Colors.transparent,
+                      appBarBackgroundColor: Colors.transparent,
                       onChanged: (CountryCode code) {
                         widget.project["country"] = code.name;
                       }),

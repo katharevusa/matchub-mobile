@@ -16,7 +16,7 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:matchub_mobile/widgets/errorDialog.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:date_format/date_format.dart';
 
 class ResourceCreationScreen extends StatefulWidget {

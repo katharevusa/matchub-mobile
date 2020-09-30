@@ -123,7 +123,7 @@ class _ChannelMessagesState extends State<ChannelMessages> {
     if (messageEditingController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
         "sentBy": Provider.of<Auth>(context).myProfile.uuid,
-        "messageText": messageEditingController.text,
+        "messageText": messageEditingController.text.trim(),
         'sentAt': DateTime.now()
       };
       print(widget.channelData['id']);
@@ -360,9 +360,9 @@ class _MessageTileState extends State<MessageTile> {
                             Text(messageSender.name,
                                 style: TextStyle(
                                     color: Color(StringToHex.toColor(
-                                        messageSender.name.length > 10
+                                        messageSender.name.length > 7
                                             ? messageSender.name
-                                                .substring(0, 10)
+                                                .substring(0, 7)
                                             : messageSender.name)))),
                           Text(widget.message,
                               textAlign: TextAlign.start,

@@ -109,6 +109,7 @@ class _UploadVerificationDocumentState
       ));
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Padding(
         padding: EdgeInsets.all(10),
         child: FutureBuilder(

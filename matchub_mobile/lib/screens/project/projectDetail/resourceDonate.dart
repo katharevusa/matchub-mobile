@@ -10,7 +10,7 @@ import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceRequest.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
-import 'package:matchub_mobile/widgets/errorDialog.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
 
 class DonateFormScreen extends StatefulWidget {
@@ -158,13 +158,13 @@ class _DonateFormScreenState extends State<DonateFormScreen> {
                               if (r.available == true) ...{
                                 new ListTile(
                                   title: Text(r.resourceName),
-                                  onTap: () {
+                                  onTap: () async {
+                                    selectedResource = r;
+                                    await getCategoryById();
                                     setState(() {
                                       this.foos = r.resourceName;
                                       resourceRequest['resourceId'] =
                                           r.resourceId;
-                                      selectedResource = r;
-                                      getCategoryById();
                                       expansionTile.currentState.collapse();
                                     });
                                   },

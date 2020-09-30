@@ -35,7 +35,8 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
 
   getProjectChannels() async {
     await DatabaseMethods()
-        .getProjectChannels("${widget.project.projectId}")
+        .getProjectChannels("${widget.project.projectId}",
+            Provider.of<Auth>(context, listen: false).myProfile.uuid)
         .then((snapshots) {
       setState(() {
         chatRooms = snapshots;
@@ -59,16 +60,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
               final channelGroupSnapshot = snapshot.data.documents[index];
               return ChannelTile(
                   channelData: channelGroupSnapshot.data(),
-                  project: widget.project
-                  // recentMessage: channelGroupSnapshot.data()['recentMessage'] !=
-                  //         null
-                  //     ? channelGroupSnapshot.data()['recentMessage']['messageText']
-                  //     : "",
-                  // recentDate: channelGroupSnapshot.data()['recentMessage'] != null
-                  //     ? channelGroupSnapshot.data()['recentMessage']['sentAt']
-                  //     : null,
-                  // chatRoomId: "aasdf",
-                  );
+                  project: widget.project);
             });
       },
     );
@@ -139,16 +131,20 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
         ]),
       ),
-      floatingActionButton: widget.project.projCreatorId == Provider.of<Auth>(context).myProfile.accountId ?  FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      ChannelCreation(project: widget.project)));
-        },
-      ) : SizedBox.shrink(),
+      floatingActionButton: widget.project.projCreatorId ==
+              Provider.of<Auth>(context).myProfile.accountId
+          ? FloatingActionButton(
+              heroTag: "channelCreateBtn",
+              child: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ChannelCreation(project: widget.project)));
+              },
+            )
+          : SizedBox.shrink(),
     );
   }
 }
@@ -188,7 +184,12 @@ class _ChannelTileState extends State<ChannelTile> {
               size: 16,
             ),
             SizedBox(width: 8),
-            Text(widget.channelData['name'], style: TextStyle(fontSize: 18)),
+            Expanded(
+                child: Text(
+              widget.channelData['name'],
+              style: TextStyle(fontSize: 18),
+              overflow: TextOverflow.ellipsis,
+            )),
           ]),
         ));
   }

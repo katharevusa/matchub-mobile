@@ -15,7 +15,8 @@ Post _$PostFromJson(Map<String, dynamic> json) {
     ..originalPostId = json['originalPostId'] as String
     ..previousPostId = json['previousPostId'] as String
     ..likes = json['likes'] as num
-    ..postCreatorId = json['postCreatorId'] as num
+    ..postCreator = json['postCreatorId'] as Map<String, dynamic>
+    ..postCreator = json['postCreator'] as Map<String, dynamic>
     ..listOfComments = json['listOfComments'] as List;
 }
 
@@ -27,6 +28,6 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'originalPostId': instance.originalPostId,
       'previousPostId': instance.previousPostId,
       'likes': instance.likes,
-      'postCreatorId': instance.postCreatorId,
+      'postCreator': instance.postCreator,
       'listOfComments': instance.listOfComments
     };

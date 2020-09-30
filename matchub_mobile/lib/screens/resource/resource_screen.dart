@@ -60,6 +60,9 @@ class _ResourceScreenState extends State<ResourceScreen>
                   child: Scaffold(
                     drawer: ResourceDrawer(),
                     appBar: AppBar(
+                      iconTheme: IconThemeData(
+                        color: Colors.black, //change your color here
+                      ),
                       title: Text("Resource Overview"),
                       elevation: 0.0,
                       bottom: PreferredSize(

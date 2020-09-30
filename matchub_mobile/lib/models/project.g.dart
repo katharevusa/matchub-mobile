@@ -22,7 +22,9 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..projCreatorId = json['projCreatorId'] as num
     ..spotlight = json['spotlight'] as bool
     ..spotlightEndTime = json['spotlightEndTime'] ?? ""
-    ..joinRequests = json['joinRequests'] as List
+    ..joinRequests = json['joinRequests'] != null
+        ? (json['joinRequests'] as List).map((i) => JoinRequest.fromJson(i)).toList()
+        : []
     ..reviews = json['reviews'] as List
     ..projectBadge = json['projectBadge'] ?? ""
     ..fundsCampaign = json['fundsCampaign'] as List

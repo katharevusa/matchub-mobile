@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/services/database.dart';
+import 'package:matchub_mobile/style.dart';
 
 import 'channel_creation.dart';
 
@@ -19,10 +21,20 @@ class EditChannelMembers extends StatelessWidget {
         appBar: AppBar(
           title: Text("Edit Channel Members"),
         ),
-        body: SelectMembers(
-          channelMap: channelMap,
-          contributors: contributors,
-          filteredContributors: filteredContributors,
-        ));
+        body: Column(children: [
+          SelectMembers(
+            channelMap: channelMap,
+            contributors: contributors,
+            filteredContributors: filteredContributors,
+          ),
+          RaisedButton(
+              color: kAccentColor,
+              onPressed: () {
+                // print(channelMap);
+                DatabaseMethods().updateChannel(channelMap);
+                Navigator.pop(context, true);
+              },
+              child: Text("Submit"))
+        ]));
   }
 }
