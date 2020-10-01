@@ -6,6 +6,8 @@ import 'package:matchub_mobile/screens/profile/wall_components/manageKahsScreen.
 import 'package:matchub_mobile/screens/profile/wall_components/manageOrganisationMembers.dart';
 import 'package:matchub_mobile/screens/profile/wall_components/viewOrganisationMembers.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manageOrganisationMembers.dart';
+import 'package:matchub_mobile/services/manage_listOfKah.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -26,109 +28,131 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
   Future membersFuture;
   Future kahsFuture;
 
+  bool _isLoading;
   @override
   void initState() {
+    _isLoading = false;
+    if (widget.profile.isOrganisation) {
+      _isLoading = true;
+
+      loadMembers();
+      loadKah();
+    }
     super.initState();
-    membersFuture = getMembers();
-    kahsFuture = getKah();
   }
 
-  getMembers() async {
-    final url =
-        'authenticated/organisation/viewMembers/${widget.profile.accountId}';
-    final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
-    members = (responseData['content'] as List)
-        .map((e) => Profile.fromJson(e))
-        .toList();
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   membersFuture = getMembers();
+  //   kahsFuture = getKah();
+  // }
+
+  // getMembers() async {
+  //   final url =
+  //       'authenticated/organisation/viewMembers/${widget.profile.accountId}';
+  //   final responseData = await _helper.getProtected(
+  //       url, Provider.of<Auth>(this.context, listen: false).accessToken);
+  //   members = (responseData['content'] as List)
+  //       .map((e) => Profile.fromJson(e))
+  //       .toList();
+  // }
+
+  loadMembers() async {
+    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
+    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
+    await Provider.of<ManageOrganisationMembers>(context, listen: false)
+        .getMembers(profile, accessToken);
+    // setState(() {
+    //   _isLoading = false;
+    // });
+    // await getKah();
   }
 
-  getKah() async {
-    final url =
-        'authenticated/organisation/viewKAHs/${widget.profile.accountId}';
-    final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
-    kahs = (responseData['content'] as List)
-        .map((e) => Profile.fromJson(e))
-        .toList();
+  loadKah() async {
+    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
+    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
+    await Provider.of<ManageListOfKah>(context, listen: false)
+        .getKahs(profile, accessToken);
+    setState(() {
+      _isLoading = false;
+    });
+    // await getKah();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Future.wait([membersFuture, kahsFuture]),
-      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) =>
-          (snapshot.connectionState == ConnectionState.done)
-              ? Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  padding: EdgeInsets.all(20),
-                  // height: 29 * SizeConfig.heightMultiplier,
-                  width: 100 * SizeConfig.widthMultiplier,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(4, 3),
-                          blurRadius: 10,
-                          color: kSecondaryColor.withOpacity(0.1),
-                        ),
-                        BoxShadow(
-                          offset: Offset(-4, -3),
-                          blurRadius: 10,
-                          color: kSecondaryColor.withOpacity(0.1),
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    kahs = Provider.of<ManageListOfKah>(context).listOfKah;
+    members = Provider.of<ManageOrganisationMembers>(context).members;
+    return _isLoading
+        ? Container(child: Center(child: Text("I am loading")))
+        : Container(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: EdgeInsets.all(20),
+            // height: 29 * SizeConfig.heightMultiplier,
+            width: 100 * SizeConfig.widthMultiplier,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(4, 3),
+                    blurRadius: 10,
+                    color: kSecondaryColor.withOpacity(0.1),
+                  ),
+                  BoxShadow(
+                    offset: Offset(-4, -3),
+                    blurRadius: 10,
+                    color: kSecondaryColor.withOpacity(0.1),
+                  ),
+                ],
+                borderRadius: BorderRadius.circular(15)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.profile.country != null)
+                  Row(
                     children: [
-                      if (widget.profile.country != null)
-                        Row(
-                          children: [
-                            Expanded(child: Text("Based In")),
-                            if (widget.profile.city != null)
-                              Text("${widget.profile.city ?? 'No Data'}, ",
-                                  style: AppTheme.subTitleLight),
-                            Text("${widget.profile.country ?? 'No Data'}",
-                                style: AppTheme.subTitleLight)
-                          ],
-                        ),
-                      SizedBox(height: 20),
-                      buildSDGTags(),
-                      SizedBox(height: 20),
-                      buildSkillset(),
-                      SizedBox(height: 20),
-                      buildProfileUrl(),
-                      SizedBox(height: 20),
-                      Column(
-                        children: [
-                          Row(
-                            children: [Expanded(child: Text("Description"))],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                      widget.profile.profileDescription ??
-                                          'No Data',
-                                      style: AppTheme.unSelectedTabLight))
-                            ],
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      //return this only if it is organisation user
-                      buildKah(context),
-                      SizedBox(height: 20),
-                      ...buildOrganisationMembers(context, members),
+                      Expanded(child: Text("Based In")),
+                      if (widget.profile.city != null)
+                        Text("${widget.profile.city ?? 'No Data'}, ",
+                            style: AppTheme.subTitleLight),
+                      Text("${widget.profile.country ?? 'No Data'}",
+                          style: AppTheme.subTitleLight)
                     ],
-                  ))
-              : Center(child: CircularProgressIndicator()),
-    );
+                  ),
+                SizedBox(height: 20),
+                buildSDGTags(),
+                SizedBox(height: 20),
+                buildSkillset(),
+                SizedBox(height: 20),
+                buildProfileUrl(),
+                SizedBox(height: 20),
+                Column(
+                  children: [
+                    Row(
+                      children: [Expanded(child: Text("Description"))],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Text(
+                                widget.profile.profileDescription ?? 'No Data',
+                                style: AppTheme.unSelectedTabLight))
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(height: 20),
+                // return this only if it is organisation user
+                buildKah(context),
+                SizedBox(height: 20),
+                ...buildOrganisationMembers(context, members),
+              ],
+            ));
   }
 
   buildOrganisationMembers(BuildContext context, List<Profile> members) {
-    Profile currentUser = Provider.of<Auth>(context).myProfile;
+    Profile currentUser = Provider.of<Auth>(context, listen: false).myProfile;
     List<Widget> organisationMembers = [];
     print(currentUser.name);
     if (widget.profile.isOrganisation) {
@@ -251,7 +275,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
       //     ],
       //   );
       // }
-    } 
+    }
     return organisationMembers;
   }
 

@@ -1,5 +1,3 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'sdg.dart';
 
 // **************************************************************************
@@ -11,7 +9,7 @@ Sdg _$SdgFromJson(Map<String, dynamic> json) {
     ..sdgId = json['sdgId'] as num
     ..sdgName = json['sdgName'] as String
     ..sdgDescription = json['sdgDescription'] as String;
-    // ..projects = json['projects'] as List;
+  // ..projects = json['projects'] as List;
 }
 
 Map<String, dynamic> _$SdgToJson(Sdg instance) => <String, dynamic>{

@@ -23,7 +23,9 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..spotlight = json['spotlight'] as bool
     ..spotlightEndTime = json['spotlightEndTime'] ?? ""
     ..joinRequests = json['joinRequests'] != null
-        ? (json['joinRequests'] as List).map((i) => JoinRequest.fromJson(i)).toList()
+        ? (json['joinRequests'] as List)
+            .map((i) => JoinRequest.fromJson(i))
+            .toList()
         : []
     ..reviews = json['reviews'] as List
     ..projectBadge = json['projectBadge'] ?? ""
@@ -34,8 +36,10 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
         ? (json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList()
         : []
     ..kpis = json['kpis'] as List
-    ..teamMembers = json['teamMembers']  != null
-        ? (json['teamMembers'] as List).map((i) => TruncatedProfile.fromJson(i)).toList()
+    ..teamMembers = json['teamMembers'] != null
+        ? (json['teamMembers'] as List)
+            .map((i) => TruncatedProfile.fromJson(i))
+            .toList()
         : []
     ..channels = json['channels'] as List
     ..documents = json['documents'] as Map<String, dynamic>

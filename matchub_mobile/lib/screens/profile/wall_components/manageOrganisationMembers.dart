@@ -3,6 +3,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manageOrganisationMembers.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
@@ -24,23 +25,41 @@ class _ManageOrganisationMembersScreenState
   List<Profile> members;
   Profile myProfile;
   List<Profile> searchResult;
+  bool _isLoading;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   organisationMembersFuture = getMembers();
+  // }
   @override
   void initState() {
+    _isLoading = true;
+    loadMembers();
     super.initState();
-    organisationMembersFuture = getMembers();
   }
 
-  getMembers() async {
-    final url =
-        'authenticated/organisation/viewMembers/${widget.user.accountId}';
-    final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
-    members = (responseData['content'] as List)
-        .map((e) => Profile.fromJson(e))
-        .toList();
-    searchResult = members;
+  loadMembers() async {
+    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
+    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
+    await Provider.of<ManageOrganisationMembers>(context, listen: false)
+        .getMembers(profile, accessToken);
+    setState(() {
+      _isLoading = false;
+    });
+    // await getList();
   }
+
+  // getMembers() async {
+  //   final url =
+  //       'authenticated/organisation/viewMembers/${widget.user.accountId}';
+  //   final responseData = await _helper.getProtected(
+  //       url, Provider.of<Auth>(context, listen: false).accessToken);
+  //   members = (responseData['content'] as List)
+  //       .map((e) => Profile.fromJson(e))
+  //       .toList();
+  //   searchResult = members;
+  // }
 
   getSearchedUsers(String value) async {
     final url = 'authenticated/searchIndividuals?search=${value}';
@@ -119,6 +138,7 @@ class _ManageOrganisationMembersScreenState
 
   @override
   Widget build(BuildContext context) {
+    members = Provider.of<ManageOrganisationMembers>(context).members;
     return Scaffold(
       appBar: AppBar(
         title: Text("${widget.user.name}"),

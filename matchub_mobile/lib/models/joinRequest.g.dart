@@ -11,7 +11,8 @@ JoinRequest _$JoinRequestFromJson(Map<String, dynamic> json) {
     ..joinRequestId = json['joinRequestId'] as num
     ..requestCreationTime = DateTime.parse(json['requestCreationTime'])
     ..status = json['status'] as String
-    ..requestor = TruncatedProfile.fromJson(json['requestor'] as Map<String, dynamic>)
+    ..requestor =
+        TruncatedProfile.fromJson(json['requestor'] as Map<String, dynamic>)
     ..project = Project.fromJson(json['project'] as Map<String, dynamic>);
 }
 

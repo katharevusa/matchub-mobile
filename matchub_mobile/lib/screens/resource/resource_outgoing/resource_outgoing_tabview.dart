@@ -6,6 +6,7 @@ import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/widgets/customAlertDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_pass_package/ticket_pass.dart';
 
@@ -129,6 +130,22 @@ class _RequestTicketState extends State<RequestTicket> {
     final responseData = await ApiBaseHelper().deleteProtected(
         "authenticated/deleteResourceRequest?requestId=${widget.request.requestId}&terminatorId=${profile.accountId}",
         accessToken: Provider.of<Auth>(context).accessToken);
+    _customAlertDialog(context, AlertDialogType.WARNING, "Terminated",
+        "You have retrieved the request!");
+  }
+
+  _customAlertDialog(BuildContext context, AlertDialogType type, String title,
+      String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          type: type,
+          title: title,
+          content: content,
+        );
+      },
+    );
   }
 
   @override

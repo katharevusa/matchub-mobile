@@ -62,7 +62,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       "spotlightEndTime": newProject.spotlightEndTime,
       "joinRequests": newProject.joinRequests ?? [],
       "reviews": newProject.reviews ?? [],
-      "projectBadge": newProject.projectBadge,
+      "projectBadge": newProject.projectBadge ?? "",
       "fundsCampaign": newProject.fundsCampaign ?? [],
       "meetings": newProject.meetings,
       "listOfRequests": newProject.listOfRequests,
@@ -292,7 +292,6 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
           children: <Widget>[
             Swiper(
                 loop: false,
-                // physics: NeverScrollableScrollPhysics(),
                 index: _currentIndex,
                 onIndexChanged: (index) {
                   setState(() {
@@ -399,7 +398,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                         title: titles_edit[index],
                         subtitle: subtitles[index],
                         bg: colors[index],
-                        widget: Badge(project));
+                        widget: BadgeCreation(project));
                   }
                 }),
             Align(
@@ -636,7 +635,6 @@ class IntroItem extends StatelessWidget {
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: <Widget>[
-                const SizedBox(height: 40),
                 Text(
                   title,
                   style: TextStyle(
@@ -645,17 +643,17 @@ class IntroItem extends StatelessWidget {
                       color: Colors.white),
                 ),
                 if (subtitle != null) ...[
-                  const SizedBox(height: 20.0),
+                  const SizedBox(height: 5.0),
                   Text(
                     subtitle,
                     style: TextStyle(color: Colors.white, fontSize: 24.0),
                     textAlign: TextAlign.center,
                   ),
                 ],
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 10.0),
                 Expanded(
                   child: Container(
-                    margin: const EdgeInsets.only(bottom: 70),
+                    margin: const EdgeInsets.only(bottom: 10),
                     width: double.infinity,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20.0),

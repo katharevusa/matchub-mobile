@@ -6,6 +6,7 @@ import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manage_incoming_resourceDonation.dart';
 import 'package:matchub_mobile/widgets/customAlertDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_pass_package/ticket_pass.dart';
@@ -15,7 +16,7 @@ class ProjectIncomingTabview extends StatefulWidget {
   num flag;
   // Function getAllIncomingResourceRequests;
   ProjectIncomingTabview(
-    this.listOfIncomingRequests,
+    // this.listOfIncomingRequests,
     this.flag,
   );
   // this.getAllIncomingResourceRequests);
@@ -25,29 +26,105 @@ class ProjectIncomingTabview extends StatefulWidget {
 }
 
 class _ProjectIncomingTabviewState extends State<ProjectIncomingTabview> {
+  List<ResourceRequest> listOfIncomingRequests = [];
+  List<ResourceRequest> listOfIncomingPending = [];
+  List<ResourceRequest> listOfIncomingApproved = [];
+  List<ResourceRequest> listOfIncomingRejected = [];
+  bool _isLoading;
+  @override
+  void initState() {
+    _isLoading = true;
+    loadRequests();
+    super.initState();
+  }
+
+  loadRequests() async {
+    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
+    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
+    await Provider.of<ManageIncomingResourceDonation>(context, listen: false)
+        .getAllIncomingResourceDonation(profile, accessToken);
+    setState(() {
+      _isLoading = false;
+    });
+    await clearList();
+    // widget.listOfIncomingRequests =
+    //     Provider.of<ManageIncomingResourceRequest>(context).listOfRequests;
+  }
+
+  clearList() async {
+    listOfIncomingRequests =
+        Provider.of<ManageIncomingResourceDonation>(context).listOfRequests;
+    listOfIncomingPending = [];
+    listOfIncomingApproved = [];
+    listOfIncomingRejected = [];
+    for (ResourceRequest rr in listOfIncomingRequests) {
+      if (rr.status == "ON_HOLD") listOfIncomingPending.add(rr);
+      if (rr.status == "ACCEPTED") listOfIncomingApproved.add(rr);
+      if (rr.status == "REJECTED") listOfIncomingRejected.add(rr);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // widget.getAllIncomingResourceRequests();
-    return widget.listOfIncomingRequests.isNotEmpty
-        ? SingleChildScrollView(
-            child: Column(
-            children: [
-              SizedBox(height: 30),
-              ListView.builder(
-                  shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemCount: widget.listOfIncomingRequests.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return RequestTicket(
-                        widget.listOfIncomingRequests[index], widget.flag);
-                  }),
-            ],
-          ))
-        : SingleChildScrollView(
-            child: Center(
-                child: Text("You do not have any resource donation request.")),
-          );
+    return _isLoading
+        ? Container(child: Center(child: Text("I am loading")))
+        : listOfIncomingRequests.isNotEmpty && widget.flag == 0
+            ? SingleChildScrollView(
+                child: Column(
+                children: [
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: listOfIncomingPending.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return RequestTicket(
+                          listOfIncomingPending[index],
+                          0,
+                        );
+                      }),
+                ],
+              ))
+            : listOfIncomingRequests.isNotEmpty && widget.flag == 1
+                ? SingleChildScrollView(
+                    child: Column(
+                    children: [
+                      ListView.builder(
+                          shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          itemCount: listOfIncomingApproved.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return RequestTicket(
+                              listOfIncomingApproved[index],
+                              1,
+                            );
+                          }),
+                    ],
+                  ))
+                : listOfIncomingRequests.isNotEmpty && widget.flag == 2
+                    ? SingleChildScrollView(
+                        child: Column(
+                        children: [
+                          ListView.builder(
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              itemCount: listOfIncomingRejected.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return RequestTicket(
+                                  listOfIncomingRejected[index],
+                                  1,
+                                );
+                              }),
+                        ],
+                      ))
+                    : SingleChildScrollView(
+                        child: Center(
+                            child: Text(
+                                "No project is requesting for your resources.")),
+                      );
   }
 }
 
@@ -125,13 +202,27 @@ class _RequestTicketState extends State<RequestTicket> {
           Provider.of<Auth>(this.context, listen: false).accessToken);
       _customAlertDialog(context, AlertDialogType.SUCCESS, "Accepted",
           "You have accepted the request!");
+      await loadRequests();
     } else {
       final responseData = await ApiBaseHelper().getProtected(
           "authenticated/respondToResourceRequest?requestId=${widget.request.requestId}&responderId=${profile.accountId}&response=${false}",
           Provider.of<Auth>(this.context, listen: false).accessToken);
       _customAlertDialog(context, AlertDialogType.WARNING, "Rejected",
           "You have rejected the request!");
+      await loadRequests();
     }
+  }
+
+  loadRequests() async {
+    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
+    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
+    await Provider.of<ManageIncomingResourceDonation>(context, listen: false)
+        .getAllIncomingResourceDonation(profile, accessToken);
+    setState(() {
+      _isLoading = true;
+    });
+    // widget.listOfIncomingRequests =
+    //     Provider.of<ManageIncomingResourceRequest>(context).listOfRequests;
   }
 
   final Color bgColor = Color(0xffFD6592);

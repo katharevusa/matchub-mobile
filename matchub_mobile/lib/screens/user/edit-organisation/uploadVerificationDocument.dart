@@ -118,6 +118,12 @@ class _UploadVerificationDocumentState
               snapshot.connectionState == ConnectionState.done
                   ? SingleChildScrollView(
                       child: Column(children: [
+                      SizedBox(height: 10),
+                      Text(
+                        "Upload files for verification",
+                        style: AppTheme.titleLight,
+                      ),
+                      SizedBox(height: 10),
                       GridView.count(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),

@@ -86,6 +86,7 @@ class _DonateFormScreenState extends State<DonateFormScreen> {
     resourceRequest['projectId'] = widget.project.projectId;
     final url = "authenticated/createNewResourceRequestByResourceOwner";
     var accessToken = Provider.of<Auth>(context).accessToken;
+    Navigator.of(context).pop(true);
     try {
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(resourceRequest));
@@ -261,12 +262,6 @@ class _DonateFormScreenState extends State<DonateFormScreen> {
                             onPressed: () {
                               donate();
                               FocusScope.of(context).unfocus();
-                              Scaffold.of(context).showSnackBar(new SnackBar(
-                                key: UniqueKey(),
-                                content:
-                                    Text("Your donation form has been sent!"),
-                                duration: Duration(seconds: 3),
-                              ));
                             }),
                       ),
                     ],

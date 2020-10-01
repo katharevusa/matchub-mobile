@@ -421,18 +421,7 @@ class Gallery extends StatelessWidget {
           enlargeCenterPage: true),
       items: imageLinks
           .map((item) => Container(
-                decoration: BoxDecoration(boxShadow: [
-                  // BoxShadow(
-                  //   offset: Offset(4, 10),
-                  //   blurRadius: 10,
-                  //   color: Colors.grey[300].withOpacity(0.2),
-                  // ),
-                  // BoxShadow(
-                  //   offset: Offset(-4, 10),
-                  //   blurRadius: 30,
-                  //   color: Colors.grey[300].withOpacity(0.2),
-                  // ),
-                ]),
+                decoration: BoxDecoration(boxShadow: []),
                 margin: EdgeInsets.symmetric(
                     horizontal: SizeConfig.widthMultiplier * 6,
                     vertical: SizeConfig.heightMultiplier * 2),
@@ -443,7 +432,10 @@ class Gallery extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       child: Stack(
                         children: <Widget>[
-                          AttachmentImage(item),
+                          Container(
+                            width: 100 * SizeConfig.widthMultiplier,
+                            child: AttachmentImage(item),
+                          ),
                           Positioned(
                             bottom: 0.0,
                             left: 0.0,
