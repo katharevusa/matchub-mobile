@@ -122,7 +122,7 @@ class _ManageKahsScreenState extends State<ManageKahsScreen> {
         //   rootNavigator: true,
         // ).pushNamed(ProfileScreen.routeName,
         //     arguments: Provider.of<Auth>(context).myProfile.accountId);
-        Navigator.of(this.context).pop(true);
+
       } catch (error) {
         final responseData = error.body as Map<String, dynamic>;
         print("Failure");

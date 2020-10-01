@@ -36,6 +36,7 @@ class _ManageOrganisationMembersScreenState
   void initState() {
     _isLoading = true;
     loadMembers();
+    getMembers();
     super.initState();
   }
 
@@ -51,20 +52,19 @@ class _ManageOrganisationMembersScreenState
     // await getList();
   }
 
-  // getMembers() async {
-  //   final url =
-  //       'authenticated/organisation/viewMembers/${widget.user.accountId}';
-  //   final responseData = await _helper.getProtected(
-  //       url, Provider.of<Auth>(context, listen: false).accessToken);
-  //   members = (responseData['content'] as List)
-  //       .map((e) => Profile.fromJson(e))
-  //       .toList();
-  //   searchResult = members;
-  // }
+  getMembers() async {
+    final url =
+        'authenticated/organisation/viewMembers/${widget.user.accountId}';
+    final responseData = await _helper.getProtected(
+        url, Provider.of<Auth>(context, listen: false).accessToken);
+    members = (responseData['content'] as List)
+        .map((e) => Profile.fromJson(e))
+        .toList();
+    searchResult = members;
+  }
 
   getList() {
     members = Provider.of<ManageOrganisationMembers>(context).members;
-    searchResult = List.from(members);
   }
 
   getSearchedUsers(String value) async {
@@ -76,10 +76,18 @@ class _ManageOrganisationMembersScreenState
           .map((e) => Profile.fromJson(e))
           .toList();
       print("search");
-      // print(searchResult[0].name);
-      // print(members[0].name);
     });
   }
+
+  // onItemChanged(String value) {
+  //   print(value);
+  //   setState(() {
+  //     newMembersList = members
+  //         .where((element) =>
+  //             element.name.toUpperCase().contains(value.toUpperCase()))
+  //         .toList();
+  //   });
+  // }
 
   toggleOrganisationMember(Profile individual, bool isMember) async {
     if (!isMember) {
@@ -89,6 +97,7 @@ class _ManageOrganisationMembersScreenState
         var accessToken = Provider.of<Auth>(this.context).accessToken;
         final response =
             await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+        await loadMembers();
         print("Success");
         // Navigator.of(this.context).pop(true);
       } catch (error) {
@@ -137,6 +146,7 @@ class _ManageOrganisationMembersScreenState
                 ));
       }
       setState(() {});
+      await loadMembers();
     }
   }
 
