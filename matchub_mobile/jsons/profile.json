@@ -1,6 +1,10 @@
 {
     "accountId": 2,
     "uuid": "8f554336-8a3b-4b74-a317-c0f4d42ae7b8",
+    "name": "",
+    "countryCode": "",
+    "employees": [],
+    "address": "",
     "email": "user1@gmail.com",
     "accountLocked": false,
     "accountExpired": false,

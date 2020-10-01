@@ -18,7 +18,7 @@ Resources _$ResourcesFromJson(Map<String, dynamic> json) {
     ..endTime = json['endTime'] as String
     ..listOfRequests = json['listOfRequests'] as List
     ..resourceCategoryId = json['resourceCategoryId'] as num
-    ..resourceOwnerId = json['resourceOwnerId'] as num
+    ..resourceOwnerId = json['resourceOwnerId'] as num 
     ..units = json['units'] as num
     ..photos = json['photos'] as List
     ..spotlight = json['spotlight'] as bool

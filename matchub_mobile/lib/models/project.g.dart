@@ -5,7 +5,7 @@ part of 'project.dart';
 // **************************************************************************
 
 Project _$ProjectFromJson(Map<String, dynamic> json) {
-  print((json['projectOwners']));
+  // print((json['projectOwners']));
   return Project()
     ..projectId = json['projectId'] as num
     ..projectTitle = json['projectTitle'] as String
@@ -28,7 +28,8 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
             .toList()
         : []
     ..reviews = json['reviews'] as List
-    ..projectBadge = json['projectBadge'] ?? ""
+    ..projectBadge = json['projectBadge']  != null
+        ? Badge.fromJson(json['projectBadge']) : null
     ..fundsCampaign = json['fundsCampaign'] as List
     ..meetings = json['meetings'] as List
     ..listOfRequests = json['listOfRequests'] as List

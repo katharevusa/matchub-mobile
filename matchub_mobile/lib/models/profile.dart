@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:matchub_mobile/models/index.dart';
 
@@ -11,6 +11,11 @@ class Profile with ChangeNotifier{
     num accountId;
     String uuid;
     String email;
+    String name;
+    List employees;
+    String countryCode;
+    String address;
+    bool isOrganisation;
     bool accountLocked;
     bool accountExpired;
     bool disabled;
@@ -42,11 +47,6 @@ class Profile with ChangeNotifier{
     List managedChannel;
     List joinedChannel;
     List likedPosts;
-    List employees;
-    String countryCode;
-    String address;
-    String name;
-    bool isOrganisation;
     String firstName;
     String lastName;
     String genderEnum;
@@ -58,7 +58,7 @@ class Profile with ChangeNotifier{
     factory Profile.fromJson(Map<String,dynamic> json) => _$ProfileFromJson(json);
     Map<String, dynamic> toJson() => _$ProfileToJson(this);
 
-      void toggleFollow(int accountId) {
+    void toggleFollow(int accountId) {
     if (this.following.indexOf(accountId) > -1) {
       this.following.remove(accountId);
     } else {

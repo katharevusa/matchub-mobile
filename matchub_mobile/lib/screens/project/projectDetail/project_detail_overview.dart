@@ -49,7 +49,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         Provider.of<Auth>(this.context, listen: false).accessToken);
 
     project = Project.fromJson(responseData);
-    documentKeys = project.documents.keys.toList();
+    // documentKeys = project.documents.keys.toList();
+    print(project.projectTitle);
   }
 
   List<Widget> getPhotoList(photos) {

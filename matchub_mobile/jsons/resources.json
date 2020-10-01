@@ -2,6 +2,7 @@
   "resourceId": 1,
   "resourceName": "Bread",
   "resourceDescription": "Free Bread",
+  "resourceProfilePic": "",
   "uploadedFiles": [],
   "available": true,
   "startTime": null,
@@ -13,5 +14,5 @@
   "photos": [],
   "spotlight": false,
   "spotlightEndTime": null,
-  "matchedProjectId": null
+  "matchedProjectId": 2
 }

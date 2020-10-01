@@ -8,15 +8,14 @@ part of 'post.dart';
 
 Post _$PostFromJson(Map<String, dynamic> json) {
   return Post()
-    ..postId = json['postId'] as num
+    ..postId = json['postId'] as num 
     ..content = json['content'] as String
     ..timeCreated = DateTime.parse(json['timeCreated'])
     ..photos = json['photos'] as List
     ..originalPostId = json['originalPostId'] as String
     ..previousPostId = json['previousPostId'] as String
     ..likes = json['likes'] as num
-    ..postCreator = json['postCreatorId'] as Map<String, dynamic>
-    ..postCreator = json['postCreator'] as Map<String, dynamic>
+    ..postCreatorId = json['postCreatorId'] as String
     ..listOfComments = json['listOfComments'] as List;
 }
 
@@ -28,6 +27,6 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'originalPostId': instance.originalPostId,
       'previousPostId': instance.previousPostId,
       'likes': instance.likes,
-      'postCreator': instance.postCreator,
+      'postCreatorId': instance.postCreatorId,
       'listOfComments': instance.listOfComments
     };

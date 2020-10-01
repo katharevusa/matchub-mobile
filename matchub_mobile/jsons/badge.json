@@ -1,0 +1,31 @@
+{
+  "badgeId": 2,
+  "badgeType": "PROJECT_SPECIFIC",
+  "badgeTitle": "hey there",
+  "icon": "https://localhost:8443/api/v1/files/badgeIcons/gender-equality.png",
+  "project": {
+    "projectId": 13,
+    "projectTitle": "created finally",
+    "projectDescription": "gg on the way back ",
+    "country": "Singapore",
+    "startDate": "2020-10-02 13:34",
+    "endDate": "2020-10-03 13:44",
+    "userFollowers": [],
+    "projStatus": "ON_HOLD",
+    "upvotes": 0,
+    "relatedResources": [],
+    "projCreatorId": 5,
+    "spotlight": false,
+    "spotlightEndTime": null,
+    "projectProfilePic": null,
+    "photos": [],
+    "documents": {},
+    "joinRequests": [],
+    "reviews": [],
+    "fundsCampaign": [],
+    "meetings": [],
+    "listOfRequests": [],
+    "kpis": [],
+    "channels": []
+  }
+}
