@@ -34,7 +34,7 @@ class _ActivitiesState extends State<Activities> {
                 child: ClipOval(
                   child: AttachmentImage(widget.profile.profilePhoto),
                 )),
-            title: Text("${widget.profile.lastName}"),
+            title: Text("${widget.profile.name}"),
             subtitle: Text(
                 "${widget.listOfPosts[index].listOfComments.length} comments | ${widget.listOfPosts[index].likes} likes"),
             trailing: Text(

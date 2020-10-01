@@ -22,109 +22,100 @@ class _ProjectIncomingScreenState extends State<ProjectIncomingScreen>
   List<ResourceRequest> listOfIncomingPending = [];
   List<ResourceRequest> listOfIncomingApproved = [];
   List<ResourceRequest> listOfIncomingRejected = [];
-  Future listOfIncomingRequestsFuture;
+  // Future listOfIncomingRequestsFuture;
 
   @override
   void initState() {
-    listOfIncomingRequestsFuture = getAllIncomingResourceDonationRequests();
+    // listOfIncomingRequestsFuture = getAllIncomingResourceDonationRequests();
     super.initState();
   }
 
-  getAllIncomingResourceDonationRequests() async {
-    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-    final url =
-        'authenticated/getAllIncomingResourceDonationRequests?userId=${profile.accountId}';
+  // getAllIncomingResourceDonationRequests() async {
+  //   Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
+  //   final url =
+  //       'authenticated/getAllIncomingResourceDonationRequests?userId=${profile.accountId}';
 
-    final responseData = await _helper.getWODecode(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
-    (responseData as List).forEach(
-        (e) => listOfIncomingRequests.add(ResourceRequest.fromJson(e)));
+  //   final responseData = await _helper.getWODecode(
+  //       url, Provider.of<Auth>(this.context, listen: false).accessToken);
+  //   (responseData as List).forEach(
+  //       (e) => listOfIncomingRequests.add(ResourceRequest.fromJson(e)));
 
-    for (ResourceRequest rr in listOfIncomingRequests) {
-      if (rr.status == "ON_HOLD") listOfIncomingPending.add(rr);
-      if (rr.status == "ACCEPTED") listOfIncomingApproved.add(rr);
-      if (rr.status == "REJECTED") listOfIncomingRejected.add(rr);
-    }
-  }
+  //   for (ResourceRequest rr in listOfIncomingRequests) {
+  //     if (rr.status == "ON_HOLD") listOfIncomingPending.add(rr);
+  //     if (rr.status == "ACCEPTED") listOfIncomingApproved.add(rr);
+  //     if (rr.status == "REJECTED") listOfIncomingRejected.add(rr);
+  //   }
+  // }
 
 /*Front end methods*/
 
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: FutureBuilder(
-        future: listOfIncomingRequestsFuture,
-        builder: (context, snapshot) => (snapshot.connectionState ==
-                ConnectionState.done)
-            ? Scaffold(
-                drawer: DrawerMenu(),
-                appBar: AppBar(
-                  centerTitle: true,
-                  backgroundColor: Colors.blueGrey.shade800,
-                  bottom: PreferredSize(
-                      child: TabBar(
-                          isScrollable: true,
-                          unselectedLabelColor: Colors.white.withOpacity(0.3),
-                          indicatorColor: Color(0xffE70F0B),
-                          labelColor: Color(0xffE70F0B),
-                          tabs: [
-                            Tab(
-                              icon: Row(
-                                children: [
-                                  Icon(FlutterIcons.library_books_mco),
-                                  Text('  Pending'),
-                                ],
-                              ),
-                            ),
-                            Tab(
-                              icon: Row(
-                                children: [
-                                  Icon(FlutterIcons.tasks_faw5s),
-                                  Text('  Approved'),
-                                ],
-                              ),
-                            ),
-                            Tab(
-                              icon: Row(
-                                children: [
-                                  Icon(FlutterIcons.briefcase_fea),
-                                  Text('  Rejected'),
-                                ],
-                              ),
-                            ),
-                          ]),
-                      preferredSize: Size.fromHeight(40.0)),
-                  actions: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: Icon(Icons.search),
-                    ),
-                  ],
+      child: Scaffold(
+          drawer: DrawerMenu(),
+          appBar: AppBar(
+            centerTitle: true,
+            backgroundColor: Colors.blueGrey.shade800,
+            bottom: PreferredSize(
+                child: TabBar(
+                    isScrollable: true,
+                    unselectedLabelColor: Colors.white.withOpacity(0.3),
+                    indicatorColor: Color(0xffE70F0B),
+                    labelColor: Color(0xffE70F0B),
+                    tabs: [
+                      Tab(
+                        icon: Row(
+                          children: [
+                            Icon(FlutterIcons.library_books_mco),
+                            Text('  Pending'),
+                          ],
+                        ),
+                      ),
+                      Tab(
+                        icon: Row(
+                          children: [
+                            Icon(FlutterIcons.tasks_faw5s),
+                            Text('  Approved'),
+                          ],
+                        ),
+                      ),
+                      Tab(
+                        icon: Row(
+                          children: [
+                            Icon(FlutterIcons.briefcase_fea),
+                            Text('  Rejected'),
+                          ],
+                        ),
+                      ),
+                    ]),
+                preferredSize: Size.fromHeight(40.0)),
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Icon(Icons.search),
+              ),
+            ],
+          ),
+          body: TabBarView(
+            children: <Widget>[
+              Container(
+                child: ProjectIncomingTabview(
+                  0,
                 ),
-                body: TabBarView(
-                  children: <Widget>[
-                    Container(
-                      child: ProjectIncomingTabview(
-                        listOfIncomingPending,
-                        0,
-                      ),
-                    ),
-                    Container(
-                      child: ProjectIncomingTabview(
-                        listOfIncomingApproved,
-                        1,
-                      ),
-                    ),
-                    Container(
-                      child: ProjectIncomingTabview(
-                        listOfIncomingRejected,
-                        1,
-                      ),
-                    ),
-                  ],
-                ))
-            : Center(child: CircularProgressIndicator()),
-      ),
+              ),
+              Container(
+                child: ProjectIncomingTabview(
+                  1,
+                ),
+              ),
+              Container(
+                child: ProjectIncomingTabview(
+                  2,
+                ),
+              ),
+            ],
+          )),
     );
   }
 }

@@ -76,7 +76,7 @@ class _BasicInfoState extends State<BasicInfo> {
                         Text("Stakeholder", style: AppTheme.subTitleLight),
                         SizedBox(height: 10),
                         Container(
-                            width: 44 * SizeConfig.widthMultiplier,
+                            width: 36 * SizeConfig.widthMultiplier,
                             constraints: BoxConstraints(
                                 minHeight: 8 * SizeConfig.heightMultiplier),
                             decoration: BoxDecoration(

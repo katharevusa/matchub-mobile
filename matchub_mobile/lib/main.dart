@@ -7,6 +7,10 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 // import 'package:matchub_mobile/screens/login/auth_screen.dart';
 import 'package:matchub_mobile/screens/login/login_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manageOrganisationMembers.dart';
+import 'package:matchub_mobile/services/manage_incoming_resourceDonation.dart';
+import 'package:matchub_mobile/services/manage_incoming_resourceRequest.dart';
+import 'package:matchub_mobile/services/manage_listOfKah.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -33,6 +37,12 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => Auth()),
             ChangeNotifierProvider(create: (_) => Profile()),
             ChangeNotifierProvider(create: (_) => ManageProject()),
+            ChangeNotifierProvider(
+                create: (_) => ManageIncomingResourceRequest()),
+            ChangeNotifierProvider(
+                create: (_) => ManageIncomingResourceDonation()),
+            ChangeNotifierProvider(create: (_) => ManageOrganisationMembers()),
+            ChangeNotifierProvider(create: (_) => ManageListOfKah()),
           ],
           child: Consumer<Auth>(
             builder: (context, auth, widget) => MaterialApp(
