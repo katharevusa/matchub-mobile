@@ -39,8 +39,8 @@ class _ChatScreenState extends State<ChatScreen> {
     return StreamBuilder<QuerySnapshot>(
       stream: chatRooms,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) {
-          return Container();
+        if (!snapshot.hasData || snapshot.data.documents.length == 0) {
+          return Container(height: 80*SizeConfig.heightMultiplier, child: Center(child: Text("No Chats here yet...")));
         }
 
         return Expanded(
@@ -79,13 +79,13 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chats",
+        title: Text("Inbox",
             style: TextStyle(
-                color: Colors.white,
+                  color: Colors.grey[850],
                 fontSize: 3 * SizeConfig.textMultiplier,
-                fontWeight: FontWeight.w400)),
-        elevation: 5.0,
-        // backgroundColor: kScaffoldColor,
+                fontWeight: FontWeight.w700)),
+        elevation: 0,
+        backgroundColor: kScaffoldColor,
         centerTitle: false,
         automaticallyImplyLeading: false,
         // bottom: PreferredSize(
@@ -130,13 +130,13 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(children: [
         chatRoomsList(),
       ]),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.search),
-        onPressed: () {
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: (context) => Search()));
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.search),
+      //   onPressed: () {
+      //     // Navigator.push(
+      //     //     context, MaterialPageRoute(builder: (context) => Search()));
+      //   },
+      // ),
     );
   }
 }

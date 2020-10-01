@@ -35,6 +35,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Project project;
   List<String> documentKeys;
   Profile myProfile;
+
+  GlobalKey<ScaffoldState> _projectDetailScaffoldKey = GlobalKey();
   @override
   void didChangeDependencies() {
     loadProject = getProjects();
@@ -120,6 +122,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     myProfile = Provider.of<Auth>(context).myProfile;
 
     return Scaffold(
+      key: _projectDetailScaffoldKey,
         appBar: AppBar(
           leading: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -146,13 +149,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 });
                 switch (value) {
                   case "Joined-Project":
-                    Scaffold.of(context).showSnackBar(new SnackBar(
+                    _projectDetailScaffoldKey.currentState.showSnackBar(new SnackBar(
                       content: Text(
                         "You've applied to join ${project.projectTitle}",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      duration: Duration(seconds: 3),
+                      duration: Duration(seconds: 2),
                     ));
                     break;
                   default:
@@ -568,7 +571,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     -1) &&
                 (myProfile.projectsOwned.indexWhere(
                         (element) => element.projectId == project.projectId) ==
-                    -1))
+                    -1)) //Only able to join a project that Not currently part of
               FlatButton(
                   onPressed: () async {
                     await joinProject();
@@ -671,8 +674,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       final response =
           await ApiBaseHelper().postProtected(url, accessToken: accessToken);
       print("Success");
-
       Navigator.of(this.context).pop("Joined-Project");
+
     } catch (error) {
       showErrorDialog(error.toString(), this.context);
       print("Failure");

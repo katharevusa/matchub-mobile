@@ -180,7 +180,8 @@ class _BasicInfoState extends State<BasicInfo> {
             SizedBox(height: 15),
             Row(
               children: [
-                Expanded(
+                if (widget.profile.accountId != myProfile.accountId) ...[
+                  Expanded(
                     child: OutlineButton(
                   onPressed: () async {
                     if (!await DatabaseMethods().checkChatRoomExists(
@@ -204,7 +205,6 @@ class _BasicInfoState extends State<BasicInfo> {
                       borderRadius: new BorderRadius.circular(5.0)),
                   child: Text("Contact"),
                 )),
-                if (widget.profile.accountId != myProfile.accountId) ...[
                   SizedBox(width: 10),
                   Expanded(
                       child: OutlineButton(

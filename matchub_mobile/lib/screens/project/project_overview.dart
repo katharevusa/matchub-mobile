@@ -34,6 +34,7 @@ class _ProjectOverviewState extends State<ProjectOverview> {
           drawer: DrawerMenu(),
           // endDrawer: DrawerMenu(),
           appBar: AppBar(
+            leadingWidth: 35,
             iconTheme: IconThemeData(color: Colors.black),
             // leading: IconButton(
             //   padding: EdgeInsets.symmetric(horizontal: 20),

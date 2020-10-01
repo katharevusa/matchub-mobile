@@ -53,19 +53,21 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview> {
           appBar: AppBar(
             backgroundColor: kScaffoldColor,
             elevation: 0,
-            leadingWidth: 199,
-            leading: IconButton(
-              icon: Row(
-                children: [
-                  Icon(
-                    Icons.chevron_left_rounded,
-                    color: Colors.black,
-                  ),
-                  Text("Projects", style: TextStyle(color: Colors.black))
-                ],
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
+            // leadingWidth: 199,
+            // leading: IconButton(
+            //   icon: Row(
+            //     children: [
+            //       Icon(
+            //         Icons.chevron_left_rounded,
+            //         color: Colors.black,
+            //       ),
+            //       Text("Projects", style: TextStyle(color: Colors.black))
+            //     ],
+            //   ),
+            //   onPressed: () => Navigator.of(context).pop(),
+            // ),
+            leadingWidth: 35,
+            iconTheme: IconThemeData(color: Colors.black),
             actions: [
               IconButton(
                 icon: Icon(
