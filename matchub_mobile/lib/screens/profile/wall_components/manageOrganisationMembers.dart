@@ -44,6 +44,7 @@ class _ManageOrganisationMembersScreenState
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageOrganisationMembers>(context, listen: false)
         .getMembers(profile, accessToken);
+
     setState(() {
       _isLoading = false;
     });
@@ -60,6 +61,11 @@ class _ManageOrganisationMembersScreenState
   //       .toList();
   //   searchResult = members;
   // }
+
+  getList() {
+    members = Provider.of<ManageOrganisationMembers>(context).members;
+    searchResult = List.from(members);
+  }
 
   getSearchedUsers(String value) async {
     final url = 'authenticated/searchIndividuals?search=${value}';
@@ -138,96 +144,92 @@ class _ManageOrganisationMembersScreenState
 
   @override
   Widget build(BuildContext context) {
+    getList();
     members = Provider.of<ManageOrganisationMembers>(context).members;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("${widget.user.name}"),
-      ),
-      body: FutureBuilder(
-        future: organisationMembersFuture,
-        builder: (context, snapshot) => (snapshot.connectionState ==
-                ConnectionState.done)
-            ? GestureDetector(
-                onTap: () => FocusScope.of(context).unfocus(),
-                child: Scaffold(
-                    body: Column(
-                  children: [
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: TextFormField(
-                        controller: _textController,
-                        expands: false,
-                        decoration: InputDecoration(
-                          hintText: "Search Profile...",
-                          border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
+    return _isLoading
+        ? Container(child: Center(child: Text("I am loading")))
+        : Scaffold(
+            appBar: AppBar(
+              title: Text("${widget.user.name}"),
+            ),
+            body: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Scaffold(
+                  body: Column(
+                children: [
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: TextFormField(
+                      controller: _textController,
+                      expands: false,
+                      decoration: InputDecoration(
+                        hintText: "Search Profile...",
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
                         ),
-                        onChanged: getSearchedUsers,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
                       ),
+                      onChanged: getSearchedUsers,
                     ),
-                    SizedBox(height: 20),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) => SizedBox(height: 5),
-                      itemBuilder: (context, index) => ListTile(
-                        onTap: () => Navigator.of(context).pushNamed(
-                            ProfileScreen.routeName,
-                            arguments: searchResult[index].accountId),
-                        leading: ClipOval(
-                            child: Container(
-                          height: 50,
-                          width: 50,
-                          child:
-                              AttachmentImage(searchResult[index].profilePhoto),
-                        )),
-                        title: Text(searchResult[index].name),
-                        trailing: FlatButton(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6)),
-                          child: Text(
-                              (members.indexWhere((m) =>
-                                          searchResult[index].accountId ==
-                                          m.accountId) >=
-                                      0)
-                                  ? "Remove"
-                                  : " Add ",
-                              style: TextStyle(color: Colors.white)),
-                          onPressed: () async {
-                            bool isMember;
-                            if (members.indexWhere((m) =>
+                  ),
+                  SizedBox(height: 20),
+                  ListView.separated(
+                    shrinkWrap: true,
+                    separatorBuilder: (context, index) => SizedBox(height: 5),
+                    itemBuilder: (context, index) => ListTile(
+                      onTap: () => Navigator.of(context).pushNamed(
+                          ProfileScreen.routeName,
+                          arguments: searchResult[index].accountId),
+                      leading: ClipOval(
+                          child: Container(
+                        height: 50,
+                        width: 50,
+                        child:
+                            AttachmentImage(searchResult[index].profilePhoto),
+                      )),
+                      title: Text(searchResult[index].name),
+                      trailing: FlatButton(
+                        padding: EdgeInsets.symmetric(horizontal: 30),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
+                        child: Text(
+                            (members.indexWhere((m) =>
+                                        searchResult[index].accountId ==
+                                        m.accountId) >=
+                                    0)
+                                ? "Remove"
+                                : " Add ",
+                            style: TextStyle(color: Colors.white)),
+                        onPressed: () async {
+                          bool isMember;
+                          if (members.indexWhere((m) =>
+                                  searchResult[index].accountId ==
+                                  m.accountId) >=
+                              0) {
+                            isMember = true;
+                          } else {
+                            isMember = false;
+                          }
+                          setState(() {
+                            toggleOrganisationMember(
+                                searchResult[index], isMember);
+                          });
+                        },
+                        color: (members.indexWhere((m) =>
                                     searchResult[index].accountId ==
                                     m.accountId) >=
-                                0) {
-                              isMember = true;
-                            } else {
-                              isMember = false;
-                            }
-                            setState(() {
-                              toggleOrganisationMember(
-                                  searchResult[index], isMember);
-                            });
-                          },
-                          color: (members.indexWhere((m) =>
-                                      searchResult[index].accountId ==
-                                      m.accountId) >=
-                                  0)
-                              ? Colors.red.shade300
-                              : Colors.green.shade400,
-                        ),
+                                0)
+                            ? Colors.red.shade300
+                            : Colors.green.shade400,
                       ),
-                      itemCount: searchResult.length,
                     ),
-                  ],
-                )),
-              )
-            : Center(child: CircularProgressIndicator()),
-      ),
-    );
+                    itemCount: searchResult.length,
+                  ),
+                ],
+              )),
+            ));
   }
 }

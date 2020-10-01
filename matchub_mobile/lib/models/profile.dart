@@ -5,60 +5,61 @@ import 'package:matchub_mobile/models/index.dart';
 part 'profile.g.dart';
 
 @JsonSerializable()
-class Profile with ChangeNotifier{
-    Profile();
+class Profile with ChangeNotifier {
+  Profile();
 
-    num accountId;
-    String uuid;
-    String email;
-    bool accountLocked;
-    bool accountExpired;
-    bool disabled;
-    List roles;
-    bool isVerified;
-    String joinDate;
-    String phoneNumber;
-    String country;
-    String city;
-    String profilePhoto;
-    num reputationPoints;
-    List followers;
-    List following;
-    List savedResourceIds;
-    List upvotedProjectIds;
-    num spotlightChances;
-    List posts;
-    List notifications;
-    List hostedResources;
-    List sdgs;
-    List meetings;
-    List<Project> projectsJoined;
-    List<Project> projectsOwned;
-    List joinRequests;
-    List reviewsReceived;
-    List badges;
-    List fundPladges;
-    List tasks;
-    List managedChannel;
-    List joinedChannel;
-    List likedPosts;
-    List employees;
-    String countryCode;
-    String address;
-    String name;
-    bool isOrganisation;
-    String firstName;
-    String lastName;
-    String genderEnum;
-    String profileDescription;
-    List projectFollowing;
-    List skillSet;
-    Map<String, dynamic> verificationDocuments;
-    
-    factory Profile.fromJson(Map<String,dynamic> json) => _$ProfileFromJson(json);
-    Map<String, dynamic> toJson() => _$ProfileToJson(this);
+  num accountId;
+  String uuid;
+  String email;
+  bool accountLocked;
+  bool accountExpired;
+  bool disabled;
+  List roles;
+  bool isVerified;
+  String joinDate;
+  String phoneNumber;
+  String country;
+  String city;
+  String profilePhoto;
+  num reputationPoints;
+  List followers;
+  List following;
+  List savedResourceIds;
+  List upvotedProjectIds;
+  num spotlightChances;
+  List posts;
+  List notifications;
+  List hostedResources;
+  List sdgs;
+  List meetings;
+  List<Project> projectsJoined;
+  List<Project> projectsOwned;
+  List joinRequests;
+  List reviewsReceived;
+  List badges;
+  List fundPladges;
+  List tasks;
+  List managedChannel;
+  List joinedChannel;
+  List likedPosts;
+  List employees;
+  String countryCode;
+  String address;
+  String name;
+  bool isOrganisation;
+  String firstName;
+  String lastName;
+  String genderEnum;
+  String profileDescription;
+  List projectFollowing;
+  List skillSet;
+  Map<String, dynamic> verificationDocuments;
 
-      void toggleFollow(int accountId) {
+  factory Profile.fromJson(Map<String, dynamic> json) =>
+      _$ProfileFromJson(json);
+  Map<String, dynamic> toJson() => _$ProfileToJson(this);
+
+  void toggleFollow(int accountId) {
     if (this.following.indexOf(accountId) > -1) {
       this.following.remove(accountId);
     } else {
