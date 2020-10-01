@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/resources.dart';
-import 'package:matchub_mobile/screens/project/projectCreation/badge.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/badge_creation.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/basic_information.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/dateTime.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/sdg.dart';
@@ -73,6 +73,8 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       "teamMembers": newProject.teamMembers,
       "channels": newProject.channels,
       "projectOwners": newProject.projectOwners ?? [],
+      "badgeTitle": null,
+      "badgeIcon": null,
     };
   }
 
@@ -109,7 +111,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     "Upload Cover Photo",
     "Upload Photo",
     "Upload Documents",
-    "Badge Creation",
+    "Badge",
     "Create Fund Campaign",
   ];
   final List<Color> colors = [
@@ -172,6 +174,16 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
             Provider.of<Auth>(context, listen: false).accessToken,
             "documents",
             context);
+      }
+      if (project['badgeIcon'] != null && project['badgeTitle'] != null) {
+        Map<String, dynamic> badge = {};
+        badge['badgeTitle'] = project['badgeTitle'];
+        badge['icon'] = project['badgeIcon'];
+        badge['projectId'] = newProjectId;
+
+        ApiBaseHelper().postProtected("authenticated/createProjectBadge",
+            body: json.encode(badge),
+            accessToken: Provider.of<Auth>(context, listen: false).accessToken);
       }
       Provider.of<Auth>(context, listen: false).retrieveUser();
       print("Success");
@@ -393,9 +405,15 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                         subtitle: subtitles[index],
                         bg: colors[index],
                         widget: Document(project, true, true, documents));
-                  } else if (index == 7 && project["projectId"] == null) {
+                  } else if (index == 7 && project["projectId"] != null) {
                     return IntroItem(
                         title: titles_edit[index],
+                        subtitle: subtitles[index],
+                        bg: colors[index],
+                        widget: BadgeCreation(project));
+                  } else if (index == 7 && project["projectId"] == null) {
+                    return IntroItem(
+                        title: titles[index],
                         subtitle: subtitles[index],
                         bg: colors[index],
                         widget: BadgeCreation(project));

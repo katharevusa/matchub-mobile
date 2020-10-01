@@ -122,7 +122,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     myProfile = Provider.of<Auth>(context).myProfile;
 
     return Scaffold(
-      key: _projectDetailScaffoldKey,
+        key: _projectDetailScaffoldKey,
         appBar: AppBar(
           leading: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -149,9 +149,21 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 });
                 switch (value) {
                   case "Joined-Project":
-                    _projectDetailScaffoldKey.currentState.showSnackBar(new SnackBar(
+                    _projectDetailScaffoldKey.currentState
+                        .showSnackBar(new SnackBar(
                       content: Text(
-                        "You've applied to join ${project.projectTitle}",
+                        "You've applied to join: ${project.projectTitle}",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      duration: Duration(seconds: 2),
+                    ));
+                    break;
+                  case "Delete-Project":
+                    _projectDetailScaffoldKey.currentState
+                        .showSnackBar(new SnackBar(
+                      content: Text(
+                        "You've have left the project: ${project.projectTitle}",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -566,12 +578,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     Text("Follow", style: AppTheme.titleLight),
                   ],
                 )),
-            if ((myProfile.projectsJoined.indexWhere(
-                        (element) => element.projectId == project.projectId) ==
-                    -1) &&
-                (myProfile.projectsOwned.indexWhere(
-                        (element) => element.projectId == project.projectId) ==
-                    -1)) //Only able to join a project that Not currently part of
+            if (project.teamMembers.indexWhere((element) => element.accountId == myProfile.accountId) == -1
+            && project.joinRequests.indexWhere((element) => element.requestor.accountId==myProfile.accountId) == -1
+            ) //Only able to join a project that Not currently part of
               FlatButton(
                   onPressed: () async {
                     await joinProject();
@@ -589,6 +598,26 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       ),
                       SizedBox(width: 10),
                       Text("Join Team", style: AppTheme.titleLight),
+                    ],
+                  )),
+            if (project.teamMembers.indexWhere((element) => element.accountId == myProfile.accountId) > -1)
+              FlatButton(
+                  onPressed: () async {
+                    await leaveProject();
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          FlutterIcons.user_friends_faw5s,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text("Leave Project", style: AppTheme.titleLight),
                     ],
                   )),
             if (project.projCreatorId !=
@@ -666,7 +695,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         ));
   }
 
-  void joinProject() async {
+  joinProject() async {
     final url =
         "authenticated/createJoinRequest?projectId=${widget.projectId}&profileId=${myProfile.accountId}";
     try {
@@ -675,7 +704,20 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           await ApiBaseHelper().postProtected(url, accessToken: accessToken);
       print("Success");
       Navigator.of(this.context).pop("Joined-Project");
-
+    } catch (error) {
+      showErrorDialog(error.toString(), this.context);
+      print("Failure");
+    }
+  }
+  leaveProject() async {
+    final url =
+        "authenticated/leaveProject?projectId=${widget.projectId}&memberId=${myProfile.accountId}";
+    try {
+      var accessToken = Provider.of<Auth>(this.context).accessToken;
+      final response =
+          await ApiBaseHelper().deleteProtected(url, accessToken: accessToken);
+      print("Success");
+      Navigator.of(this.context).pop("Delete-Project");
     } catch (error) {
       showErrorDialog(error.toString(), this.context);
       print("Failure");

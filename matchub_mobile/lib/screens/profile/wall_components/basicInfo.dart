@@ -76,7 +76,7 @@ class _BasicInfoState extends State<BasicInfo> {
                         Text("Stakeholder", style: AppTheme.subTitleLight),
                         SizedBox(height: 10),
                         Container(
-                            width: 36 * SizeConfig.widthMultiplier,
+                            width: 44 * SizeConfig.widthMultiplier,
                             constraints: BoxConstraints(
                                 minHeight: 8 * SizeConfig.heightMultiplier),
                             decoration: BoxDecoration(
@@ -87,7 +87,7 @@ class _BasicInfoState extends State<BasicInfo> {
                               Flexible(
                                   fit: FlexFit.tight,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
+                                    padding: EdgeInsets.all(1.25*SizeConfig.widthMultiplier),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -120,7 +120,7 @@ class _BasicInfoState extends State<BasicInfo> {
                                       );
                                     },
                                     child: Padding(
-                                        padding: const EdgeInsets.all(5.0),
+                                        padding:  EdgeInsets.all(1.25*SizeConfig.widthMultiplier),
                                         child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -152,7 +152,7 @@ class _BasicInfoState extends State<BasicInfo> {
                                         });
                                   },
                                   child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
+                                      padding: EdgeInsets.all(1.25* SizeConfig.widthMultiplier),
                                       child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
