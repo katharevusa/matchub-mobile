@@ -32,47 +32,48 @@ class ProjectCreationScreen extends StatefulWidget {
   Project newProject;
   ProjectCreationScreen({this.newProject});
   @override
-  _ProjectCreationScreenState createState() =>
-      _ProjectCreationScreenState(newProject);
+  _ProjectCreationScreenState createState() => _ProjectCreationScreenState();
 }
 
 class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
-  Project newProject;
-  _ProjectCreationScreenState(this.newProject);
+  _ProjectCreationScreenState();
   Map<String, dynamic> project;
   List<File> coverPhoto = [];
   List<File> photos = [];
   List<File> documents = [];
   @override
   void initState() {
+    if (widget.newProject == null) {
+      widget.newProject = Project();
+    }
     project = {
-      "projectId": newProject.projectId,
-      "projectTitle": newProject.projectTitle ?? "",
-      "projectDescription": newProject.projectDescription ?? "",
-      "country": newProject.country ?? "",
-      "startDate": newProject.startDate ?? DateTime.now(),
-      "endDate": newProject.endDate ?? DateTime.now(),
-      "userFollowers": newProject.userFollowers ?? [],
-      "projStatus": newProject.projStatus ?? "ON_HOLD",
-      "upvotes": newProject.upvotes ?? 0,
-      "photos": newProject.photos ?? [],
-      "relatedResources": newProject.relatedResources ?? [],
-      "projCreatorId": newProject.projCreatorId,
-      "spotlight": newProject.spotlight,
-      "spotlightEndTime": newProject.spotlightEndTime,
-      "joinRequests": newProject.joinRequests ?? [],
-      "reviews": newProject.reviews ?? [],
-      "projectBadge": newProject.projectBadge ?? "",
-      "fundsCampaign": newProject.fundsCampaign ?? [],
-      "meetings": newProject.meetings,
-      "listOfRequests": newProject.listOfRequests,
-      "sdgs": newProject.sdgs != null
-          ? newProject.sdgs.map((e) => e.sdgId).toList()
+      "projectId": widget.newProject.projectId,
+      "projectTitle": widget.newProject.projectTitle ?? "",
+      "projectDescription": widget.newProject.projectDescription ?? "",
+      "country": widget.newProject.country ?? "",
+      "startDate": widget.newProject.startDate ?? DateTime.now(),
+      "endDate": widget.newProject.endDate ?? DateTime.now(),
+      "userFollowers": widget.newProject.userFollowers ?? [],
+      "projStatus": widget.newProject.projStatus ?? "ON_HOLD",
+      "upvotes": widget.newProject.upvotes ?? 0,
+      "photos": widget.newProject.photos ?? [],
+      "relatedResources": widget.newProject.relatedResources ?? [],
+      "projCreatorId": widget.newProject.projCreatorId,
+      "spotlight": widget.newProject.spotlight,
+      "spotlightEndTime": widget.newProject.spotlightEndTime,
+      "joinRequests": widget.newProject.joinRequests ?? [],
+      "reviews": widget.newProject.reviews ?? [],
+      "projectBadge": widget.newProject.projectBadge ?? "",
+      "fundsCampaign": widget.newProject.fundsCampaign ?? [],
+      "meetings": widget.newProject.meetings,
+      "listOfRequests": widget.newProject.listOfRequests,
+      "sdgs": widget.newProject.sdgs != null
+          ? widget.newProject.sdgs.map((e) => e.sdgId).toList()
           : [],
-      "kpis": newProject.kpis,
-      "teamMembers": newProject.teamMembers,
-      "channels": newProject.channels,
-      "projectOwners": newProject.projectOwners ?? [],
+      "kpis": widget.newProject.kpis,
+      "teamMembers": widget.newProject.teamMembers,
+      "channels": widget.newProject.channels,
+      "projectOwners": widget.newProject.projectOwners ?? [],
       "badgeTitle": null,
       "badgeIcon": null,
     };
@@ -269,6 +270,17 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
             "documents",
             context);
       }
+      if (project['badgeIcon'] != null && project['badgeTitle'] != null) {
+        print(project['projectBadge']['badgeId']);
+        // Map<String, dynamic> badge = {};
+        // badge['badgeTitle'] = project['badgeTitle'];
+        // badge['icon'] = project['badgeIcon'];
+        // badge['accountId'] = projectId;
+
+        // ApiBaseHelper().postProtected("authenticated/updateProjectBadge/${project['projectBadge']}",
+        //     body: json.encode(badge),
+        //     accessToken: Provider.of<Auth>(context, listen: false).accessToken);
+      }
       Provider.of<Auth>(context).retrieveUser();
       print("Success");
       Navigator.of(context).pop(true);
@@ -317,7 +329,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                     activeSize: 20.0,
                   ),
                 ),
-                itemCount: 8,
+                itemCount: project["projectId"] == null ? 8 : 6,
                 itemBuilder: (context, index) {
                   if (index == 0 && project["projectId"] == null) {
                     return IntroItem(
@@ -405,7 +417,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                         subtitle: subtitles[index],
                         bg: colors[index],
                         widget: Document(project, true, true, documents));
-                  } else if (index == 7 && project["projectId"] != null) {
+                  } else if (index == 5 && project["projectId"] != null) {
                     return IntroItem(
                         title: titles_edit[index],
                         subtitle: subtitles[index],

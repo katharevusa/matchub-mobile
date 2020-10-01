@@ -579,11 +579,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   ],
                 )),
             if (project.teamMembers.indexWhere((element) => element.accountId == myProfile.accountId) == -1
-            && project.joinRequests.indexWhere((element) => element.requestor.accountId==myProfile.accountId) == -1
-            ) //Only able to join a project that Not currently part of
+            // && project.joinRequests.indexWhere((element) => element.requestor.accountId==myProfile.accountId) == -1
+            && project.projectOwners.indexWhere((element) => element.accountId==myProfile.accountId) == -1
+            ) //Only able to join a project that Not currently part of,jave not applied to, not the owenr for
               FlatButton(
                   onPressed: () async {
                     await joinProject();
+                    Provider.of<Auth>(context).retrieveUser();
                   },
                   visualDensity: VisualDensity.comfortable,
                   highlightColor: Colors.transparent,
@@ -601,9 +603,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     ],
                   )),
             if (project.teamMembers.indexWhere((element) => element.accountId == myProfile.accountId) > -1)
+            //only able to leave a projct that youre a team member of
               FlatButton(
                   onPressed: () async {
                     await leaveProject();
+                    Provider.of<Auth>(context).retrieveUser();
                   },
                   visualDensity: VisualDensity.comfortable,
                   highlightColor: Colors.transparent,
@@ -667,6 +671,25 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       ),
                       SizedBox(width: 10),
                       Text("Edit Project", style: AppTheme.titleLight),
+                    ],
+                  )),
+              FlatButton(
+                  onPressed: () {
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          Icons.check_box_outlined,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text("Mark as Complete", style: AppTheme.titleLight),
                     ],
                   )),
               FlatButton(

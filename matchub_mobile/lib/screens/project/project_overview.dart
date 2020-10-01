@@ -19,7 +19,6 @@ class ProjectOverview extends StatefulWidget {
 
 class _ProjectOverviewState extends State<ProjectOverview> {
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
-  final newProject = new Project();
   @override
   Widget build(BuildContext context) {
     Profile myProfile = Provider.of<Auth>(context).myProfile;
@@ -125,7 +124,7 @@ class _ProjectOverviewState extends State<ProjectOverview> {
             onPressed: () => Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                     builder: (context) =>
-                        ProjectCreationScreen(newProject: newProject))),
+                        ProjectCreationScreen())),
           ),
         ),
       ),
