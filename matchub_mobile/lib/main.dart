@@ -11,7 +11,9 @@ import 'package:matchub_mobile/services/manageOrganisationMembers.dart';
 import 'package:matchub_mobile/services/manage_incoming_resourceDonation.dart';
 import 'package:matchub_mobile/services/manage_incoming_resourceRequest.dart';
 import 'package:matchub_mobile/services/manage_listOfKah.dart';
+import 'package:matchub_mobile/services/manage_outgoingRequest.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/services/manage_resource.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +45,8 @@ class MyApp extends StatelessWidget {
                 create: (_) => ManageIncomingResourceDonation()),
             ChangeNotifierProvider(create: (_) => ManageOrganisationMembers()),
             ChangeNotifierProvider(create: (_) => ManageListOfKah()),
+            ChangeNotifierProvider(create: (_) => ManageResource()),
+            ChangeNotifierProvider(create: (_) => ManageOutgoingRequest()),
           ],
           child: Consumer<Auth>(
             builder: (context, auth, widget) => MaterialApp(

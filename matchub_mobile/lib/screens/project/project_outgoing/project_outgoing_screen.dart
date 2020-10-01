@@ -19,47 +19,48 @@ class OutgoingProjectScreen extends StatefulWidget {
 
 class _OutgoingProjectScreenState extends State<OutgoingProjectScreen>
     with SingleTickerProviderStateMixin {
-  ApiBaseHelper _helper = ApiBaseHelper();
-  List<ResourceRequest> listOfOutgoingRequests = [];
-  List<ResourceRequest> listOfOutgoingPending = [];
-  List<ResourceRequest> listOfOutgoingApproved = [];
-  List<ResourceRequest> listOfOutgoingRejected = [];
-  Future listOfOutgoingRequestsFuture;
+  // ApiBaseHelper _helper = ApiBaseHelper();
+  // List<ResourceRequest> listOfOutgoingRequests = [];
+  // List<ResourceRequest> listOfOutgoingPending = [];
+  // List<ResourceRequest> listOfOutgoingApproved = [];
+  // List<ResourceRequest> listOfOutgoingRejected = [];
+  // Future listOfOutgoingRequestsFuture;
 
   @override
   void initState() {
-    listOfOutgoingRequestsFuture = getAllOutgingResourceRequests();
+    // listOfOutgoingRequestsFuture = getAllOutgingResourceRequests();
     super.initState();
   }
 
 /*HTTP calls*/
 
-  getAllOutgingResourceRequests() async {
-    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-    final url =
-        'authenticated/getAllOutgoingResourceRequests?userId=${profile.accountId}';
+  // getAllOutgingResourceRequests() async {
+  //   Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
+  //   final url =
+  //       'authenticated/getAllOutgoingResourceRequests?userId=${profile.accountId}';
 
-    final responseData = await _helper.getWODecode(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
-    (responseData as List).forEach(
-        (e) => listOfOutgoingRequests.add(ResourceRequest.fromJson(e)));
+  //   final responseData = await _helper.getWODecode(
+  //       url, Provider.of<Auth>(this.context, listen: false).accessToken);
+  //   (responseData as List).forEach(
+  //       (e) => listOfOutgoingRequests.add(ResourceRequest.fromJson(e)));
 
-    for (ResourceRequest rr in listOfOutgoingRequests) {
-      if (rr.status == "ON_HOLD") listOfOutgoingPending.add(rr);
-      if (rr.status == "ACCEPTED") listOfOutgoingApproved.add(rr);
-      if (rr.status == "REJECTED") listOfOutgoingRejected.add(rr);
-    }
-  }
+  //   for (ResourceRequest rr in listOfOutgoingRequests) {
+  //     if (rr.status == "ON_HOLD") listOfOutgoingPending.add(rr);
+  //     if (rr.status == "ACCEPTED") listOfOutgoingApproved.add(rr);
+  //     if (rr.status == "REJECTED") listOfOutgoingRejected.add(rr);
+  //   }
+  // }
 
 /*Front end methods*/
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
-      child: FutureBuilder(
-        future: listOfOutgoingRequestsFuture,
-        builder: (context, snapshot) => (snapshot.connectionState ==
-                ConnectionState.done)
-            ? Scaffold(
+        length: 3,
+        child:
+            // FutureBuilder(
+            //   future: listOfOutgoingRequestsFuture,
+            //   builder: (context, snapshot) => (snapshot.connectionState ==
+            //           ConnectionState.done)
+            Scaffold(
                 drawer: DrawerMenu(),
                 appBar: AppBar(
                   centerTitle: true,
@@ -108,26 +109,20 @@ class _OutgoingProjectScreenState extends State<OutgoingProjectScreen>
                   children: <Widget>[
                     Container(
                       child: ProjectOutgoingTabview(
-                        listOfOutgoingPending,
                         0,
                       ),
                     ),
                     Container(
                       child: ProjectOutgoingTabview(
-                        listOfOutgoingApproved,
                         1,
                       ),
                     ),
                     Container(
                       child: ProjectOutgoingTabview(
-                        listOfOutgoingRejected,
-                        1,
+                        2,
                       ),
                     ),
                   ],
-                ))
-            : Center(child: CircularProgressIndicator()),
-      ),
-    );
+                )));
   }
 }

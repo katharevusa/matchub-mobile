@@ -22,9 +22,9 @@ class _ManageOrganisationMembersScreenState
   Future organisationMembersFuture;
 
   ApiBaseHelper _helper = ApiBaseHelper();
-  List<Profile> members;
+  List<Profile> members = [];
   Profile myProfile;
-  List<Profile> searchResult;
+  List<Profile> searchResult = [];
   bool _isLoading;
 
   // @override
