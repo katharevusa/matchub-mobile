@@ -5,8 +5,8 @@ import 'package:matchub_mobile/models/index.dart';
 part 'profile.g.dart';
 
 @JsonSerializable()
-class Profile with ChangeNotifier{
-    Profile();
+class Profile with ChangeNotifier {
+  Profile();
 
     num accountId;
     String uuid;

@@ -9,7 +9,7 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class ExploreProjects extends StatelessWidget {
-  List<Project> allProjects;
+  List<Project> allProjects = [];
   ApiBaseHelper _helper = ApiBaseHelper();
 
   retrieveAllProjects(BuildContext context) async {

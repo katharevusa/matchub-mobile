@@ -13,6 +13,7 @@ import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_s
 import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manage_resource.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -96,6 +97,15 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     Colors.brown.shade400,
   ];
   List<File> photos = [];
+
+  loadResources() async {
+    Profile profile = Provider.of<Auth>(this.context, listen: false).myProfile;
+    var accessToken =
+        Provider.of<Auth>(this.context, listen: false).accessToken;
+    await Provider.of<ManageResource>(this.context, listen: false)
+        .getResources(profile, accessToken);
+  }
+
   void createNewResource(context) async {
     resource["resourceOwnerId"] =
         Provider.of<Auth>(context).myProfile.accountId;
@@ -135,7 +145,8 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
             "photos",
             context);
       }
-      Provider.of<Auth>(context).retrieveUser();
+      // Provider.of<Auth>(context).retrieveUser();
+      loadResources();
       Navigator.of(context).pop(true);
     } catch (error) {
       resource['startTime'] = startResourceTime;
