@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:matchub_mobile/helpers/sdgs.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
@@ -31,6 +33,9 @@ class _UserScreenState extends State<UserScreen> {
     _scaffoldKey.currentState.removeCurrentSnackBar();
   }
 
+  final LocalAuthentication auth = LocalAuthentication();
+  bool _canCheckBiometrics;
+  List<BiometricType> _availableBiometrics;
   @override
   Widget build(BuildContext context) {
     Profile profile = Provider.of<Auth>(context).myProfile;
@@ -170,71 +175,113 @@ class _UserScreenState extends State<UserScreen> {
                       () {})
                 ],
               ),
-              ExpansionTile(
-                title: Text("Notifications"),
-                children: [
-                  ListTile(
-                    onTap: () {},
-                    leading: Icon(Icons.notification_important),
-                    title: Text("Notification Settings"),
-                    subtitle: Text(
-                      "Choose which notifications you want to receive",
-                      style: AppTheme.subTitleLight,
-                    ),
-                  ),
-                  ListTile(
+              Theme(
+                data: ThemeData(accentColor: Colors.grey),
+                child: ExpansionTile(
+                  title: Container(
+                      child: Text(
+                    "Notifications",
+                  )),
+                  children: [
+                    ListTile(
                       onTap: () {},
-                      leading: Icon(Icons.chat),
-                      title: Text("Messaging Settings"),
+                      leading: Icon(Icons.notification_important),
+                      title: Text("Notification Settings"),
                       subtitle: Text(
-                        "Choose which messages you want to receive",
+                        "Choose which notifications you want to receive",
                         style: AppTheme.subTitleLight,
-                      ))
-                ],
+                      ),
+                    ),
+                    ListTile(
+                        onTap: () {},
+                        leading: Icon(Icons.chat),
+                        title: Text("Messaging Settings"),
+                        subtitle: Text(
+                          "Choose which messages you want to receive",
+                          style: AppTheme.subTitleLight,
+                        ))
+                  ],
+                ),
               ),
-              ExpansionTile(
-                title: Text("Account Settings"),
-                children: [
-                  ListTile(
-                    onTap: () {
-                      dismissSnackBar();
-                      Navigator.of(
-                        context,
-                        rootNavigator: true,
-                      ).pushNamed(ChangePasswordScreen.routeName).then((value) {
-                        if (value != null && value) {
-                          Scaffold.of(context).showSnackBar(new SnackBar(
-                            key: UniqueKey(),
-                            content: Text("Password updated successfully"),
-                            duration: Duration(seconds: 1),
-                          ));
-                        }
-                      });
-                    },
-                    leading: Icon(FlutterIcons.key_faw5s),
-                    title: Text("Change Password"),
-                    subtitle: Text(
-                      "Change your password here",
-                      style: AppTheme.subTitleLight,
-                    ),
-                  ),
-                  ListTile(
-                      onTap: () {},
-                      leading: Icon(FlutterIcons.security_mdi),
-                      title: Text("Biometric Login"),
-                      subtitle: Text(
-                        "Use your fingerprint to login",
-                        style: AppTheme.subTitleLight,
-                      )),
-                  ListTile(
-                    onTap: () {
-                      Provider.of<Auth>(context).logout();
-                    },
-                    leading: Icon(FlutterIcons.log_out_fea),
-                    title: Text("Logout"),
-                  ),
-                ],
-              )
+              Theme(
+                  data: ThemeData(accentColor: Colors.grey),
+                  child: ExpansionTile(
+                    title: Text("Account Settings"),
+                    children: [
+                      ListTile(
+                        onTap: () {
+                          dismissSnackBar();
+                          Navigator.of(
+                            context,
+                            rootNavigator: true,
+                          )
+                              .pushNamed(ChangePasswordScreen.routeName)
+                              .then((value) {
+                            if (value != null && value) {
+                              Scaffold.of(context).showSnackBar(new SnackBar(
+                                key: UniqueKey(),
+                                content: Text("Password updated successfully"),
+                                duration: Duration(seconds: 1),
+                              ));
+                            }
+                          });
+                        },
+                        leading: Icon(FlutterIcons.key_faw5s),
+                        title: Text("Change Password"),
+                        subtitle: Text(
+                          "Change your password here",
+                          style: AppTheme.subTitleLight,
+                        ),
+                      ),
+                      ListTile(
+                          trailing: Switch(
+                            value: Provider.of<Auth>(context).biometricsEnabled,
+                            onChanged: (value) async {
+                              bool authenticated = false;
+                              if (value) {
+                                try {
+                                  _canCheckBiometrics =
+                                      await auth.canCheckBiometrics;
+                                  _availableBiometrics =
+                                      await auth.getAvailableBiometrics();
+
+                                  authenticated =
+                                      await auth.authenticateWithBiometrics(
+                                          localizedReason:
+                                              'Use your biometrics to verify your identity',
+                                          useErrorDialogs: true,
+                                          stickyAuth: false);
+                                } on PlatformException catch (e) {
+                                  print(e);
+                                  return;
+                                }
+                                if (!mounted) return;
+                              }
+
+                              await Provider.of<Auth>(context)
+                                  .setBiometricLogin(authenticated);
+                              setState(() {
+                                print("Set biometrics: " + value.toString());
+                              });
+                            },
+                            // activeTrackColor: Colors.lightGreenAccent,
+                            activeColor: kSecondaryColor,
+                          ),
+                          leading: Icon(FlutterIcons.security_mdi),
+                          title: Text("Biometric Login"),
+                          subtitle: Text(
+                            "Use your fingerprint to login",
+                            style: AppTheme.subTitleLight,
+                          )),
+                      ListTile(
+                        onTap: () {
+                          Provider.of<Auth>(context).logout();
+                        },
+                        leading: Icon(FlutterIcons.log_out_fea),
+                        title: Text("Logout"),
+                      ),
+                    ],
+                  ))
             ],
           ),
         ),

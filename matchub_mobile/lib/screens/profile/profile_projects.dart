@@ -46,7 +46,7 @@ class ProjectVerticalCard extends StatelessWidget {
       @required this.isOwner})
       : _randomColor = randomColor,
         super(key: key);
-  final isOwner;
+  final bool isOwner;
   final RandomColor _randomColor;
   final Project project;
   @override
@@ -72,23 +72,23 @@ class ProjectVerticalCard extends StatelessWidget {
         padding: EdgeInsets.all(2 * SizeConfig.heightMultiplier),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: _randomColor
-              .randomColor(
-                  colorBrightness: ColorBrightness.veryLight,
-                  colorHue: ColorHue.multiple(
-                      colorHues: [ColorHue.green, ColorHue.blue]),
-                  colorSaturation: ColorSaturation.lowSaturation)
-              .withAlpha(50),
+          // color: _randomColor
+          //     .randomColor(
+          //         colorBrightness: ColorBrightness.veryLight,
+          //         colorHue: ColorHue.multiple(
+          //             colorHues: [ColorHue.green, ColorHue.blue]),
+          //         colorSaturation: ColorSaturation.lowSaturation)
+          //     .withAlpha(50),
           boxShadow: [
             BoxShadow(
               offset: Offset(4, 3),
               blurRadius: 10,
-              color: kSecondaryColor.withOpacity(0.1),
+              color: Colors.grey[850].withOpacity(0.1),
             ),
             BoxShadow(
               offset: Offset(-4, -3),
               blurRadius: 10,
-              color: kSecondaryColor.withOpacity(0.1),
+              color: Colors.grey[850].withOpacity(0.1),
             ),
           ],
         ),

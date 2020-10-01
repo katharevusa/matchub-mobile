@@ -74,12 +74,12 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
                 color: Colors.white,
-                fontSize: 2.5 * SizeConfig.textMultiplier,
+                fontSize: 2.3 * SizeConfig.textMultiplier,
                 fontWeight: FontWeight.w600)),
         elevation: 5.0,
         // backgroundColor: kScaffoldColor,
         centerTitle: false,
-        automaticallyImplyLeading: false,
+        leadingWidth: 30,
         // bottom: PreferredSize(
         //   preferredSize: Size(SizeConfig.widthMultiplier * 100, 60),
         //   child: Container(
@@ -137,8 +137,8 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
               heroTag: "channelCreateBtn",
               child: Icon(Icons.add),
               onPressed: () {
-                Navigator.push(
-                    context,
+                Navigator.of(
+                    context, rootNavigator: true).push(
                     MaterialPageRoute(
                         builder: (context) =>
                             ChannelCreation(project: widget.project)));

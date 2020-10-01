@@ -1,6 +1,7 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
@@ -25,7 +26,6 @@ class TeamMembers extends StatefulWidget {
 
 class _TeamMembersState extends State<TeamMembers> {
   bool isExpanded = false;
-  @override
   updateProject() async {
     final instance = Provider.of<Auth>(context, listen: false);
     try {
@@ -70,6 +70,18 @@ class _TeamMembersState extends State<TeamMembers> {
             Messages(chatRoomId: chatRoomId, recipient: recipientProfile)));
   }
 
+  _removeTeamMember(int teamMemberId) async { 
+    final instance = Provider.of<Auth>(context, listen: false);
+    try {
+      await ApiBaseHelper().deleteProtected(
+          "authenticated/removeTeamMember?projectId=${widget.project.projectId}&memberId=$teamMemberId&decisionMakerId=${instance.myProfile.accountId}",
+          accessToken: instance.accessToken);
+      await updateProject();
+    } catch (error) {
+      showErrorDialog(error.toString(), context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     widget.project = Provider.of<ManageProject>(context).managedProject;
@@ -94,7 +106,7 @@ class _TeamMembersState extends State<TeamMembers> {
                     labelColor: Colors.white,
                     isScrollable: true,
                     indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: new BubbleTabIndicator(
+                    indicator: BubbleTabIndicator(
                         indicatorRadius: (40),
                         indicatorHeight: 25.0,
                         indicatorColor: kSecondaryColor,
@@ -137,18 +149,38 @@ class _TeamMembersState extends State<TeamMembers> {
   buildCurrentTeamMembersView() {
     return ListView.builder(
         itemBuilder: (context, index) {
-          return ListTile(
-              leading: CircleAvatar(
-                radius: 25,
-                backgroundImage: widget.project.teamMembers[index].profilePhoto.isEmpty
-                    ? AssetImage("assets/images/avatar2.jpg")
-                    : NetworkImage(
-                        "${ApiBaseHelper().baseUrl}${widget.project.teamMembers[index].profilePhoto.substring(30)}"),
+          return Slidable(
+            actionPane: SlidableDrawerActionPane(),
+            actionExtentRatio: 0.2,
+            child: ListTile(
+                leading: CircleAvatar(
+                  radius: 25,
+                  backgroundImage: widget
+                          .project.teamMembers[index].profilePhoto.isEmpty
+                      ? AssetImage("assets/images/avatar2.jpg")
+                      : NetworkImage(
+                          "${ApiBaseHelper().baseUrl}${widget.project.teamMembers[index].profilePhoto.substring(30)}"),
+                ),
+                title: Text(widget.project.teamMembers[index].name,
+                    style: TextStyle(
+                      color: Colors.grey[850],
+                    ))),
+            secondaryActions: <Widget>[
+              // IconSlideAction(
+              //   caption: 'More',
+              //   color: Colors.black45,
+              //   icon: Icons.more_horiz,
+              //   // onTap: () => _showSnackBar('More'),
+              // ),
+              IconSlideAction(
+                caption: 'Remove',
+                color: Colors.red[300],
+                icon: Icons.delete,
+                onTap: () =>
+                    _removeTeamMember(widget.project.teamMembers[index].accountId),
               ),
-              title: Text(widget.project.teamMembers[index].name,
-                  style: TextStyle(
-                    color: Colors.grey[850],
-                  )));
+            ],
+          );
         },
         itemCount: widget.project.teamMembers.length);
   }
@@ -163,13 +195,14 @@ class _TeamMembersState extends State<TeamMembers> {
             accentColor: kSecondaryColor,
           ),
           child: ExpansionTile(
+            initiallyExpanded: true,
             tilePadding:
                 EdgeInsets.only(bottom: 0, left: 16, right: 16, top: 8),
             leading: CircleAvatar(
               radius: 25,
               backgroundImage: widget.project.joinRequests[index].requestor
                       .profilePhoto.isEmpty
-                  ? AssetImage("assets/images/avatar2.jpg")
+                  ? AssetImage("assets/images/avatar.png")
                   : NetworkImage(
                       "${ApiBaseHelper().baseUrl}${widget.project.joinRequests[index].requestor.profilePhoto.substring(30)}"),
             ),

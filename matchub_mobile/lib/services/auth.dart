@@ -23,9 +23,16 @@ class Auth with ChangeNotifier {
   bool _isIndividual;
   ApiBaseHelper _apiHelper = ApiBaseHelper();
   Profile myProfile;
+  bool biometricsEnabled;
 
   bool get isAuth {
     return _accessToken != null;
+  }
+
+  setBiometricLogin(bool value) async {
+    biometricsEnabled = value;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("biometricsEnabled", value);
   }
 
   bool get isIndividual {
@@ -94,6 +101,14 @@ class Auth with ChangeNotifier {
     final responseData = await _apiHelper.post(
       url,
     );
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("isLoggedIn", true);
+
+    if (!prefs.containsKey("biometricsEnabled")) {
+      setBiometricLogin(false);
+    } else {
+      setBiometricLogin(prefs.getBool("biometricsEnabled"));
+    }
     await saveTokens(responseData);
     await retrieveUser();
     notifyListeners();
@@ -113,10 +128,12 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<bool> tryAutoLogin() async {
+  Future<bool> tryAutoLogin({bool biometricBypass = false}) async {
     final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('userData')) {
-      return false;
+    if (!biometricBypass) {
+      if (prefs.get('isLoggedIn') != null && !prefs.get('isLoggedIn')) {
+        return false;
+      }
     }
     final extractedUserData =
         json.decode(prefs.getString('userData')) as Map<String, Object>;
@@ -125,6 +142,7 @@ class Auth with ChangeNotifier {
     _accessToken = extractedUserData['accessToken'];
     _refreshToken = extractedUserData['refreshToken'];
     _expiryDate = DateTime.parse(extractedUserData['expiryDate']);
+    
     if (expiryDate.subtract(Duration(seconds: 600)).isBefore(DateTime.now())) {
       // accessToken expired
       try {
@@ -137,6 +155,11 @@ class Auth with ChangeNotifier {
     }
     await retrieveUser();
 
+    if (!prefs.containsKey("biometricsEnabled")) {
+      setBiometricLogin(false);
+    } else {
+      setBiometricLogin(prefs.getBool("biometricsEnabled"));
+    }
     notifyListeners();
     return true;
   }
@@ -145,9 +168,9 @@ class Auth with ChangeNotifier {
     _accessToken = null;
     _accountId = null;
     _expiryDate = null;
-    notifyListeners();
     final prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+    prefs.setBool("isLoggedIn", false);
+    notifyListeners();
   }
 
   Future<void> retrieveUser() async {

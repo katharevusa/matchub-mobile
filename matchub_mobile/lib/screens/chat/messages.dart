@@ -68,8 +68,8 @@ class _MessagesState extends State<Messages> {
     return StreamBuilder<QuerySnapshot>(
       stream: chats,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) {
-          return Container();
+        if (!snapshot.hasData || snapshot.data.documents.length == 0) {
+          return Container(height: 80*SizeConfig.heightMultiplier, child: Center(child: Text("No Chats here yet...")));
         }
         print(snapshot.data.documents.length);
         // _scrollController.jumpTo(
@@ -157,7 +157,10 @@ class _MessagesState extends State<Messages> {
                 itemBuilder: (BuildContext context) => [
                       popupmenu.PopupMenuItem(
                         child: ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            DatabaseMethods().deleteChat(widget.chatRoomId);
+                            Navigator.of(context).popUntil(ModalRoute.withName("/"));
+                          },
                           dense: true,
                           leading: Icon(FlutterIcons.trash_alt_faw5s),
                           title: Text(

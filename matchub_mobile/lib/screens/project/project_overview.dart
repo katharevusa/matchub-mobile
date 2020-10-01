@@ -19,7 +19,6 @@ class ProjectOverview extends StatefulWidget {
 
 class _ProjectOverviewState extends State<ProjectOverview> {
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
-  final newProject = new Project();
   @override
   Widget build(BuildContext context) {
     Profile myProfile = Provider.of<Auth>(context).myProfile;
@@ -34,25 +33,27 @@ class _ProjectOverviewState extends State<ProjectOverview> {
         child: Scaffold(
           key: _key,
           drawer: DrawerMenu(),
-          endDrawer: DrawerMenu(),
+          // endDrawer: DrawerMenu(),
           appBar: AppBar(
-            leading: IconButton(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              icon: Image.asset("assets/icons/menu.png"),
-              onPressed: () {
-                _key.currentState.openDrawer();
-              },
-            ),
-            actions: [IconButton(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              icon: Image.asset("assets/icons/menu.png"),
-              onPressed: () {
-                _key.currentState.openEndDrawer();
-              },
-            )],
-            automaticallyImplyLeading: false,
+            leadingWidth: 35,
+            iconTheme: IconThemeData(color: Colors.black),
+            // leading: IconButton(
+            //   padding: EdgeInsets.symmetric(horizontal: 20),
+            //   icon: Image.asset("assets/icons/menu.png"),
+            //   onPressed: () {
+            //     _key.currentState.openDrawer();
+            //   },
+            // ),
+            // actions: [IconButton(
+            //   padding: EdgeInsets.symmetric(horizontal: 20),
+            //   icon: Image.asset("assets/icons/menu.png"),
+            //   onPressed: () {
+            //     _key.currentState.openEndDrawer();
+            //   },
+            // )],
+            // automaticallyImplyLeading: false,
             // leadingWidth: 40,
-            
+
             title: Text("Projects",
                 style: TextStyle(
                     color: Colors.grey[850],
@@ -108,8 +109,14 @@ class _ProjectOverviewState extends State<ProjectOverview> {
               projects: allProjects,
               isOwner: true,
             ),
-            Icon(Icons.movie),
-            Icon(Icons.games),
+            ProfileProjects(
+              projects: myProfile.projectsOwned,
+              isOwner: true,
+            ),
+            ProfileProjects(
+              projects: myProfile.projectsJoined,
+              isOwner: false,
+            ),
           ]),
           floatingActionButton: IconButton(
             color: Colors.black,
@@ -117,7 +124,7 @@ class _ProjectOverviewState extends State<ProjectOverview> {
             onPressed: () => Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                     builder: (context) =>
-                        ProjectCreationScreen(newProject: newProject))),
+                        ProjectCreationScreen())),
           ),
         ),
       ),

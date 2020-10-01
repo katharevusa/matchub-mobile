@@ -35,6 +35,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Project project;
   List<String> documentKeys;
   Profile myProfile;
+
+  GlobalKey<ScaffoldState> _projectDetailScaffoldKey = GlobalKey();
   @override
   void didChangeDependencies() {
     loadProject = getProjects();
@@ -120,6 +122,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     myProfile = Provider.of<Auth>(context).myProfile;
 
     return Scaffold(
+        key: _projectDetailScaffoldKey,
         appBar: AppBar(
           leading: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -139,11 +142,38 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 color: Colors.grey[800],
               ),
               onPressed: () => showModalBottomSheet(
-                      context: context,
-                      builder: (context) => buildMorePopUp(context))
-                  .then((value) => setState(() {
-                        loadProject = getProjects();
-                      })),
+                  context: context,
+                  builder: (context) => buildMorePopUp(context)).then((value) {
+                setState(() {
+                  loadProject = getProjects();
+                });
+                switch (value) {
+                  case "Joined-Project":
+                    _projectDetailScaffoldKey.currentState
+                        .showSnackBar(new SnackBar(
+                      content: Text(
+                        "You've applied to join: ${project.projectTitle}",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      duration: Duration(seconds: 2),
+                    ));
+                    break;
+                  case "Delete-Project":
+                    _projectDetailScaffoldKey.currentState
+                        .showSnackBar(new SnackBar(
+                      content: Text(
+                        "You've have left the project: ${project.projectTitle}",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      duration: Duration(seconds: 2),
+                    ));
+                    break;
+                  default:
+                    break;
+                }
+              }),
             ),
           ],
           backgroundColor: AppTheme.appBackgroundColor,
@@ -548,26 +578,52 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     Text("Follow", style: AppTheme.titleLight),
                   ],
                 )),
-            FlatButton(
-                onPressed: () async {
-                  await joinProject();
-                },
-                visualDensity: VisualDensity.comfortable,
-                highlightColor: Colors.transparent,
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Icon(
-                        FlutterIcons.user_friends_faw5s,
-                        color: Colors.grey[700],
+            if (project.teamMembers.indexWhere((element) => element.accountId == myProfile.accountId) == -1
+            // && project.joinRequests.indexWhere((element) => element.requestor.accountId==myProfile.accountId) == -1
+            && project.projectOwners.indexWhere((element) => element.accountId==myProfile.accountId) == -1
+            ) //Only able to join a project that Not currently part of,jave not applied to, not the owenr for
+              FlatButton(
+                  onPressed: () async {
+                    await joinProject();
+                    Provider.of<Auth>(context).retrieveUser();
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          FlutterIcons.user_friends_faw5s,
+                          color: Colors.grey[700],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Text("Join Team", style: AppTheme.titleLight),
-                  ],
-                )),
+                      SizedBox(width: 10),
+                      Text("Join Team", style: AppTheme.titleLight),
+                    ],
+                  )),
+            if (project.teamMembers.indexWhere((element) => element.accountId == myProfile.accountId) > -1)
+            //only able to leave a projct that youre a team member of
+              FlatButton(
+                  onPressed: () async {
+                    await leaveProject();
+                    Provider.of<Auth>(context).retrieveUser();
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          FlutterIcons.user_friends_faw5s,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text("Leave Project", style: AppTheme.titleLight),
+                    ],
+                  )),
             if (project.projCreatorId !=
                 Provider.of<Auth>(context).myProfile.accountId) ...[
               FlatButton(
@@ -619,6 +675,25 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   )),
               FlatButton(
                   onPressed: () {
+                  },
+                  visualDensity: VisualDensity.comfortable,
+                  highlightColor: Colors.transparent,
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          Icons.check_box_outlined,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text("Mark as Complete", style: AppTheme.titleLight),
+                    ],
+                  )),
+              FlatButton(
+                  onPressed: () {
                     Navigator.pop(context);
                     _terminateDialog(context);
                   },
@@ -643,7 +718,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         ));
   }
 
-  void joinProject() async {
+  joinProject() async {
     final url =
         "authenticated/createJoinRequest?projectId=${widget.projectId}&profileId=${myProfile.accountId}";
     try {
@@ -651,8 +726,21 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       final response =
           await ApiBaseHelper().postProtected(url, accessToken: accessToken);
       print("Success");
-      setState(() {});
-      // Navigator.of(this.context).pop(true);
+      Navigator.of(this.context).pop("Joined-Project");
+    } catch (error) {
+      showErrorDialog(error.toString(), this.context);
+      print("Failure");
+    }
+  }
+  leaveProject() async {
+    final url =
+        "authenticated/leaveProject?projectId=${widget.projectId}&memberId=${myProfile.accountId}";
+    try {
+      var accessToken = Provider.of<Auth>(this.context).accessToken;
+      final response =
+          await ApiBaseHelper().deleteProtected(url, accessToken: accessToken);
+      print("Success");
+      Navigator.of(this.context).pop("Delete-Project");
     } catch (error) {
       showErrorDialog(error.toString(), this.context);
       print("Failure");

@@ -55,29 +55,24 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
     super.dispose();
   }
 
-  // update() {
-  //   setState(() {
-  //     print("Reached here");
-  //     print(widget.user.following.length);
-  //   });
-  // }
-
   toggleFollowing(int followId) async {
     try {
-      var responseData;
       setState(() {
         if (myProfile.following.indexOf(followId) != -1) {
-          responseData = ApiBaseHelper().postProtected(
+          ApiBaseHelper().postProtected(
               "authenticated/unfollowProfile?unfollowId=${followId}&accountId=${myProfile.accountId}",
               accessToken: Provider.of<Auth>(context).accessToken);
         } else {
-          responseData = ApiBaseHelper().postProtected(
+          ApiBaseHelper().postProtected(
               "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
               accessToken: Provider.of<Auth>(context).accessToken);
         }
+        if (widget.user.accountId == myProfile.accountId) {
+          //to update followers | following
+          widget.user = myProfile;
+        }
         getFollowers();
       });
-      // print("backend method" + widget.user.following.length.toString());
     } catch (error) {
       print(error.toString());
       showErrorDialog(error.toString(), context);
@@ -98,7 +93,6 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
     following = (responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
         .toList();
-    // print("Followers length" + following.length.toString());
   }
 
   @override
@@ -107,7 +101,6 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          // automaticallyImplyLeading: true,
           title: Text("${widget.user.name}"),
           bottom: TabBar(
             controller: _controller,
