@@ -30,6 +30,7 @@ class _ResourceOutgoingPendingState extends State<ResourceOutgoingPending> {
   List<ResourceRequest> listOfOutgoingPending = [];
   List<ResourceRequest> listOfOutgoingApproved = [];
   List<ResourceRequest> listOfOutgoingRejected = [];
+  List<ResourceRequest> listOfOutgoingExpired = [];
   bool _isLoading;
   @override
   void initState() {
@@ -55,10 +56,12 @@ class _ResourceOutgoingPendingState extends State<ResourceOutgoingPending> {
     listOfOutgoingPending = [];
     listOfOutgoingApproved = [];
     listOfOutgoingRejected = [];
+    listOfOutgoingExpired = [];
     for (ResourceRequest rr in listOfOutgoingRequests) {
       if (rr.status == "ON_HOLD") listOfOutgoingPending.add(rr);
       if (rr.status == "ACCEPTED") listOfOutgoingApproved.add(rr);
       if (rr.status == "REJECTED") listOfOutgoingRejected.add(rr);
+      if (rr.status == "EXPIRED") listOfOutgoingExpired.add(rr);
     }
   }
 
@@ -67,7 +70,7 @@ class _ResourceOutgoingPendingState extends State<ResourceOutgoingPending> {
     // widget.getAllIncomingResourceRequests();
     return _isLoading
         ? Container(child: Center(child: Text("I am loading")))
-        : listOfOutgoingRequests.isNotEmpty && widget.flag == 0
+        : listOfOutgoingPending.isNotEmpty && widget.flag == 0
             ? SingleChildScrollView(
                 child: Column(
                 children: [
@@ -82,7 +85,7 @@ class _ResourceOutgoingPendingState extends State<ResourceOutgoingPending> {
                       }),
                 ],
               ))
-            : listOfOutgoingRequests.isNotEmpty && widget.flag == 1
+            : listOfOutgoingApproved.isNotEmpty && widget.flag == 1
                 ? SingleChildScrollView(
                     child: Column(
                     children: [
@@ -98,7 +101,7 @@ class _ResourceOutgoingPendingState extends State<ResourceOutgoingPending> {
                           }),
                     ],
                   ))
-                : listOfOutgoingRequests.isNotEmpty && widget.flag == 2
+                : listOfOutgoingRejected.isNotEmpty && widget.flag == 2
                     ? SingleChildScrollView(
                         child: Column(
                         children: [
@@ -114,11 +117,28 @@ class _ResourceOutgoingPendingState extends State<ResourceOutgoingPending> {
                               }),
                         ],
                       ))
-                    : SingleChildScrollView(
-                        child: Center(
-                            child: Text(
-                                "You have not make any resource donation request.")),
-                      );
+                    : listOfOutgoingExpired.isNotEmpty && widget.flag == 3
+                        ? SingleChildScrollView(
+                            child: Column(
+                            children: [
+                              SizedBox(height: 30),
+                              ListView.builder(
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: listOfOutgoingExpired.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return RequestTicket(
+                                        listOfOutgoingExpired[index], 1);
+                                  }),
+                            ],
+                          ))
+                        : SingleChildScrollView(
+                            child: Center(
+                                child: Text(
+                                    "You have not make any resource donation request.")),
+                          );
   }
 }
 

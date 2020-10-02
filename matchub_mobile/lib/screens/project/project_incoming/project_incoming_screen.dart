@@ -51,7 +51,7 @@ class _ProjectIncomingScreenState extends State<ProjectIncomingScreen>
 
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
           drawer: DrawerMenu(),
           appBar: AppBar(
@@ -67,7 +67,6 @@ class _ProjectIncomingScreenState extends State<ProjectIncomingScreen>
                       Tab(
                         icon: Row(
                           children: [
-                            Icon(FlutterIcons.library_books_mco),
                             Text('  Pending'),
                           ],
                         ),
@@ -75,7 +74,6 @@ class _ProjectIncomingScreenState extends State<ProjectIncomingScreen>
                       Tab(
                         icon: Row(
                           children: [
-                            Icon(FlutterIcons.tasks_faw5s),
                             Text('  Approved'),
                           ],
                         ),
@@ -83,8 +81,14 @@ class _ProjectIncomingScreenState extends State<ProjectIncomingScreen>
                       Tab(
                         icon: Row(
                           children: [
-                            Icon(FlutterIcons.briefcase_fea),
                             Text('  Rejected'),
+                          ],
+                        ),
+                      ),
+                      Tab(
+                        icon: Row(
+                          children: [
+                            Text('  Expired'),
                           ],
                         ),
                       ),
@@ -112,6 +116,11 @@ class _ProjectIncomingScreenState extends State<ProjectIncomingScreen>
               Container(
                 child: ProjectIncomingTabview(
                   2,
+                ),
+              ),
+              Container(
+                child: ProjectIncomingTabview(
+                  3,
                 ),
               ),
             ],

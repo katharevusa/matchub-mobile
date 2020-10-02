@@ -29,6 +29,7 @@ class _ProjectOutgoingTabviewState extends State<ProjectOutgoingTabview> {
   List<ResourceRequest> listOfOutgoingPending = [];
   List<ResourceRequest> listOfOutgoingApproved = [];
   List<ResourceRequest> listOfOutgoingRejected = [];
+  List<ResourceRequest> listOfOutgoingExpired = [];
   bool _isLoading;
   @override
   void initState() {
@@ -54,10 +55,12 @@ class _ProjectOutgoingTabviewState extends State<ProjectOutgoingTabview> {
     listOfOutgoingPending = [];
     listOfOutgoingApproved = [];
     listOfOutgoingRejected = [];
+    listOfOutgoingExpired = [];
     for (ResourceRequest rr in listOfOutgoingRequests) {
       if (rr.status == "ON_HOLD") listOfOutgoingPending.add(rr);
       if (rr.status == "ACCEPTED") listOfOutgoingApproved.add(rr);
       if (rr.status == "REJECTED") listOfOutgoingRejected.add(rr);
+      if (rr.status == "EXPIRED") listOfOutgoingExpired.add(rr);
     }
   }
 
@@ -113,11 +116,28 @@ class _ProjectOutgoingTabviewState extends State<ProjectOutgoingTabview> {
                               }),
                         ],
                       ))
-                    : SingleChildScrollView(
-                        child: Center(
-                            child: Text(
-                                "You have not make any resource donation request.")),
-                      );
+                    : listOfOutgoingExpired.isNotEmpty && widget.flag == 3
+                        ? SingleChildScrollView(
+                            child: Column(
+                            children: [
+                              SizedBox(height: 30),
+                              ListView.builder(
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: listOfOutgoingExpired.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return RequestTicket(
+                                        listOfOutgoingExpired[index], 1);
+                                  }),
+                            ],
+                          ))
+                        : SingleChildScrollView(
+                            child: Center(
+                                child: Text(
+                                    "You have not make any resource donation request.")),
+                          );
   }
 }
 

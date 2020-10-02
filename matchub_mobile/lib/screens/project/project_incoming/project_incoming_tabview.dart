@@ -30,6 +30,7 @@ class _ProjectIncomingTabviewState extends State<ProjectIncomingTabview> {
   List<ResourceRequest> listOfIncomingPending = [];
   List<ResourceRequest> listOfIncomingApproved = [];
   List<ResourceRequest> listOfIncomingRejected = [];
+  List<ResourceRequest> listOfIncomingExpired = [];
   bool _isLoading;
   @override
   void initState() {
@@ -57,10 +58,12 @@ class _ProjectIncomingTabviewState extends State<ProjectIncomingTabview> {
     listOfIncomingPending = [];
     listOfIncomingApproved = [];
     listOfIncomingRejected = [];
+    listOfIncomingExpired = [];
     for (ResourceRequest rr in listOfIncomingRequests) {
       if (rr.status == "ON_HOLD") listOfIncomingPending.add(rr);
       if (rr.status == "ACCEPTED") listOfIncomingApproved.add(rr);
       if (rr.status == "REJECTED") listOfIncomingRejected.add(rr);
+      if (rr.status == "EXPIRED") listOfIncomingExpired.add(rr);
     }
   }
 
@@ -69,7 +72,7 @@ class _ProjectIncomingTabviewState extends State<ProjectIncomingTabview> {
     // widget.getAllIncomingResourceRequests();
     return _isLoading
         ? Container(child: Center(child: Text("I am loading")))
-        : listOfIncomingRequests.isNotEmpty && widget.flag == 0
+        : listOfIncomingPending.isNotEmpty && widget.flag == 0
             ? SingleChildScrollView(
                 child: Column(
                 children: [
@@ -86,7 +89,7 @@ class _ProjectIncomingTabviewState extends State<ProjectIncomingTabview> {
                       }),
                 ],
               ))
-            : listOfIncomingRequests.isNotEmpty && widget.flag == 1
+            : listOfIncomingApproved.isNotEmpty && widget.flag == 1
                 ? SingleChildScrollView(
                     child: Column(
                     children: [
@@ -103,7 +106,7 @@ class _ProjectIncomingTabviewState extends State<ProjectIncomingTabview> {
                           }),
                     ],
                   ))
-                : listOfIncomingRequests.isNotEmpty && widget.flag == 2
+                : listOfIncomingRejected.isNotEmpty && widget.flag == 2
                     ? SingleChildScrollView(
                         child: Column(
                         children: [
@@ -120,11 +123,29 @@ class _ProjectIncomingTabviewState extends State<ProjectIncomingTabview> {
                               }),
                         ],
                       ))
-                    : SingleChildScrollView(
-                        child: Center(
-                            child: Text(
-                                "No project is requesting for your resources.")),
-                      );
+                    : listOfIncomingExpired.isNotEmpty && widget.flag == 3
+                        ? SingleChildScrollView(
+                            child: Column(
+                            children: [
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: listOfIncomingExpired.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return RequestTicket(
+                                      listOfIncomingExpired[index],
+                                      1,
+                                    );
+                                  }),
+                            ],
+                          ))
+                        : SingleChildScrollView(
+                            child: Center(
+                                child: Text(
+                                    "No project is requesting for your resources.")),
+                          );
   }
 }
 
