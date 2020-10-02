@@ -57,12 +57,14 @@ class _BadgeCreationState extends State<BadgeCreation> {
                       Container(
                         padding: EdgeInsets.all(10),
                         margin: EdgeInsets.all(10),
-                        child: TextField(
+                        child: TextFormField(
+                          initialValue: widget.project["badgeTitle"] != null ? widget.project["badgeTitle"] : "",
                           decoration: InputDecoration(hintText: 'Badge Title'),
-                          controller: _badgeTitleController,
+                          // controller: _badgeTitleController,
                           onChanged: (text) {
-                           setState(() { widget.project["badgeTitle"] = text; 
-                              });
+                            setState(() {
+                              widget.project["badgeTitle"] = text;
+                            });
                           },
                         ),
                       ),

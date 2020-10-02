@@ -217,6 +217,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                             ...buildFoundersRow(),
                             ...buildTeamMemberRow(project.teamMembers),
                             ...buildAttachments(),
+                            ...buildBadgeRow(),
                             ...buildSDGRow()
                           ]),
                     )
@@ -291,7 +292,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               (project.documents[documentKeys[index]]);
                           String url =
                               ApiBaseHelper().baseUrl + fileName.substring(30);
-                          print(url);
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {
@@ -400,6 +400,36 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
             itemCount: project.projectOwners.length),
       )
     ];
+  }
+
+  List<Widget> buildBadgeRow() {
+    print(project.projectBadge);
+    if (project.projectBadge != null) {
+      return [
+        Padding(
+          padding: EdgeInsets.only(
+              top: 1.5 * SizeConfig.heightMultiplier,
+              right: 8.0 * SizeConfig.widthMultiplier,
+              left: 8.0 * SizeConfig.widthMultiplier),
+          child: Text(
+            "PROJECT BADGE",
+            style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: SizeConfig.textMultiplier * 2),
+          ),
+        ),
+        Container(
+            padding: EdgeInsets.only(
+                top: 1.5 * SizeConfig.heightMultiplier,
+                left: 8.0 * SizeConfig.widthMultiplier),
+            height: 12 * SizeConfig.heightMultiplier,
+            width: 12 * SizeConfig.heightMultiplier,
+            child: Center(child: AttachmentImage(project.projectBadge.icon)))
+      ];
+    } else {
+      return [SizedBox.shrink()];
+    }
+    ;
   }
 
   Widget _buildAvatar(profile, {double radius = 80}) {
@@ -578,10 +608,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     Text("Follow", style: AppTheme.titleLight),
                   ],
                 )),
-            if (project.teamMembers.indexWhere((element) => element.accountId == myProfile.accountId) == -1
-            // && project.joinRequests.indexWhere((element) => element.requestor.accountId==myProfile.accountId) == -1
-            && project.projectOwners.indexWhere((element) => element.accountId==myProfile.accountId) == -1
-            ) //Only able to join a project that Not currently part of,jave not applied to, not the owenr for
+            if (project.teamMembers.indexWhere((element) =>
+                        element.accountId == myProfile.accountId) ==
+                    -1
+                // && project.joinRequests.indexWhere((element) => element.requestor.accountId==myProfile.accountId) == -1
+                &&
+                project.projectOwners.indexWhere((element) =>
+                        element.accountId == myProfile.accountId) ==
+                    -1) //Only able to join a project that Not currently part of,jave not applied to, not the owenr for
               FlatButton(
                   onPressed: () async {
                     await joinProject();
@@ -602,8 +636,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       Text("Join Team", style: AppTheme.titleLight),
                     ],
                   )),
-            if (project.teamMembers.indexWhere((element) => element.accountId == myProfile.accountId) > -1)
-            //only able to leave a projct that youre a team member of
+            if (project.teamMembers.indexWhere(
+                    (element) => element.accountId == myProfile.accountId) >
+                -1)
+              //only able to leave a projct that youre a team member of
               FlatButton(
                   onPressed: () async {
                     await leaveProject();
@@ -673,49 +709,68 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       Text("Edit Project", style: AppTheme.titleLight),
                     ],
                   )),
-              FlatButton(
-                  onPressed: () {
-                  },
-                  visualDensity: VisualDensity.comfortable,
-                  highlightColor: Colors.transparent,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Icon(
-                          Icons.check_box_outlined,
-                          color: Colors.grey[700],
+              if (project.projStatus == "ON_HOLD")
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _completeDialog(context);
+                    },
+                    visualDensity: VisualDensity.comfortable,
+                    highlightColor: Colors.transparent,
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Icon(
+                            Icons.check_box_outlined,
+                            color: Colors.grey[700],
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Text("Mark as Complete", style: AppTheme.titleLight),
-                    ],
-                  )),
-              FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _terminateDialog(context);
-                  },
-                  visualDensity: VisualDensity.comfortable,
-                  highlightColor: Colors.transparent,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Icon(
-                          FlutterIcons.stop_circle_faw,
-                          color: Colors.grey[700],
+                        SizedBox(width: 10),
+                        Text("Mark as Complete", style: AppTheme.titleLight),
+                      ],
+                    )),
+              if (project.projStatus == "ON_HOLD")
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _terminateDialog(context);
+                    },
+                    visualDensity: VisualDensity.comfortable,
+                    highlightColor: Colors.transparent,
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Icon(
+                            FlutterIcons.stop_circle_faw,
+                            color: Colors.grey[700],
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Text("Terminate", style: AppTheme.titleLight),
-                    ],
-                  ))
+                        SizedBox(width: 10),
+                        Text("Terminate", style: AppTheme.titleLight),
+                      ],
+                    ))
             ],
           ],
         ));
+  }
+
+  markProjectAsComplete() async {
+    final url =
+        "authenticated/completeProject?projectId=${widget.projectId}&profileId=${myProfile.accountId}";
+    try {
+      var accessToken = Provider.of<Auth>(this.context).accessToken;
+      final response =
+          await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+      print("Success");
+      Navigator.of(this.context).pop("Completed-Project");
+    } catch (error) {
+      showErrorDialog(error.toString(), this.context);
+      print("Failure");
+    }
   }
 
   joinProject() async {
@@ -732,6 +787,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       print("Failure");
     }
   }
+
   leaveProject() async {
     final url =
         "authenticated/leaveProject?projectId=${widget.projectId}&memberId=${myProfile.accountId}";
@@ -774,6 +830,96 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 ],
               ));
     }
+  }
+
+  _completeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            child: Container(
+              padding: EdgeInsets.only(right: 16.0),
+              height: 150,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(75),
+                      bottomLeft: Radius.circular(75),
+                      topRight: Radius.circular(10),
+                      bottomRight: Radius.circular(10))),
+              child: Row(
+                children: <Widget>[
+                  SizedBox(width: 20.0),
+                  CircleAvatar(
+                    radius: 55,
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                      image: AssetImage(
+                        './././assets/images/info-icon.png',
+                      ),
+                    ))),
+                  ),
+                  SizedBox(width: 20.0),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Alert!",
+                          style: Theme.of(context).textTheme.title,
+                        ),
+                        SizedBox(height: 10.0),
+                        Flexible(
+                          child: Text(
+                              "Do you want to mark this project as complete?"),
+                        ),
+                        SizedBox(height: 10.0),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: RaisedButton(
+                                child: Text("No"),
+                                color: Colors.red,
+                                colorBrightness: Brightness.dark,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0)),
+                              ),
+                            ),
+                            SizedBox(width: 10.0),
+                            Expanded(
+                              child: RaisedButton(
+                                child: Text("Yes"),
+                                color: Colors.green,
+                                colorBrightness: Brightness.dark,
+                                onPressed: () async {
+                                  await markProjectAsComplete();
+                                  Navigator.of(this.context).pop();
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0)),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   _terminateDialog(BuildContext context) {
@@ -886,7 +1032,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       case '.xlsx':
         {
           ext = 2;
-          print(ext.toString() + "ASDASDSDADsd");
         }
         break;
       default:
@@ -961,11 +1106,6 @@ final List<String> imgList = [
   "https://localhost:8443/api/v1/files/init/project2.jpg",
   "https://localhost:8443/api/v1/files/init/project3.jpg",
   "https://localhost:8443/api/v1/files/init/project6.jpg",
-  // "https://localhost:8443/api/v1/files/init/project5.png"
-  // 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
-  //     'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-  // 'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-  // 'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
 ];
 final List<String> iconList = [
   "assets/icons/word.png",

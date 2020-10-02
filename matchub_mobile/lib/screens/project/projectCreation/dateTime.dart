@@ -22,7 +22,7 @@ class _StartState extends State<Start> {
             height: 300,
             child: CupertinoDatePicker(
               mode: CupertinoDatePickerMode.dateAndTime,
-              minimumDate: DateTime.now().subtract(Duration(minutes: 30)),
+              minimumDate: (widget.project['projectId'] == null) ? DateTime.now().subtract(Duration(minutes: 30)) : null,
               initialDateTime: widget.project["startDate"],
               onDateTimeChanged: (newDateTime) {
                 setState(() {

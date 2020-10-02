@@ -33,6 +33,7 @@ class _ResourceIncomingPendingState extends State<ResourceIncomingPending> {
   List<ResourceRequest> listOfIncomingPending = [];
   List<ResourceRequest> listOfIncomingApproved = [];
   List<ResourceRequest> listOfIncomingRejected = [];
+  List<ResourceRequest> listOfIncomingExpired = [];
   bool _isLoading;
 
   @override
@@ -59,10 +60,12 @@ class _ResourceIncomingPendingState extends State<ResourceIncomingPending> {
     listOfIncomingPending = [];
     listOfIncomingApproved = [];
     listOfIncomingRejected = [];
+    listOfIncomingExpired = [];
     for (ResourceRequest rr in listOfIncomingRequests) {
       if (rr.status == "ON_HOLD") listOfIncomingPending.add(rr);
       if (rr.status == "ACCEPTED") listOfIncomingApproved.add(rr);
       if (rr.status == "REJECTED") listOfIncomingRejected.add(rr);
+      if (rr.status == "EXPIRED") listOfIncomingExpired.add(rr);
     }
   }
 
@@ -121,11 +124,29 @@ class _ResourceIncomingPendingState extends State<ResourceIncomingPending> {
                               }),
                         ],
                       ))
-                    : SingleChildScrollView(
-                        child: Center(
-                            child: Text(
-                                "No project is requesting for your resources.")),
-                      );
+                    : listOfIncomingExpired.isNotEmpty && widget.flag == 3
+                        ? SingleChildScrollView(
+                            child: Column(
+                            children: [
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: listOfIncomingExpired.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return RequestTicket(
+                                      listOfIncomingExpired[index],
+                                      1,
+                                    );
+                                  }),
+                            ],
+                          ))
+                        : SingleChildScrollView(
+                            child: Center(
+                                child: Text(
+                                    "No project is requesting for your resources.")),
+                          );
   }
 }
 

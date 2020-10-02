@@ -56,7 +56,7 @@ class _IncomingRequestScreenState extends State<IncomingRequestScreen>
     // listOfIncomingRequests =
     //     Provider.of<ManageIncomingResourceRequest>(context).listOfRequests;
     return DefaultTabController(
-        length: 3,
+        length: 4,
         // child: FutureBuilder(
         //   future: listOfIncomingRequestsFuture,
         //   builder: (context, snapshot) => (snapshot.connectionState ==
@@ -76,7 +76,6 @@ class _IncomingRequestScreenState extends State<IncomingRequestScreen>
                         Tab(
                           icon: Row(
                             children: [
-                              Icon(FlutterIcons.library_books_mco),
                               Text('  Pending'),
                             ],
                           ),
@@ -84,7 +83,6 @@ class _IncomingRequestScreenState extends State<IncomingRequestScreen>
                         Tab(
                           icon: Row(
                             children: [
-                              Icon(FlutterIcons.tasks_faw5s),
                               Text('  Approved'),
                             ],
                           ),
@@ -92,8 +90,14 @@ class _IncomingRequestScreenState extends State<IncomingRequestScreen>
                         Tab(
                           icon: Row(
                             children: [
-                              Icon(FlutterIcons.briefcase_fea),
                               Text('  Rejected'),
+                            ],
+                          ),
+                        ),
+                        Tab(
+                          icon: Row(
+                            children: [
+                              Text('  Expired'),
                             ],
                           ),
                         ),
@@ -133,6 +137,12 @@ class _IncomingRequestScreenState extends State<IncomingRequestScreen>
                   child: ResourceIncomingPending(
                     //listOfIncomingRequests,
                     2,
+                  ),
+                ),
+                Container(
+                  child: ResourceIncomingPending(
+                    //listOfIncomingRequests,
+                    3,
                   ),
                 ),
               ],

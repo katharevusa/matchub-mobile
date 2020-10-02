@@ -26,6 +26,7 @@ class _WallState extends State<Wall> {
   Map<String, dynamic> post;
   Post newPost = new Post();
   List<Post> listOfPosts;
+  Future loadPosts;
   @override
   void initState() {
     post = {
@@ -39,6 +40,7 @@ class _WallState extends State<Wall> {
       'likes': newPost.likes,
       'listOfComments': newPost.listOfComments ?? [],
     };
+    loadPosts = retrieveAllPosts();
   }
 
   postFunc(context) async {
@@ -70,7 +72,7 @@ class _WallState extends State<Wall> {
     textFieldController.text = post['content'];
 
     return FutureBuilder(
-      future: retrieveAllPosts(),
+      future: loadPosts,
       builder: (context, snapshot) => (snapshot.connectionState ==
               ConnectionState.done)
           ? Padding(

@@ -40,7 +40,9 @@ class _ChatScreenState extends State<ChatScreen> {
       stream: chatRooms,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData || snapshot.data.documents.length == 0) {
-          return Container(height: 80*SizeConfig.heightMultiplier, child: Center(child: Text("No Chats here yet...")));
+          return Container(
+              height: 80 * SizeConfig.heightMultiplier,
+              child: Center(child: Text("No Chats here yet...")));
         }
 
         return Expanded(
@@ -81,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text("Inbox",
             style: TextStyle(
-                  color: Colors.grey[850],
+                color: Colors.grey[850],
                 fontSize: 3 * SizeConfig.textMultiplier,
                 fontWeight: FontWeight.w700)),
         elevation: 0,
@@ -114,29 +116,12 @@ class _ChatScreenState extends State<ChatScreen> {
         //     ),
         //   ),
         // ),
-        // actions: [
-        //   GestureDetector(
-        //     onTap: () {
-        //       AuthService().signOut();
-        //       Navigator.pushReplacement(context,
-        //           MaterialPageRoute(builder: (context) => Authenticate()));
-        //     },
-        //     child: Container(
-        //         padding: EdgeInsets.symmetric(horizontal: 16),
-        //         child: Icon(Icons.exit_to_app)),
-        //   )
-        // ],
       ),
-      body: Column(children: [
-        chatRoomsList(),
-      ]),
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.search),
-      //   onPressed: () {
-      //     // Navigator.push(
-      //     //     context, MaterialPageRoute(builder: (context) => Search()));
-      //   },
-      // ),
+      body: SingleChildScrollView(
+        child: Column(children: [
+          chatRoomsList(),
+        ]),
+      ),
     );
   }
 }
@@ -190,15 +175,6 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
         ? SizedBox.shrink()
         : GestureDetector(
             onTap: () async {
-              // if (!await DatabaseMethods().checkChatRoomExists(
-              //     myProfile.uuid, user.uuid)) {
-              //   DatabaseMethods().addChatRoom({
-              //     "createdAt": DateTime.now(),
-              //     "createdBy": myProfile.uuid,
-              //     "members": [myProfile.uuid, user.uuid]
-              //       ..sort(),
-              //   });
-              // }
               String chatRoomId = await DatabaseMethods()
                   .getChatRoomId(myProfile.uuid, user.uuid);
               print(chatRoomId);
@@ -223,39 +199,6 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
                     ? Text(
                         DateFormat('kk:mm').format(date),
                       )
-                    : Text(""))
-            //  Container(
-            //   // color: Colors.black26,
-            //   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            //   child: Row(
-            //     children: [
-            //       Container(
-            //         height: 30,
-            //         width: 30,
-            //         decoration: BoxDecoration(
-            //             // color: CustomTheme.colorAccent,
-            //             borderRadius: BorderRadius.circular(30)),
-            //         child: Text(user.name,
-            //             textAlign: TextAlign.center,
-            //             style: TextStyle(
-            //                 color: Colors.black,
-            //                 fontSize: 16,
-            //                 // fontFamily: 'OverpassRegular',
-            //                 fontWeight: FontWeight.w300)),
-            //       ),
-            //       SizedBox(
-            //         width: 12,
-            //       ),
-            //       // Text(userName,
-            //       //     textAlign: TextAlign.start,
-            //       //     style: TextStyle(
-            //       //         color: Colors.white,
-            //       //         fontSize: 16,
-            //       //         // fontFamily: 'OverpassRegular',
-            //       //         fontWeight: FontWeight.w300))
-            //     ],
-            //   ),
-            // ),
-            );
+                    : Text("")));
   }
 }

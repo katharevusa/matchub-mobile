@@ -1,3 +1,5 @@
+export 'badge.dart' ; 
+export 'joinRequest.dart' ; 
 export 'sdg.dart' ; 
 export 'resourceCategory.dart' ; 
 export 'stakeholder.dart' ; 

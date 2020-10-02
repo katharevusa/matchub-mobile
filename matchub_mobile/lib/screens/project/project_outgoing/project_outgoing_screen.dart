@@ -54,7 +54,7 @@ class _OutgoingProjectScreenState extends State<OutgoingProjectScreen>
 /*Front end methods*/
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 3,
+        length: 4,
         child:
             // FutureBuilder(
             //   future: listOfOutgoingRequestsFuture,
@@ -75,7 +75,6 @@ class _OutgoingProjectScreenState extends State<OutgoingProjectScreen>
                             Tab(
                               icon: Row(
                                 children: [
-                                  Icon(FlutterIcons.library_books_mco),
                                   Text('  Pending'),
                                 ],
                               ),
@@ -83,7 +82,6 @@ class _OutgoingProjectScreenState extends State<OutgoingProjectScreen>
                             Tab(
                               icon: Row(
                                 children: [
-                                  Icon(FlutterIcons.tasks_faw5s),
                                   Text('  Approved'),
                                 ],
                               ),
@@ -91,8 +89,14 @@ class _OutgoingProjectScreenState extends State<OutgoingProjectScreen>
                             Tab(
                               icon: Row(
                                 children: [
-                                  Icon(FlutterIcons.briefcase_fea),
                                   Text('  Rejected'),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              icon: Row(
+                                children: [
+                                  Text('  Expired'),
                                 ],
                               ),
                             ),
@@ -120,6 +124,11 @@ class _OutgoingProjectScreenState extends State<OutgoingProjectScreen>
                     Container(
                       child: ProjectOutgoingTabview(
                         2,
+                      ),
+                    ),
+                    Container(
+                      child: ProjectOutgoingTabview(
+                        3,
                       ),
                     ),
                   ],
