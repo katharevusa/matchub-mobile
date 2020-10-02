@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
@@ -25,7 +26,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
               return ChatScreen();
             case ProjectDetailScreen.routeName:
               return ProjectDetailScreen(
-                projectId: settings.arguments as int,
+                project: settings.arguments as Project,
               );
           }
         });

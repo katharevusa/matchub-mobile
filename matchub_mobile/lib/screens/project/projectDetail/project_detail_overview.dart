@@ -22,15 +22,16 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ProjectDetailScreen extends StatefulWidget {
   static const routeName = "/project-details";
-  int projectId;
+  Project project;
 
-  ProjectDetailScreen({this.projectId});
+  ProjectDetailScreen({this.project});
 
   @override
   _ProjectDetailScreenState createState() => _ProjectDetailScreenState();
 }
 
 class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
+  bool _isLoading;
   Future loadProject;
   Project project;
   List<String> documentKeys;
@@ -38,18 +39,22 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   GlobalKey<ScaffoldState> _projectDetailScaffoldKey = GlobalKey();
   @override
-  void didChangeDependencies() {
+  void initState() {
+    _isLoading = false;
+    project = widget.project;
     loadProject = getProjects();
-    super.didChangeDependencies();
+    super.initState();
   }
 
   getProjects() async {
     final responseData = await ApiBaseHelper().getProtected(
-        "authenticated/getProject?projectId=${widget.projectId}",
+        "authenticated/getProject?projectId=${widget.project.projectId}",
         Provider.of<Auth>(this.context, listen: false).accessToken);
 
     project = Project.fromJson(responseData);
     documentKeys = project.documents.keys.toList();
+
+    setState(()=>_isLoading = false);
   }
 
   List<Widget> getPhotoList(photos) {
@@ -122,7 +127,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     myProfile = Provider.of<Auth>(context).myProfile;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         key: _projectDetailScaffoldKey,
         appBar: AppBar(
           leading: Padding(
@@ -146,8 +151,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   context: context,
                   builder: (context) => buildMorePopUp(context)).then((value) {
                 setState(() {
-                  loadProject = getProjects();
+                  _isLoading = true;
+
                 });
+                  getProjects();
                 switch (value) {
                   case "Joined-Project":
                     _projectDetailScaffoldKey.currentState
@@ -180,52 +187,49 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           backgroundColor: AppTheme.appBackgroundColor,
           elevation: 0,
         ),
-        body: FutureBuilder(
-          future: loadProject,
-          builder: (context, snapshot) =>
-              snapshot.connectionState == ConnectionState.done
-                  ? SingleChildScrollView(
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8.0 * SizeConfig.widthMultiplier),
-                              child: Text(
-                                project.projectTitle,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 3.2 * SizeConfig.textMultiplier),
-                              ),
-                            ),
-                            UpvoteRow(
-                                project: project,
-                                myProfile: myProfile,
-                                getProjects: getProjects),
-                            CarouselSlider(
-                              options: CarouselOptions(
-                                  autoPlay: false,
-                                  aspectRatio: 1.8,
-                                  viewportFraction: 1.0,
-                                  enlargeCenterPage: true,
-                                  enableInfiniteScroll: false),
-                              items: (project.photos.isNotEmpty)
-                                  ? getPhotoList(project.photos)
-                                  : getPhotoList(imgList),
-                            ),
-                            ...buildDescription(),
-                            ...buildFoundersRow(),
-                            ...buildTeamMemberRow(project.teamMembers),
-                            ...buildAttachments(),
-                            ...buildBadgeRow(),
-                            ...buildSDGRow()
-                          ]),
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    ),
-        ));
+        body: _isLoading
+            ? Container()
+            : SingleChildScrollView(
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.0 * SizeConfig.widthMultiplier),
+                        child: Text(
+                          project.projectTitle,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 3.2 * SizeConfig.textMultiplier),
+                        ),
+                      ),
+                      UpvoteRow(
+                          project: project,
+                          myProfile: myProfile,
+                          getProjects: getProjects),
+                      Hero(
+                        tag: project.projectProfilePic,
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                              autoPlay: false,
+                              aspectRatio: 1.8,
+                              viewportFraction: 1.0,
+                              enlargeCenterPage: true,
+                              enableInfiniteScroll: false),
+                          items: (project.photos.isNotEmpty)
+                              ? getPhotoList(project.photos)
+                              : getPhotoList(imgList),
+                        ),
+                      ),
+                      ...buildDescription(),
+                      ...buildFoundersRow(),
+                      ...buildTeamMemberRow(project.teamMembers),
+                      ...buildAttachments(),
+                      ...buildBadgeRow(),
+                      ...buildSDGRow()
+                    ]),
+              ));
   }
 
   List<Widget> buildDescription() {
@@ -420,13 +424,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           ),
         ),
         Container(
-            padding: EdgeInsets.only(
-                left: 8.0 * SizeConfig.widthMultiplier),
+            padding: EdgeInsets.only(left: 8.0 * SizeConfig.widthMultiplier),
             height: 12 * SizeConfig.heightMultiplier,
             width: 12 * SizeConfig.heightMultiplier,
-            child: Center(child: Tooltip(
-              message: project.projectBadge.badgeTitle,
-              child: AttachmentImage(project.projectBadge.icon))))
+            child: Center(
+                child: Tooltip(
+                    message: project.projectBadge.badgeTitle,
+                    child: AttachmentImage(project.projectBadge.icon))))
       ];
     } else {
       return [SizedBox.shrink()];
@@ -762,7 +766,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   markProjectAsComplete() async {
     final url =
-        "authenticated/completeProject?projectId=${widget.projectId}&profileId=${myProfile.accountId}";
+        "authenticated/completeProject?projectId=${widget.project.projectId}&profileId=${myProfile.accountId}";
     try {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =
@@ -777,7 +781,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   joinProject() async {
     final url =
-        "authenticated/createJoinRequest?projectId=${widget.projectId}&profileId=${myProfile.accountId}";
+        "authenticated/createJoinRequest?projectId=${widget.project.projectId}&profileId=${myProfile.accountId}";
     try {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =
@@ -792,7 +796,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   leaveProject() async {
     final url =
-        "authenticated/leaveProject?projectId=${widget.projectId}&memberId=${myProfile.accountId}";
+        "authenticated/leaveProject?projectId=${widget.project.projectId}&memberId=${myProfile.accountId}";
     try {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =
@@ -807,7 +811,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   void terminateProject() async {
     final url =
-        "authenticated/terminateProject?projectId=${widget.projectId}&profileId=${myProfile.accountId}";
+        "authenticated/terminateProject?projectId=${widget.project.projectId}&profileId=${myProfile.accountId}";
     try {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =

@@ -105,16 +105,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           RefreshIndicator(
                               onRefresh: () => getUser(),
-                              child: SingleChildScrollView(
-                                  child: Column(
-                                children: [
-                                  BasicInfo(
-                                      profile: profile,
-                                      follow: toggleFollowing),
-                                  DescriptionInfo(profile: profile),
-                                  Wall(profile: profile)
-                                ],
-                              ))),
+                              child: GestureDetector(
+                                onTap: () => FocusScope.of(context).unfocus(),
+                                child: SingleChildScrollView(
+                                    child: Column(
+                                  children: [
+                                    BasicInfo(
+                                        profile: profile,
+                                        follow: toggleFollowing),
+                                    DescriptionInfo(profile: profile),
+                                    Wall(profile: profile,)
+                                  ],
+                                )),
+                              )),
                           ProfileProjects(projects: profile.projectsOwned),
                           ProfileResource(profile),
                           ProfileReviews(),

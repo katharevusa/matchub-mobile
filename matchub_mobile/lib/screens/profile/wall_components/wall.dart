@@ -50,6 +50,8 @@ class _WallState extends State<Wall> {
     try {
       final response = await ApiBaseHelper().postProtected(url,
           accessToken: accessToken, body: json.encode(post));
+      loadPosts = retrieveAllPosts();
+      setState((){});
     } catch (error) {
       showErrorDialog(error.toString(), context);
     }
@@ -63,7 +65,6 @@ class _WallState extends State<Wall> {
     listOfPosts =
         (responseData['content'] as List).map((e) => Post.fromJson(e)).toList();
     listOfPosts = new List.from(listOfPosts.reversed);
-    print(listOfPosts[0].content);
   }
 
   @override

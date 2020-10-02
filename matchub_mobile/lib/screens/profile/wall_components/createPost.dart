@@ -29,11 +29,12 @@ class _CreatePostState extends State<CreatePost> {
             controller: widget.textEditingController,
             decoration: InputDecoration(
               labelText: 'Write a post',
-              hintText: 'What do you want to talk about?',
+              hintText: 'What\'s on your mind?',
               labelStyle: TextStyle(color: Colors.grey[850], fontSize: 14),
               fillColor: Colors.grey[100],
               hoverColor: Colors.grey[100],
               suffix: IconButton(
+                visualDensity: VisualDensity.compact,
                 icon: Icon(Icons.send),
                 onPressed: () {
                   widget.postFunc(context);
@@ -60,6 +61,6 @@ class _CreatePostState extends State<CreatePost> {
               widget.post["content"] = text;
             },
           )
-        : Column();
+        : SizedBox.shrink();
   }
 }

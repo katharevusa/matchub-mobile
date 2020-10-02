@@ -9,6 +9,7 @@ import 'package:matchub_mobile/screens/chat/messages.dart';
 import 'package:matchub_mobile/screens/project_management/channels/channel_messages.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/database.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,9 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
 
   @override
   void initState() {
+    Provider.of<ManageProject>(context, listen: false).getProject(
+        widget.project.projectId,
+        Provider.of<Auth>(context, listen: false).accessToken);
     getProjectChannels();
     super.initState();
   }
@@ -137,8 +141,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
               heroTag: "channelCreateBtn",
               child: Icon(Icons.add),
               onPressed: () {
-                Navigator.of(
-                    context, rootNavigator: true).push(
+                Navigator.of(context, rootNavigator: true).push(
                     MaterialPageRoute(
                         builder: (context) =>
                             ChannelCreation(project: widget.project)));
@@ -171,9 +174,17 @@ class _ChannelTileState extends State<ChannelTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () async {
-          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-              builder: (context) => ChannelMessages(
-                  channelData: widget.channelData, project: widget.project)));
+          Navigator.of(context, rootNavigator: true)
+              .push(MaterialPageRoute(
+                  builder: (context) => ChannelMessages(
+                      channelData: widget.channelData,
+                      project: widget.project)))
+              .then((value) {
+            Provider.of<ManageProject>(context, listen: false)
+                .getProject(widget.project.projectId,
+                    Provider.of<Auth>(context, listen: false).accessToken)
+                .getProjectChannels();
+          });
         },
         child: ListTile(
           dense: true,

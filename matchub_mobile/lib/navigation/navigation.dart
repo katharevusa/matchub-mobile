@@ -289,7 +289,7 @@ class _TabsScreenState extends State<TabsScreen> {
         return MaterialPageRoute(
             fullscreenDialog: true,
             builder: (context) => ProjectDetailScreen(
-                  projectId: settings.arguments as int,
+                  project: settings.arguments as Project,
                 ),
             settings: settings);
       case ResourceDetailScreen.routeName:

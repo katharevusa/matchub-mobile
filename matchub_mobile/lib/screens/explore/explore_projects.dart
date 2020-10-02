@@ -54,7 +54,7 @@ class ExploreProjects extends StatelessWidget {
             onTap: () => Navigator.of(
               context,
             ).pushNamed(ProjectDetailScreen.routeName,
-                arguments: allProjects[index].projectId),
+                arguments: allProjects[index]),
             child: Container(
                 margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                 width: 150.0,

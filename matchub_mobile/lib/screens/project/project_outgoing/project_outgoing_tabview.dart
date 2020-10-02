@@ -136,7 +136,7 @@ class _ProjectOutgoingTabviewState extends State<ProjectOutgoingTabview> {
                         : SingleChildScrollView(
                             child: Center(
                                 child: Text(
-                                    "You have not make any resource donation request.")),
+                                    "You have not made any resource donation request.")),
                           );
   }
 }
@@ -297,8 +297,7 @@ class _RequestTicketState extends State<RequestTicket> {
                                 fontWeight: FontWeight.w400,
                               )),
                           Text(
-                            (widget.request.unitsRequired *
-                                        resourceCategory.perUnit)
+                            (widget.request.unitsRequired)
                                     .toString() +
                                 " " +
                                 resourceCategory.unitName,
@@ -314,7 +313,7 @@ class _RequestTicketState extends State<RequestTicket> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text('Resource onwer:',
+                          Text('Resource owner:',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400,

@@ -142,7 +142,7 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
                             style: label,
                           ),
                           Text(
-                              (category.perUnit * _n).toString() +
+                              ( _n).toString() +
                                   category.unitName,
                               style: label)
                         ],
@@ -174,7 +174,7 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
                           max: widget.resource.units.toDouble(),
                           value: _n,
                           label: '$_n',
-                          divisions: 10,
+                          divisions: (widget.resource.units).toInt(),
                           onChanged: (value) {
                             if (this.mounted) {
                               setState(() {

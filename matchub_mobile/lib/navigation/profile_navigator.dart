@@ -40,7 +40,7 @@ class _ProfileNavigatorState extends State<ProfileNavigator> {
               return FollowOverviewScreen(user: user, initialTab: initialTab);
             case ProjectDetailScreen.routeName:
               return ProjectDetailScreen(
-                projectId: settings.arguments as int,
+                project: settings.arguments as Project,
               );
             case EditIndividualScreen.routeName:
               return EditIndividualScreen(

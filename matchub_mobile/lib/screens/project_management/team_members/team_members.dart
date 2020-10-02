@@ -25,6 +25,13 @@ class TeamMembers extends StatefulWidget {
 }
 
 class _TeamMembersState extends State<TeamMembers> {
+  @override
+  initState() {
+    Provider.of<ManageProject>(context, listen: false)
+        .getProject(widget.project.projectId, Provider.of<Auth>(context, listen: false).accessToken);
+    super.initState();
+  }
+
   bool isExpanded = false;
   updateProject() async {
     final instance = Provider.of<Auth>(context, listen: false);
@@ -57,6 +64,7 @@ class _TeamMembersState extends State<TeamMembers> {
         "createdAt": DateTime.now(),
         "createdBy": myProfile.uuid,
         "members": [myProfile.uuid, recipient.uuid]..sort(),
+        "recentMessage": {}
       });
     }
     String chatRoomId =
@@ -70,7 +78,7 @@ class _TeamMembersState extends State<TeamMembers> {
             Messages(chatRoomId: chatRoomId, recipient: recipientProfile)));
   }
 
-  _removeTeamMember(int teamMemberId) async { 
+  _removeTeamMember(int teamMemberId) async {
     final instance = Provider.of<Auth>(context, listen: false);
     try {
       await ApiBaseHelper().deleteProtected(
@@ -176,8 +184,8 @@ class _TeamMembersState extends State<TeamMembers> {
                 caption: 'Remove',
                 color: Colors.red[300],
                 icon: Icons.delete,
-                onTap: () =>
-                    _removeTeamMember(widget.project.teamMembers[index].accountId),
+                onTap: () => _removeTeamMember(
+                    widget.project.teamMembers[index].accountId),
               ),
             ],
           );

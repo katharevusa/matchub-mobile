@@ -26,7 +26,7 @@ class _ProjectNavigatorState extends State<ProjectNavigator> {
           switch (settings.name) {
             case ProjectDetailScreen.routeName:
               return ProjectDetailScreen(
-                projectId: settings.arguments as int,
+                project: settings.arguments as Project,
               );
             case ProjectManagementOverview.routeName:
               return ProjectManagementOverview(settings.arguments as Project);

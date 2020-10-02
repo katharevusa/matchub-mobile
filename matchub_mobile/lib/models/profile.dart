@@ -41,7 +41,7 @@ class Profile with ChangeNotifier {
     List<Project> projectsOwned;
     List joinRequests;
     List reviewsReceived;
-    List badges;
+    List<Badge> badges;
     List fundPladges;
     List tasks;
     List managedChannel;

@@ -87,7 +87,8 @@ class _BasicInfoState extends State<BasicInfo> {
                               Flexible(
                                   fit: FlexFit.tight,
                                   child: Padding(
-                                    padding: EdgeInsets.all(1.25*SizeConfig.widthMultiplier),
+                                    padding: EdgeInsets.all(
+                                        1.25 * SizeConfig.widthMultiplier),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -120,7 +121,8 @@ class _BasicInfoState extends State<BasicInfo> {
                                       );
                                     },
                                     child: Padding(
-                                        padding:  EdgeInsets.all(1.25*SizeConfig.widthMultiplier),
+                                        padding: EdgeInsets.all(
+                                            1.25 * SizeConfig.widthMultiplier),
                                         child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -152,7 +154,8 @@ class _BasicInfoState extends State<BasicInfo> {
                                         });
                                   },
                                   child: Padding(
-                                      padding: EdgeInsets.all(1.25* SizeConfig.widthMultiplier),
+                                      padding: EdgeInsets.all(
+                                          1.25 * SizeConfig.widthMultiplier),
                                       child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -182,29 +185,32 @@ class _BasicInfoState extends State<BasicInfo> {
               children: [
                 if (widget.profile.accountId != myProfile.accountId) ...[
                   Expanded(
-                    child: OutlineButton(
-                  onPressed: () async {
-                    if (!await DatabaseMethods().checkChatRoomExists(
-                        myProfile.uuid, widget.profile.uuid)) {
-                      DatabaseMethods().addChatRoom({
-                        "createdAt": DateTime.now(),
-                        "createdBy": myProfile.uuid,
-                        "members": [myProfile.uuid, widget.profile.uuid]
-                          ..sort(),
-                      });
-                    }
-                    String chatRoomId = await DatabaseMethods().getChatRoomId(myProfile.uuid, widget.profile.uuid);
-                    print(chatRoomId);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Messages(chatRoomId: chatRoomId, recipient: widget.profile
-                                )));
-                  },
-                  shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(5.0)),
-                  child: Text("Contact"),
-                )),
+                      child: OutlineButton(
+                    onPressed: () async {
+                      if (!await DatabaseMethods().checkChatRoomExists(
+                          myProfile.uuid, widget.profile.uuid)) {
+                        DatabaseMethods().addChatRoom({
+                          "createdAt": DateTime.now(),
+                          "createdBy": myProfile.uuid,
+                          "members": [myProfile.uuid, widget.profile.uuid]
+                            ..sort(),
+                          "recentMessage": {}
+                        });
+                      }
+                      String chatRoomId = await DatabaseMethods()
+                          .getChatRoomId(myProfile.uuid, widget.profile.uuid);
+                      print(chatRoomId);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Messages(
+                                  chatRoomId: chatRoomId,
+                                  recipient: widget.profile)));
+                    },
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(5.0)),
+                    child: Text("Contact"),
+                  )),
                   SizedBox(width: 10),
                   Expanded(
                       child: OutlineButton(

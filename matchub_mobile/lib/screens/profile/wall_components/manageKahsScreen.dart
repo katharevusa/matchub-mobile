@@ -30,13 +30,11 @@ class _ManageKahsScreenState extends State<ManageKahsScreen> {
   List<Profile> members = [];
   Profile myProfile;
   List<Profile> newMembersList;
-  bool _isLoading;
 
   @override
   void initState() {
-    _isLoading = true;
-    loadKah();
-    loadMembers();
+    kahsFuture= loadKah();
+    organisationMembersFuture = loadMembers();
     super.initState();
   }
   // @override
@@ -71,9 +69,6 @@ class _ManageKahsScreenState extends State<ManageKahsScreen> {
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageOrganisationMembers>(context, listen: false)
         .getMembers(profile, accessToken);
-    setState(() {
-      _isLoading = false;
-    });
     // await getList();
   }
 
@@ -82,9 +77,6 @@ class _ManageKahsScreenState extends State<ManageKahsScreen> {
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageListOfKah>(context, listen: false)
         .getKahs(profile, accessToken);
-    setState(() {
-      _isLoading = false;
-    });
     //  await getList();
   }
 
@@ -180,104 +172,95 @@ class _ManageKahsScreenState extends State<ManageKahsScreen> {
   @override
   Widget build(BuildContext context) {
     getList();
-    return _isLoading
-        ? Container(child: Center(child: Text("I am loading")))
-        : Scaffold(
-            appBar: AppBar(
-              title: Text("Manage Kahs"),
-            ),
-            body: FutureBuilder(
-              future: Future.wait([organisationMembersFuture, kahsFuture]),
-              builder: (context, AsyncSnapshot<List<dynamic>> snapshot) =>
-                  (snapshot.connectionState == ConnectionState.done)
-                      ? GestureDetector(
-                          onTap: () => FocusScope.of(context).unfocus(),
-                          child: Scaffold(
-                              body: Column(
-                            children: [
-                              SizedBox(height: 10),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: TextFormField(
-                                  controller: _textController,
-                                  expands: false,
-                                  decoration: InputDecoration(
-                                    hintText: "Search Profile...",
-                                    border: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.grey),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.grey),
-                                    ),
-                                  ),
-                                  onChanged: onItemChanged,
-                                ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Manage Key Appointment Holders"),
+      ),
+      body: FutureBuilder(
+        future: Future.wait([organisationMembersFuture, kahsFuture]),
+        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) =>
+            (snapshot.connectionState == ConnectionState.done)
+                ? GestureDetector(
+                    onTap: () => FocusScope.of(context).unfocus(),
+                    child: Scaffold(
+                        body: Column(
+                      children: [
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: TextFormField(
+                            controller: _textController,
+                            expands: false,
+                            decoration: InputDecoration(
+                              hintText: "Search Profile...",
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
-                              SizedBox(height: 20),
-                              ListView.separated(
-                                shrinkWrap: true,
-                                separatorBuilder: (context, index) =>
-                                    SizedBox(height: 5),
-                                itemBuilder: (context, index) => ListTile(
-                                  onTap: () => Navigator.of(context).pushNamed(
-                                      ProfileScreen.routeName,
-                                      arguments:
-                                          newMembersList[index].accountId),
-                                  leading: ClipOval(
-                                      child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    child: AttachmentImage(
-                                        newMembersList[index].profilePhoto),
-                                  )),
-                                  title: Text(newMembersList[index].name),
-                                  trailing: FlatButton(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 30),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6)),
-                                    child: Text(
-                                        (kahs.indexWhere((m) =>
-                                                    newMembersList[index]
-                                                        .accountId ==
-                                                    m.accountId) >=
-                                                0)
-                                            ? "Remove"
-                                            : " Add ",
-                                        style: TextStyle(color: Colors.white)),
-                                    onPressed: () async {
-                                      bool isKah;
-                                      if (kahs.indexWhere((m) =>
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                            ),
+                            onChanged: onItemChanged,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          separatorBuilder: (context, index) =>
+                              SizedBox(height: 5),
+                          itemBuilder: (context, index) => ListTile(
+                            onTap: () => Navigator.of(context).pushNamed(
+                                ProfileScreen.routeName,
+                                arguments: newMembersList[index].accountId),
+                            leading: ClipOval(
+                                child: Container(
+                              height: 50,
+                              width: 50,
+                              child: AttachmentImage(
+                                  newMembersList[index].profilePhoto),
+                            )),
+                            title: Text(newMembersList[index].name),
+                            trailing: FlatButton(
+                              padding: EdgeInsets.symmetric(horizontal: 30),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6)),
+                              child: Text(
+                                  (kahs.indexWhere((m) =>
                                               newMembersList[index].accountId ==
                                               m.accountId) >=
-                                          0) {
-                                        isKah = true;
-                                      } else {
-                                        isKah = false;
-                                      }
-                                      setState(() {
-                                        toggleKahMember(
-                                            newMembersList[index], isKah);
-                                      });
-                                    },
-                                    color: (kahs.indexWhere((m) =>
-                                                newMembersList[index]
-                                                    .accountId ==
-                                                m.accountId) >=
-                                            0)
-                                        ? Colors.red.shade300
-                                        : Colors.green.shade400,
-                                  ),
-                                ),
-                                itemCount: newMembersList.length,
-                              ),
-                            ],
-                          )),
-                        )
-                      : Center(child: CircularProgressIndicator()),
-            ),
-          );
+                                          0)
+                                      ? "Remove"
+                                      : " Add ",
+                                  style: TextStyle(color: Colors.white)),
+                              onPressed: () async {
+                                bool isKah;
+                                if (kahs.indexWhere((m) =>
+                                        newMembersList[index].accountId ==
+                                        m.accountId) >=
+                                    0) {
+                                  isKah = true;
+                                } else {
+                                  isKah = false;
+                                }
+                                setState(() {
+                                  toggleKahMember(newMembersList[index], isKah);
+                                });
+                              },
+                              color: (kahs.indexWhere((m) =>
+                                          newMembersList[index].accountId ==
+                                          m.accountId) >=
+                                      0)
+                                  ? Colors.red.shade300
+                                  : Colors.green.shade400,
+                            ),
+                          ),
+                          itemCount: newMembersList.length,
+                        ),
+                      ],
+                    )),
+                  )
+                : Container(),
+      ),
+    );
   }
 }

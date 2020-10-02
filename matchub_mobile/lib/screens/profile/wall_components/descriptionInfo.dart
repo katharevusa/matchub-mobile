@@ -65,7 +65,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
         .getMembers(widget.profile, accessToken);
     // setState(() {
     //   _isLoading = false;
-    // }); 
+    // });
     // await getKah();
   }
 
@@ -107,6 +107,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
                 ],
                 borderRadius: BorderRadius.circular(15)),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (widget.profile.country != null)
@@ -125,7 +126,8 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
                 SizedBox(height: 20),
                 buildSkillset(),
                 SizedBox(height: 20),
-                buildProfileUrl(),
+                // buildProfileUrl(),
+                buildBadges(),
                 SizedBox(height: 20),
                 Column(
                   children: [
@@ -142,10 +144,8 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
                     )
                   ],
                 ),
-                SizedBox(height: 20),
                 // return this only if it is organisation user
                 buildKah(context),
-                SizedBox(height: 20),
                 ...buildOrganisationMembers(context, members),
               ],
             ));
@@ -153,7 +153,9 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
 
   buildOrganisationMembers(BuildContext context, List<Profile> members) {
     Profile currentUser = Provider.of<Auth>(context, listen: false).myProfile;
-    List<Widget> organisationMembers = [];
+    List<Widget> organisationMembers = [
+      SizedBox(height: 20),
+    ];
     print(currentUser.name);
     if (widget.profile.isOrganisation) {
       organisationMembers.add(Row(
@@ -294,6 +296,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
     if (widget.profile.isOrganisation) {
       if (kahs.isNotEmpty) {
         return Column(children: [
+          SizedBox(height: 20),
           Row(
             children: [
               Expanded(child: Text("Key Appointment Holder")),
@@ -416,7 +419,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Flexible(flex: 1, child: Text("Skillset")),
+          Flexible(flex: 1, child: Text("Skillsets")),
           Flexible(
             flex: 3,
             child: Tags(
@@ -479,5 +482,30 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
             ),
           ),
         ]);
+  }
+
+  buildBadges() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      Text("Badges Earned"),
+      Container(
+        height: 100,
+        child: ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.profile.badges.length,
+          itemBuilder: (_, index) {
+            return Container(
+              height: 100,
+              child: Tooltip(
+                message: widget.profile.badges[index].badgeTitle,
+                child: AttachmentImage(widget.profile.badges[index].icon),
+              ),
+            );
+          },
+        ),
+      ),
+    ]);
   }
 }

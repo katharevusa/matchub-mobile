@@ -137,7 +137,7 @@ class _ResourceOutgoingPendingState extends State<ResourceOutgoingPending> {
                         : SingleChildScrollView(
                             child: Center(
                                 child: Text(
-                                    "You have not make any resource donation request.")),
+                                    "You have not made any resource donation request.")),
                           );
   }
 }

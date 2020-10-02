@@ -69,7 +69,7 @@ class _MessagesState extends State<Messages> {
       stream: chats,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData || snapshot.data.documents.length == 0) {
-          return Container(height: 80*SizeConfig.heightMultiplier, child: Center(child: Text("No Chats here yet...")));
+          return Container(height: 80*SizeConfig.heightMultiplier, child: Center(child: Text("No messages here yet...")));
         }
         print(snapshot.data.documents.length);
         // _scrollController.jumpTo(

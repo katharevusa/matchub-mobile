@@ -44,9 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
               height: 80 * SizeConfig.heightMultiplier,
               child: Center(child: Text("No Chats here yet...")));
         }
-
-        return Expanded(
-          child: ListView.builder(
+        return ListView.builder(
               // separatorBuilder: (ctx, idx) => Divider(),
               itemCount: snapshot.data.documents.length,
               shrinkWrap: true,
@@ -68,10 +66,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       : "",
                   recentDate: chatGroupSnapshot.data()['recentMessage'] != null
                       ? chatGroupSnapshot.data()['recentMessage']['sentAt']
-                      : null,
+                      : "",
                   chatRoomId: "aasdf",
                 );
-              }),
+              }
         );
       },
     );

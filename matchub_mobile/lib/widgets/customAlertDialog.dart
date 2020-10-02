@@ -32,7 +32,7 @@ class CustomAlertDialog extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           child: Container(
-            margin: const EdgeInsets.all(8.0),
+            margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 20.0),
             padding: const EdgeInsets.all(20.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
