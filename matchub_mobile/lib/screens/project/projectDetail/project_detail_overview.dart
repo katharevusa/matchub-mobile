@@ -122,6 +122,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     myProfile = Provider.of<Auth>(context).myProfile;
 
     return Scaffold(
+      backgroundColor: Colors.white,
         key: _projectDetailScaffoldKey,
         appBar: AppBar(
           leading: Padding(
@@ -420,11 +421,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         ),
         Container(
             padding: EdgeInsets.only(
-                top: 1.5 * SizeConfig.heightMultiplier,
                 left: 8.0 * SizeConfig.widthMultiplier),
             height: 12 * SizeConfig.heightMultiplier,
             width: 12 * SizeConfig.heightMultiplier,
-            child: Center(child: AttachmentImage(project.projectBadge.icon)))
+            child: Center(child: Tooltip(
+              message: project.projectBadge.badgeTitle,
+              child: AttachmentImage(project.projectBadge.icon))))
       ];
     } else {
       return [SizedBox.shrink()];

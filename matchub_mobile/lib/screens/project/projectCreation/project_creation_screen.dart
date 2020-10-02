@@ -70,12 +70,13 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       "sdgs": widget.newProject.sdgs != null
           ? widget.newProject.sdgs.map((e) => e.sdgId).toList()
           : [],
-      "kpis": widget.newProject.kpis,
+      "kpis": widget.newProject.kpis, 
       "teamMembers": widget.newProject.teamMembers,
       "channels": widget.newProject.channels,
       "projectOwners": widget.newProject.projectOwners ?? [],
       "badgeTitle": widget.newProject.projectBadge != null ? widget.newProject.projectBadge.badgeTitle : null,
       "badgeIcon": widget.newProject.projectBadge != null ?  widget.newProject.projectBadge.icon : null,
+      "badgeId": widget.newProject.projectBadge != null ?  widget.newProject.projectBadge.badgeId : null,
     };
   }
 
@@ -271,15 +272,15 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
             context);
       }
       if (project['badgeIcon'] != null && project['badgeTitle'] != null) {
-        print(project['projectBadge']['badgeId']);
-        // Map<String, dynamic> badge = {};
-        // badge['badgeTitle'] = project['badgeTitle'];
-        // badge['icon'] = project['badgeIcon'];
-        // badge['accountId'] = projectId;
-
-        // ApiBaseHelper().postProtected("authenticated/updateProjectBadge/${project['projectBadge']}",
-        //     body: json.encode(badge),
-        //     accessToken: Provider.of<Auth>(context, listen: false).accessToken);
+        print(project['badgeId']);
+        Map<String, dynamic> badge = {};
+        badge['badgeTitle'] = project['badgeTitle'];
+        badge['icon'] = project['badgeIcon'];
+        badge['accountId'] = Provider.of<Auth>(context, listen: false).myProfile.accountId;
+        print(badge);
+        ApiBaseHelper().putProtected("authenticated/updateProjectBadge/${project['badgeId']}",
+            body: json.encode(badge),
+            accessToken: Provider.of<Auth>(context, listen: false).accessToken);
       }
       Provider.of<Auth>(context).retrieveUser();
       print("Success");

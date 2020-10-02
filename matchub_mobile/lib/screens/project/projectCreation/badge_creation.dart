@@ -54,7 +54,7 @@ class _BadgeCreationState extends State<BadgeCreation> {
                   backgroundColor: Colors.white,
                   body: SingleChildScrollView(
                     child: Column(children: <Widget>[
-                      Container(
+                      Container( 
                         padding: EdgeInsets.all(10),
                         margin: EdgeInsets.all(10),
                         child: TextFormField(
@@ -70,6 +70,8 @@ class _BadgeCreationState extends State<BadgeCreation> {
                       ),
                       Text("Please select your project's badge icon"),
                       SizedBox(height: 20),
+                      if (selectedBadgeIndex == null && widget.project['badgeIcon'] !=null)
+                      AttachmentImage(widget.project['badgeIcon']),
                       if (selectedBadgeIndex != null)
                         AttachmentImage(badgesIcon[selectedBadgeIndex]),
                       RaisedButton(
