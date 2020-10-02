@@ -87,7 +87,8 @@ class _OngoingResourceState extends State<OngoingResource> {
                       itemCount: listOfResources.length,
                       itemBuilder: (BuildContext ctx, int index) {
                         return _selected == "Available" &&
-                                listOfResources[index].available == true
+                                // listOfResources[index].available == true &&
+                                listOfResources[index].matchedProjectId == null
                             ? ListTile(
                                 title:
                                     Text(listOfResources[index].resourceName),
@@ -105,11 +106,14 @@ class _OngoingResourceState extends State<OngoingResource> {
                                         ctx, listOfResources[index]),
                                   )
                                 : _selected == "All" &&
+                                            listOfResources[index].available ==
+                                                true ||
                                         listOfResources[index].available ==
-                                            true &&
-                                        listOfResources[index]
-                                                .matchedProjectId ==
-                                            null
+                                            false
+                                    //      &&
+                                    // listOfResources[index]
+                                    //         .matchedProjectId ==
+                                    //     null
                                     ? ListTile(
                                         title: Text(listOfResources[index]
                                             .resourceName),

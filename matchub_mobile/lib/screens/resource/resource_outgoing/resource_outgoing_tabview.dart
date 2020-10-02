@@ -443,7 +443,7 @@ class _RequestTicketState extends State<RequestTicket> {
                                   ),
                                 )),
                                 child: Text(
-                                  "Terminate",
+                                  "Delete",
                                   style: TextStyle(
                                       color: Colors.grey.shade600,
                                       fontSize: 13.0,

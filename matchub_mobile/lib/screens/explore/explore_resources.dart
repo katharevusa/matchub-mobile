@@ -76,16 +76,33 @@ class _ExploreResourcesState extends State<ExploreResources> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5.0),
-                            child: Container(
-                              width: 100 * SizeConfig.widthMultiplier,
-                              height: 30 * SizeConfig.heightMultiplier,
-                              child: AttachmentImage(
-                                allResources[index].photos[0],
-                              ),
-                            ))),
+                    allResources[index].photos.isNotEmpty
+                        ? Expanded(
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5.0),
+                                child: Container(
+                                  width: 100 * SizeConfig.widthMultiplier,
+                                  height: 30 * SizeConfig.heightMultiplier,
+                                  child: AttachmentImage(
+                                    allResources[index].photos[0],
+                                  ),
+                                )))
+                        : Expanded(
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5.0),
+                                child: Container(
+                                  width: 100 * SizeConfig.widthMultiplier,
+                                  height: 30 * SizeConfig.heightMultiplier,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                        width: 1, color: Colors.black),
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            './././assets/images/avatar.png'),
+                                        fit: BoxFit.fill),
+                                  ),
+                                ))),
                     SizedBox(
                       height: 5.0,
                     ),
