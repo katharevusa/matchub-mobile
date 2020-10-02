@@ -74,8 +74,8 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       "teamMembers": widget.newProject.teamMembers,
       "channels": widget.newProject.channels,
       "projectOwners": widget.newProject.projectOwners ?? [],
-      "badgeTitle": null,
-      "badgeIcon": null,
+      "badgeTitle": widget.newProject.projectBadge != null ? widget.newProject.projectBadge.badgeTitle : null,
+      "badgeIcon": widget.newProject.projectBadge != null ?  widget.newProject.projectBadge.icon : null,
     };
   }
 
@@ -445,7 +445,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
               child: IconButton(
                 icon: Icon(((_currentIndex == 7 &&
                             project["projectId"] == null) ||
-                        (_currentIndex == 4 && project["projectId"] != null))
+                        (_currentIndex == 5 && project["projectId"] != null))
                     ? Icons.check
                     : Icons.arrow_forward),
                 onPressed: () {
@@ -457,7 +457,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                       createNewProject(context);
                     }
                   } else {
-                    if (_currentIndex != 4)
+                    if (_currentIndex != 5)
                       _controller.next();
                     else {
                       updateProject(context);

@@ -49,8 +49,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         Provider.of<Auth>(this.context, listen: false).accessToken);
 
     project = Project.fromJson(responseData);
-    // documentKeys = project.documents.keys.toList();
-    print(project.projectTitle);
+    documentKeys = project.documents.keys.toList();
   }
 
   List<Widget> getPhotoList(photos) {
@@ -218,6 +217,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                             ...buildFoundersRow(),
                             ...buildTeamMemberRow(project.teamMembers),
                             ...buildAttachments(),
+                            ...buildBadgeRow(),
                             ...buildSDGRow()
                           ]),
                     )
@@ -292,7 +292,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               (project.documents[documentKeys[index]]);
                           String url =
                               ApiBaseHelper().baseUrl + fileName.substring(30);
-                          print(url);
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {
@@ -401,6 +400,36 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
             itemCount: project.projectOwners.length),
       )
     ];
+  }
+
+  List<Widget> buildBadgeRow() {
+    print(project.projectBadge);
+    if (project.projectBadge != null) {
+      return [
+        Padding(
+          padding: EdgeInsets.only(
+              top: 1.5 * SizeConfig.heightMultiplier,
+              right: 8.0 * SizeConfig.widthMultiplier,
+              left: 8.0 * SizeConfig.widthMultiplier),
+          child: Text(
+            "PROJECT BADGE",
+            style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: SizeConfig.textMultiplier * 2),
+          ),
+        ),
+        Container(
+            padding: EdgeInsets.only(
+                top: 1.5 * SizeConfig.heightMultiplier,
+                left: 8.0 * SizeConfig.widthMultiplier),
+            height: 12 * SizeConfig.heightMultiplier,
+            width: 12 * SizeConfig.heightMultiplier,
+            child: Center(child: AttachmentImage(project.projectBadge.icon)))
+      ];
+    } else {
+      return [SizedBox.shrink()];
+    }
+    ;
   }
 
   Widget _buildAvatar(profile, {double radius = 80}) {
@@ -680,48 +709,50 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       Text("Edit Project", style: AppTheme.titleLight),
                     ],
                   )),
-              FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _completeDialog(context);
-                  },
-                  visualDensity: VisualDensity.comfortable,
-                  highlightColor: Colors.transparent,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Icon(
-                          Icons.check_box_outlined,
-                          color: Colors.grey[700],
+              if (project.projStatus == "ON_HOLD")
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _completeDialog(context);
+                    },
+                    visualDensity: VisualDensity.comfortable,
+                    highlightColor: Colors.transparent,
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Icon(
+                            Icons.check_box_outlined,
+                            color: Colors.grey[700],
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Text("Mark as Complete", style: AppTheme.titleLight),
-                    ],
-                  )),
-              FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _terminateDialog(context);
-                  },
-                  visualDensity: VisualDensity.comfortable,
-                  highlightColor: Colors.transparent,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Icon(
-                          FlutterIcons.stop_circle_faw,
-                          color: Colors.grey[700],
+                        SizedBox(width: 10),
+                        Text("Mark as Complete", style: AppTheme.titleLight),
+                      ],
+                    )),
+              if (project.projStatus == "ON_HOLD")
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _terminateDialog(context);
+                    },
+                    visualDensity: VisualDensity.comfortable,
+                    highlightColor: Colors.transparent,
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Icon(
+                            FlutterIcons.stop_circle_faw,
+                            color: Colors.grey[700],
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Text("Terminate", style: AppTheme.titleLight),
-                    ],
-                  ))
+                        SizedBox(width: 10),
+                        Text("Terminate", style: AppTheme.titleLight),
+                      ],
+                    ))
             ],
           ],
         ));

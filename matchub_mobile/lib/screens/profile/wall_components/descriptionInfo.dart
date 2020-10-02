@@ -62,10 +62,10 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageOrganisationMembers>(context, listen: false)
-        .getMembers(profile, accessToken);
+        .getMembers(widget.profile, accessToken);
     // setState(() {
     //   _isLoading = false;
-    // });
+    // }); 
     // await getKah();
   }
 
@@ -73,7 +73,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageListOfKah>(context, listen: false)
-        .getKahs(profile, accessToken);
+        .getKahs(widget.profile, accessToken);
     setState(() {
       _isLoading = false;
     });
