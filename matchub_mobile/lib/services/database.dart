@@ -50,6 +50,34 @@ class DatabaseMethods {
     return result.size > 0;
   }
 
+  checkUserIsAdmn(adminUUID, projectId) async {
+    final result = await Firestore.instance
+        .collection("channels")
+        .where('projectId', isEqualTo: projectId)
+        .where(
+          "admins",
+          arrayContains: adminUUID,
+        ) //need check owner also
+        .get()
+        .then((value) => null);
+    return result.size > 0;
+  }
+
+  removeFromChannels(memberUUID, projectId) async {
+    print("reached here");
+    final result = await Firestore.instance
+        .collection("channels")
+        .where('projectId', isEqualTo: projectId)
+        .where('members', arrayContains: memberUUID)
+        .get()
+        .then(
+          (snapshot) => snapshot.docs.forEach((element) {
+            element.data().update("members",
+                (value) => FieldValue.arrayRemove(memberUUID));
+          }),
+        );
+  }
+
   getChatMessages(String chatRoomId) async {
     return Firestore.instance
         .collection("message")
@@ -142,11 +170,7 @@ class DatabaseMethods {
   }
 
   deleteChat(String chatId) async {
-    firestoreInstance
-        .collection("groups")
-        .doc(chatId)
-        .delete()
-        .catchError((e) {
+    firestoreInstance.collection("groups").doc(chatId).delete().catchError((e) {
       print(e);
     });
   }

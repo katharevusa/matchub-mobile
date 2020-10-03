@@ -42,7 +42,9 @@ class _WallState extends State<Wall> {
     };
     loadPosts = retrieveAllPosts();
   }
-
+  updateWall() async {
+      loadPosts = retrieveAllPosts();
+  }
   postFunc(context) async {
     post['postCreatorId'] = Provider.of<Auth>(context).myProfile.accountId;
     final url = "authenticated/createPost";
@@ -87,7 +89,7 @@ class _WallState extends State<Wall> {
                     //post new activity here
                     CreatePost(
                         textFieldController, post, postFunc, widget.profile),
-                    Activities(listOfPosts, widget.profile),
+                    Activities(listOfPosts, widget.profile, updateWall),
 
                     if (listOfPosts.isEmpty) Text("No Posts Yet"),
                     SizedBox(height: 20)

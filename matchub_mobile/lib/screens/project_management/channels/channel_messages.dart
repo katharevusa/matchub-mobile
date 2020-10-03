@@ -172,6 +172,17 @@ class _ChannelMessagesState extends State<ChannelMessages> {
                   color: Colors.grey[300],
                 )),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(FlutterIcons.info_circle_faw5s),
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => ChannelSettings(
+                          channelData: widget.channelData,
+                          project: widget.project))),
+            )
+          ],
           // IconButton(
           //   alignment: Alignment.bottomCenter,
           //   visualDensity: VisualDensity.comfortable,
@@ -293,9 +304,11 @@ class _MessageTileState extends State<MessageTile> {
   void initState() {
     print(widget.project.teamMembers);
     var allContributors = [];
-    allContributors..addAll(widget.project.teamMembers)..addAll(widget.project.projectOwners);
-    messageSender = allContributors
-        .firstWhere((element) => element.uuid == widget.sentBy);
+    allContributors
+      ..addAll(widget.project.teamMembers)
+      ..addAll(widget.project.projectOwners);
+    messageSender =
+        allContributors.firstWhere((element) => element.uuid == widget.sentBy);
     super.initState();
   }
 
@@ -306,7 +319,7 @@ class _MessageTileState extends State<MessageTile> {
     print(messageSender.toJson());
     print(widget.sendByMe);
     print(widget.message);
-    
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 2 * SizeConfig.widthMultiplier),
       child: Row(
@@ -361,8 +374,7 @@ class _MessageTileState extends State<MessageTile> {
                                 style: TextStyle(
                                     color: Color(StringToHex.toColor(
                                         messageSender.name.length > 7
-                                            ? messageSender.name
-                                                .substring(0, 7)
+                                            ? messageSender.name.substring(0, 7)
                                             : messageSender.name)))),
                           Text(widget.message,
                               textAlign: TextAlign.start,

@@ -231,7 +231,7 @@ class _RequestTicketState extends State<RequestTicket> {
         accessToken: Provider.of<Auth>(context).accessToken);
 
     _customAlertDialog(context, AlertDialogType.WARNING, "Terminated",
-        "You have retrieved the request!");
+        "You have terminated the request!");
     await loadRequests();
   }
 

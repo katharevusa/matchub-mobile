@@ -218,7 +218,7 @@ class _RequestTicketState extends State<RequestTicket> {
         "authenticated/deleteResourceRequest?requestId=${widget.request.requestId}&terminatorId=${profile.accountId}",
         accessToken: Provider.of<Auth>(context).accessToken);
     _customAlertDialog(context, AlertDialogType.WARNING, "Terminated",
-        "You have retrieved the request!");
+        "You have terminated the request!");
     await loadRequests();
   }
 

@@ -263,7 +263,7 @@ class _RequestTicketState extends State<RequestTicket> {
             child: TicketPass(
                 alignment: Alignment.center,
                 animationDuration: Duration(seconds: 1),
-                expandedHeight: 450,
+                expandedHeight: 600,
                 expandIcon: CircleAvatar(
                   maxRadius: 10,
                   child: Icon(
@@ -302,7 +302,7 @@ class _RequestTicketState extends State<RequestTicket> {
                 ),
                 titleHeight: 35,
                 width: 320,
-                height: 300,
+                height: 600,
                 shadowColor: Colors.blue.withOpacity(0.5),
                 elevation: 8,
                 shouldExpand: true,

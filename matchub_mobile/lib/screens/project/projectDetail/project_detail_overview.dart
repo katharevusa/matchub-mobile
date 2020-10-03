@@ -9,6 +9,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/resourceDonate.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/database.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -54,7 +55,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     project = Project.fromJson(responseData);
     documentKeys = project.documents.keys.toList();
 
-    setState(()=>_isLoading = false);
+    setState(() => _isLoading = false);
   }
 
   List<Widget> getPhotoList(photos) {
@@ -152,9 +153,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   builder: (context) => buildMorePopUp(context)).then((value) {
                 setState(() {
                   _isLoading = true;
-
                 });
-                  getProjects();
+                getProjects();
                 switch (value) {
                   case "Joined-Project":
                     _projectDetailScaffoldKey.currentState
@@ -715,7 +715,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       Text("Edit Project", style: AppTheme.titleLight),
                     ],
                   )),
-              if (project.projStatus == "ON_HOLD")
+              if (project.projStatus == "ACTIVE")
                 FlatButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -737,7 +737,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         Text("Mark as Complete", style: AppTheme.titleLight),
                       ],
                     )),
-              if (project.projStatus == "ON_HOLD")
+              if (project.projStatus == "ACTIVE" || project.projStatus == "ON_HOLD")
                 FlatButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -801,6 +801,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =
           await ApiBaseHelper().deleteProtected(url, accessToken: accessToken);
+
+      await DatabaseMethods()
+          .removeFromChannels(myProfile.uuid, widget.project.projectId);
       print("Success");
       Navigator.of(this.context).pop("Delete-Project");
     } catch (error) {
@@ -819,22 +822,23 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       print("Success");
       Navigator.of(this.context).pop(true);
     } catch (error) {
-      final responseData = error.body as Map<String, dynamic>;
+      // final responseData = error.body as Map<String, dynamic>;
       print("Failure");
-      showDialog(
-          context: this.context,
-          builder: (ctx) => AlertDialog(
-                title: Text(responseData['error']),
-                content: Text(responseData['message']),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Okay'),
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                  )
-                ],
-              ));
+      showErrorDialog(error.toString(), this.context);
+      // showDialog(
+      //     context: this.context,
+      //     builder: (ctx) => AlertDialog(
+      //           title: Text(responseData['error']),
+      //           content: Text(responseData['message']),
+      //           actions: <Widget>[
+      //             FlatButton(
+      //               child: Text('Okay'),
+      //               onPressed: () {
+      //                 Navigator.of(ctx).pop();
+      //               },
+      //             )
+      //           ],
+      //         ));
     }
   }
 
@@ -1109,9 +1113,9 @@ class _UpvoteRowState extends State<UpvoteRow> {
 }
 
 final List<String> imgList = [
-  "https://localhost:8443/api/v1/files/init/project2.jpg",
-  "https://localhost:8443/api/v1/files/init/project3.jpg",
-  "https://localhost:8443/api/v1/files/init/project6.jpg",
+  "https://localhost:8443/api/v1/files/init/project-default.jpg",
+  // "https://localhost:8443/api/v1/files/init/project3.jpg",
+  // "https://localhost:8443/api/v1/files/init/project6.jpg",
 ];
 final List<String> iconList = [
   "assets/icons/word.png",

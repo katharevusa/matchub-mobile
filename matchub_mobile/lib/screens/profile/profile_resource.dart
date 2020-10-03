@@ -128,7 +128,9 @@ class ResourceVerticalCard extends StatelessWidget {
                     color: Colors.white,
                     width: 25 * SizeConfig.widthMultiplier,
                     height: 18 * SizeConfig.heightMultiplier,
-                    child: AttachmentImage(resource.photos[0]))),
+                    child: resource.photos.isNotEmpty
+                        ? AttachmentImage(resource.photos[0])
+                        : Image.asset("assets/images/resource-default2.png", fit: BoxFit.cover))),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

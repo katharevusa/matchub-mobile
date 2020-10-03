@@ -68,9 +68,12 @@ class ExploreProjects extends StatelessWidget {
                             child: Container(
                               width: 100 * SizeConfig.widthMultiplier,
                               height: 30 * SizeConfig.heightMultiplier,
-                              child: AttachmentImage(
-                                allProjects[index].photos[0],
-                              ),
+                              child: allProjects[index].photos.isNotEmpty
+                                  ? AttachmentImage(
+                                      allProjects[index].photos[0],
+                                    )
+                                  : Image.asset(
+                                      "assets/images/resource-default2.png"),
                             ))),
                     SizedBox(
                       height: 5.0,

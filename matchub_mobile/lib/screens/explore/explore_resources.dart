@@ -82,9 +82,12 @@ class _ExploreResourcesState extends State<ExploreResources> {
                             child: Container(
                               width: 100 * SizeConfig.widthMultiplier,
                               height: 30 * SizeConfig.heightMultiplier,
-                              child: AttachmentImage(
-                                allResources[index].photos[0],
-                              ),
+                              child: allResources[index].photos.isNotEmpty
+                                  ? AttachmentImage(
+                                      allResources[index].photos[0],
+                                    )
+                                  : Image.asset(
+                                      "assets/images/resource-default2.png"),
                             ))),
                     SizedBox(
                       height: 5.0,
