@@ -14,6 +14,7 @@ import 'package:matchub_mobile/services/manage_listOfKah.dart';
 import 'package:matchub_mobile/services/manage_outgoingRequest.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/services/manage_resource.dart';
+import 'package:matchub_mobile/services/notification_service.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
@@ -54,7 +55,9 @@ class MyApp extends StatelessWidget {
               title: 'MatcHub',
               theme: AppTheme.lightTheme,
               home: auth.isAuth
-                  ? TabsScreen()
+                  ? ChangeNotifierProvider(
+                      create: (_) => NotificationService(auth.myProfile.uuid),
+                      child: TabsScreen())
                   : FutureBuilder(
                       future: auth.tryAutoLogin(),
                       builder: (ctx, authResultSnapshot) => LoginScreen(),

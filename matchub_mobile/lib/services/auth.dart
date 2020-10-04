@@ -13,6 +13,8 @@ import 'package:matchub_mobile/models/post.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'notification_service.dart';
+
 class Auth with ChangeNotifier {
   String _userRole;
   String _accessToken;
@@ -181,6 +183,7 @@ class Auth with ChangeNotifier {
     _username = responseData['email'].toString();
     print(myProfile.uuid);
     await signInToFirebase();
+    NotificationService(myProfile.uuid).startup();
     notifyListeners();
   }
 

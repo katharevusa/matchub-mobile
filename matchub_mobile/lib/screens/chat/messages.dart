@@ -6,7 +6,7 @@ import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/widgets/popupmenubutton.dart' as popupmenu;
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/database.dart';
+import 'package:matchub_mobile/services/firebase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
@@ -82,7 +82,6 @@ class _MessagesState extends State<Messages> {
             shrinkWrap: true,
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
-              print("s=============== ${index.toString()}");
               return MessageTile(
                 sentAt: snapshot.data.documents[index].data()["sentAt"],
                 sentBy: snapshot.data.documents[index].data()["sentBy"],

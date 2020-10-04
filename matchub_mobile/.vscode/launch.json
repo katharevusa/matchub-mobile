@@ -7,7 +7,8 @@
         {
             "name": "matchub_mobile",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "deviceId": "R58M21EB4WX"
         }
     ]
 }

@@ -7,7 +7,7 @@ import 'package:matchub_mobile/models/profile.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/models/truncatedProfile.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/database.dart';
+import 'package:matchub_mobile/services/firebase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
@@ -104,7 +104,6 @@ class _ChannelMessagesState extends State<ChannelMessages> {
             shrinkWrap: true,
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
-              print("s=============== ${index.toString()}");
               return MessageTile(
                 project: widget.project,
                 sentAt: snapshot.data.documents[index].data()["sentAt"],

@@ -6,7 +6,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/chat/messages.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/database.dart';
+import 'package:matchub_mobile/services/firebase.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
@@ -60,13 +60,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         orElse: () => print('No matching element.'));
                 return ChatRoomsTile(
                   uuid: conversationRecipient,
-                  recentMessage: chatGroupSnapshot.data()['recentMessage'] !=
-                          null
-                      ? chatGroupSnapshot.data()['recentMessage']['messageText']
-                      : "",
-                  recentDate: chatGroupSnapshot.data()['recentMessage'] != null
-                      ? chatGroupSnapshot.data()['recentMessage']['sentAt']
-                      : "",
+                  recentMessage: chatGroupSnapshot.data()['recentMessage']['messageText'] ?? "",
+                  recentDate: (chatGroupSnapshot.data()['recentMessage']['sentAt'] is Timestamp) ? chatGroupSnapshot.data()['recentMessage']['sentAt'] : null,
                   chatRoomId: "aasdf",
                 );
               }
