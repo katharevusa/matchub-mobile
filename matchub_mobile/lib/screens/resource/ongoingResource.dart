@@ -21,6 +21,7 @@ class OngoingResource extends StatefulWidget {
 
 class _OngoingResourceState extends State<OngoingResource> {
   List<Resources> listOfResources = [];
+  List<Resources> filteredResources = [];
   // _OngoingResourceState(this.listOfResources);
   bool _isLoading;
   @override
@@ -39,6 +40,8 @@ class _OngoingResourceState extends State<OngoingResource> {
     setState(() {
       _isLoading = false;
     });
+    listOfResources = Provider.of<ManageResource>(context).resources;
+    filteredResources = listOfResources;
   }
 
   List _resourceStatus = [
@@ -58,7 +61,6 @@ class _OngoingResourceState extends State<OngoingResource> {
   @override
   Widget build(BuildContext context) {
     //new empty resource
-    listOfResources = Provider.of<ManageResource>(context).resources;
     final newResource = new Resources();
     return _isLoading
         ? Container(child: Center(child: Text("I am loading")))
@@ -71,8 +73,19 @@ class _OngoingResourceState extends State<OngoingResource> {
                   DropdownButton(
                     value: _selected,
                     onChanged: (value) {
+                      _selected = value;
                       setState(() {
-                        _selected = value;
+                        if (value == "All") {
+                          filteredResources = listOfResources;
+                        } else if (value == "Available") {
+                          filteredResources = listOfResources
+                              .where((e) => e.available)
+                              .toList();
+                        } else {
+                          filteredResources = listOfResources
+                              .where((e) => !e.available)
+                              .toList();
+                        }
                       });
                     },
                     items: _resourceStatus.map((value) {
@@ -84,44 +97,14 @@ class _OngoingResourceState extends State<OngoingResource> {
                   ),
                   ListView.builder(
                       shrinkWrap: true,
-                      itemCount: listOfResources.length,
+                      itemCount: filteredResources.length,
                       itemBuilder: (BuildContext ctx, int index) {
-                        return _selected == "Available" &&
-                                // listOfResources[index].available == true &&
-                                listOfResources[index].matchedProjectId == null
-                            ? ListTile(
-                                title:
-                                    Text(listOfResources[index].resourceName),
-                                onTap: () => selecteResource(
-                                    ctx, listOfResources[index]),
-                              )
-                            : _selected == "Busy" &&
-                                    listOfResources[index].available == false &&
-                                    listOfResources[index].matchedProjectId !=
-                                        null
-                                ? ListTile(
-                                    title: Text(
-                                        listOfResources[index].resourceName),
-                                    onTap: () => selecteResource(
-                                        ctx, listOfResources[index]),
-                                  )
-                                : _selected == "All" &&
-                                            listOfResources[index].available ==
-                                                true ||
-                                        listOfResources[index].available ==
-                                            false
-                                    //      &&
-                                    // listOfResources[index]
-                                    //         .matchedProjectId ==
-                                    //     null
-                                    ? ListTile(
-                                        title: Text(listOfResources[index]
-                                            .resourceName),
-                                        onTap: () => selecteResource(
-                                            ctx, listOfResources[index]),
-                                      )
-                                    : SizedBox.shrink();
-                      }),
+                        return ListTile(
+                          title: Text(filteredResources[index].resourceName),
+                          onTap: () =>
+                              selecteResource(ctx, filteredResources[index]),
+                        );
+                      })
                 ],
               ),
             ),
@@ -133,7 +116,16 @@ class _OngoingResourceState extends State<OngoingResource> {
                       context,
                     ) =>
                                 ResourceCreationScreen(
-                                    newResource: newResource))),
+                                    newResource: newResource)))
+                        .then((value) async {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      await loadResources();
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }),
                 icon: Icon(Icons.add),
                 label: Text("New")),
           );

@@ -11,7 +11,8 @@ import 'package:matchub_mobile/helpers/extensions.dart';
 class Activities extends StatefulWidget {
   List<Post> listOfPosts;
   Profile profile;
-  Activities(this.listOfPosts, this.profile);
+  Function updateWall;
+  Activities(this.listOfPosts, this.profile, this.updateWall);
   @override
   _ActivitiesState createState() => _ActivitiesState();
 }

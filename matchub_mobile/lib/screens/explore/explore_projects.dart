@@ -62,33 +62,19 @@ class ExploreProjects extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    allProjects[index].photos.isNotEmpty
-                        ? Expanded(
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5.0),
-                                child: Container(
-                                  width: 100 * SizeConfig.widthMultiplier,
-                                  height: 30 * SizeConfig.heightMultiplier,
-                                  child: AttachmentImage(
-                                    allProjects[index].photos[0],
-                                  ),
-                                )))
-                        : Expanded(
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5.0),
-                                child: Container(
-                                  width: 100 * SizeConfig.widthMultiplier,
-                                  height: 30 * SizeConfig.heightMultiplier,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    border: Border.all(
-                                        width: 1, color: Colors.black),
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            './././assets/images/avatar.png'),
-                                        fit: BoxFit.fill),
-                                  ),
-                                ))),
+                    Expanded(
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5.0),
+                            child: Container(
+                              width: 100 * SizeConfig.widthMultiplier,
+                              height: 30 * SizeConfig.heightMultiplier,
+                              child: allProjects[index].photos.isNotEmpty
+                                  ? AttachmentImage(
+                                      allProjects[index].photos[0],
+                                    )
+                                  : Image.asset(
+                                      "assets/images/resource-default2.png"),
+                            ))),
                     SizedBox(
                       height: 5.0,
                     ),

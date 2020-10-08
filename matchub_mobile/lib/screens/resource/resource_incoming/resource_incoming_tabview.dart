@@ -7,6 +7,7 @@ import 'package:matchub_mobile/screens/project/projectDetail/project_detail_over
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_incoming_resourceRequest.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/customAlertDialog.dart';
 import 'package:provider/provider.dart';
@@ -268,7 +269,7 @@ class _RequestTicketState extends State<RequestTicket> {
             child: TicketPass(
                 alignment: Alignment.center,
                 animationDuration: Duration(seconds: 1),
-                expandedHeight: 450,
+                expandedHeight: 600,
                 expandIcon: CircleAvatar(
                   backgroundColor: kSecondaryColor,
                   maxRadius: 10,
@@ -312,7 +313,7 @@ class _RequestTicketState extends State<RequestTicket> {
                 ),
                 titleHeight: 50,
                 width: 320,
-                height: 300,
+                height: 600,
                 shadowColor: primaryColor,
                 elevation: 8,
                 shouldExpand: true,
@@ -403,10 +404,11 @@ class _RequestTicketState extends State<RequestTicket> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text('Requestor:',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                              )),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                          ),
                           GestureDetector(
                             onTap: () {
                               Navigator.of(
@@ -415,6 +417,8 @@ class _RequestTicketState extends State<RequestTicket> {
                               ).pushNamed(ProfileScreen.routeName,
                                   arguments: requestor.accountId);
                             },
+                            child: Container(
+                            width: SizeConfig.widthMultiplier * 60,
                             child: Text(
                               requestor.name,
                               style: TextStyle(
@@ -424,7 +428,7 @@ class _RequestTicketState extends State<RequestTicket> {
                                 fontSize: 13,
                               ),
                             ),
-                          ),
+                          ),)
                         ],
                       ),
 

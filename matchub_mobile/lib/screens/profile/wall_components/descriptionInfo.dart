@@ -496,11 +496,13 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
           scrollDirection: Axis.horizontal,
           itemCount: widget.profile.badges.length,
           itemBuilder: (_, index) {
-            return Container(
-              height: 100,
-              child: Tooltip(
-                message: widget.profile.badges[index].badgeTitle,
-                child: AttachmentImage(widget.profile.badges[index].icon),
+            return ClipOval(
+                          child: Container(
+                height: 100,
+                child: Tooltip(
+                  message: widget.profile.badges[index].badgeTitle,
+                  child: AttachmentImage(widget.profile.badges[index].icon),
+                ),
               ),
             );
           },

@@ -165,86 +165,89 @@ class _ManageOrganisationMembersScreenState
             : GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: Scaffold(
-                    body: Column(
+                    body: SingleChildScrollView(
+                                          child: Column(
                   children: [
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: TextFormField(
-                        controller: _textController,
-                        expands: false,
-                        decoration: InputDecoration(
-                          hintText: "Search Profile...",
-                          border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: TextFormField(
+                          controller: _textController,
+                          expands: false,
+                          decoration: InputDecoration(
+                            hintText: "Search Profile...",
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
                           ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
+                          onChanged: getSearchedUsers,
                         ),
-                        onChanged: getSearchedUsers,
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    if (searchResult.isEmpty)
-                      Container(
-                          child: Center(
-                              child: Text(
-                                  "Search to find your organisation's members"))),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) => SizedBox(height: 5),
-                      itemBuilder: (context, index) => ListTile(
-                        onTap: () => Navigator.of(context).pushNamed(
-                            ProfileScreen.routeName,
-                            arguments: searchResult[index].accountId),
-                        leading: ClipOval(
-                            child: Container(
-                          height: 50,
-                          width: 50,
-                          child:
-                              AttachmentImage(searchResult[index].profilePhoto),
-                        )),
-                        title: Text(searchResult[index].name),
-                        trailing: FlatButton(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6)),
-                          child: Text(
-                              (members.indexWhere((m) =>
-                                          searchResult[index].accountId ==
-                                          m.accountId) >=
-                                      0)
-                                  ? "Remove"
-                                  : " Add ",
-                              style: TextStyle(color: Colors.white)),
-                          onPressed: () async {
-                            bool isMember;
-                            if (members.indexWhere((m) =>
-                                    searchResult[index].accountId ==
-                                    m.accountId) >=
-                                0) {
-                              isMember = true;
-                            } else {
-                              isMember = false;
-                            }
-                            setState(() {
-                              toggleOrganisationMember(
-                                  searchResult[index], isMember);
-                            });
-                          },
-                          color: (members.indexWhere((m) =>
+                      SizedBox(height: 20),
+                      if (searchResult.isEmpty)
+                        Container(
+                            child: Center(
+                                child: Text(
+                                    "Search to find your organisation's members"))),
+                      ListView.separated(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) => SizedBox(height: 5),
+                        itemBuilder: (context, index) => ListTile(
+                          onTap: () => Navigator.of(context).pushNamed(
+                              ProfileScreen.routeName,
+                              arguments: searchResult[index].accountId),
+                          leading: ClipOval(
+                              child: Container(
+                            height: 50,
+                            width: 50,
+                            child:
+                                AttachmentImage(searchResult[index].profilePhoto),
+                          )),
+                          title: Text(searchResult[index].name),
+                          trailing: FlatButton(
+                            padding: EdgeInsets.symmetric(horizontal: 30),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6)),
+                            child: Text(
+                                (members.indexWhere((m) =>
+                                            searchResult[index].accountId ==
+                                            m.accountId) >=
+                                        0)
+                                    ? "Remove"
+                                    : " Add ",
+                                style: TextStyle(color: Colors.white)),
+                            onPressed: () async {
+                              bool isMember;
+                              if (members.indexWhere((m) =>
                                       searchResult[index].accountId ==
                                       m.accountId) >=
-                                  0)
-                              ? Colors.red.shade300
-                              : Colors.green.shade400,
+                                  0) {
+                                isMember = true;
+                              } else {
+                                isMember = false;
+                              }
+                              setState(() {
+                                toggleOrganisationMember(
+                                    searchResult[index], isMember);
+                              });
+                            },
+                            color: (members.indexWhere((m) =>
+                                        searchResult[index].accountId ==
+                                        m.accountId) >=
+                                    0)
+                                ? Colors.red.shade300
+                                : Colors.green.shade400,
+                          ),
                         ),
+                        itemCount: searchResult.length,
                       ),
-                      itemCount: searchResult.length,
-                    ),
                   ],
-                )),
+                ),
+                    )),
               ));
   }
 }

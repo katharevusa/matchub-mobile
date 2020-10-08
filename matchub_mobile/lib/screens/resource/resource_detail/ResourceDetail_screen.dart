@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/resources.dart';
@@ -545,12 +546,12 @@ class _DescriptionState extends State<Description> {
                         ),
                         ListTile(
                           title: Text("Start Date & Time"),
-                          subtitle: Text(startdatetime),
+                          subtitle: Text(DateFormat('dd-MMM-yyyy ').add_jm().format(DateTime.parse(startdatetime))),
                           leading: Icon(Icons.event_note),
                         ),
                         ListTile(
                           title: Text("End Date & Time"),
-                          subtitle: Text(enddatetime),
+                          subtitle: Text(DateFormat('dd-MMM-yyyy ').add_jm().format(DateTime.parse(enddatetime))),
                           leading: Icon(Icons.event_note),
                         ),
                         ListTile(

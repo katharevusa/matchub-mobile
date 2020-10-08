@@ -123,29 +123,15 @@ class ResourceVerticalCard extends StatelessWidget {
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
-                child: resource.photos.isNotEmpty
-                    ? Container(
-                        padding:
-                            EdgeInsets.all(1 * SizeConfig.heightMultiplier),
-                        color: Colors.white,
-                        width: 25 * SizeConfig.widthMultiplier,
-                        height: 18 * SizeConfig.heightMultiplier,
-                        child: AttachmentImage(resource.photos[0]))
-                    : Container(
-                        padding:
-                            EdgeInsets.all(1 * SizeConfig.heightMultiplier),
-                        color: Colors.white,
-                        width: 25 * SizeConfig.widthMultiplier,
-                        height: 18 * SizeConfig.heightMultiplier,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(width: 1, color: Colors.black),
-                          image: DecorationImage(
-                              image:
-                                  AssetImage('./././assets/images/avatar.png'),
-                              fit: BoxFit.fill),
-                        ),
-                      )),
+                child: Container(
+                    padding: EdgeInsets.all(1 * SizeConfig.heightMultiplier),
+                    color: Colors.white,
+                    width: 25 * SizeConfig.widthMultiplier,
+                    height: 18 * SizeConfig.heightMultiplier,
+                    child: resource.photos.isNotEmpty
+                        ? AttachmentImage(resource.photos[0])
+                        : Image.asset("assets/images/resource-default2.png",
+                            fit: BoxFit.cover))),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
