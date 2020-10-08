@@ -4,27 +4,51 @@ import 'package:matchub_mobile/models/index.dart';
 
 class ManageOutgoingRequest with ChangeNotifier {
   ApiBaseHelper _apiHelper = ApiBaseHelper();
-  List<ResourceRequest> listOfRequests = [];
-
-  getAllOutgoing(Profile profile, accessToken) async {
-    listOfRequests = [];
+  List<ResourceRequest> requestsToOtherResource = [];
+  List<ResourceRequest> requestToOtherProject = [];
+  List<ResourceRequest> requestToMyResource = [];
+  List<ResourceRequest> requestToMyProject = [];
+  getRequestsToOtherResource(Profile profile, accessToken) async {
+    requestsToOtherResource = [];
     final url =
         'authenticated/getAllOutgoingDonationRequests?userId=${profile.accountId}';
     final responseData = await _apiHelper.getWODecode(url, accessToken);
-    (responseData as List)
-        .forEach((e) => listOfRequests.add(ResourceRequest.fromJson(e)));
+    (responseData as List).forEach(
+        (e) => requestsToOtherResource.add(ResourceRequest.fromJson(e)));
     notifyListeners();
-    return listOfRequests;
+    return requestsToOtherResource;
   }
 
-  getAllProjectOutgoing(Profile profile, accessToken) async {
-    listOfRequests = [];
+  getRequestsToOtherProject(Profile profile, accessToken) async {
+    requestToOtherProject = [];
     final url =
         'authenticated/getAllOutgoingResourceRequests?userId=${profile.accountId}';
     final responseData = await _apiHelper.getWODecode(url, accessToken);
     (responseData as List)
-        .forEach((e) => listOfRequests.add(ResourceRequest.fromJson(e)));
+        .forEach((e) => requestToOtherProject.add(ResourceRequest.fromJson(e)));
     notifyListeners();
-    return listOfRequests;
+    return requestToOtherProject;
+  }
+
+  getRequestsToMyProject(Profile profile, accessToken) async {
+    requestToMyProject = [];
+    final url =
+        'authenticated/getAllIncomingResourceDonationRequests?userId=${profile.accountId}';
+    final responseData = await _apiHelper.getWODecode(url, accessToken);
+    (responseData as List)
+        .forEach((e) => requestToMyProject.add(ResourceRequest.fromJson(e)));
+    notifyListeners();
+    return requestToMyProject;
+  }
+
+  getRequestsToMyResource(Profile profile, accessToken) async {
+    requestToMyResource = [];
+    final url =
+        'authenticated/getAllIncomingResourceRequests?userId=${profile.accountId}';
+    final responseData = await _apiHelper.getWODecode(url, accessToken);
+    (responseData as List)
+        .forEach((e) => requestToMyResource.add(ResourceRequest.fromJson(e)));
+    notifyListeners();
+    return requestToMyResource;
   }
 }

@@ -39,10 +39,10 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => Auth()),
             ChangeNotifierProvider(create: (_) => Profile()),
             ChangeNotifierProvider(create: (_) => ManageProject()),
-            ChangeNotifierProvider(
-                create: (_) => ManageIncomingResourceRequest()),
-            ChangeNotifierProvider(
-                create: (_) => ManageIncomingResourceDonation()),
+            // ChangeNotifierProvider(
+            //     create: (_) => ManageIncomingResourceRequest()),
+            // ChangeNotifierProvider(
+            //     create: (_) => ManageIncomingResourceDonation()),
             ChangeNotifierProvider(create: (_) => ManageOrganisationMembers()),
             ChangeNotifierProvider(create: (_) => ManageListOfKah()),
             ChangeNotifierProvider(create: (_) => ManageResource()),

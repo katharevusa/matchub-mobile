@@ -5,9 +5,12 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/resource/resourceDrawer.dart';
 import 'package:matchub_mobile/screens/resource/resource_incoming/filterRequestByResource.dart';
+import 'package:matchub_mobile/screens/resource/resource_incoming/incoming_request_tabview.dart';
 import 'package:matchub_mobile/screens/resource/resource_incoming/resource_incoming_tabview.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_incoming_resourceRequest.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
 class IncomingRequestScreen extends StatefulWidget {
@@ -18,7 +21,63 @@ class IncomingRequestScreen extends StatefulWidget {
 
 class _IncomingRequestScreenState extends State<IncomingRequestScreen>
     with SingleTickerProviderStateMixin {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: SafeArea(
+        child: Scaffold(
+          key: _key,
+          drawer: ResourceDrawer(),
+          // endDrawer: DrawerMenu(),
+          appBar: AppBar(
+            leadingWidth: 35,
+            iconTheme: IconThemeData(color: Colors.black),
+            title: Text("Incoming Request",
+                style: TextStyle(
+                    color: Colors.grey[850],
+                    fontSize: SizeConfig.textMultiplier * 3,
+                    fontWeight: FontWeight.w700)),
+            backgroundColor: kScaffoldColor,
+            elevation: 0,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(40),
+              child: Container(
+                padding: EdgeInsets.only(left: 20),
+                alignment: Alignment.centerLeft,
+                child: TabBar(
+                    labelColor: Colors.grey[600],
+                    unselectedLabelColor: Colors.grey[400],
+                    indicator: UnderlineTabIndicator(
+                        borderSide: BorderSide(
+                          width: 4,
+                          color: kSecondaryColor,
+                        ),
+                        insets: EdgeInsets.only(left: 8, right: 8, bottom: 4)),
+                    isScrollable: true,
+                    tabs: [
+                      Tab(
+                        text: ("To my Projects"),
+                      ),
+                      Tab(
+                        text: ("To my Resources"),
+                      ),
+                    ]),
+              ),
+            ),
+          ),
+          body: TabBarView(children: [
+            IncomingRequestTabview(0),
+            IncomingRequestTabview(1),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  /*ApiBaseHelper _helper = ApiBaseHelper();
   List<ResourceRequest> listOfIncomingRequests = [];
   List<ResourceRequest> listOfIncomingPending = [];
   List<ResourceRequest> listOfIncomingApproved = [];
@@ -76,7 +135,7 @@ class _IncomingRequestScreenState extends State<IncomingRequestScreen>
                         Tab(
                           icon: Row(
                             children: [
-                              Text('  Pending'),
+                              Text('  To my project'),
                             ],
                           ),
                         ),
@@ -150,5 +209,5 @@ class _IncomingRequestScreenState extends State<IncomingRequestScreen>
         // : Center(child: CircularProgressIndicator()),
 
         );
-  }
+  }*/
 }
