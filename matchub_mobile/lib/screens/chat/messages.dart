@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
+import 'package:matchub_mobile/services/notification_service.dart';
 import 'package:matchub_mobile/widgets/popupmenubutton.dart' as popupmenu;
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/services/auth.dart';
@@ -58,7 +59,6 @@ class _MessagesState extends State<Messages> {
   loadMessages() async {
     await DatabaseMethods().getChatMessages(widget.chatRoomId).then((val) {
       setState(() {
-        print('rached herer');
         chats = val;
       });
     });
@@ -96,19 +96,18 @@ class _MessagesState extends State<Messages> {
 
   addMessage() {
     print("reached here - 0");
+    var authInstance = Provider.of<Auth>(context, listen: false);
     if (messageEditingController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
-        "sentBy": Provider.of<Auth>(context).myProfile.uuid,
+        "sentBy": authInstance.myProfile.uuid,
         "messageText": messageEditingController.text,
         'sentAt': DateTime.now()
       };
-      print("reached here -1");
       print(widget.chatRoomId);
       DatabaseMethods().sendMessage(widget.chatRoomId, chatMessageMap, false);
-
+      NotificationService(authInstance.myProfile.uuid).sendNotificationToUsers(authInstance.accessToken, [widget.recipient.uuid], "type", widget.chatRoomId, authInstance.myProfile.name, messageEditingController.text, authInstance.myProfile.profilePhoto);
       setState(() {
         messageEditingController.text = "";
-        print("reached here -3");
         Future.delayed(Duration(milliseconds: 200), () {
           _scrollController.animateTo(
               _scrollController.position.maxScrollExtent,

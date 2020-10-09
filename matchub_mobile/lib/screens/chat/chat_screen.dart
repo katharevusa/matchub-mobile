@@ -44,6 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
               height: 80 * SizeConfig.heightMultiplier,
               child: Center(child: Text("No Chats here yet...")));
         }
+        
         return ListView.builder(
               // separatorBuilder: (ctx, idx) => Divider(),
               itemCount: snapshot.data.documents.length,

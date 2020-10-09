@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/navigation/navigation.dart';
 import 'package:toast/toast.dart';
 
@@ -16,9 +17,25 @@ class NotificationService with ChangeNotifier {
       FlutterLocalNotificationsPlugin();
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
-  void startup(){
+  void startup() {
     registerNotification();
     configLocalNotification();
+  }
+
+  void sendNotificationToUsers(accessToken, List<String> uuids, String type, String chatId,
+      String title, String body, String image) async {
+
+        print("Hello Word");
+    await ApiBaseHelper()
+        .postProtected("authenticated/sendNotificationsToUsers",
+            body: json.encode({
+              "uuids": uuids,
+              "type": type,
+              "chatId": chatId,
+              "title": title,
+              "body": body,
+              "image": image,
+            },), accessToken :accessToken);
   }
 
   void registerNotification() {
@@ -28,7 +45,7 @@ class NotificationService with ChangeNotifier {
     firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
       print('onMessage: $message');
       Platform.isAndroid
-          ? showNotification(message['notification'])
+          ? showNotification(message)
           : showNotification(message['aps']['alert']);
       return;
     }, onResume: (Map<String, dynamic> message) {
@@ -43,7 +60,7 @@ class NotificationService with ChangeNotifier {
       Firestore.instance
           .collection('users')
           .document(userId)
-          .set({'pushToken': token}, SetOptions(merge: true));
+          .set({'mobilePushToken': token}, SetOptions(merge: true));
     }).catchError((err) {
       print(err.toString());
       // Toast.show(msg: err.message.toString());
@@ -53,21 +70,24 @@ class NotificationService with ChangeNotifier {
   void showNotification(message) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       Platform.isAndroid
-          ? 'com.dfa.flutterchatdemo'
+          ? 'com.example.matchub_mobile'
           : 'com.duytq.flutterchatdemo',
       'Flutter chat demo',
       'your channel description',
+      // largeIcon: message['notification']['imageUrl'],
+      // icon: message['notification']['imageUrl'],
       playSound: true,
       enableVibration: true,
       importance: Importance.Max,
       priority: Priority.High,
+      // category:  	"CATEGORY_MESSAGE"
     );
-  var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-  var platformChannelSpecifics =
-  new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-  await flutterLocalNotificationsPlugin.show(
-      0, message['title'].toString(), message['body'].toString(), platformChannelSpecifics,
-      payload: json.encode(message));
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(0, message['data']['title'].toString(),
+        message['data']['body'].toString(), platformChannelSpecifics,
+        payload: json.encode(message));
 // }
   }
 
@@ -77,6 +97,10 @@ class NotificationService with ChangeNotifier {
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: (payload) => Future.delayed(Duration(seconds:2), ()=>print(payload)),);
+    flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onSelectNotification: (payload) =>
+          Future.delayed(Duration(seconds: 2), () => print(payload)),
+    );
   }
 }
