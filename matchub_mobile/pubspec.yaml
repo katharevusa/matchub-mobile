@@ -61,6 +61,7 @@ dependencies:
   date_format: ^1.0.9
   string_to_hex: ^0.2.1+30
   bubble_tab_indicator: ^0.1.4
+  rxdart: ^0.24.1
   
   toast: ^0.1.5
   ticket_pass_package: ^0.1.0

@@ -69,14 +69,28 @@ class _MessagesState extends State<Messages> {
       stream: chats,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData || snapshot.data.documents.length == 0) {
-          return Container(height: 80*SizeConfig.heightMultiplier, child: Center(child: Text("No messages here yet...")));
+          return Container(
+              height: 80 * SizeConfig.heightMultiplier,
+              child: Center(child: Text("No messages here yet...")));
         }
         print(snapshot.data.documents.length);
         // _scrollController.jumpTo(
         //   _scrollController.position.maxScrollExtent ,
         // );
-
         Profile myProfile = Provider.of<Auth>(context).myProfile;
+        for (var message in snapshot.data.documents) {
+          if (!message['readBy'].contains(myProfile.uuid)) {
+            if (message.reference != null) {
+              var readByArray = message['readBy'];
+              readByArray.add(myProfile.uuid);
+              Firestore.instance
+                  .runTransaction((Transaction myTransaction) async {
+                await myTransaction.update(message.reference, {'readBy': readByArray});
+              });
+            }
+          }
+        }
+
         return ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -101,11 +115,19 @@ class _MessagesState extends State<Messages> {
       Map<String, dynamic> chatMessageMap = {
         "sentBy": authInstance.myProfile.uuid,
         "messageText": messageEditingController.text,
-        'sentAt': DateTime.now()
+        'sentAt': DateTime.now(),
+        "readBy" : []
       };
       print(widget.chatRoomId);
       DatabaseMethods().sendMessage(widget.chatRoomId, chatMessageMap, false);
-      NotificationService(authInstance.myProfile.uuid).sendNotificationToUsers(authInstance.accessToken, [widget.recipient.uuid], "type", widget.chatRoomId, authInstance.myProfile.name, messageEditingController.text, authInstance.myProfile.profilePhoto);
+      NotificationService(authInstance.myProfile.uuid).sendNotificationToUsers(
+          authInstance.accessToken,
+          [widget.recipient.uuid],
+          "type",
+          widget.chatRoomId,
+          authInstance.myProfile.name,
+          messageEditingController.text,
+          authInstance.myProfile.profilePhoto);
       setState(() {
         messageEditingController.text = "";
         Future.delayed(Duration(milliseconds: 200), () {
@@ -144,8 +166,6 @@ class _MessagesState extends State<Messages> {
           ),
           actions: [
             popupmenu.PopupMenuButton(
-                // onSelected: (value) => FocusScope.of(context).unfocus(),
-                // onCanceled: () => FocusScope.of(context).unfocus(),
                 offset: Offset(0, 50),
                 icon: Icon(
                   FlutterIcons.ellipsis_v_faw5s,
@@ -157,7 +177,8 @@ class _MessagesState extends State<Messages> {
                         child: ListTile(
                           onTap: () {
                             DatabaseMethods().deleteChat(widget.chatRoomId);
-                            Navigator.of(context).popUntil(ModalRoute.withName("/"));
+                            Navigator.of(context)
+                                .popUntil(ModalRoute.withName("/"));
                           },
                           dense: true,
                           leading: Icon(FlutterIcons.trash_alt_faw5s),

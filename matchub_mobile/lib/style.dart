@@ -71,7 +71,7 @@ class AppTheme {
 
   static final TextStyle searchLight = TextStyle(
     color: Colors.grey[800],
-    fontSize: 1.3 * SizeConfig.textMultiplier,
+    fontSize: 1.4 * SizeConfig.textMultiplier,
     fontFamily: "Lato",
   );
 

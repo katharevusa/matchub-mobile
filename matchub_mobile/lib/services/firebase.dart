@@ -9,6 +9,24 @@ class DatabaseMethods {
     });
   }
 
+  getUnreadMessages(String chatRoomId, String userUUID) async {
+    int totalUnreadMessages = 0;
+    await Firestore.instance
+        .collection("message")
+        .doc(chatRoomId)
+        .collection("messages")
+        .getDocuments()
+        .then((value) {
+      value.docs.forEach((message) {
+        if (message.get('sentBy') != userUUID && message.get('readBy').indexWhere((el) => el == userUUID) == -1) {
+          totalUnreadMessages++;
+        }
+      });
+      print("Total Unread Messages: " + totalUnreadMessages.toString());
+    });
+    return totalUnreadMessages;
+  }
+
   getUserInfo(String email, String uuid) async {
     return Firestore.instance
         .collection("users")
@@ -73,8 +91,8 @@ class DatabaseMethods {
         .get()
         .then(
           (snapshot) => snapshot.docs.forEach((element) {
-            element.data().update("members",
-                (value) => FieldValue.arrayRemove(memberUUID));
+            element.data().update(
+                "members", (value) => FieldValue.arrayRemove(memberUUID));
           }),
         );
   }

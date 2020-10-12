@@ -20,6 +20,7 @@ import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/login/reset_password.dart';
 import 'package:matchub_mobile/screens/login/register_screen.dart';
+import 'package:matchub_mobile/screens/search/search_page.dart';
 import 'package:matchub_mobile/screens/user/account-settings/change_password.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
@@ -301,7 +302,11 @@ class _TabsScreenState extends State<TabsScreen> {
         return MaterialPageRoute(
             builder: (context) =>
                 ProjectManagementOverview(settings.arguments as Project),
-            // fullscreenDialog: true,
+            settings: settings);
+                          case SearchResults.routeName:
+                return MaterialPageRoute(
+            builder: (context) =>
+               SearchResults(),
             settings: settings);
       default:
         return MaterialPageRoute(

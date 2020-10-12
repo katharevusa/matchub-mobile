@@ -25,7 +25,6 @@ class NotificationService with ChangeNotifier {
   void sendNotificationToUsers(accessToken, List<String> uuids, String type, String chatId,
       String title, String body, String image) async {
 
-        print("Hello Word");
     await ApiBaseHelper()
         .postProtected("authenticated/sendNotificationsToUsers",
             body: json.encode({
@@ -41,7 +40,7 @@ class NotificationService with ChangeNotifier {
   void registerNotification() {
     firebaseMessaging.requestNotificationPermissions();
     print(
-        "======================== reached here ==============================");
+        "======================== Notification Service Startup ==============================");
     firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
       print('onMessage: $message');
       Platform.isAndroid
@@ -80,13 +79,12 @@ class NotificationService with ChangeNotifier {
       enableVibration: true,
       importance: Importance.Max,
       priority: Priority.High,
-      // category:  	"CATEGORY_MESSAGE"
     );
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(0, message['data']['title'].toString(),
-        message['data']['body'].toString(), platformChannelSpecifics,
+    await flutterLocalNotificationsPlugin.show(0, message['notification']['title'].toString(),
+        message['notification']['body'].toString(), platformChannelSpecifics,
         payload: json.encode(message));
 // }
   }
@@ -99,8 +97,8 @@ class NotificationService with ChangeNotifier {
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onSelectNotification: (payload) =>
-          Future.delayed(Duration(seconds: 2), () => print(payload)),
+      // onSelectNotification: (payload) =>
+      //     Future.delayed(Duration(seconds: 2), () => print(payload)),
     );
   }
 }
