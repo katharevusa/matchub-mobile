@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/models/project.dart';
+import 'package:matchub_mobile/screens/profile/profile_projects.dart';
+import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/widgets/project_vertical_card.dart';
+import 'package:provider/provider.dart';
 import 'dart:math';
 
 import '../../../sizeconfig.dart';
@@ -28,7 +34,14 @@ class _ExploreListState extends State<ExploreList> {
 
   @override
   Widget build(BuildContext context) {
+    Profile myProfile = Provider.of<Auth>(context).myProfile;
+    List<Project> allProjects = [];
+    allProjects
+      ..addAll(myProfile.projectsOwned)
+      ..addAll(myProfile.projectsJoined);
+
     return SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,7 +51,7 @@ class _ExploreListState extends State<ExploreList> {
             child: Text(
               "Featured Projects",
               style: TextStyle(
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w500,
                 fontSize: 2.2 * SizeConfig.textMultiplier,
               ),
             ),
@@ -65,7 +78,7 @@ class _ExploreListState extends State<ExploreList> {
             child: Text(
               "Because You Liked",
               style: TextStyle(
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w500,
                 fontSize: 2.2 * SizeConfig.textMultiplier,
               ),
             ),
@@ -76,11 +89,19 @@ class _ExploreListState extends State<ExploreList> {
             child: Text(
               "Recommended For You",
               style: TextStyle(
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w500,
                 fontSize: 2.2 * SizeConfig.textMultiplier,
               ),
             ),
           ),
+          // ListView.builder(
+          //   // physics: NeverScrollableScrollPhysics(),
+          //   shrinkWrap:true,
+          //     itemBuilder: (context, index) => ProjectVerticalCard(
+          //         project: allProjects[index],
+          //         isOwner: true),
+          //     itemCount: allProjects.length,
+          //   ),
         ],
       ),
     );

@@ -8,22 +8,63 @@ class Search with ChangeNotifier {
   List<Resources> searchResourcesResults = [];
   String accessToken;
   ApiBaseHelper _apiHelper = ApiBaseHelper();
+  bool hasMoreProjects;
+  bool hasMoreProfiles;
 
   Search({this.accessToken});
 
-  globalSearchForUsers(String searchQuery) async {
+  globalSearchForUsers(String searchQuery, {pageNo = 0, Map<String, dynamic> filterOptions}) async {
+    if (pageNo == 0) searchProfileResults.clear();
+    var filter = "";
+    if (filterOptions != null) {
+      if (filterOptions['country'] != null) {
+        var countryQuery = "&country=${filterOptions['country']}";
+        filter += countryQuery;
+      }
+      for (num i in filterOptions['sdgs']) {
+        filter += "&sdgIds=${i+1}";
+      }
+    }
     var responseData = await _apiHelper.getProtected(
-        "authenticated/globalSearchAllUsers?search=$searchQuery", accessToken);
-    searchProfileResults = (responseData['content'] as List)
+        "authenticated/globalSearchAllUsers?search=$searchQuery&size=8&page=$pageNo$filter",
+        accessToken);
+    searchProfileResults.addAll((responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
-        .toList();
+        .toList());
+    hasMoreProfiles = !responseData['last'];
   }
-  globalSearchForProjects(String searchQuery) async {
+
+  globalSearchForProjects(String searchQuery,
+      {pageNo = 0, Map<String, dynamic> filterOptions}) async {
+    if (pageNo == 0) searchProjectResults.clear();
+    var filter = "";
+    if (filterOptions != null) {
+      if (filterOptions['status'] != null) {
+        var statusQuery = "&status=";
+        var value = filterOptions['status'];
+        if (value == 'Pending') {
+          statusQuery += "ON_HOLD";
+        } else if (value == 'Active') {
+          statusQuery += "ACTIVE";
+        } else if (value == 'Completed') {
+          statusQuery += "COMPLETED";
+        }
+        filter += statusQuery;
+      }
+      if (filterOptions['country'] != null) {
+        var countryQuery = "&country=${filterOptions['country']}";
+        filter += countryQuery;
+      }
+      for (num i in filterOptions['sdgs']) {
+        filter += "&sdgIds=${i+1}";
+      }
+    }
     var responseData = await _apiHelper.getProtected(
-        "authenticated/projectGlobalSearch?keywords=$searchQuery&size=5", accessToken);
-    searchProjectResults = (responseData['content'] as List)
+        "authenticated/projectGlobalSearch?keywords=$searchQuery&size=10&page=$pageNo$filter",
+        accessToken);
+    searchProjectResults.addAll((responseData['content'] as List)
         .map((e) => Project.fromJson(e))
-        .toList();
-        print(responseData['totalElements']); 
+        .toList());
+    hasMoreProjects = !responseData['last'];
   }
 }

@@ -216,7 +216,7 @@ class _ProjectVerticalCardState extends State<ProjectVerticalCard> {
               Positioned(
                 top: 1 * SizeConfig.heightMultiplier,
                 child: Hero(
-                  tag: widget.project.projectProfilePic,
+                  tag: widget.project.projectProfilePic+"123",
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: ClipRRect(

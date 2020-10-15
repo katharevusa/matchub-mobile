@@ -43,9 +43,9 @@ class _HomeScreenState extends State<HomeScreen>
               )
             ],
             backgroundColor: kScaffoldColor,
-            // pinned: true,
-            floating: true,
-            snap: true,
+            pinned: true,
+            // floating: true,
+            // snap: true,
             toolbarHeight: 5.5 * SizeConfig.heightMultiplier,
             centerTitle: true, stretch: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          new SliverFillRemaining(
+          SliverFillRemaining(
             child: TabBarView(
               children: <Widget>[
                 ExploreList(),

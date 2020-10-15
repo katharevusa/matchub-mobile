@@ -192,7 +192,7 @@ class _TabsScreenState extends State<TabsScreen> {
         ),
         BottomNavigationBarItem(
           icon: Icon(FlutterIcons.compass_fea),
-          title: Text('Explore'),
+          title: Text('Inbox'),
         ),
         BottomNavigationBarItem(
           icon: Icon(FlutterIcons.tasks_faw5s),
