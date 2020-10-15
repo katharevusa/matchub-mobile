@@ -11,6 +11,8 @@ import 'package:matchub_mobile/services/manage_resource.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:provider/provider.dart';
 
+import '../../style.dart';
+
 class ResourceScreen extends StatefulWidget {
   static const routeName = "/resource-screen";
 
@@ -20,43 +22,12 @@ class ResourceScreen extends StatefulWidget {
 
 class _ResourceScreenState extends State<ResourceScreen>
     with SingleTickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   List<Resources> listOfResources = [];
   Future resourcesFuture;
   Resources resources;
   ApiBaseHelper _helper = ApiBaseHelper();
   bool _isLoading;
-  // @override
-  // void initState() {
-  //   // resourcesFuture = retrieveResources();
-  //   _isLoading = true;
-  //   loadResources();
-  //   super.initState();
-  // }
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   resourcesFuture = retrieveResources();
-  // }
-
-  // retrieveResources() async {
-  //   var profileId =
-  //       Provider.of<Auth>(context, listen: false).myProfile.accountId;
-  //   final url = 'authenticated/getHostedResources?profileId=${profileId}';
-  //   final responseData = await _helper.getProtected(
-  //       url, Provider.of<Auth>(context, listen: false).accessToken);
-  //   listOfResources = (responseData['content'] as List)
-  //       .map((e) => Resources.fromJson(e))
-  //       .toList();
-  // }
-  // loadResources() async {
-  //   Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-  //   var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
-  //   await Provider.of<ManageResource>(context, listen: false)
-  //       .getResources(profile, accessToken);
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  // }
 
   void selectOwnResource(BuildContext ctx) {
     Navigator.of(ctx).pushNamed('/own-resource-detail-screen');
@@ -64,51 +35,60 @@ class _ResourceScreenState extends State<ResourceScreen>
 
   @override
   Widget build(BuildContext context) {
-    // listOfResources = Provider.of<ManageResource>(context).resources;
-    return
-
-        // FutureBuilder(
-        //   future: resourcesFuture,
-        //   builder: (context, snapshot) =>
-        //       (snapshot.connectionState == ConnectionState.done)
-        //           ?
-        DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        drawer: ResourceDrawer(),
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
-          ),
-          title: Text("Resource Overview"),
-          elevation: 0.0,
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(10 * SizeConfig.widthMultiplier),
-            child: Container(
-              color: Colors.white,
-              child: TabBar(
-                tabs: [
-                  Tab(text: "Ongoing"),
-                  Tab(text: "Expired"),
-                  Tab(text: "Saved"),
-                ],
-                labelColor: Color.fromRGBO(64, 133, 140, 0.8),
-                indicatorColor: Color.fromRGBO(64, 133, 140, 0.8),
+    return DefaultTabController(
+      length: 2,
+      child: SafeArea(
+        child: Scaffold(
+          key: _key,
+          drawer: ResourceDrawer(),
+          appBar: AppBar(
+            leadingWidth: 35,
+            iconTheme: IconThemeData(color: Colors.black),
+            title: Text("Resources",
+                style: TextStyle(
+                    color: Colors.grey[850],
+                    fontSize: SizeConfig.textMultiplier * 3,
+                    fontWeight: FontWeight.w700)),
+            backgroundColor: kScaffoldColor,
+            elevation: 0,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(40),
+              child: Container(
+                padding: EdgeInsets.only(left: 20),
+                alignment: Alignment.centerLeft,
+                child: TabBar(
+                    labelColor: Colors.grey[600],
+                    unselectedLabelColor: Colors.grey[400],
+                    indicator: UnderlineTabIndicator(
+                        borderSide: BorderSide(
+                          width: 4,
+                          color: kSecondaryColor,
+                        ),
+                        insets: EdgeInsets.only(left: 8, right: 8, bottom: 4)),
+                    isScrollable: true,
+                    tabs: [
+                      Tab(
+                        text: ("My Resources"),
+                      ),
+                      Tab(
+                        text: ("Saved Resources"),
+                      ),
+                    ]),
               ),
             ),
           ),
+          body: TabBarView(children: [
+            Container(
+              child: OngoingResource(),
+            ),
+            // Container(
+            //   child: ExpiredResource(listOfResources),
+            // ),
+            Container(
+              child: OngoingResource(),
+            ),
+          ]),
         ),
-        body: TabBarView(children: [
-          Container(
-            child: OngoingResource(),
-          ),
-          Container(
-            child: ExpiredResource(listOfResources),
-          ),
-          Container(
-            child: OngoingResource(),
-          ),
-        ]),
       ),
       //   )
       // : Center(child: CircularProgressIndicator()),

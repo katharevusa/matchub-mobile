@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 
@@ -10,6 +11,7 @@ import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceDetail_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_resource.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
 class OngoingResource extends StatefulWidget {
@@ -70,40 +72,156 @@ class _OngoingResourceState extends State<OngoingResource> {
                 //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  DropdownButton(
-                    value: _selected,
-                    onChanged: (value) {
-                      _selected = value;
-                      setState(() {
-                        if (value == "All") {
-                          filteredResources = listOfResources;
-                        } else if (value == "Available") {
-                          filteredResources = listOfResources
-                              .where((e) => e.available)
-                              .toList();
-                        } else {
-                          filteredResources = listOfResources
-                              .where((e) => !e.available)
-                              .toList();
-                        }
-                      });
-                    },
-                    items: _resourceStatus.map((value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Icon(FlutterIcons.filter_ant),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Filter Resource",
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      Spacer(),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: DropdownButton(
+                          value: _selected,
+                          onChanged: (value) {
+                            _selected = value;
+                            setState(() {
+                              if (value == "All") {
+                                filteredResources = listOfResources;
+                              } else if (value == "Available") {
+                                filteredResources = listOfResources
+                                    .where((e) => e.available)
+                                    .toList();
+                              } else {
+                                filteredResources = listOfResources
+                                    .where((e) => !e.available)
+                                    .toList();
+                              }
+                            });
+                          },
+                          items: _resourceStatus.map((value) {
+                            return DropdownMenuItem(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
                   ),
-                  ListView.builder(
+                  ListView.separated(
                       shrinkWrap: true,
                       itemCount: filteredResources.length,
+                      separatorBuilder: (context, index) {
+                        return Divider();
+                      },
                       itemBuilder: (BuildContext ctx, int index) {
                         return ListTile(
-                          title: Text(filteredResources[index].resourceName),
                           onTap: () =>
                               selecteResource(ctx, filteredResources[index]),
+                          title: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              RotatedBox(
+                                quarterTurns: -1,
+                                child:
+                                    filteredResources[index].available == true
+                                        ? Text("Available",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black))
+                                        : Text("Busy",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.blueGrey)),
+                              ),
+                              Container(
+                                color: Colors.green.shade500,
+                                height: 50,
+                                width: 2,
+                              ),
+                              SizedBox(width: 5),
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    " " + filteredResources[index].resourceName,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1,
+                                  ),
+                                  Text(
+                                    "  By: " +
+                                        Provider.of<Auth>(context,
+                                                listen: false)
+                                            .myProfile
+                                            .name,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                  ),
+                                ],
+                              ),
+
+                              // Container(
+                              //   height: 20,
+                              //   width: 60,
+                              //   decoration: BoxDecoration(
+                              //     color:
+                              //         filteredResources[index].available == true
+                              //             ? Colors.green.shade300
+                              //             : Colors.red.shade200,
+                              //     borderRadius: BorderRadius.circular(15),
+                              //   ),
+                              //   child: Center(
+                              //     child:
+                              //         filteredResources[index].available == true
+                              //             ? Text(
+                              //                 "Available",
+                              //                 style: TextStyle(fontSize: 11),
+                              //               )
+                              //             : Text("Busy",
+                              //                 style: TextStyle(fontSize: 11)),
+                              //   ),
+                              // )
+                            ],
+                          ),
+                          // subtitle: filteredResources[index].available == true
+                          //     ? Text("Available")
+                          //     : Text("Busy"),
+                          trailing: Container(
+                            width: 80.0,
+                            child: filteredResources[index].photos.isNotEmpty
+                                ? AttachmentImage(
+                                    filteredResources[index].photos[0],
+                                  )
+                                : Image.asset(
+                                    "assets/images/resource-default2.png"),
+                            // decoration: BoxDecoration(
+                            //     borderRadius: BorderRadius.circular(10.0),
+                            //     child: DecorationImage(
+                            //       image: AttachmentImage(images[4]),
+                            //       fit: BoxFit.cover,
+                            //     )),
+                          ),
                         );
+                        // return ListTile(
+                        //   title: Text(filteredResources[index].resourceName),
+                        //   onTap: () =>
+                        //       selecteResource(ctx, filteredResources[index]),
+                        // );
                       })
                 ],
               ),

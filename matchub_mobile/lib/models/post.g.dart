@@ -8,7 +8,7 @@ part of 'post.dart';
 
 Post _$PostFromJson(Map<String, dynamic> json) {
   return Post()
-    ..postId = json['postId'] as num 
+    ..postId = json['postId'] as num
     ..content = json['content'] as String
     ..timeCreated = DateTime.parse(json['timeCreated'])
     ..photos = json['photos'] as List

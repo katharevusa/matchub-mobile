@@ -13,7 +13,7 @@ Sdg _$SdgFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$SdgToJson(Sdg instance) => <String, dynamic>{
-      'sdgId': instance.sdgId, 
+      'sdgId': instance.sdgId,
       'sdgName': instance.sdgName,
       'sdgDescription': instance.sdgDescription,
       'projects': instance.projects

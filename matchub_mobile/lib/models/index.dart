@@ -1,5 +1,3 @@
-export 'badge.dart' ; 
-export 'joinRequest.dart' ; 
 export 'sdg.dart' ; 
 export 'resourceCategory.dart' ; 
 export 'stakeholder.dart' ; 
@@ -9,5 +7,7 @@ export 'resources.dart' ;
 export 'resourceRequest.dart' ; 
 export 'truncatedProfile.dart' ; 
 export 'review.dart' ; 
+export 'announcement.dart' ; 
+export 'badge.dart' ; 
 export 'profile.dart' ; 
 export 'post.dart' ; 

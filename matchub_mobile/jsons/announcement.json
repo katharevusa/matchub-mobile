@@ -1,0 +1,685 @@
+{
+  "announcementId": 3,
+  "title": " internal announcement 1",
+  "content": "description",
+  "timestamp": "2016-01-25T21:34:55",
+  "notifiedUsers": [
+    {
+      "accountId": 5,
+      "uuid": "eb695ba2-8136-4413-a107-e7abc82409ea",
+      "email": "ikjun@gmail.com",
+      "accountLocked": false,
+      "accountExpired": false,
+      "disabled": false,
+      "roles": ["USER"],
+      "isVerified": true,
+      "joinDate": "2020-10-08T22:05:26",
+      "activeMonths": 0,
+      "countryCode": "+82",
+      "phoneNumber": "011-465-9876",
+      "country": "South Korea",
+      "city": "Seoul",
+      "profilePhoto": "https://localhost:8443/api/v1/files/init/ikjun.jpeg",
+      "reputationPoints": 0,
+      "followers": [8, 9, 10],
+      "following": [3, 9, 10],
+      "savedResourceIds": [],
+      "upvotedProjectIds": [],
+      "downvotedProjectIds": [],
+      "spotlightChances": 0,
+      "posts": [],
+      "hostedResources": [
+        {
+          "resourceId": 1,
+          "resourceName": "Bread",
+          "resourceDescription": "Free Bread",
+          "uploadedFiles": [],
+          "available": true,
+          "startTime": "2021-06-05T11:50:55",
+          "endTime": "2021-07-05T11:50:55",
+          "resourceCategoryId": 1,
+          "resourceOwnerId": 5,
+          "units": 10,
+          "resourceProfilePic": "https://localhost:8443/api/v1/files/init/resource_bread.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/resource_bread.jpg",
+            "https://localhost:8443/api/v1/files/init/bread2.jpg"
+          ],
+          "documents": {},
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "matchedProjectId": null
+        },
+        {
+          "resourceId": 2,
+          "resourceName": "Classroom",
+          "resourceDescription": "Free classroom",
+          "uploadedFiles": [],
+          "available": true,
+          "startTime": "2021-06-05T11:50:55",
+          "endTime": "2021-07-05T11:50:55",
+          "resourceCategoryId": 2,
+          "resourceOwnerId": 5,
+          "units": 10,
+          "resourceProfilePic": "https://localhost:8443/api/v1/files/init/resource_classroom.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/resource_classroom.jpg",
+            "https://localhost:8443/api/v1/files/init/classroom.jpg"
+          ],
+          "documents": {},
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "matchedProjectId": null
+        },
+        {
+          "resourceId": 3,
+          "resourceName": "Water",
+          "resourceDescription": "10 Free Bottle Water",
+          "uploadedFiles": [],
+          "available": true,
+          "startTime": "2021-06-05T11:50:55",
+          "endTime": "2021-07-05T11:50:55",
+          "resourceCategoryId": 3,
+          "resourceOwnerId": 5,
+          "units": 10,
+          "resourceProfilePic": "https://localhost:8443/api/v1/files/init/resource_water.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/resource_water.jpg",
+            "https://localhost:8443/api/v1/files/init/water1.jpg"
+          ],
+          "documents": {},
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "matchedProjectId": null
+        }
+      ],
+      "sdgs": [
+        {
+          "sdgId": 3,
+          "sdgName": "Good Health and Well-being",
+          "sdgDescription": "Ensure healthy lives and promote well-being for all at all ages"
+        },
+        {
+          "sdgId": 4,
+          "sdgName": "Quality Education",
+          "sdgDescription": "Ensure inclusive and equitable quality education and promote lifelong learning opportunities for all"
+        },
+        {
+          "sdgId": 5,
+          "sdgName": "Gender Equality",
+          "sdgDescription": "Achieve gender equality and empower all women and girls"
+        },
+        {
+          "sdgId": 11,
+          "sdgName": "Sustainable Cities and Communities",
+          "sdgDescription": "Make cities and human settlements inclusive, safe, resilient and sustainable"
+        },
+        {
+          "sdgId": 14,
+          "sdgName": "Life Below Water",
+          "sdgDescription": "Conserve and sustainably use the oceans, seas and marine resources for sustainable development"
+        }
+      ],
+      "meetings": [],
+      "projectsJoined": [],
+      "projectsOwned": [
+        {
+          "projectId": 1,
+          "projectTitle": "Empowering Communities in Bangladesh",
+          "projectDescription": "To strengthen community resilience to prepare and respond to the risks associated with disasters and climate change by fostering economic empowerment, inclusive leadership and disaster preparedness.",
+          "country": "Bangladesh",
+          "startDate": "2020-10-08 22:05",
+          "endDate": "2021-05-05 11:50",
+          "userFollowers": [],
+          "projStatus": "ACTIVE",
+          "upvotes": 21,
+          "relatedResources": [],
+          "projCreatorId": 5,
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "projectProfilePic": "https://localhost:8443/api/v1/files/init/project1.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/project1.jpg",
+            "https://localhost:8443/api/v1/files/init/Bangladesh.jpg",
+            "https://localhost:8443/api/v1/files/init/Bangladesh1.jpg",
+            "https://localhost:8443/api/v1/files/init/Bangladesh2.jpg"
+          ],
+          "documents": {},
+          "meetings": []
+        },
+        {
+          "projectId": 2,
+          "projectTitle": "Women's financial literacy, Malawi",
+          "projectDescription": "CARE will work with 20,000 women from 1,000 village savings and loans groups in Lilongwe, Dowa and Kasungu Districts, to overcome chronic hunger by expanding their farms or micro-businesses.",
+          "country": "Malawi",
+          "startDate": "2019-03-05 11:50",
+          "endDate": "2019-06-05 11:50",
+          "userFollowers": [],
+          "projStatus": "ACTIVE",
+          "upvotes": 23,
+          "relatedResources": [],
+          "projCreatorId": 5,
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "projectProfilePic": "https://localhost:8443/api/v1/files/init/project2.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/project2.jpg",
+            "https://localhost:8443/api/v1/files/init/woman1.jpg",
+            "https://localhost:8443/api/v1/files/init/woman2.jpg",
+            "https://localhost:8443/api/v1/files/init/woman3.jpg"
+          ],
+          "documents": {},
+          "meetings": []
+        },
+        {
+          "projectId": 6,
+          "projectTitle": "Save endangered sea turtles in Panama",
+          "projectDescription": "This project will launch a sea turtle research and conservation program to protect endangered leatherback and hawksbill turtles that were found at Bocas del Drago, Panama.",
+          "country": "Panama",
+          "startDate": "2021-01-05 11:50",
+          "endDate": "2025-06-05 11:50",
+          "userFollowers": [],
+          "projStatus": "ACTIVE",
+          "upvotes": 50,
+          "relatedResources": [],
+          "projCreatorId": 5,
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "projectProfilePic": "https://localhost:8443/api/v1/files/init/project6.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/project6.jpg",
+            "https://localhost:8443/api/v1/files/init/turtles.jpg",
+            "https://localhost:8443/api/v1/files/init/turtles2.jpg"
+          ],
+          "documents": {},
+          "meetings": []
+        },
+        {
+          "projectId": 13,
+          "projectTitle": "Build School Toilets for Nepal",
+          "projectDescription": "Building School-Friendly Toilets for Girls in Nepal.",
+          "country": "Nepal",
+          "startDate": "2018-12-01 11:50",
+          "endDate": "2030-12-01 11:50",
+          "userFollowers": [],
+          "projStatus": "ACTIVE",
+          "upvotes": 35,
+          "relatedResources": [],
+          "projCreatorId": 5,
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "projectProfilePic": "https://localhost:8443/api/v1/files/init/toilet.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/toilet1.jpg",
+            "https://localhost:8443/api/v1/files/init/toilet.jpg"
+          ],
+          "documents": {},
+          "meetings": []
+        },
+        {
+          "projectId": 14,
+          "projectTitle": "Time To Clean Up Hangang River",
+          "projectDescription": "One of Seoul KFEM’s projects is to clean up and protect the Hangang River, which runs through South Korea’s capital city. The river is a vital source of water for the 10 million people who live there, but years of neglect have dramatically reduced the quality of the water. As part of the new partnership, Oris will be supporting a series of clean-up days Seoul KFEM has scheduled. During these, hundreds of local volunteers will work along the river to pick up litter, plastic and other harmful pollutants. The events will also help raise awareness of the importance of clean water in Seoul.",
+          "country": "South Korea",
+          "startDate": "2018-06-05 11:45",
+          "endDate": "2020-02-26 10:25",
+          "userFollowers": [],
+          "projStatus": "COMPLETED",
+          "upvotes": 45,
+          "relatedResources": [],
+          "projCreatorId": 5,
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "projectProfilePic": "https://localhost:8443/api/v1/files/init/timeToCleanUpHangang.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/timeToCleanUpHangang.jpg",
+            "https://localhost:8443/api/v1/files/init/timeToCleanUpHangang1.jpg"
+          ],
+          "documents": {},
+          "meetings": []
+        },
+        {
+          "projectId": 15,
+          "projectTitle": "Recycle Clothes Movement",
+          "projectDescription": "How can you play a part in making fashion sustainable? Surely, some of us must have attempted the KonMarie’s method to start our journey on decluttering our jam-packed closet. The meaning of decluttering is to get rid of clothes that do not spark joy out. Thanks to KonMarie,  your closet’s now organised, clean, and left with the items you need. What’s next? What do you do with the items which do not spark joy? Discard them? Often, this scenario is common in Singapore. However, do you know that discarding is not the only way to get rid of these pre-loved clothes? You can give them a new lease of life by recycling! Let's get started!",
+          "country": "Singapore",
+          "startDate": "2018-07-07 11:45",
+          "endDate": "2020-03-28 10:25",
+          "userFollowers": [],
+          "projStatus": "COMPLETED",
+          "upvotes": 55,
+          "relatedResources": [],
+          "projCreatorId": 5,
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "projectProfilePic": "https://localhost:8443/api/v1/files/init/recycleClothes.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/recycleClothes.jpg",
+            "https://localhost:8443/api/v1/files/init/recycleClothes1.jpg"
+          ],
+          "documents": {},
+          "meetings": []
+        },
+        {
+          "projectId": 16,
+          "projectTitle": "End violence Against Women",
+          "projectDescription": "End all forms of violence and harmful practices against women and girls, regardless of gender identity and sexual orientation",
+          "country": "India",
+          "startDate": "2017-02-07 11:45",
+          "endDate": "2019-12-28 10:25",
+          "userFollowers": [],
+          "projStatus": "COMPLETED",
+          "upvotes": 36,
+          "relatedResources": [],
+          "projCreatorId": 5,
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "projectProfilePic": "https://localhost:8443/api/v1/files/init/genderEqualityIndia.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/genderEqualityIndia.jpg",
+            "https://localhost:8443/api/v1/files/init/genderEqualityIndia1.jpg"
+          ],
+          "documents": {},
+          "meetings": []
+        },
+        {
+          "projectId": 17,
+          "projectTitle": "Education For All",
+          "projectDescription": "The Education for All Project's long-term development objective is to improve access to, and benefit from basic and primary education for children, especially girls and children from disadvantaged groups, and from literacy programs for poor adults. The project will achieve three strategic goals: a) improving access to, and equity of basic and primary education; b) enhancing educational quality and relevance; and, c) improving efficiency, and institutional capacity of education service delivery. ",
+          "country": "Liberia",
+          "startDate": "2015-02-07 11:45",
+          "endDate": "2018-11-20 10:25",
+          "userFollowers": [],
+          "projStatus": "COMPLETED",
+          "upvotes": 60,
+          "relatedResources": [],
+          "projCreatorId": 5,
+          "spotlight": false,
+          "spotlightEndTime": null,
+          "projectProfilePic": "https://localhost:8443/api/v1/files/init/educationForAll.jpg",
+          "photos": [
+            "https://localhost:8443/api/v1/files/init/educationForAll.jpg",
+            "https://localhost:8443/api/v1/files/init/educationForAll1.jpg",
+            "https://localhost:8443/api/v1/files/init/educationForAll2.jpg"
+          ],
+          "documents": {},
+          "meetings": []
+        }
+      ],
+      "joinRequests": [],
+      "reviewsReceived": [
+        {
+          "reviewId": 1,
+          "timeCreated": "2020-03-15T09:00:00",
+          "content": "Ik Jun was very helpful and played a great role in this project! He motivated the team to keep progressing when things got tough.",
+          "rating": 5.0,
+          "reviewer": {
+            "accountId": 9,
+            "uuid": "d27c214e-d621-40b7-965c-cafc1517525a",
+            "email": "songhwa@gmail.com",
+            "accountLocked": false,
+            "accountExpired": false,
+            "disabled": false,
+            "roles": ["USER"],
+            "isVerified": true,
+            "joinDate": "2020-10-08T22:05:26",
+            "activeMonths": 0,
+            "countryCode": "+82",
+            "phoneNumber": "012-456-4321",
+            "country": "South Korea",
+            "city": "Seoul",
+            "profilePhoto": "https://localhost:8443/api/v1/files/init/songhwa.jpg",
+            "reputationPoints": 0,
+            "followers": [5, 7, 8, 10],
+            "following": [4, 5, 10],
+            "savedResourceIds": [],
+            "upvotedProjectIds": [],
+            "downvotedProjectIds": [],
+            "spotlightChances": 0,
+            "posts": [],
+            "announcements": [],
+            "meetings": [],
+            "projectsJoined": [
+              {
+                "projectId": 6,
+                "projectTitle": "Save endangered sea turtles in Panama",
+                "projectDescription": "This project will launch a sea turtle research and conservation program to protect endangered leatherback and hawksbill turtles that were found at Bocas del Drago, Panama.",
+                "country": "Panama",
+                "startDate": "2021-01-05 11:50",
+                "endDate": "2025-06-05 11:50",
+                "userFollowers": [],
+                "projStatus": "ACTIVE",
+                "upvotes": 50,
+                "relatedResources": [],
+                "projCreatorId": 5,
+                "spotlight": false,
+                "spotlightEndTime": null,
+                "projectProfilePic": "https://localhost:8443/api/v1/files/init/project6.jpg",
+                "photos": [
+                  "https://localhost:8443/api/v1/files/init/project6.jpg",
+                  "https://localhost:8443/api/v1/files/init/turtles.jpg",
+                  "https://localhost:8443/api/v1/files/init/turtles2.jpg"
+                ],
+                "documents": {},
+                "meetings": []
+              },
+              {
+                "projectId": 14,
+                "projectTitle": "Time To Clean Up Hangang River",
+                "projectDescription": "One of Seoul KFEM’s projects is to clean up and protect the Hangang River, which runs through South Korea’s capital city. The river is a vital source of water for the 10 million people who live there, but years of neglect have dramatically reduced the quality of the water. As part of the new partnership, Oris will be supporting a series of clean-up days Seoul KFEM has scheduled. During these, hundreds of local volunteers will work along the river to pick up litter, plastic and other harmful pollutants. The events will also help raise awareness of the importance of clean water in Seoul.",
+                "country": "South Korea",
+                "startDate": "2018-06-05 11:45",
+                "endDate": "2020-02-26 10:25",
+                "userFollowers": [],
+                "projStatus": "COMPLETED",
+                "upvotes": 45,
+                "relatedResources": [],
+                "projCreatorId": 5,
+                "spotlight": false,
+                "spotlightEndTime": null,
+                "projectProfilePic": "https://localhost:8443/api/v1/files/init/timeToCleanUpHangang.jpg",
+                "photos": [
+                  "https://localhost:8443/api/v1/files/init/timeToCleanUpHangang.jpg",
+                  "https://localhost:8443/api/v1/files/init/timeToCleanUpHangang1.jpg"
+                ],
+                "documents": {},
+                "meetings": []
+              },
+              {
+                "projectId": 15,
+                "projectTitle": "Recycle Clothes Movement",
+                "projectDescription": "How can you play a part in making fashion sustainable? Surely, some of us must have attempted the KonMarie’s method to start our journey on decluttering our jam-packed closet. The meaning of decluttering is to get rid of clothes that do not spark joy out. Thanks to KonMarie,  your closet’s now organised, clean, and left with the items you need. What’s next? What do you do with the items which do not spark joy? Discard them? Often, this scenario is common in Singapore. However, do you know that discarding is not the only way to get rid of these pre-loved clothes? You can give them a new lease of life by recycling! Let's get started!",
+                "country": "Singapore",
+                "startDate": "2018-07-07 11:45",
+                "endDate": "2020-03-28 10:25",
+                "userFollowers": [],
+                "projStatus": "COMPLETED",
+                "upvotes": 55,
+                "relatedResources": [],
+                "projCreatorId": 5,
+                "spotlight": false,
+                "spotlightEndTime": null,
+                "projectProfilePic": "https://localhost:8443/api/v1/files/init/recycleClothes.jpg",
+                "photos": [
+                  "https://localhost:8443/api/v1/files/init/recycleClothes.jpg",
+                  "https://localhost:8443/api/v1/files/init/recycleClothes1.jpg"
+                ],
+                "documents": {},
+                "meetings": []
+              },
+              {
+                "projectId": 16,
+                "projectTitle": "End violence Against Women",
+                "projectDescription": "End all forms of violence and harmful practices against women and girls, regardless of gender identity and sexual orientation",
+                "country": "India",
+                "startDate": "2017-02-07 11:45",
+                "endDate": "2019-12-28 10:25",
+                "userFollowers": [],
+                "projStatus": "COMPLETED",
+                "upvotes": 36,
+                "relatedResources": [],
+                "projCreatorId": 5,
+                "spotlight": false,
+                "spotlightEndTime": null,
+                "projectProfilePic": "https://localhost:8443/api/v1/files/init/genderEqualityIndia.jpg",
+                "photos": [
+                  "https://localhost:8443/api/v1/files/init/genderEqualityIndia.jpg",
+                  "https://localhost:8443/api/v1/files/init/genderEqualityIndia1.jpg"
+                ],
+                "documents": {},
+                "meetings": []
+              },
+              {
+                "projectId": 17,
+                "projectTitle": "Education For All",
+                "projectDescription": "The Education for All Project's long-term development objective is to improve access to, and benefit from basic and primary education for children, especially girls and children from disadvantaged groups, and from literacy programs for poor adults. The project will achieve three strategic goals: a) improving access to, and equity of basic and primary education; b) enhancing educational quality and relevance; and, c) improving efficiency, and institutional capacity of education service delivery. ",
+                "country": "Liberia",
+                "startDate": "2015-02-07 11:45",
+                "endDate": "2018-11-20 10:25",
+                "userFollowers": [],
+                "projStatus": "COMPLETED",
+                "upvotes": 60,
+                "relatedResources": [],
+                "projCreatorId": 5,
+                "spotlight": false,
+                "spotlightEndTime": null,
+                "projectProfilePic": "https://localhost:8443/api/v1/files/init/educationForAll.jpg",
+                "photos": [
+                  "https://localhost:8443/api/v1/files/init/educationForAll.jpg",
+                  "https://localhost:8443/api/v1/files/init/educationForAll1.jpg",
+                  "https://localhost:8443/api/v1/files/init/educationForAll2.jpg"
+                ],
+                "documents": {},
+                "meetings": []
+              }
+            ],
+            "joinRequests": [],
+            "badges": [
+              {
+                "badgeId": 14,
+                "badgeType": "PROJECT_SPECIFIC",
+                "badgeTitle": "Hangang Cleanup Contributor",
+                "icon": "https://localhost:8443/api/v1/files/badgeIcons/environment.png"
+              },
+              {
+                "badgeId": 15,
+                "badgeType": "PROJECT_SPECIFIC",
+                "badgeTitle": "Sustainable Fashion",
+                "icon": "https://localhost:8443/api/v1/files/badgeIcons/environment.png"
+              },
+              {
+                "badgeId": 16,
+                "badgeType": "PROJECT_SPECIFIC",
+                "badgeTitle": "Equal Beings",
+                "icon": "https://localhost:8443/api/v1/files/badgeIcons/gender-equality.png"
+              },
+              {
+                "badgeId": 17,
+                "badgeType": "PROJECT_SPECIFIC",
+                "badgeTitle": "Liberia Education Movement",
+                "icon": "https://localhost:8443/api/v1/files/badgeIcons/education.png"
+              }
+            ],
+            "fundPladges": [],
+            "tasks": [],
+            "managedChannel": [],
+            "joinedChannel": [],
+            "firstName": "Song Hwa",
+            "lastName": "Chae",
+            "genderEnum": "FEMALE",
+            "profileDescription": "Actively taking small steps to Save the earth",
+            "projectFollowing": [2, 5, 6, 7],
+            "skillSet": [
+              "Pet Lover",
+              "Verified First Aider",
+              "Nature Lover",
+              "Hiking"
+            ]
+          },
+          "project": {
+            "projectId": 14,
+            "projectTitle": "Time To Clean Up Hangang River",
+            "projectDescription": "One of Seoul KFEM’s projects is to clean up and protect the Hangang River, which runs through South Korea’s capital city. The river is a vital source of water for the 10 million people who live there, but years of neglect have dramatically reduced the quality of the water. As part of the new partnership, Oris will be supporting a series of clean-up days Seoul KFEM has scheduled. During these, hundreds of local volunteers will work along the river to pick up litter, plastic and other harmful pollutants. The events will also help raise awareness of the importance of clean water in Seoul.",
+            "country": "South Korea",
+            "startDate": "2018-06-05 11:45",
+            "endDate": "2020-02-26 10:25",
+            "userFollowers": [],
+            "projStatus": "COMPLETED",
+            "upvotes": 45,
+            "relatedResources": [],
+            "projCreatorId": 5,
+            "spotlight": false,
+            "spotlightEndTime": null,
+            "projectProfilePic": "https://localhost:8443/api/v1/files/init/timeToCleanUpHangang.jpg",
+            "photos": [
+              "https://localhost:8443/api/v1/files/init/timeToCleanUpHangang.jpg",
+              "https://localhost:8443/api/v1/files/init/timeToCleanUpHangang1.jpg"
+            ],
+            "documents": {},
+            "joinRequests": [],
+            "projectBadge": {
+              "badgeId": 14,
+              "badgeType": "PROJECT_SPECIFIC",
+              "badgeTitle": "Hangang Cleanup Contributor",
+              "icon": "https://localhost:8443/api/v1/files/badgeIcons/environment.png"
+            },
+            "fundsCampaign": [],
+            "meetings": [],
+            "sdgs": [
+              {
+                "sdgId": 6,
+                "sdgName": "Clean Water and Sanitation",
+                "sdgDescription": "Ensure availability and sustainable management of water and sanitation for all"
+              },
+              {
+                "sdgId": 11,
+                "sdgName": "Sustainable Cities and Communities",
+                "sdgDescription": "Make cities and human settlements inclusive, safe, resilient and sustainable"
+              },
+              {
+                "sdgId": 14,
+                "sdgName": "Life Below Water",
+                "sdgDescription": "Conserve and sustainably use the oceans, seas and marine resources for sustainable development"
+              }
+            ],
+            "kpis": [],
+            "channels": []
+          },
+          "reviewReceiver": {
+            "accountId": 5,
+            "uuid": "eb695ba2-8136-4413-a107-e7abc82409ea",
+            "email": "ikjun@gmail.com",
+            "accountLocked": false,
+            "accountExpired": false,
+            "disabled": false,
+            "roles": ["USER"],
+            "isVerified": true,
+            "joinDate": "2020-10-08T22:05:26",
+            "activeMonths": 0,
+            "countryCode": "+82",
+            "phoneNumber": "011-465-9876",
+            "country": "South Korea",
+            "city": "Seoul",
+            "profilePhoto": "https://localhost:8443/api/v1/files/init/ikjun.jpeg",
+            "reputationPoints": 0,
+            "followers": [8, 9, 10],
+            "following": [3, 9, 10],
+            "savedResourceIds": [],
+            "upvotedProjectIds": [],
+            "downvotedProjectIds": [],
+            "spotlightChances": 0,
+            "posts": [],
+            "announcements": [
+              {
+                "announcementId": 3,
+                "title": " internal announcement 1",
+                "content": "description",
+                "timestamp": "2016-01-25T21:34:55",
+                "projectId": 2,
+                "taskId": null,
+                "postId": null,
+                "type": "PROJECT_INTERNAL_ANNOUNCEMENT",
+                "viewedUserIds": [],
+                "creatorId": 5
+              }
+            ],
+            "meetings": [],
+            "projectsJoined": [],
+            "joinRequests": [],
+            "badges": [
+              {
+                "badgeId": 14,
+                "badgeType": "PROJECT_SPECIFIC",
+                "badgeTitle": "Hangang Cleanup Contributor",
+                "icon": "https://localhost:8443/api/v1/files/badgeIcons/environment.png"
+              },
+              {
+                "badgeId": 15,
+                "badgeType": "PROJECT_SPECIFIC",
+                "badgeTitle": "Sustainable Fashion",
+                "icon": "https://localhost:8443/api/v1/files/badgeIcons/environment.png"
+              },
+              {
+                "badgeId": 16,
+                "badgeType": "PROJECT_SPECIFIC",
+                "badgeTitle": "Equal Beings",
+                "icon": "https://localhost:8443/api/v1/files/badgeIcons/gender-equality.png"
+              },
+              {
+                "badgeId": 17,
+                "badgeType": "PROJECT_SPECIFIC",
+                "badgeTitle": "Liberia Education Movement",
+                "icon": "https://localhost:8443/api/v1/files/badgeIcons/education.png"
+              }
+            ],
+            "fundPladges": [],
+            "tasks": [],
+            "managedChannel": [],
+            "joinedChannel": [],
+            "firstName": "Ik Jun",
+            "lastName": "Lee",
+            "genderEnum": "MALE",
+            "profileDescription": "Highly Passionate Individual with a love for contributing back to the society!",
+            "projectFollowing": [1],
+            "skillSet": [
+              "Playing the Guitar",
+              "Singing",
+              "Trilingual",
+              "Verified First Aider",
+              "General Surgery (GS)"
+            ]
+          }
+        }
+      ],
+      "badges": [
+        {
+          "badgeId": 14,
+          "badgeType": "PROJECT_SPECIFIC",
+          "badgeTitle": "Hangang Cleanup Contributor",
+          "icon": "https://localhost:8443/api/v1/files/badgeIcons/environment.png"
+        },
+        {
+          "badgeId": 15,
+          "badgeType": "PROJECT_SPECIFIC",
+          "badgeTitle": "Sustainable Fashion",
+          "icon": "https://localhost:8443/api/v1/files/badgeIcons/environment.png"
+        },
+        {
+          "badgeId": 16,
+          "badgeType": "PROJECT_SPECIFIC",
+          "badgeTitle": "Equal Beings",
+          "icon": "https://localhost:8443/api/v1/files/badgeIcons/gender-equality.png"
+        },
+        {
+          "badgeId": 17,
+          "badgeType": "PROJECT_SPECIFIC",
+          "badgeTitle": "Liberia Education Movement",
+          "icon": "https://localhost:8443/api/v1/files/badgeIcons/education.png"
+        }
+      ],
+      "fundPladges": [],
+      "tasks": [],
+      "managedChannel": [],
+      "joinedChannel": [],
+      "likedPosts": [],
+      "firstName": "Ik Jun",
+      "lastName": "Lee",
+      "genderEnum": "MALE",
+      "profileDescription": "Highly Passionate Individual with a love for contributing back to the society!",
+      "projectFollowing": [1],
+      "skillSet": [
+        "Playing the Guitar",
+        "Singing",
+        "Trilingual",
+        "Verified First Aider",
+        "General Surgery (GS)"
+      ]
+    }
+  ],
+  "projectId": 2,
+  "taskId": null,
+  "postId": null,
+  "type": "PROJECT_INTERNAL_ANNOUNCEMENT",
+  "viewedUserIds": [],
+  "creatorId": 5
+}

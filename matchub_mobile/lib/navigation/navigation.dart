@@ -12,6 +12,7 @@ import 'package:matchub_mobile/screens/project/projectDetail/project_detail_over
 import 'package:matchub_mobile/screens/project/project_overview.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
+import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
 import 'package:matchub_mobile/screens/project_management/project_management.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
@@ -190,8 +191,8 @@ class _TabsScreenState extends State<TabsScreen> {
           title: Text('Home'),
         ),
         BottomNavigationBarItem(
-          icon: Icon(FlutterIcons.compass_fea),
-          title: Text('Explore'),
+          icon: Icon(FlutterIcons.inbox_ant),
+          title: Text('Inbox'),
         ),
         BottomNavigationBarItem(
           icon: Icon(FlutterIcons.tasks_faw5s),
@@ -297,6 +298,15 @@ class _TabsScreenState extends State<TabsScreen> {
             builder: (context) => ResourceDetailScreen(),
             // fullscreenDialog: true,
             settings: settings);
+
+      case AnnouncementDetail.routeName:
+        return MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) => AnnouncementDetail(
+                  announcement: settings.arguments as Announcement,
+                ),
+            settings: settings);
+
       case ProjectManagementOverview.routeName:
         return MaterialPageRoute(
             builder: (context) =>
@@ -309,6 +319,7 @@ class _TabsScreenState extends State<TabsScreen> {
     }
   }
 }
+
 //Animation with no Fade
 class TabRouteBuilder<T> extends MaterialPageRoute<T> {
   TabRouteBuilder({WidgetBuilder builder, RouteSettings settings})

@@ -8,8 +8,7 @@ import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manage_incoming_resourceDonation.dart';
-import 'package:matchub_mobile/services/manage_incoming_resourceRequest.dart';
+
 import 'package:matchub_mobile/services/manage_outgoingRequest.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -57,46 +56,65 @@ class _OutgoingRequestTabviewState extends State<OutgoingRequestTabview> {
     return _isLoading
         ? Container(child: Center(child: Text("I am loading")))
         : widget.flag == 0
-            ? SingleChildScrollView(
-                child: requestToOtherProjects.isNotEmpty
-                    ? Column(
-                        children: [
-                          ListView.builder(
-                              shrinkWrap: true,
-                              physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              itemCount: requestToOtherProjects.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return RequestCard(
-                                  requestToOtherProjects[index],
-                                  0,
-                                );
-                              }),
-                        ],
-                      )
-                    : Center(child: Text("You have not make any request yet.")),
+            ? Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        colorFilter: ColorFilter.mode(
+                            Colors.white.withOpacity(0.95), BlendMode.dstATop),
+                        image: AssetImage('assets/images/Mail_sent.gif'),
+                        fit: BoxFit.scaleDown)),
+                child: SingleChildScrollView(
+                  child: requestToOtherProjects.isNotEmpty
+                      ? Column(
+                          children: [
+                            ListView.builder(
+                                shrinkWrap: true,
+                                physics: BouncingScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                itemCount: requestToOtherProjects.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return RequestCard(
+                                    requestToOtherProjects[index],
+                                    0,
+                                  );
+                                }),
+                          ],
+                        )
+                      : Center(
+                          child: Text("You have not make any request yet.")),
+                ),
               )
             : widget.flag == 1
-                ? SingleChildScrollView(
-                    child: requestToOtherResource.isNotEmpty
-                        ? Column(
-                            children: [
-                              ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: BouncingScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: requestToOtherResource.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return RequestCard(
-                                      requestToOtherResource[index],
-                                      1,
-                                    );
-                                  }),
-                            ],
-                          )
-                        : Center(
-                            child: Text("You have not make any request yet.")),
+                ? Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            colorFilter: ColorFilter.mode(
+                                Colors.white.withOpacity(0.95),
+                                BlendMode.dstATop),
+                            image: AssetImage('assets/images/Mail_sent.gif'),
+                            fit: BoxFit.scaleDown)),
+                    child: SingleChildScrollView(
+                      child: requestToOtherResource.isNotEmpty
+                          ? Column(
+                              children: [
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: BouncingScrollPhysics(),
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: requestToOtherResource.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return RequestCard(
+                                        requestToOtherResource[index],
+                                        1,
+                                      );
+                                    }),
+                              ],
+                            )
+                          : Center(
+                              child:
+                                  Text("You have not make any request yet.")),
+                    ),
                   )
                 : Container();
   }
@@ -177,7 +195,7 @@ class _RequestCardState extends State<RequestCard> {
                 horizontal: 2 * SizeConfig.heightMultiplier),
             padding: EdgeInsets.all(2 * SizeConfig.heightMultiplier),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.white.withOpacity(0.8),
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(

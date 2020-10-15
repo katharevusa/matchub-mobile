@@ -17,7 +17,7 @@ Stakeholder _$StakeholderFromJson(Map<String, dynamic> json) {
     ..roles = json['roles'] as List;
 }
 
-Map<String, dynamic> _$StakeholderToJson(Stakeholder instance) => 
+Map<String, dynamic> _$StakeholderToJson(Stakeholder instance) =>
     <String, dynamic>{
       'accountId': instance.accountId,
       'uuid': instance.uuid,
