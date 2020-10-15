@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
+import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
+import 'package:matchub_mobile/screens/search/search_page.dart';
 
 class HomeNavigator extends StatefulWidget {
   @override
@@ -18,16 +20,14 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   }
 
   Route<dynamic> generateRoute(RouteSettings settings) {
-    return MaterialPageRoute(
+    return MaterialPageRoute(maintainState: false,
         settings: settings,
         builder: (BuildContext context) {
           switch (settings.name) {
             case '/':
-              return ChatScreen();
-            case ProjectDetailScreen.routeName:
-              return ProjectDetailScreen(
-                project: settings.arguments as Project,
-              );
+              return HomeScreen();
+              case SearchResults.routeName:
+              return SearchResults();
           }
         });
   }

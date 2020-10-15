@@ -2,10 +2,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseMethods {
   final firestoreInstance = FirebaseFirestore.instance;
+
   Future<void> addUserInfo(userData) async {
     Firestore.instance.collection("users").add(userData).catchError((e) {
       print(e.toString());
     });
+  }
+
+  getUnreadMessages(String chatRoomId, String userUUID) async {
+    int totalUnreadMessages = 0;
+    await Firestore.instance
+        .collection("message")
+        .doc(chatRoomId)
+        .collection("messages")
+        .getDocuments()
+        .then((value) {
+      value.docs.forEach((message) {
+        if (message.get('sentBy') != userUUID && message.get('readBy').indexWhere((el) => el == userUUID) == -1) {
+          totalUnreadMessages++;
+        }
+      });
+      print("Total Unread Messages: " + totalUnreadMessages.toString());
+    });
+    return totalUnreadMessages;
   }
 
   getUserInfo(String email, String uuid) async {
@@ -72,8 +91,8 @@ class DatabaseMethods {
         .get()
         .then(
           (snapshot) => snapshot.docs.forEach((element) {
-            element.data().update("members",
-                (value) => FieldValue.arrayRemove(memberUUID));
+            element.data().update(
+                "members", (value) => FieldValue.arrayRemove(memberUUID));
           }),
         );
   }

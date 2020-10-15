@@ -8,7 +8,7 @@ import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/chat/messages.dart';
 import 'package:matchub_mobile/screens/project_management/channels/channel_messages.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/database.dart';
+import 'package:matchub_mobile/services/firebase.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';

@@ -3,10 +3,11 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
+import 'package:matchub_mobile/services/notification_service.dart';
 import 'package:matchub_mobile/widgets/popupmenubutton.dart' as popupmenu;
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/database.dart';
+import 'package:matchub_mobile/services/firebase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
@@ -58,7 +59,6 @@ class _MessagesState extends State<Messages> {
   loadMessages() async {
     await DatabaseMethods().getChatMessages(widget.chatRoomId).then((val) {
       setState(() {
-        print('rached herer');
         chats = val;
       });
     });
@@ -69,20 +69,33 @@ class _MessagesState extends State<Messages> {
       stream: chats,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData || snapshot.data.documents.length == 0) {
-          return Container(height: 80*SizeConfig.heightMultiplier, child: Center(child: Text("No messages here yet...")));
+          return Container(
+              height: 80 * SizeConfig.heightMultiplier,
+              child: Center(child: Text("No messages here yet...")));
         }
         print(snapshot.data.documents.length);
         // _scrollController.jumpTo(
         //   _scrollController.position.maxScrollExtent ,
         // );
-
         Profile myProfile = Provider.of<Auth>(context).myProfile;
+        for (var message in snapshot.data.documents) {
+          if (!message['readBy'].contains(myProfile.uuid)) {
+            if (message.reference != null) {
+              var readByArray = message['readBy'];
+              readByArray.add(myProfile.uuid);
+              Firestore.instance
+                  .runTransaction((Transaction myTransaction) async {
+                await myTransaction.update(message.reference, {'readBy': readByArray});
+              });
+            }
+          }
+        }
+
         return ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
-              print("s=============== ${index.toString()}");
               return MessageTile(
                 sentAt: snapshot.data.documents[index].data()["sentAt"],
                 sentBy: snapshot.data.documents[index].data()["sentBy"],
@@ -97,19 +110,26 @@ class _MessagesState extends State<Messages> {
 
   addMessage() {
     print("reached here - 0");
+    var authInstance = Provider.of<Auth>(context, listen: false);
     if (messageEditingController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
-        "sentBy": Provider.of<Auth>(context).myProfile.uuid,
+        "sentBy": authInstance.myProfile.uuid,
         "messageText": messageEditingController.text,
-        'sentAt': DateTime.now()
+        'sentAt': DateTime.now(),
+        "readBy" : []
       };
-      print("reached here -1");
       print(widget.chatRoomId);
       DatabaseMethods().sendMessage(widget.chatRoomId, chatMessageMap, false);
-
+      NotificationService(authInstance.myProfile.uuid).sendNotificationToUsers(
+          authInstance.accessToken,
+          [widget.recipient.uuid],
+          "type",
+          widget.chatRoomId,
+          authInstance.myProfile.name,
+          messageEditingController.text,
+          authInstance.myProfile.profilePhoto);
       setState(() {
         messageEditingController.text = "";
-        print("reached here -3");
         Future.delayed(Duration(milliseconds: 200), () {
           _scrollController.animateTo(
               _scrollController.position.maxScrollExtent,
@@ -146,8 +166,6 @@ class _MessagesState extends State<Messages> {
           ),
           actions: [
             popupmenu.PopupMenuButton(
-                // onSelected: (value) => FocusScope.of(context).unfocus(),
-                // onCanceled: () => FocusScope.of(context).unfocus(),
                 offset: Offset(0, 50),
                 icon: Icon(
                   FlutterIcons.ellipsis_v_faw5s,
@@ -159,7 +177,8 @@ class _MessagesState extends State<Messages> {
                         child: ListTile(
                           onTap: () {
                             DatabaseMethods().deleteChat(widget.chatRoomId);
-                            Navigator.of(context).popUntil(ModalRoute.withName("/"));
+                            Navigator.of(context)
+                                .popUntil(ModalRoute.withName("/"));
                           },
                           dense: true,
                           leading: Icon(FlutterIcons.trash_alt_faw5s),

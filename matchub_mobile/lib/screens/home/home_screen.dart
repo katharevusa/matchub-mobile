@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+import 'package:matchub_mobile/screens/home/components/greeting_card.dart';
+import 'package:matchub_mobile/screens/search/search_page.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
+
+import 'components/explore_list.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = "/home-screen";
@@ -9,19 +15,77 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  TabController controller;
+  @override
+  void initState() {
+    super.initState();
+    controller = new TabController(length: 2, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Container(
-        height:500,
-        child: Column(
-          children: [Text("Home Page", style:AppTheme.titleLight),
-            FlatButton(child:Text("LOGOUT"), onPressed: () => Provider.of<Auth>(context).logout(),),
-          ],
-        ),
-      )
-      )
+      body: SafeArea(
+        child: CustomScrollView(slivers: [
+          SliverToBoxAdapter(
+            child: Container(child: GreetingCard()),
+          ),
+          SliverAppBar(
+            actions: [
+              IconButton(
+                color: Colors.grey[850],
+                icon: Icon(FlutterIcons.search_fea),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pushNamed(SearchResults.routeName);
+                },
+              )
+            ],
+            backgroundColor: kScaffoldColor,
+            pinned: true,
+            // floating: true,
+            // snap: true,
+            toolbarHeight: 5.5 * SizeConfig.heightMultiplier,
+            centerTitle: true, stretch: true,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: EdgeInsets.only(
+                  left: 4 * SizeConfig.widthMultiplier,
+                  right: 4 * SizeConfig.widthMultiplier,
+                  bottom: 0.5 * SizeConfig.heightMultiplier),
+              // preferredSize: new Size(
+              //     SizeConfig.widthMultiplier, 6 * SizeConfig.heightMultiplier),
+              title: TabBar(
+                isScrollable: true,
+                labelPadding: EdgeInsets.only(
+                  right: 20,
+                ),
+                tabs: [Text("Explore"), Text("Feed")],
+                controller: controller,
+                unselectedLabelStyle: TextStyle(
+                  color: Colors.grey[650],
+                ),
+                indicatorColor: kScaffoldColor.withOpacity(0),
+                labelColor: Colors.grey[900],
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 2.7 * SizeConfig.textMultiplier,
+                ),
+                unselectedLabelColor: Colors.grey[400],
+              ),
+            ),
+          ),
+          SliverFillRemaining(
+            child: TabBarView(
+              children: <Widget>[
+                ExploreList(),
+                Text("Tab 2"),
+              ],
+              controller: controller,
+            ),
+          ),
+        ]),
+      ),
     );
   }
 }

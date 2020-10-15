@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/services/database.dart';
+import 'package:matchub_mobile/services/firebase.dart';
 import 'package:matchub_mobile/style.dart';
 
 import 'channel_creation.dart';

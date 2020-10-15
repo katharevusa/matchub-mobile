@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/services/database.dart';
+import 'package:matchub_mobile/services/firebase.dart';
 
 import 'channel_creation.dart';
 

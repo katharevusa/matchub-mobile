@@ -6,7 +6,7 @@ import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/chat/messages.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/database.dart';
+import 'package:matchub_mobile/services/firebase.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
