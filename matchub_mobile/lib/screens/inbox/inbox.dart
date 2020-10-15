@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/explore/explore_projects.dart';
 import 'package:matchub_mobile/screens/explore/explore_resources.dart';
 import 'package:matchub_mobile/screens/inbox/inbox-chat.dart';
@@ -65,7 +66,7 @@ class _InboxScreenState extends State<InboxScreen> {
           ),
           body: TabBarView(children: [
             Container(
-              child: InboxChat(),
+              child: ChatScreen(),
             ),
             // Container(
             //   child: ExpiredResource(listOfResources),
