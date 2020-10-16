@@ -1,5 +1,5 @@
 import 'package:matchub_mobile/model/approverEnum.dart';
-import 'package:matchub_mobile/model/project.dart';
+import 'package:matchub_mobile/models/index.dart';
 
 class ResourceRequest {
   DateTime requestCreationTime;

@@ -26,6 +26,7 @@ import 'package:matchub_mobile/screens/user/account-settings/change_password.dar
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/screens/user/user_screen.dart';
+import 'package:matchub_mobile/widgets/resourceCategoryPicker.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import './project_navigator.dart';
 import 'home_navigator.dart';
@@ -254,6 +255,9 @@ class _TabsScreenState extends State<TabsScreen> {
       case ResetPassword.routeName:
         return MaterialPageRoute(
             builder: (context) => ResetPassword(), settings: settings);
+      case ResourceCategoryPicker.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ResourceCategoryPicker(categories: settings.arguments as List,), settings: settings);
       case FollowOverviewScreen.routeName:
         final user =
             (settings.arguments as Map<String, dynamic>)['profile'] as Profile;

@@ -1,4 +1,3 @@
-import 'package:matchub_mobile/model/post.dart';
 import 'package:matchub_mobile/model/resourceCategory.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:path/path.dart';

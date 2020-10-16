@@ -132,115 +132,117 @@ class _ChannelSettingsState extends State<ChannelSettings> {
               : SizedBox.shrink(),
         ],
       ),
-      body: Column(
-        children: [
-          ListTile(
-            title: Text(widget.channelData['name']),
-            subtitle: Text("Name"),
-          ),
-          Divider(
-            thickness: 1.5,
-          ),
-          if(widget.channelData['description'].isNotEmpty) ...[ListTile(
-            leading: Icon(
-              FlutterIcons.info_circle_faw5s,
-              color: Colors.grey[400],
+      body: SingleChildScrollView(
+              child: Column(
+          children: [
+            ListTile(
+              title: Text(widget.channelData['name']),
+              subtitle: Text("Name"),
             ),
-            title: Text(
-              widget.channelData['description'],
-              style: AppTheme.unSelectedTabLight,
+            Divider(
+              thickness: 1.5,
             ),
-            subtitle: Text("Description"),
-          ),
-          Divider(
-            thickness: 1.5,
-          ),],
-          ListTile(
-            leading: Icon(
-              FlutterIcons.user_friends_faw5s,
-              color: Colors.grey[400],
+            if(widget.channelData['description'].isNotEmpty) ...[ListTile(
+              leading: Icon(
+                FlutterIcons.info_circle_faw5s,
+                color: Colors.grey[400],
+              ),
+              title: Text(
+                widget.channelData['description'],
+                style: AppTheme.unSelectedTabLight,
+              ),
+              subtitle: Text("Description"),
             ),
-            title: Text("${widget.channelData['members'].length} Members"),
-          ),
-          if (!_isLoading)
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: members.length,
-                itemBuilder: (ctx, idx) {
-                  bool memberIsOwner =
-                      widget.channelData['createdBy'] == members[idx].uuid;
-                  bool memberIsAdmin =
-                      widget.channelData['admins'].contains(members[idx].uuid);
-                  return ListTile(
-                    onLongPress: () {
-                      if (loggedInUserIsOwner && memberIsAdmin) {
-                        showDialog(
-                                context: context,
-                                builder: (ctx) => confirmationDialog(ctx,
-                                    "Confirm transfer of channel ownership to ${members[idx].name}?"))
-                            .then((value) {
-                          if (value) {
-                            widget.channelData['createdBy'] = members[idx].uuid;
-                            DatabaseMethods().updateChannel(widget.channelData);
-                            exitChannelSettings(true);
-                          }
-                        });
-                      }
-                    },
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    leading: CircleAvatar(
-                      radius: 25,
-                      backgroundImage: members[idx].profilePhoto.isEmpty
-                          ? AssetImage("assets/images/avatar2.jpg")
-                          : NetworkImage(
-                              "${ApiBaseHelper().baseUrl}${members[idx].profilePhoto.substring(30)}"),
-                    ),
-                    title: Text(members[idx].name),
-                    subtitle: Text(memberIsOwner
-                        ? "owner"
-                        : memberIsAdmin
-                            ? "admin"
-                            : "member"),
-                    trailing: loggedInUserIsOwner
-                        ? IconButton(
-                            icon: Icon(FlutterIcons.user_cog_faw5s,
-                                color: memberIsAdmin
-                                    ? kSecondaryColor
-                                    : Colors.grey[400]),
-                            onPressed: () {
-                              setState(() {
-                                if (!memberIsOwner) {
-                                  if (memberIsAdmin) {
-                                    widget.channelData['admins']
-                                        .remove(members[idx].uuid);
-                                    _scaffoldKey.currentState
-                                        .showSnackBar(new SnackBar(
-                                      content: Text(
-                                          "Demoted ${members[idx].name} to member"),
-                                      duration: Duration(seconds: 1),
-                                    ));
-                                  } else {
-                                    widget.channelData['admins']
-                                        .add(members[idx].uuid);
-                                    _scaffoldKey.currentState
-                                        .showSnackBar(new SnackBar(
-                                      content: Text(
-                                          "Promoted ${members[idx].name} to admin"),
-                                      duration: Duration(seconds: 1),
-                                    ));
+            Divider(
+              thickness: 1.5,
+            ),],
+            ListTile(
+              leading: Icon(
+                FlutterIcons.user_friends_faw5s,
+                color: Colors.grey[400],
+              ),
+              title: Text("${widget.channelData['members'].length} Members"),
+            ),
+            if (!_isLoading)
+              ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: members.length,
+                  itemBuilder: (ctx, idx) {
+                    bool memberIsOwner =
+                        widget.channelData['createdBy'] == members[idx].uuid;
+                    bool memberIsAdmin =
+                        widget.channelData['admins'].contains(members[idx].uuid);
+                    return ListTile(
+                      onLongPress: () {
+                        if (loggedInUserIsOwner && memberIsAdmin) {
+                          showDialog(
+                                  context: context,
+                                  builder: (ctx) => confirmationDialog(ctx,
+                                      "Confirm transfer of channel ownership to ${members[idx].name}?"))
+                              .then((value) {
+                            if (value) {
+                              widget.channelData['createdBy'] = members[idx].uuid;
+                              DatabaseMethods().updateChannel(widget.channelData);
+                              exitChannelSettings(true);
+                            }
+                          });
+                        }
+                      },
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      leading: CircleAvatar(
+                        radius: 25,
+                        backgroundImage: members[idx].profilePhoto.isEmpty
+                            ? AssetImage("assets/images/avatar2.jpg")
+                            : NetworkImage(
+                                "${ApiBaseHelper().baseUrl}${members[idx].profilePhoto.substring(30)}"),
+                      ),
+                      title: Text(members[idx].name),
+                      subtitle: Text(memberIsOwner
+                          ? "owner"
+                          : memberIsAdmin
+                              ? "admin"
+                              : "member"),
+                      trailing: loggedInUserIsOwner
+                          ? IconButton(
+                              icon: Icon(FlutterIcons.user_cog_faw5s,
+                                  color: memberIsAdmin
+                                      ? kSecondaryColor
+                                      : Colors.grey[400]),
+                              onPressed: () {
+                                setState(() {
+                                  if (!memberIsOwner) {
+                                    if (memberIsAdmin) {
+                                      widget.channelData['admins']
+                                          .remove(members[idx].uuid);
+                                      _scaffoldKey.currentState
+                                          .showSnackBar(new SnackBar(
+                                        content: Text(
+                                            "Demoted ${members[idx].name} to member"),
+                                        duration: Duration(seconds: 1),
+                                      ));
+                                    } else {
+                                      widget.channelData['admins']
+                                          .add(members[idx].uuid);
+                                      _scaffoldKey.currentState
+                                          .showSnackBar(new SnackBar(
+                                        content: Text(
+                                            "Promoted ${members[idx].name} to admin"),
+                                        duration: Duration(seconds: 1),
+                                      ));
+                                    }
+                                    DatabaseMethods()
+                                        .updateChannel(widget.channelData);
                                   }
-                                  DatabaseMethods()
-                                      .updateChannel(widget.channelData);
-                                }
-                              });
-                              print(widget.channelData);
-                            },
-                          )
-                        : SizedBox.shrink(),
-                  );
-                })
-        ],
+                                });
+                                print(widget.channelData);
+                              },
+                            )
+                          : SizedBox.shrink(),
+                    );
+                  })
+          ],
+        ),
       ),
     );
   }

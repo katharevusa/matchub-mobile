@@ -71,21 +71,24 @@ class ProjectSearchCard extends StatelessWidget {
                           text: " contributors", style: AppTheme.searchLight),
                     ])),
                   ),
-                  Container(width: 100*SizeConfig.widthMultiplier,
-                    alignment: Alignment.bottomLeft,
+                  SizedBox(height: 4),
+                  Container(
+                    width: 100 * SizeConfig.widthMultiplier,
+                    alignment: Alignment.centerLeft,
                     height: 4 * SizeConfig.heightMultiplier,
                     child: Tags(
-                      direction: Axis.horizontal,
+                      direction: Axis.vertical,
                       horizontalScroll: true,
-                      itemCount: project.sdgs.length, // required
+                      itemCount: project.sdgs.length > 1 ? 2 : 1, // required
                       itemBuilder: (int index) {
                         return ItemTags(
                           key: Key(index.toString()),
                           index: index, // required
                           title: project.sdgs[index].sdgName,
-                          color: kScaffoldColor,
+                          color: Colors.blueGrey[300],
                           border: Border.all(color: Colors.grey[400]),
-                          textColor: Colors.grey[600],
+                          textColor: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
                           elevation: 0,
                           active: false,
                           pressEnabled: false,
@@ -93,7 +96,7 @@ class ProjectSearchCard extends StatelessWidget {
                               fontWeight: FontWeight.w400, fontSize: 12.0),
                         );
                       },
-                      alignment: WrapAlignment.end,
+                      alignment: WrapAlignment.start,
                       runAlignment: WrapAlignment.start,
                       spacing: 6,
                       runSpacing: 6,
