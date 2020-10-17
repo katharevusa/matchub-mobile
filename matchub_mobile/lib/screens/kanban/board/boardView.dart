@@ -265,6 +265,7 @@ class BoardView2State extends State<BoardView2> {
         itemBuilder: (BuildContext context, int index) {
           if (widget.lists[index].boardView == null) {
             widget.lists[index] = BoardList(
+              title: widget.lists[index].title,
               items: widget.lists[index].items,
               headerBackgroundColor: widget.lists[index].headerBackgroundColor,
               backgroundColor: widget.lists[index].backgroundColor,
@@ -279,6 +280,7 @@ class BoardView2State extends State<BoardView2> {
           }
           if (widget.lists[index].index != index) {
             widget.lists[index] = BoardList(
+              title: widget.lists[index].title,
               items: widget.lists[index].items,
               headerBackgroundColor: widget.lists[index].headerBackgroundColor,
               backgroundColor: widget.lists[index].backgroundColor,

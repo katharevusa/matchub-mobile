@@ -1,5 +1,7 @@
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 
@@ -11,6 +13,7 @@ typedef void OnTapList(int listIndex);
 typedef void OnStartDragList(int listIndex);
 
 class BoardList extends StatefulWidget {
+  final String title;
   final List<Widget> header;
   final Widget footer;
   final List<BoardItem> items;
@@ -25,6 +28,7 @@ class BoardList extends StatefulWidget {
   const BoardList({
     Key key,
     this.header,
+    this.title,
     this.items,
     this.footer,
     this.backgroundColor,
@@ -127,11 +131,27 @@ class BoardListState extends State<BoardList> {
                   if (index >= widget.items.length) {
                     return InkWell(
                       child: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                        width: 100*SizeConfig.widthMultiplier,
-                        height: 40,
-                        child: Row(children: [Icon(Icons.add), Text("Create Task", style: AppTheme.buttonLight.copyWith(fontSize: 16),)])),
-                      onTap: () => print("fasdfsadaf"),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5)),
+                          width: 100 * SizeConfig.widthMultiplier,
+                          height: 40,
+                          child: Row(children: [
+                            Icon(Icons.add),
+                            Text(
+                              "Create Task",
+                              style:
+                                  AppTheme.buttonLight.copyWith(fontSize: 16),
+                            )
+                          ])),
+                      onTap: () => showModalBottomSheet(
+                          useRootNavigator: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          backgroundColor: Colors.white,
+                          context: context,
+                          builder: (context) =>
+                              TaskCreatePopup(widget: widget)),
                     );
                   }
                   if (widget.items[index].boardList == null ||
@@ -150,7 +170,7 @@ class BoardListState extends State<BoardList> {
                       onStartDragItem: widget.items[index].onStartDragItem,
                     );
                   }
-                  
+
                   if (widget.boardView.draggedItemIndex == index &&
                       widget.boardView.draggedListIndex == widget.index) {
                     return Opacity(
@@ -186,5 +206,151 @@ class BoardListState extends State<BoardList> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: listWidgets,
         ));
+  }
+}
+
+class TaskCreatePopup extends StatefulWidget {
+  const TaskCreatePopup({
+    Key key,
+    @required this.widget,
+  }) : super(key: key);
+
+  final BoardList widget;
+
+  @override
+  _TaskCreatePopupState createState() => _TaskCreatePopupState();
+}
+
+class _TaskCreatePopupState extends State<TaskCreatePopup> {
+  FocusNode taskNameFocus = new FocusNode();
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => FocusScope.of(context).requestFocus(taskNameFocus));
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: MediaQuery.of(context).viewInsets,
+      child: Container(
+        height: 200,
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(15),
+            topRight: const Radius.circular(15),
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Row(
+                  children: [
+                    Icon(
+                      FlutterIcons.columns_faw5s,
+                      size: 14,
+                      color: Colors.grey[400],
+                    ),
+                    SizedBox(width: 10),
+                    Text(widget.widget.title,
+                        style: AppTheme.searchLight.copyWith(
+                            color: Colors.grey[400],
+                            fontSize: 2 * SizeConfig.textMultiplier)),
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1),
+                  child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(color: kTertiaryColor, width: 2)),
+                      child: Text(
+                        "Create Task",
+                        style: TextStyle(
+                            color: kSecondaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 2 * SizeConfig.textMultiplier),
+                      )),
+                ),
+              ]),
+              SizedBox(height: 6),
+              TextFormField(
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "Please enter a task name";
+                  }
+                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                focusNode: taskNameFocus,
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintText: "Task Name...",
+                    hintStyle: TextStyle(color: Colors.grey[700])),
+              ),
+              Row(children: [
+                FlatButton(
+                  onPressed: () {},
+                  padding: EdgeInsets.zero,
+                  child: Row(
+                    children: [
+                      Icon(FlutterIcons.user_circle_faw5s,
+                          color: Colors.grey[400]),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Text("Unassigned",
+                          style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 1.6 * SizeConfig.textMultiplier))
+                    ],
+                  ),
+                ),
+                SizedBox(width: 10),
+                Row(
+                  children: [
+                    Icon(FlutterIcons.calendar_fea, color: Colors.grey[400]),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Container(
+                      width: 100,
+                      child: Theme(
+                        data: AppTheme.lightTheme.copyWith(
+                          colorScheme:
+                              ColorScheme.light(primary: kSecondaryColor),
+                        ),
+                        child: DateTimePicker(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            labelText: 'Deadline',
+                            labelStyle: TextStyle(
+                                color: Colors.grey[400],
+                                fontSize: 1.6 * SizeConfig.textMultiplier),
+                          ),
+                          // initialValue: widget.filterOptions['endDate'],
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+
+                          onChanged: (val) {
+                            // widget.filterOptions['endDate'] = val;
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ]),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
