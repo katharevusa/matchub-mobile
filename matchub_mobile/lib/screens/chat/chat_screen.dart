@@ -149,8 +149,8 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
   }
 
   getUserDetails() async {
-    final response = await ApiBaseHelper().getProtected(
-        "authenticated/getAccountByUUID/${widget.uuid}",
+    final response = await ApiBaseHelper.instance.getProtected(
+        "authenticated/getAccountByUUID/${widget.uuid}", accessToken:
         Provider.of<Auth>(context, listen: false).accessToken);
     user = Profile.fromJson(response);
     getNoOfUnread();
@@ -209,7 +209,7 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
                     backgroundImage: user.profilePhoto.isEmpty
                         ? AssetImage("assets/images/avatar2.jpg")
                         : NetworkImage(
-                            "${ApiBaseHelper().baseUrl}${user.profilePhoto.substring(30)}"),
+                            "${ApiBaseHelper.instance.baseUrl}${user.profilePhoto.substring(30)}"),
                   ),
                   title: Text(user.name),
                   subtitle: Text(

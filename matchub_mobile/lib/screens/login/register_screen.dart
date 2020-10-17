@@ -104,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   //   onPressed: () async {
                   //     if (!_formKey.currentState.validate()) return;
                   //     try {
-                  //       await ApiBaseHelper().post(
+                  //       await ApiBaseHelper.instance.post(
                   //         "public/forgotPassword?email=$email",
                   //       );
                   //       Navigator.of(context).pop();

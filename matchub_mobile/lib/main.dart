@@ -16,11 +16,13 @@ import 'package:matchub_mobile/services/manage_resource.dart';
 import 'package:matchub_mobile/services/notification_service.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 
 void main() async {
   HttpOverrides.global = new MyHttpOverrides();
+  ApiBaseHelper api = ApiBaseHelper();
   runApp(MyApp());
 }
 

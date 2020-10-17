@@ -24,7 +24,7 @@ class ProfileResource extends StatefulWidget {
 class _ProfileResourceState extends State<ProfileResource> {
   List<Resources> listOfResources = [];
   Future listOfHostedResourcesFuture;
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _ProfileResourceState extends State<ProfileResource> {
     final url =
         'authenticated/getHostedResources?profileId=${widget.profile.accountId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
+        url, accessToken: Provider.of<Auth>(this.context, listen: false).accessToken);
     listOfResources = (responseData['content'] as List)
         .map((e) => Resources.fromJson(e))
         .toList();

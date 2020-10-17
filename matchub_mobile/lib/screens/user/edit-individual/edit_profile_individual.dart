@@ -122,7 +122,7 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
     final url = "authenticated/updateIndividual";
     print(url);
     try {
-      final response = await ApiBaseHelper().postProtected(url,
+      final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(editedProfile));
       // Provider.of<Auth>(context).retrieveUser();
       

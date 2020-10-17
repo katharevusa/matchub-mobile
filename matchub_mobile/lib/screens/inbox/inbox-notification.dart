@@ -13,7 +13,7 @@ class InboxNotification extends StatefulWidget {
 
 class _InboxNotificationState extends State<InboxNotification> {
   List<Announcement> allAnnouncements = [];
-  ApiBaseHelper _apiHelper = ApiBaseHelper();
+  ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   Future allAnnouncementsFuture;
   Profile user;

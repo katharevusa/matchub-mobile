@@ -40,7 +40,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       _isLoading = true;
     });
     try {
-      await ApiBaseHelper().postProtected("authenticated/changePassword/$uuid",
+      await ApiBaseHelper.instance.postProtected("authenticated/changePassword/$uuid",
           body: json.encode(passwordMap),
           accessToken: Provider.of<Auth>(context).accessToken);
       Navigator.of(context).pop(true);

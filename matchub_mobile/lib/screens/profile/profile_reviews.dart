@@ -16,7 +16,7 @@ class _ProfileReviewsState extends State<ProfileReviews> {
   final TextStyle dropdownMenuItem =
       TextStyle(color: Colors.black, fontSize: 18);
   List<Review> reviews = [];
-  ApiBaseHelper _apiHelper = ApiBaseHelper();
+  ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   Future reviewsFuture;
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _ProfileReviewsState extends State<ProfileReviews> {
     final url =
         'authenticated/profilewall/reviewsReceived/${profile.accountId}';
     final responseData = await _apiHelper.getProtected(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
+        url,  accessToken:Provider.of<Auth>(this.context, listen: false).accessToken);
     reviews = (responseData['content'] as List)
         .map((e) => Review.fromJson(e))
         .toList();
@@ -72,7 +72,7 @@ class OneReview extends StatefulWidget {
 }
 
 class _ReviewState extends State<OneReview> {
-  ApiBaseHelper _apiHelper = ApiBaseHelper();
+  ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
 
   @override
   Widget build(BuildContext context) {

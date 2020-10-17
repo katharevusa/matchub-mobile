@@ -40,9 +40,9 @@ class _ChannelSettingsState extends State<ChannelSettings> {
 
   getMembersDetails() async {
     for (String uuid in widget.channelData['members']) {
-      final response = await ApiBaseHelper().getProtected(
+      final response = await ApiBaseHelper.instance.getProtected(
           "authenticated/getAccountByUUID/$uuid",
-          Provider.of<Auth>(context, listen: false).accessToken);
+           accessToken:Provider.of<Auth>(context, listen: false).accessToken);
       members.add(Profile.fromJson(response));
     }
     setState(() => _isLoading = false);
@@ -195,7 +195,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                         backgroundImage: members[idx].profilePhoto.isEmpty
                             ? AssetImage("assets/images/avatar2.jpg")
                             : NetworkImage(
-                                "${ApiBaseHelper().baseUrl}${members[idx].profilePhoto.substring(30)}"),
+                                "${ApiBaseHelper.instance.baseUrl}${members[idx].profilePhoto.substring(30)}"),
                       ),
                       title: Text(members[idx].name),
                       subtitle: Text(memberIsOwner

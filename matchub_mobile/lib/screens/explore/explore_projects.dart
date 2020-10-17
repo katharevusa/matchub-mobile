@@ -10,12 +10,12 @@ import 'package:provider/provider.dart';
 
 class ExploreProjects extends StatelessWidget {
   List<Project> allProjects = [];
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
 
   retrieveAllProjects(BuildContext context) async {
     final url = 'authenticated/getAllProjects';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url, accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     allProjects = (responseData['content'] as List)
         .map((e) => Project.fromJson(e))
         .toList();

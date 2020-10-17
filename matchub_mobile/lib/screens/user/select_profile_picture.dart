@@ -79,7 +79,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                   visualDensity: VisualDensity.comfortable,
                   child: Text("Remove Profile Picture"),
                   onPressed: () async {
-                    await ApiBaseHelper().deleteProtected(
+                    await ApiBaseHelper.instance.deleteProtected(
                         "authenticated/deleteProfilePict/${myProfile.accountId}",
                         accessToken: Provider.of<Auth>(context).accessToken);
                     setState(() {
@@ -151,7 +151,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                   if (pickedProfilePic != null) {
                     await uploadSinglePic(
                         pickedProfilePic,
-                        "${ApiBaseHelper().baseUrl}authenticated/updateIndividual/updateProfilePic/${Provider.of<Auth>(context, listen: false).myProfile.uuid}",
+                        "${ApiBaseHelper.instance.baseUrl}authenticated/updateIndividual/updateProfilePic/${Provider.of<Auth>(context, listen: false).myProfile.uuid}",
                         Provider.of<Auth>(context, listen: false).accessToken,
                         'file',
                         context);
@@ -174,7 +174,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
   //   var request = new http.MultipartRequest(
   //       "POST",
   //       Uri.parse(
-  //           "${ApiBaseHelper().baseUrl}authenticated/updateIndividual/updateProfilePic/${Provider.of<Auth>(context).myProfile.uuid}"));
+  //           "${ApiBaseHelper.instance.baseUrl}authenticated/updateIndividual/updateProfilePic/${Provider.of<Auth>(context).myProfile.uuid}"));
   //   request.headers.addAll(
   //       {"Authorization": "Bearer " + Provider.of<Auth>(context).accessToken});
   //   request.files.add(await http.MultipartFile.fromBytes(

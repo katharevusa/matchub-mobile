@@ -21,7 +21,7 @@ class _FilterRequestByResourceScreenState
     extends State<FilterRequestByResourceScreen> {
   List<Resources> resources = [];
   List<num> resourcesId = [];
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper =ApiBaseHelper.instance ;
   List<Resources> finalResources = [];
   Future resourcesFuture;
 
@@ -36,7 +36,7 @@ class _FilterRequestByResourceScreenState
         Provider.of<Auth>(this.context, listen: false).myProfile.accountId;
     final url = 'authenticated/getHostedResources?profileId=${profileId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
+        url,  accessToken:Provider.of<Auth>(this.context, listen: false).accessToken);
     resources = (responseData['content'] as List)
         .map((e) => Resources.fromJson(e))
         .toList();

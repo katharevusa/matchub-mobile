@@ -50,7 +50,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   getProjects() async {
     final responseData = await ApiBaseHelper.instance.getProtected(
         "authenticated/getProject?projectId=${widget.project.projectId}",
-        Provider.of<Auth>(this.context, listen: false).accessToken);
+        accessToken: Provider.of<Auth>(this.context, listen: false).accessToken);
 
     project = Project.fromJson(responseData);
     documentKeys = project.documents.keys.toList();

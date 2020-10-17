@@ -60,10 +60,10 @@ class _WallState extends State<Wall> {
   }
 
   retrieveAllPosts() async {
-    ApiBaseHelper _helper = ApiBaseHelper();
+    ApiBaseHelper _helper = ApiBaseHelper.instance;
     final url = 'authenticated/getPostsByAccountId/${widget.profile.accountId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url,  accessToken:Provider.of<Auth>(context, listen: false).accessToken);
     listOfPosts =
         (responseData['content'] as List).map((e) => Post.fromJson(e)).toList();
     listOfPosts = new List.from(listOfPosts.reversed);

@@ -8,19 +8,13 @@ import 'package:matchub_mobile/helpers/extensions.dart';
 class ApiBaseHelper {
   final String _baseUrl = "https://192.168.72.136:8443/api/v1/";
   static String accessToken;
-
   static IOClient client;
-
-  String get baseUrl {
-    return _baseUrl;
-  }
-
+  
   ApiBaseHelper._privateConstructor();
 
   static ApiBaseHelper _instance = ApiBaseHelper._privateConstructor();
 
-  factory ApiBaseHelper(accessToken) {
-    accessToken = accessToken;
+  factory ApiBaseHelper() {
     bool trustSelfSigned = true;
     HttpClient httpClient = new HttpClient()
       ..badCertificateCallback =
@@ -31,6 +25,10 @@ class ApiBaseHelper {
   static ApiBaseHelper get instance => _instance;
 
   String get item => null;
+  String get baseUrl {
+    return _baseUrl;
+  }
+
 
   Future<dynamic> get(String url) async {
     var responseJson;
@@ -63,9 +61,12 @@ class ApiBaseHelper {
     }
   }
 
-  Future<dynamic> getProtected(String url, String accessToken) async {
+  Future<dynamic> getProtected(String url, {String accessToken}) async {
     var responseJson;
     print(_baseUrl + url);
+    if(accessToken == null) {
+      accessToken = ApiBaseHelper.accessToken;
+    }
     try {
       final response = await client.get(_baseUrl + url, headers: {
         "Authorization": "Bearer $accessToken"
@@ -100,6 +101,9 @@ class ApiBaseHelper {
   Future<dynamic> postProtected(String url,
       {String body = "", String accessToken = ""}) async {
     var responseJson;
+    if(accessToken == null) {
+      accessToken = ApiBaseHelper.accessToken;
+    }
     print(_baseUrl + url);
     print(body);
     try {
@@ -121,6 +125,9 @@ class ApiBaseHelper {
   Future<dynamic> putProtected(String url,
       {String body = "", String accessToken = ""}) async {
     var responseJson;
+    if(accessToken == null) {
+      accessToken = ApiBaseHelper.accessToken;
+    }
     print(_baseUrl + url);
     print(body);
     try {
@@ -141,6 +148,9 @@ class ApiBaseHelper {
 
   Future<dynamic> deleteProtected(String url, {String accessToken = ""}) async {
     var responseJson;
+    if(accessToken == null) {
+      accessToken = ApiBaseHelper.accessToken;
+    }
     print(_baseUrl + url);
     try {
       await client.delete(

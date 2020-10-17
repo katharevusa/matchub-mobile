@@ -81,14 +81,14 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
 
   getFollowers() async {
     Map<String, dynamic> responseData;
-    responseData = await ApiBaseHelper().getProtected(
-        "authenticated/getFollowers/${widget.user.accountId}",
+    responseData = await ApiBaseHelper.instance.getProtected(
+        "authenticated/getFollowers/${widget.user.accountId}", accessToken:
         Provider.of<Auth>(context, listen: false).accessToken);
     followers = (responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
         .toList();
-    responseData = await ApiBaseHelper().getProtected(
-        "authenticated/getFollowing/${widget.user.accountId}",
+    responseData = await ApiBaseHelper.instance.getProtected(
+        "authenticated/getFollowing/${widget.user.accountId}", accessToken:
         Provider.of<Auth>(context, listen: false).accessToken);
     following = (responseData['content'] as List)
         .map((e) => Profile.fromJson(e))

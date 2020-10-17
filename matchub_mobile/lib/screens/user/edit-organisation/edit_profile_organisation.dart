@@ -125,7 +125,7 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
     final url = "authenticated/updateOrganisation";
     print(url);
     try {
-      final response = await ApiBaseHelper().postProtected(url,
+      final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(editedProfile));
       Provider.of<Auth>(context).myProfile = Profile.fromJson(response);
       print(Provider.of<Auth>(context).myProfile.profilePhoto);

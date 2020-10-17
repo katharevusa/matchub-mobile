@@ -25,7 +25,7 @@ class ManageKahsScreen extends StatefulWidget {
 class _ManageKahsScreenState extends State<ManageKahsScreen> {
   Future organisationMembersFuture;
   Future kahsFuture;
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   List<Profile> kahs = [];
   List<Profile> members = [];
   Profile myProfile;
@@ -140,7 +140,7 @@ class _ManageKahsScreenState extends State<ManageKahsScreen> {
       try {
         var accessToken = Provider.of<Auth>(this.context).accessToken;
         final response =
-            await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+            await ApiBaseHelper.instance.putProtected(url, accessToken: accessToken);
         print("Success");
         await loadKah();
         // Navigator.of(

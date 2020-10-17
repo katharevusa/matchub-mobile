@@ -60,9 +60,9 @@ class _ChannelMessagesState extends State<ChannelMessages> {
   }
 
   retrieveAllContributors() async {
-    final response = await ApiBaseHelper().getProtected(
+    final response = await ApiBaseHelper.instance.getProtected(
         "authenticated/getWholeProjectGroup?projectId=${widget.project.projectId}",
-        Provider.of<Auth>(context, listen: false).accessToken);
+         accessToken:Provider.of<Auth>(context, listen: false).accessToken);
     print(response);
     allContributors =
         (response as List).map((e) => Profile.fromJson(e)).toList();
@@ -331,7 +331,7 @@ class _MessageTileState extends State<MessageTile> {
                 backgroundImage: messageSender.profilePhoto.isEmpty
                     ? AssetImage("assets/images/avatar2.jpg")
                     : NetworkImage(
-                        "${ApiBaseHelper().baseUrl}${messageSender.profilePhoto.substring(30)}"),
+                        "${ApiBaseHelper.instance.baseUrl}${messageSender.profilePhoto.substring(30)}"),
               ),
             Container(
               margin: widget.sendByMe

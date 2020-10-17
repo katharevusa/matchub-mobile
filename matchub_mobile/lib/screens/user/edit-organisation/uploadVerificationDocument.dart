@@ -161,7 +161,7 @@ class _UploadVerificationDocumentState
                   if (fileList.isNotEmpty) {
                     await uploadMultiFile(
                         fileList,
-                        "${ApiBaseHelper().baseUrl}public/setupOrganisationProfile/uploadDocuments/${Provider.of<Auth>(context, listen: false).myProfile.uuid}",
+                        "${ApiBaseHelper.instance.baseUrl}public/setupOrganisationProfile/uploadDocuments/${Provider.of<Auth>(context, listen: false).myProfile.uuid}",
                         Provider.of<Auth>(context, listen: false).accessToken,
                         "files",
                         context);

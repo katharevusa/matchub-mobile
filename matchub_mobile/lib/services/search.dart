@@ -29,7 +29,7 @@ class Search with ChangeNotifier {
     }
     var responseData = await _apiHelper.getProtected(
         "authenticated/globalSearchAllUsers?search=$searchQuery&size=8&page=$pageNo$filter",
-        accessToken);
+         accessToken:accessToken);
     searchProfileResults.addAll((responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
         .toList());
@@ -62,7 +62,7 @@ class Search with ChangeNotifier {
     }
     var responseData = await _apiHelper.getProtected(
         "authenticated/projectGlobalSearch?keywords=$searchQuery&size=10&page=$pageNo$filter",
-        accessToken);
+        accessToken: accessToken);
     searchProjectResults.addAll((responseData['content'] as List)
         .map((e) => Project.fromJson(e))
         .toList());
@@ -88,7 +88,7 @@ class Search with ChangeNotifier {
     }
     var responseData = await _apiHelper.getProtected(
         "authenticated/resourceGlobalSearch?keywords=$searchQuery&size=10&page=$pageNo&availability=true$filter",
-        accessToken);
+        accessToken: accessToken);
     searchResourcesResults.addAll((responseData['content'] as List)
         .map((e) => Resources.fromJson(e))
         .toList());

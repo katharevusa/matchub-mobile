@@ -22,7 +22,7 @@ class _ViewOrganisationMembersScreenState
     extends State<ViewOrganisationMembersScreen> {
   Future organisationMembersFuture;
 
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   List<Profile> members;
   Profile myProfile;
   List<Profile> newMembersList;
@@ -36,7 +36,7 @@ class _ViewOrganisationMembersScreenState
     final url =
         'authenticated/organisation/viewMembers/${widget.user.accountId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url, accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     members = (responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
         .toList();

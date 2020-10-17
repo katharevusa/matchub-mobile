@@ -3,7 +3,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 
 class ManageNotification with ChangeNotifier {
-  ApiBaseHelper _apiHelper = ApiBaseHelper();
+  ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   List<Announcement> allAnnouncementForUsers = [];
   List<Announcement> projectInternalAnnouncement = [];
   List<Announcement> projectPublicAnnouncement = [];

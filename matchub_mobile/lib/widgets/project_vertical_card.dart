@@ -34,13 +34,13 @@ class _ProjectVerticalCardState extends State<ProjectVerticalCard> {
   }
 
   retrieveProjectOwner() async {
-    var response = await ApiBaseHelper().getProtected(
+    var response = await ApiBaseHelper.instance.getProtected(
         "authenticated/getProject?projectId=${widget.project.projectId}",
-        Provider.of<Auth>(context, listen: false).accessToken);
+        accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     project = Project.fromJson(response);
-    response = await ApiBaseHelper().getProtected(
+    response = await ApiBaseHelper.instance.getProtected(
         "authenticated/getAccount/${widget.project.projCreatorId}",
-        Provider.of<Auth>(context, listen: false).accessToken);
+        accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     projectOwner = TruncatedProfile.fromJson(response);
     setState(() {
       _isLoading = false;

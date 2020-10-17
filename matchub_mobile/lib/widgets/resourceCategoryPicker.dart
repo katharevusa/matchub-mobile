@@ -27,8 +27,8 @@ class _ResourceCategoryPickerState extends State<ResourceCategoryPicker> {
 
   loadCategories() async {
     final url = 'authenticated/getAllResourceCategories';
-    final responseData = await ApiBaseHelper().getProtected(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
+    final responseData = await ApiBaseHelper.instance.getProtected(
+        url, accessToken: Provider.of<Auth>(this.context, listen: false).accessToken);
     listOfCategories = (responseData['content'] as List)
         .map((e) => ResourceCategory.fromJson(e))
         .toList();

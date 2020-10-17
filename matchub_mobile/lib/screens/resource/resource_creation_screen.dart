@@ -133,14 +133,14 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
             endResourceTime.second),
         [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
     try {
-      final response = await ApiBaseHelper().postProtected(url,
+      final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(resource));
       int newResourceId = response['resourceId'];
       print("Success");
       if (photos.isNotEmpty) {
         await uploadMultiFile(
             photos,
-            "${ApiBaseHelper().baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
+            "${ApiBaseHelper.instance.baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "photos",
             context);
@@ -179,7 +179,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     // if (coverPhoto.isNotEmpty) {
     //   await uploadSinglePic(
     //       coverPhoto.first,
-    //       "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
+    //       "${ApiBaseHelper.instance.baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
     //       Provider.of<Auth>(context, listen: false).accessToken,
     //       "profilePic",
     //       context);
@@ -212,7 +212,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
             endResourceTime.second),
         [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
     try {
-      final response = await ApiBaseHelper().putProtected(url,
+      final response = await ApiBaseHelper.instance.putProtected(url,
           accessToken: accessToken, body: json.encode(resource));
       print("Success");
       int newResourceId = response['resourceId'];
@@ -220,7 +220,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
       if (photos.isNotEmpty) {
         await uploadMultiFile(
             photos,
-            "${ApiBaseHelper().baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
+            "${ApiBaseHelper.instance.baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "photos",
             context);
@@ -485,7 +485,7 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   List<ResourceCategory> listOfCategories;
   Future categoriesFuture;
   @override
@@ -498,7 +498,7 @@ class _CategoryState extends State<Category> {
   retrieveAllCategories() async {
     final url = 'authenticated/getAllResourceCategories';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
+        url,  accessToken:Provider.of<Auth>(this.context, listen: false).accessToken);
     listOfCategories = (responseData['content'] as List)
         .map((e) => ResourceCategory.fromJson(e))
         .toList();
@@ -571,7 +571,7 @@ class Unit extends StatefulWidget {
 }
 
 class _UnitState extends State<Unit> {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   Future categoryFuture;
   ResourceCategory category;
   int totalUnit = 0;
@@ -587,7 +587,7 @@ class _UnitState extends State<Unit> {
     int id = widget.resource["resourceCategoryId"];
     final url = 'authenticated/getResourceCategoryById?resourceCategoryId=$id';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
+        url, accessToken: Provider.of<Auth>(this.context, listen: false).accessToken);
     category = ResourceCategory.fromJson(responseData);
     perUnit = category.perUnit;
     print(category.toJson());

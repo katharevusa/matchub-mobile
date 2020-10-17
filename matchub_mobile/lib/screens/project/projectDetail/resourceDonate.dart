@@ -21,7 +21,7 @@ class DonateFormScreen extends StatefulWidget {
 }
 
 class _DonateFormScreenState extends State<DonateFormScreen> {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   ResourceCategory category;
   Future projectOwnerFuture;
   ResourceRequest newResourceRequest = new ResourceRequest();
@@ -55,7 +55,7 @@ class _DonateFormScreenState extends State<DonateFormScreen> {
   getProjectOwner() async {
     final url = 'authenticated/getAccount/${widget.project.projCreatorId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url,  accessToken:Provider.of<Auth>(context, listen: false).accessToken);
     projectOwner = Profile.fromJson(responseData);
     await retrieveResources();
   }
@@ -66,7 +66,7 @@ class _DonateFormScreenState extends State<DonateFormScreen> {
         Provider.of<Auth>(context, listen: false).myProfile.accountId;
     final url = 'authenticated/getHostedResources?profileId=${profileId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url, accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     resources = (responseData['content'] as List)
         .map((e) => Resources.fromJson(e))
         .toList();
@@ -76,7 +76,7 @@ class _DonateFormScreenState extends State<DonateFormScreen> {
     final url =
         'authenticated/getResourceCategoryById?resourceCategoryId=${selectedResource.resourceCategoryId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context).accessToken);
+        url, accessToken: Provider.of<Auth>(this.context).accessToken);
     category = ResourceCategory.fromJson(responseData);
   }
 
@@ -88,7 +88,7 @@ class _DonateFormScreenState extends State<DonateFormScreen> {
     var accessToken = Provider.of<Auth>(context).accessToken;
     Navigator.of(context).pop(true);
     try {
-      final response = await ApiBaseHelper().postProtected(url,
+      final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(resourceRequest));
       print("Success");
     } catch (error) {

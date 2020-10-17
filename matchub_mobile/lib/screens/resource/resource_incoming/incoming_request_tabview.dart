@@ -129,7 +129,7 @@ class RequestCard extends StatefulWidget {
 }
 
 class _RequestCardState extends State<RequestCard> {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   Resources resource;
   ResourceCategory resourceCategory;
   Project project;
@@ -146,7 +146,7 @@ class _RequestCardState extends State<RequestCard> {
   retrieveRequestor() async {
     final url = 'authenticated/getAccount/${widget.request.requestorId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url, accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     requestor = Profile.fromJson(responseData);
   }
 
@@ -154,7 +154,7 @@ class _RequestCardState extends State<RequestCard> {
     final url =
         'authenticated/getResourceById?resourceId=${widget.request.resourceId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url, accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     resource = Resources.fromJson(responseData);
     print(resource.resourceName);
     await retrieveCategory();
@@ -166,9 +166,9 @@ class _RequestCardState extends State<RequestCard> {
   }
 
   retrieveProject() async {
-    final responseData = await ApiBaseHelper().getProtected(
+    final responseData = await ApiBaseHelper.instance.getProtected(
         "authenticated/getProject?projectId=${widget.request.projectId}",
-        Provider.of<Auth>(this.context, listen: false).accessToken);
+        accessToken: Provider.of<Auth>(this.context, listen: false).accessToken);
     project = Project.fromJson(responseData);
   }
 
@@ -176,7 +176,7 @@ class _RequestCardState extends State<RequestCard> {
     final url =
         'authenticated/getResourceCategoryById?resourceCategoryId=${resource.resourceCategoryId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context).accessToken);
+        url, accessToken: Provider.of<Auth>(this.context).accessToken);
     resourceCategory = ResourceCategory.fromJson(responseData);
   }
 
@@ -381,16 +381,16 @@ class _RequestCardState extends State<RequestCard> {
   respondToRequest(bool response) async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
     if (response == true) {
-      final responseData = await ApiBaseHelper().getProtected(
+      final responseData = await ApiBaseHelper.instance.getProtected(
           "authenticated/respondToResourceRequest?requestId=${widget.request.requestId}&responderId=${profile.accountId}&response=${true}",
-          Provider.of<Auth>(this.context, listen: false).accessToken);
+           accessToken:Provider.of<Auth>(this.context, listen: false).accessToken);
       _customAlertDialog(context, AlertDialogType.SUCCESS, "Accepted",
           "You have accepted the request!");
       await loadRequests();
     } else {
-      final responseData = await ApiBaseHelper().getProtected(
+      final responseData = await ApiBaseHelper.instance.getProtected(
           "authenticated/respondToResourceRequest?requestId=${widget.request.requestId}&responderId=${profile.accountId}&response=${false}",
-          Provider.of<Auth>(this.context, listen: false).accessToken);
+           accessToken:Provider.of<Auth>(this.context, listen: false).accessToken);
       _customAlertDialog(context, AlertDialogType.WARNING, "Rejected",
           "You have rejected the request!");
       await loadRequests();

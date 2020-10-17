@@ -27,7 +27,7 @@ class AllNotifications extends StatefulWidget {
 class _AllNotificationsState extends State<AllNotifications> {
   List<Announcement> internalAnnouncements = [];
   List<Announcement> publicAnnouncements = [];
-  ApiBaseHelper _apiHelper = ApiBaseHelper();
+  ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   Announcement newAnnouncement = new Announcement();
   Map<String, dynamic> announcement;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
@@ -521,7 +521,7 @@ class _AllNotificationsState extends State<AllNotifications> {
     }
     var accessToken = Provider.of<Auth>(context).accessToken;
     try {
-      final response = await ApiBaseHelper().postProtected(url,
+      final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(announcement));
 
       newAnnouncement = new Announcement();

@@ -34,9 +34,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   getUser() async {
-    var responseData = await ApiBaseHelper().getProtected(
+    var responseData = await ApiBaseHelper.instance.getProtected(
         "authenticated/getAccount/${widget.accountId}",
-        Provider.of<Auth>(
+         accessToken:Provider.of<Auth>(
           context,
         ).accessToken);
     setState(() {
@@ -54,11 +54,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       var responseData;
       if (myProfile.following.indexOf(followId) != -1) {
-        responseData = await ApiBaseHelper().postProtected(
+        responseData = await ApiBaseHelper.instance.postProtected(
             "authenticated/unfollowProfile?unfollowId=${followId}&accountId=${myProfile.accountId}",
             accessToken: Provider.of<Auth>(context).accessToken);
       } else {
-        responseData = await ApiBaseHelper().postProtected(
+        responseData = await ApiBaseHelper.instance.postProtected(
             "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
             accessToken: Provider.of<Auth>(context).accessToken);
       }

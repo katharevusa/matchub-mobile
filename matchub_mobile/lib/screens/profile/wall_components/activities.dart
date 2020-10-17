@@ -155,7 +155,7 @@ class _ActivitiesState extends State<Activities> {
   }
 
   _deletePost(Post post, BuildContext context) async {
-    ApiBaseHelper _helper = ApiBaseHelper();
+    ApiBaseHelper _helper = ApiBaseHelper.instance;
     var profileId = Provider.of<Auth>(context).myProfile.accountId;
     final url = 'authenticated/deletePost/${post.postId}/${profileId}';
     final responseData = await _helper.deleteProtected(url,
