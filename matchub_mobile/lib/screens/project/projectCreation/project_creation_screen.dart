@@ -150,13 +150,13 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
             endProjectTime.hour, endProjectTime.minute, endProjectTime.second),
         [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
     try {
-      final response = await ApiBaseHelper().postProtected(url,
+      final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(project));
       int newProjectId = response['projectId'];
       if (coverPhoto.isNotEmpty) {
         await uploadSinglePic(
             coverPhoto.first,
-            "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${newProjectId}",
+            "${ApiBaseHelper.instance.baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${newProjectId}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "profilePic",
             context);
@@ -164,7 +164,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       if (photos.isNotEmpty) {
         await uploadMultiFile(
             photos,
-            "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadPhotos?projectId=${newProjectId}",
+            "${ApiBaseHelper.instance.baseUrl}authenticated/updateProject/uploadPhotos?projectId=${newProjectId}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "photos",
             context);
@@ -172,7 +172,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       if (documents.isNotEmpty) {
         await uploadMultiFile(
             documents,
-            "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadDocuments?projectId=${newProjectId}",
+            "${ApiBaseHelper.instance.baseUrl}authenticated/updateProject/uploadDocuments?projectId=${newProjectId}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "documents",
             context);
@@ -183,7 +183,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
         badge['icon'] = project['badgeIcon'];
         badge['projectId'] = newProjectId;
 
-        ApiBaseHelper().postProtected("authenticated/createProjectBadge",
+        ApiBaseHelper.instance.postProtected("authenticated/createProjectBadge",
             body: json.encode(badge),
             accessToken: Provider.of<Auth>(context, listen: false).accessToken);
       }
@@ -244,13 +244,13 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
         [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
     try {
       var accessToken = Provider.of<Auth>(context).accessToken;
-      final response = await ApiBaseHelper().putProtected(url,
+      final response = await ApiBaseHelper.instance.putProtected(url,
           accessToken: accessToken, body: json.encode(project));
 
       if (coverPhoto.isNotEmpty) {
         await uploadSinglePic(
             coverPhoto.first,
-            "${ApiBaseHelper().baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
+            "${ApiBaseHelper.instance.baseUrl}authenticated/updateProject/updateProjectProfilePic?projectId=${project['projectId']}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "profilePic",
             context);
@@ -258,7 +258,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       if (photos.isNotEmpty) {
         await uploadMultiFile(
             photos,
-            "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadPhotos?projectId=${project['projectId']}",
+            "${ApiBaseHelper.instance.baseUrl}authenticated/updateProject/uploadPhotos?projectId=${project['projectId']}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "photos",
             context);
@@ -266,7 +266,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       if (documents.isNotEmpty) {
         await uploadMultiFile(
             photos,
-            "${ApiBaseHelper().baseUrl}authenticated/updateProject/uploadDocuments?projectId=${project['projectId']}",
+            "${ApiBaseHelper.instance.baseUrl}authenticated/updateProject/uploadDocuments?projectId=${project['projectId']}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "documents",
             context);
@@ -278,7 +278,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
         badge['icon'] = project['badgeIcon'];
         badge['accountId'] = Provider.of<Auth>(context, listen: false).myProfile.accountId;
         print(badge);
-        ApiBaseHelper().putProtected("authenticated/updateProjectBadge/${project['badgeId']}",
+        ApiBaseHelper.instance.putProtected("authenticated/updateProjectBadge/${project['badgeId']}",
             body: json.encode(badge),
             accessToken: Provider.of<Auth>(context, listen: false).accessToken);
       }

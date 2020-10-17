@@ -106,7 +106,7 @@ class _ManageKahsScreenState extends State<ManageKahsScreen> {
       try {
         var accessToken = Provider.of<Auth>(this.context).accessToken;
         final response =
-            await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+            await ApiBaseHelper.instance.putProtected(url, accessToken: accessToken);
         print("Success");
         await loadKah();
         // Navigator.of(

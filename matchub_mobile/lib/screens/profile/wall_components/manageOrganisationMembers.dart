@@ -96,7 +96,7 @@ class _ManageOrganisationMembersScreenState
       try {
         var accessToken = Provider.of<Auth>(this.context).accessToken;
         final response =
-            await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+            await ApiBaseHelper.instance.putProtected(url, accessToken: accessToken);
         await loadMembers();
         print("Success");
         // Navigator.of(this.context).pop(true);
@@ -124,7 +124,7 @@ class _ManageOrganisationMembersScreenState
       try {
         var accessToken = Provider.of<Auth>(this.context).accessToken;
         final response =
-            await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+            await ApiBaseHelper.instance.putProtected(url, accessToken: accessToken);
         print("Success");
         // Navigator.of(this.context).pop(true);
       } catch (error) {

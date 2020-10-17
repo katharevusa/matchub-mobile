@@ -59,11 +59,11 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
     try {
       setState(() {
         if (myProfile.following.indexOf(followId) != -1) {
-          ApiBaseHelper().postProtected(
+          ApiBaseHelper.instance.postProtected(
               "authenticated/unfollowProfile?unfollowId=${followId}&accountId=${myProfile.accountId}",
               accessToken: Provider.of<Auth>(context).accessToken);
         } else {
-          ApiBaseHelper().postProtected(
+          ApiBaseHelper.instance.postProtected(
               "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
               accessToken: Provider.of<Auth>(context).accessToken);
         }
@@ -192,7 +192,7 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
                             following.add(removeFollower);
                           }
                         });
-                        ApiBaseHelper().postProtected(
+                        ApiBaseHelper.instance.postProtected(
                             "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
                             accessToken:
                                 Provider.of<Auth>(context).accessToken);

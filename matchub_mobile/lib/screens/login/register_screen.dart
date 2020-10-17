@@ -44,7 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else {
         url = "public/createNewIndividual";
       }
-      await ApiBaseHelper().post(url, body: json.encode(newStakeholder));
+      await ApiBaseHelper.instance.post(url, body: json.encode(newStakeholder));
       print("Success");
       Navigator.pop(context);
     } catch (error) {

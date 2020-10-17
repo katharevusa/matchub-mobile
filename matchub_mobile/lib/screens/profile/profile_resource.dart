@@ -11,7 +11,6 @@ import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-import 'package:random_color/random_color.dart';
 
 class ProfileResource extends StatefulWidget {
   Profile profile;
@@ -46,7 +45,6 @@ class _ProfileResourceState extends State<ProfileResource> {
 
   @override
   Widget build(BuildContext context) {
-    RandomColor _randomColor = RandomColor();
     // print(listOfResources.length.toString() + "========================");
     return FutureBuilder(
       future: listOfHostedResourcesFuture,
@@ -59,7 +57,6 @@ class _ProfileResourceState extends State<ProfileResource> {
                               style: AppTheme.titleLight))
                       : ListView.builder(
                           itemBuilder: (context, index) => ResourceVerticalCard(
-                            randomColor: _randomColor,
                             resource: listOfResources[index],
                           ),
                           itemCount: listOfResources.length,
@@ -72,11 +69,8 @@ class _ProfileResourceState extends State<ProfileResource> {
 
 class ResourceVerticalCard extends StatelessWidget {
   const ResourceVerticalCard(
-      {Key key, @required RandomColor randomColor, @required this.resource})
-      : _randomColor = randomColor,
-        super(key: key);
+      {Key key, @required this.resource});
 
-  final RandomColor _randomColor;
   final Resources resource;
 
   void selecteResource(BuildContext ctx, Resources individualResource) {
@@ -98,13 +92,13 @@ class ResourceVerticalCard extends StatelessWidget {
         padding: EdgeInsets.all(2 * SizeConfig.heightMultiplier),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: _randomColor
-              .randomColor(
-                  colorBrightness: ColorBrightness.veryLight,
-                  colorHue: ColorHue.multiple(
-                      colorHues: [ColorHue.green, ColorHue.blue]),
-                  colorSaturation: ColorSaturation.lowSaturation)
-              .withAlpha(50),
+          // color: _randomColor
+          //     .randomColor(
+          //         colorBrightness: ColorBrightness.veryLight,
+          //         colorHue: ColorHue.multiple(
+          //             colorHues: [ColorHue.green, ColorHue.blue]),
+          //         colorSaturation: ColorSaturation.lowSaturation)
+          //     .withAlpha(50),
           boxShadow: [
             BoxShadow(
               offset: Offset(4, 3),

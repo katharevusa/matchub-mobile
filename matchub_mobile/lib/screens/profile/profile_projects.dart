@@ -8,7 +8,6 @@ import 'package:matchub_mobile/screens/project_management/project_management.dar
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/project_vertical_card.dart';
-import 'package:random_color/random_color.dart';
 
 class ProfileProjects extends StatelessWidget {
   List<Project> projects;

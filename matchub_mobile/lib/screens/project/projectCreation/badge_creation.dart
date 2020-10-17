@@ -17,7 +17,7 @@ class BadgeCreation extends StatefulWidget {
 }
 
 class _BadgeCreationState extends State<BadgeCreation> {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   List<String> badgesIcon;
   Future loadBadges;
   int selectedBadgeIndex;

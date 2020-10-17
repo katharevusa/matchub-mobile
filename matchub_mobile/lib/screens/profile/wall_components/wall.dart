@@ -50,7 +50,7 @@ class _WallState extends State<Wall> {
     final url = "authenticated/createPost";
     var accessToken = Provider.of<Auth>(context).accessToken;
     try {
-      final response = await ApiBaseHelper().postProtected(url,
+      final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(post));
       loadPosts = retrieveAllPosts();
       setState((){});

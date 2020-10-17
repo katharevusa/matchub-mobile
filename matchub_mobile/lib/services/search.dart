@@ -7,7 +7,7 @@ class Search with ChangeNotifier {
   List<Project> searchProjectResults = [];
   List<Resources> searchResourcesResults = [];
   String accessToken;
-  ApiBaseHelper _apiHelper = ApiBaseHelper();
+  ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   bool hasMoreProjects;
   bool hasMoreProfiles;
   bool hasMoreResources;

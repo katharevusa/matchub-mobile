@@ -25,7 +25,7 @@ class NotificationService with ChangeNotifier {
   void sendNotificationToUsers(accessToken, List<String> uuids, String type, String chatId,
       String title, String body, String image) async {
 
-    await ApiBaseHelper()
+    await ApiBaseHelper.instance
         .postProtected("authenticated/sendNotificationsToUsers",
             body: json.encode({
               "uuids": uuids,

@@ -7,20 +7,28 @@ import 'package:matchub_mobile/helpers/extensions.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = "https://192.168.72.136:8443/api/v1/";
+  static String accessToken;
 
-  IOClient client;
+  static IOClient client;
 
   String get baseUrl {
     return _baseUrl;
   }
 
-  ApiBaseHelper() {
+  ApiBaseHelper._privateConstructor();
+
+  static ApiBaseHelper _instance = ApiBaseHelper._privateConstructor();
+
+  factory ApiBaseHelper(accessToken) {
+    accessToken = accessToken;
     bool trustSelfSigned = true;
     HttpClient httpClient = new HttpClient()
       ..badCertificateCallback =
           ((X509Certificate cert, String host, int port) => trustSelfSigned);
     client = new IOClient(httpClient);
+    return _instance;
   }
+  static ApiBaseHelper get instance => _instance;
 
   String get item => null;
 

@@ -48,7 +48,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   getProjects() async {
-    final responseData = await ApiBaseHelper().getProtected(
+    final responseData = await ApiBaseHelper.instance.getProtected(
         "authenticated/getProject?projectId=${widget.project.projectId}",
         Provider.of<Auth>(this.context, listen: false).accessToken);
 
@@ -296,7 +296,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                           String fileName =
                               (project.documents[documentKeys[index]]);
                           String url =
-                              ApiBaseHelper().baseUrl + fileName.substring(30);
+                              ApiBaseHelper.instance.baseUrl + fileName.substring(30);
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {
@@ -770,7 +770,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     try {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =
-          await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+          await ApiBaseHelper.instance.putProtected(url, accessToken: accessToken);
       print("Success");
       Navigator.of(this.context).pop("Completed-Project");
     } catch (error) {
@@ -785,7 +785,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     try {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =
-          await ApiBaseHelper().postProtected(url, accessToken: accessToken);
+          await ApiBaseHelper.instance.postProtected(url, accessToken: accessToken);
       print("Success");
       Navigator.of(this.context).pop("Joined-Project");
     } catch (error) {
@@ -800,7 +800,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     try {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =
-          await ApiBaseHelper().deleteProtected(url, accessToken: accessToken);
+          await ApiBaseHelper.instance.deleteProtected(url, accessToken: accessToken);
 
       await DatabaseMethods()
           .removeFromChannels(myProfile.uuid, widget.project.projectId);
@@ -818,7 +818,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     try {
       var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response =
-          await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+          await ApiBaseHelper.instance.putProtected(url, accessToken: accessToken);
       print("Success");
       Navigator.of(this.context).pop(true);
     } catch (error) {
@@ -1094,11 +1094,11 @@ class _UpvoteRowState extends State<UpvoteRow> {
           onPressed: () async {
             if (!widget.myProfile.upvotedProjectIds
                 .contains(widget.project.projectId)) {
-              await ApiBaseHelper().postProtected(
+              await ApiBaseHelper.instance.postProtected(
                   "authenticated/upvoteProject?projectId=${widget.project.projectId}&userId=${widget.myProfile.accountId}",
                   accessToken: Provider.of<Auth>(context).accessToken);
             } else {
-              await ApiBaseHelper().postProtected(
+              await ApiBaseHelper.instance.postProtected(
                   "authenticated/revokeUpvote?projectId=${widget.project.projectId}&userId=${widget.myProfile.accountId}",
                   accessToken: Provider.of<Auth>(context).accessToken);
             }
