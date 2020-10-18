@@ -8,6 +8,7 @@ import 'package:matchub_mobile/navigation/resource_navigator.dart';
 import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
+import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/project/project_overview.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
@@ -257,7 +258,10 @@ class _TabsScreenState extends State<TabsScreen> {
             builder: (context) => ResetPassword(), settings: settings);
       case ResourceCategoryPicker.routeName:
         return MaterialPageRoute(
-            builder: (context) => ResourceCategoryPicker(categories: settings.arguments as List,), settings: settings);
+            builder: (context) => ResourceCategoryPicker(
+                  categories: settings.arguments as List,
+                ),
+            settings: settings);
       case FollowOverviewScreen.routeName:
         final user =
             (settings.arguments as Map<String, dynamic>)['profile'] as Profile;
@@ -317,11 +321,20 @@ class _TabsScreenState extends State<TabsScreen> {
             builder: (context) =>
                 ProjectManagementOverview(settings.arguments as Project),
             settings: settings);
-                          case SearchResults.routeName:
-                return MaterialPageRoute(
+      case SearchResults.routeName:
+        return MaterialPageRoute(
+            builder: (context) => SearchResults(), settings: settings);
+      case ProjectManagementOverview.routeName:
+        return MaterialPageRoute(
             builder: (context) =>
-               SearchResults(),
+                ProjectManagementOverview(settings.arguments as Project),
             settings: settings);
+      case ViewTask.routeName:
+        return MaterialPageRoute(
+            builder: (context, ) => ViewTask(task: settings.arguments as TaskEntity), settings: settings,fullscreenDialog: true);
+      case SearchResults.routeName:
+        return MaterialPageRoute(
+            builder: (context) => SearchResults(), settings: settings);
       default:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);

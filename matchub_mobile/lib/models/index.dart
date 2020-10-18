@@ -11,3 +11,6 @@ export 'announcement.dart' ;
 export 'badge.dart' ; 
 export 'profile.dart' ; 
 export 'post.dart' ; 
+export 'taskEntity.dart' ; 
+export 'taskColumnEntity.dart' ; 
+export 'kanbanEntity.dart' ; 

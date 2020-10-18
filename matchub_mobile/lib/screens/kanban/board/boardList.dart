@@ -132,7 +132,7 @@ class BoardListState extends State<BoardList> {
                     return InkWell(
                       child: Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5)),
+                              borderRadius: BorderRadius.circular(3)),
                           width: 100 * SizeConfig.widthMultiplier,
                           height: 40,
                           child: Row(children: [

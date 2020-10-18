@@ -48,14 +48,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   getProjects() async {
-    final responseData = await ApiBaseHelper.instance.getProtected(
-        "authenticated/getProject?projectId=${widget.project.projectId}",
-        accessToken: Provider.of<Auth>(this.context, listen: false).accessToken);
+    // final responseData = await ApiBaseHelper.instance.getProtected(
+    //     "authenticated/getProject?projectId=${widget.project.projectId}",
+    //     accessToken: Provider.of<Auth>(this.context, listen: false).accessToken);
 
-    project = Project.fromJson(responseData);
-    documentKeys = project.documents.keys.toList();
+    // project = Project.fromJson(responseData);
+    // documentKeys = project.documents.keys.toList();
 
-    setState(() => _isLoading = false);
+    // setState(() => _isLoading = false);
   }
 
   List<Widget> getPhotoList(photos) {

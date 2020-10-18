@@ -134,6 +134,14 @@ flutter:
         - asset: assets/fonts/quicksand/Quicksand-Light.ttf
         - asset: assets/fonts/quicksand/Quicksand-SemiBold.ttf
         - asset: assets/fonts/quicksand/Quicksand-Bold.ttf
+        - asset: assets/fonts/lato/Lato-Bold.ttf
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/raleway/Raleway-Regular.ttf
+        - asset: assets/fonts/raleway/Raleway-Medium.ttf
+        - asset: assets/fonts/raleway/Raleway-Light.ttf
+        - asset: assets/fonts/raleway/Raleway-SemiBold.ttf
+        - asset: assets/fonts/raleway/Raleway-Bold.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
