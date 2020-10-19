@@ -167,7 +167,7 @@ class _UploadVerificationDocumentState
                         context);
                   }
                   widget.updateProfile(
-                      Provider.of<Auth>(context).accessToken, context);
+                      Provider.of<Auth>(context,listen: false).accessToken, context);
                 },
                 child: Text("Submit")),
           ],

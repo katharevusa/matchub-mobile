@@ -97,7 +97,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
         ]),
       ),
       floatingActionButton: widget.project.projCreatorId ==
-              Provider.of<Auth>(context).myProfile.accountId
+              Provider.of<Auth>(context,listen: false).myProfile.accountId
           ? FloatingActionButton(
               heroTag: "channelCreateBtn",
               child: Icon(Icons.add),

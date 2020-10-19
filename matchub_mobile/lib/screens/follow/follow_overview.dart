@@ -61,11 +61,11 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
         if (myProfile.following.indexOf(followId) != -1) {
           ApiBaseHelper.instance.postProtected(
               "authenticated/unfollowProfile?unfollowId=${followId}&accountId=${myProfile.accountId}",
-              accessToken: Provider.of<Auth>(context).accessToken);
+              accessToken: Provider.of<Auth>(context,listen: false).accessToken);
         } else {
           ApiBaseHelper.instance.postProtected(
               "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
-              accessToken: Provider.of<Auth>(context).accessToken);
+              accessToken: Provider.of<Auth>(context,listen: false).accessToken);
         }
         if (widget.user.accountId == myProfile.accountId) {
           //to update followers | following
@@ -195,7 +195,7 @@ class _FollowOverviewScreenState extends State<FollowOverviewScreen>
                         ApiBaseHelper.instance.postProtected(
                             "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
                             accessToken:
-                                Provider.of<Auth>(context).accessToken);
+                                Provider.of<Auth>(context,listen: false).accessToken);
                       }),
                 ));
               },

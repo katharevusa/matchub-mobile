@@ -76,16 +76,16 @@ class _DonateFormScreenState extends State<DonateFormScreen> {
     final url =
         'authenticated/getResourceCategoryById?resourceCategoryId=${selectedResource.resourceCategoryId}';
     final responseData = await _helper.getProtected(
-        url, accessToken: Provider.of<Auth>(this.context).accessToken);
+        url, accessToken: Provider.of<Auth>(this.context,listen: false).accessToken);
     category = ResourceCategory.fromJson(responseData);
   }
 
   donate() async {
     resourceRequest["requestorId"] =
-        Provider.of<Auth>(context).myProfile.accountId;
+        Provider.of<Auth>(context,listen: false).myProfile.accountId;
     resourceRequest['projectId'] = widget.project.projectId;
     final url = "authenticated/createNewResourceRequestByResourceOwner";
-    var accessToken = Provider.of<Auth>(context).accessToken;
+    var accessToken = Provider.of<Auth>(context,listen: false).accessToken;
     Navigator.of(context).pop(true);
     try {
       final response = await ApiBaseHelper.instance.postProtected(url,

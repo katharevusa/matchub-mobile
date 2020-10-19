@@ -56,11 +56,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (myProfile.following.indexOf(followId) != -1) {
         responseData = await ApiBaseHelper.instance.postProtected(
             "authenticated/unfollowProfile?unfollowId=${followId}&accountId=${myProfile.accountId}",
-            accessToken: Provider.of<Auth>(context).accessToken);
+            accessToken: Provider.of<Auth>(context,listen: false).accessToken);
       } else {
         responseData = await ApiBaseHelper.instance.postProtected(
             "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
-            accessToken: Provider.of<Auth>(context).accessToken);
+            accessToken: Provider.of<Auth>(context,listen: false).accessToken);
       }
       getUser();
       await loadUser;

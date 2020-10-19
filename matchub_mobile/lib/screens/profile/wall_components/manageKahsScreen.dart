@@ -104,7 +104,7 @@ class _ManageKahsScreenState extends State<ManageKahsScreen> {
       final url =
           "authenticated/organisation/addKAH/${widget.user.accountId}/${individual.accountId}";
       try {
-        var accessToken = Provider.of<Auth>(this.context).accessToken;
+        var accessToken = Provider.of<Auth>(this.context,listen: false).accessToken;
         final response =
             await ApiBaseHelper.instance.putProtected(url, accessToken: accessToken);
         print("Success");
@@ -138,7 +138,7 @@ class _ManageKahsScreenState extends State<ManageKahsScreen> {
       final url =
           "authenticated/organisation/removeKAH/${widget.user.accountId}/${individual.accountId}";
       try {
-        var accessToken = Provider.of<Auth>(this.context).accessToken;
+        var accessToken = Provider.of<Auth>(this.context,listen: false).accessToken;
         final response =
             await ApiBaseHelper.instance.putProtected(url, accessToken: accessToken);
         print("Success");

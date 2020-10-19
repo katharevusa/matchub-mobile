@@ -350,7 +350,7 @@ class _LoginCardState extends State<LoginCard> {
                                           stickyAuth: false);
 
                                   if (authenticateViaBiometrics) {
-                                    await Provider.of<Auth>(context).tryAutoLogin(biometricBypass: true);
+                                    await Provider.of<Auth>(context,listen: false).tryAutoLogin(biometricBypass: true);
                                   }
                                 }
                               },

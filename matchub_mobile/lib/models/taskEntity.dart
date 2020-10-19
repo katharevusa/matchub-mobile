@@ -20,10 +20,10 @@ class TaskEntity {
   DateTime createdTime;
   DateTime expectedDeadline;
   TaskColumnEntity taskColumn;
-  Map<String, String> documents;
-  Map<String, String> labelAndColour;
-  Profile taskLeader;
-  List<TruncatedProfile> taskDoers;
+  Map<String, dynamic> documents;
+  Map<String, dynamic> labelAndColour;
+  num taskLeaderId;
+  List<Profile> taskDoers;
 
   factory TaskEntity.fromJson(Map<String, dynamic> json) =>
       _$TaskEntityFromJson(json);

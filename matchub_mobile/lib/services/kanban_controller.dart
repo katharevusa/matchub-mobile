@@ -24,13 +24,54 @@ class KanbanController with ChangeNotifier {
     notifyListeners();
   }
 
+  retrieveKanbanByKanbanBoardId(kanbanBoardId) async {
+    final response = await ApiBaseHelper.instance.getProtected(
+        "authenticated/getKanbanBoardByKanbanBoardId?kanbanBoardId=$kanbanBoardId");
+    kanban = KanbanEntity.fromJson(response);
+    notifyListeners();
+  }
+
   createTask(Map<String, dynamic> taskEntity) async {
     final response = await ApiBaseHelper.instance.postProtected(
         "authenticated/createTask",
         body: json.encode(taskEntity));
     final task = TaskEntity.fromJson(response);
-    await retrieveKanbanByChannelId(kanban.kanbanBoardId);
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
     print(task);
     notifyListeners();
+  }
+
+  reorderTaskSequence(arrangerId) async {
+    var newKanbanOrder = {};
+    [
+      ...kanban.taskColumns.map((e) => {
+            "${e.taskColumnId}": [...e.listOfTasks.map((e) => e.taskId)]
+          })
+    ].forEach((element) {
+      newKanbanOrder.addAll(element);
+    });
+    print(newKanbanOrder);
+    final response = await ApiBaseHelper.instance
+        .putProtected("authenticated/rearrangeTasks",
+            body: json.encode({
+              "arrangerId": arrangerId,
+              "kanbanBoardId": kanban.kanbanBoardId,
+              "columnIdAndTaskIdSequence": newKanbanOrder
+            }));
+    kanban = KanbanEntity.fromJson(response);
+    notifyListeners();
+  }
+
+  updateTaskDoers(List<Profile> newTaskDoerList, task, updaterId) async {
+    String url = 
+        "authenticated/updateTaskDoers?taskId=${task.taskId}&updatorId=$updaterId&kanbanBoardId=${kanban.kanbanBoardId}";
+        for(var i in newTaskDoerList){
+          url += "&newTaskDoerList=${i.accountId}";
+        }
+    final response = await ApiBaseHelper.instance.postProtected(url);
+    task = TaskEntity.fromJson(response);
+    print(task);
+    notifyListeners();
+
   }
 }

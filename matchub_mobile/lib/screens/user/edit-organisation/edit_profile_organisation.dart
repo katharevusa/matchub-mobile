@@ -11,6 +11,7 @@ import 'package:matchub_mobile/screens/user/edit-organisation/uploadVerification
 import 'package:matchub_mobile/screens/user/select_profile_picture.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
 
 class EditOrganisationScreen extends StatefulWidget {
@@ -123,31 +124,16 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
     }
     _formKey.currentState.save();
     final url = "authenticated/updateOrganisation";
-    print(url);
     try {
       final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(editedProfile));
-      Provider.of<Auth>(context).myProfile = Profile.fromJson(response);
-      print(Provider.of<Auth>(context).myProfile.profilePhoto);
+      Provider.of<Auth>(context,listen: false).myProfile = Profile.fromJson(response);
       print("Success");
       Navigator.of(context).pop(true);
     } catch (error) {
       final responseData = error.body as Map<String, dynamic>;
       print("Failure");
-      showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                title: Text(responseData['error']),
-                content: Text(responseData['message']),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Okay'),
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                  )
-                ],
-              ));
+      showErrorDialog(error.toString(), context);
     }
   }
 }

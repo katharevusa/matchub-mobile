@@ -14,12 +14,12 @@ TaskEntity _$TaskEntityFromJson(Map<String, dynamic> json) {
     ..createdTime = json['createdTime'] != null ? DateTime.parse(json['createdTime']) : null
     ..expectedDeadline = json['expectedDeadline']  != null ? DateTime.parse(json['expectedDeadline']) : null
     ..taskColumn = TaskColumnEntity.fromJson(json['taskColumn'])
-    ..documents = json['documents'] as Map<String, String>
-    ..labelAndColour = json['labelAndColour'] as Map<String, String>
-    ..taskLeader = Profile.fromJson(json['taskLeader']) 
+    ..documents = json['documents'] as Map<String, dynamic>
+    ..labelAndColour = json['labelAndColour'] as Map<String, dynamic>
+    ..taskLeaderId = json['taskLeaderId'] as num
     ..taskDoers = json['taskDoers'] != null
         ? (json['taskDoers'] as List)
-            .map((i) => TruncatedProfile.fromJson(i))
+            .map((i) => Profile.fromJson(i))
             .toList()
         : [];
 

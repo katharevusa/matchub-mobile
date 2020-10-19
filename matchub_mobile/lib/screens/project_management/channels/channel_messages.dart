@@ -113,7 +113,7 @@ class _ChannelMessagesState extends State<ChannelMessages> {
   addMessage() {
     if (messageEditingController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
-        "sentBy": Provider.of<Auth>(context).myProfile.uuid,
+        "sentBy": Provider.of<Auth>(context,listen: false).myProfile.uuid,
         "messageText": messageEditingController.text.trim(),
         'sentAt': DateTime.now()
       };

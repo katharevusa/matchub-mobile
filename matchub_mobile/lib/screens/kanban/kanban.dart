@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
+import 'package:matchub_mobile/screens/search/search_page.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/kanban_controller.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
 import 'board/boardItem.dart';
@@ -48,7 +51,7 @@ class _KanbanViewState extends State<KanbanView> {
   retrieveKanban() async {
     final instance = Provider.of<KanbanController>(context, listen: false);
     await instance.retrieveKanbanByChannelId(widget.channelData['id']);
-    kanban = instance.kanban;
+    // kanban = instance.kanban;
     await instance.retrieveChannelMembers(widget.channelData['members']);
     setState(() {
       loading = false;
@@ -66,35 +69,35 @@ class _KanbanViewState extends State<KanbanView> {
     // for (int i = 0; i < kanban.taskColumns.length; i++) {
     //   _lists.add(_createBoardList(kanban.taskColumns[i]));
     // }
-    return loading
-        ? Scaffold(
-            appBar: AppBar(
-                title: Text(
-              widget.channelData['name'],
-            )),
-            body: Center(child: CircularProgressIndicator()))
-        : Consumer<KanbanController>(builder: (context, controller, child) {
-            List<BoardList> _lists = List<BoardList>();
-            for (int i = 0; i < kanban.taskColumns.length; i++) {
-              _lists.add(_createBoardList(kanban.taskColumns[i]));
-            }
+    return Consumer<KanbanController>(builder: (context, controller, child) {
+      List<BoardList> _lists = List<BoardList>();
+      if (!loading) {
+        kanban = controller.kanban;
+        for (int i = 0; i < kanban.taskColumns.length; i++) {
+          _lists.add(_createBoardList(kanban.taskColumns[i]));
+        }
+      }
 
-            return Scaffold(
-              appBar: AppBar(
-                  title: Text(
-                widget.channelData['name'],
-              )),
-              backgroundColor: Color.fromARGB(255, 235, 236, 240),
-              body: BoardView2(
+      return Scaffold(
+        appBar: AppBar(
+            title: Text(
+          widget.channelData['name'],
+        )),
+        backgroundColor: Color.fromARGB(255, 235, 236, 240),
+        body: loading
+            ? Center(child: CircularProgressIndicator())
+            : BoardView2(
                 lists: _lists,
                 boardViewController: boardViewController,
                 width: 80 * SizeConfig.widthMultiplier,
               ),
-            );
-          });
+      );
+    });
   }
 
   Widget buildBoardItem(TaskEntity task) {
+    var kanbanController =
+        Provider.of<KanbanController>(context, listen: false);
     return BoardItem(
         onStartDragItem:
             (int listIndex, int itemIndex, BoardItemState state) {},
@@ -104,17 +107,19 @@ class _KanbanViewState extends State<KanbanView> {
           var item = kanban.taskColumns[oldListIndex].listOfTasks[oldItemIndex];
           kanban.taskColumns[oldListIndex].listOfTasks.removeAt(oldItemIndex);
           kanban.taskColumns[listIndex].listOfTasks.insert(itemIndex, item);
-          print(item);
+          kanbanController.reorderTaskSequence(
+              Provider.of<Auth>(context, listen: false).myProfile.accountId);
         },
         onTapItem:
-            (int listIndex, int itemIndex, BoardItemState state) async {},
-        item: GestureDetector(
-          onTap: () => Navigator.of(context, rootNavigator: true).push(
+            (int listIndex, int itemIndex, BoardItemState state) async {
+              Navigator.of(context, rootNavigator: true).push(
               MaterialPageRoute(
-                  builder: (_) => ViewTask(task: task, kanban: kanban))),
-          child: Container(
-            height: 100,
-            margin: EdgeInsets.symmetric(vertical: 10),
+                  builder: (_) => ViewTask(task: task, kanban: kanban)));
+            },
+        item: Container(
+            height: 120,
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            margin: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -126,12 +131,19 @@ class _KanbanViewState extends State<KanbanView> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(5),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(task.taskTitle),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  task.taskTitle,
+                  style: TextStyle(
+                      fontSize: 2.2 * SizeConfig.textMultiplier,
+                      fontWeight: FontWeight.w700),
+                ),
+                ...buildTeamMemberRow(task.taskDoers)
+              ],
             ),
           ),
-        ));
+        );
   }
 
   Widget _createBoardList(TaskColumnEntity list) {
@@ -163,4 +175,51 @@ class _KanbanViewState extends State<KanbanView> {
       items: items,
     );
   }
+}
+
+List<Widget> buildTeamMemberRow(List<Profile> members) {
+  return (members.isNotEmpty)
+      ? [
+          Container(
+              width: SizeConfig.widthMultiplier * 100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Stack(
+                    children: [
+                      ...members
+                          .asMap()
+                          .map((i, e) => MapEntry(
+                              i,
+                              Transform.translate(
+                                  offset: Offset(i * 30.0, 0),
+                                  child: _buildAvatar(
+                                    e,
+                                  ))))
+                          .values
+                          .toList(),
+                    ],
+                  ),
+                ],
+              ))
+        ]
+      : [];
+}
+
+Widget _buildAvatar(profile, {double radius = 50}) {
+  return Container(
+    decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[400].withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 3,offset: Offset(0,3)
+          ),
+        ],
+        border: Border.all(color: Colors.white, width: 3),
+        shape: BoxShape.circle),
+    height: radius,
+    width: radius,
+    child: ClipOval(child: AttachmentImage(profile.profilePhoto)),
+  );
 }

@@ -172,7 +172,6 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
 
   @override
   Widget build(BuildContext context) {
-    Profile myProfile = Provider.of<Auth>(context).myProfile;
     DateTime date;
     if (widget.recentDate != null) {
       date = widget.recentDate.toDate();

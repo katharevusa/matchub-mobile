@@ -292,10 +292,13 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                   padding: EdgeInsets.symmetric(horizontal: 1),
                   child: FlatButton(
                       color: kKanbanColor,
-                      onPressed: () => newTask['taskTitle'] != null
-                          ? Provider.of<KanbanController>(context)
-                              .createTask(newTask)
-                          : null,
+                      onPressed: () async {
+                        if (newTask['taskTitle'] != null) {
+                          await Provider.of<KanbanController>(context,listen: false)
+                              .createTask(newTask);
+                          Navigator.pop(context);
+                        }
+                      },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -318,6 +321,7 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                 onChanged: (val) {
                   newTask['taskTitle'] = val;
                 },
+                textCapitalization: TextCapitalization.sentences,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 focusNode: taskNameFocus,
                 decoration: InputDecoration(
@@ -336,17 +340,18 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                           borderRadius:
                               BorderRadius.circular(20.0)), //this right here
                       child:
-                          SelectTaskMembers(kanbanController: kanbanController),
+                          SelectTaskMember(kanbanController: kanbanController),
                     );
                     showDialog(
                         context: context,
                         builder: (BuildContext context) =>
                             channelMembersDialog).then((val) {
                       if (val != null) {
-                        setState(() {selectedTaskLeader = val;
-                        newTask['taskLeaderId'] =
-                            selectedTaskLeader.accountId;
-                        print(selectedTaskLeader);
+                        setState(() {
+                          selectedTaskLeader = val;
+                          newTask['taskLeaderId'] =
+                              selectedTaskLeader.accountId;
+                          print(selectedTaskLeader);
                         });
                       }
                     });
@@ -396,9 +401,10 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                                 fontSize: 1.6 * SizeConfig.textMultiplier),
                           ),
                           firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 1.6 * SizeConfig.textMultiplier),
+                          lastDate: DateTime(2100),
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 1.6 * SizeConfig.textMultiplier),
                           onChanged: (val) {
                             newTask['expectedDeadline'] = val + "T00:00:00";
                             setState(() {});
@@ -417,8 +423,8 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
   }
 }
 
-class SelectTaskMembers extends StatefulWidget {
-  SelectTaskMembers({
+class SelectTaskMember extends StatefulWidget {
+  SelectTaskMember({
     Key key,
     @required this.kanbanController,
   }) : super(key: key);
@@ -426,10 +432,10 @@ class SelectTaskMembers extends StatefulWidget {
   final KanbanController kanbanController;
 
   @override
-  _SelectTaskMembersState createState() => _SelectTaskMembersState();
+  _SelectTaskMemberState createState() => _SelectTaskMemberState();
 }
 
-class _SelectTaskMembersState extends State<SelectTaskMembers> {
+class _SelectTaskMemberState extends State<SelectTaskMember> {
   Profile selectedTaskLeader;
   @override
   Widget build(BuildContext context) {
@@ -444,7 +450,7 @@ class _SelectTaskMembersState extends State<SelectTaskMembers> {
             child: Text(
                 "Channel Members - ${widget.kanbanController.channelMembers.length.toString()}",
                 style: TextStyle(
-                    color: Colors.grey[600],
+                    color: Colors.grey[850],
                     fontSize: 1.9 * SizeConfig.heightMultiplier,
                     fontWeight: FontWeight.w700)),
           ),

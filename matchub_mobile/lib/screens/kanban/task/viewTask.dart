@@ -4,9 +4,15 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/taskEntity.dart';
 import 'package:matchub_mobile/models/truncatedProfile.dart';
+import 'package:matchub_mobile/screens/kanban/board/boardList.dart';
+import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/kanban_controller.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
+import 'package:provider/provider.dart';
+
+import 'selectTaskMembers.dart';
 
 class ViewTask extends StatefulWidget {
   static const routeName = "/view-task";
@@ -234,17 +240,50 @@ class _ViewTaskState extends State<ViewTask> {
                   ),
                   Row(
                     children: [
-                      _buildAvatar(widget.task.taskLeader, radius: 40),
+                      drawAddButton(
+                        onTap: () {
+                          final kanbanController =
+                              Provider.of<KanbanController>(context,
+                                  listen: false);
+                          Dialog channelMembersDialog = Dialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    20.0)), //this right here
+                            child: SelectTaskMember(
+                                kanbanController: kanbanController),
+                          );
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  channelMembersDialog).then((val) {
+                            if (val != null) {
+                              setState(() {
+                                widget.task.taskLeaderId = val.accountId;
+                                // kanbanController.updateTaskDoers(
+                                //     val,
+                                //     widget.task,
+                                //     Provider.of<Auth>(context, listen: false)
+                                //         .myProfile
+                                //         .accountId);
+                              });
+                            }
+                          });
+                        },
+                      ),
                       SizedBox(width: 10),
-                      Text(widget.task.taskLeader.name,
+                      Text("Not Yet Assigned",
                           style: headerText.copyWith(color: Colors.grey[100])),
+                      // _buildAvatar(widget.task.taskLeader, radius: 40),
+                      // SizedBox(width: 10),
+                      // Text(widget.task.taskLeader.name,
+                      //     style: headerText.copyWith(color: Colors.grey[100])),
                     ],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Text("Assignees", style: headerText),
                   ),
-                  ...buildTeamMemberRow(widget.task.taskDoers),
+                  buildTeamMemberRow(widget.task.taskDoers),
                 ],
               ),
             ),
@@ -333,59 +372,81 @@ class _ViewTaskState extends State<ViewTask> {
     );
   }
 
-  List<Widget> buildTeamMemberRow(List<TruncatedProfile> members) {
-    Widget addButton = Transform.translate(
+  drawAddButton({members = const [], double radius = 60.0, onTap = null}) {
+    return Transform.translate(
         offset: Offset(members.length * 50.0, 0),
         child: Container(
           decoration:
               BoxDecoration(color: Colors.grey[200], shape: BoxShape.circle),
-          height: 60,
-          width: 60,
+          height: radius,
+          width: radius,
           child: IconButton(
             icon: Icon(FlutterIcons.plus_fea),
-            onPressed: () {},
+            onPressed: () => onTap(),
             color: Colors.blueGrey[600],
           ),
         ));
-    return (members.isNotEmpty)
-        ? [
-            Container(
-                width: SizeConfig.widthMultiplier * 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Stack(
-                      children: [
-                        ...members
-                            .asMap()
-                            .map((i, e) => MapEntry(
-                                i,
-                                Transform.translate(
-                                    offset: Offset(i * 50.0, 0),
-                                    child: _buildAvatar(
-                                      e,
-                                    ))))
-                            .values
-                            .toList(),
-                        addButton
-                      ],
-                    ),
-                  ],
-                ))
-          ]
-        : [
-            Row(
-              children: [
-                addButton,
-                SizedBox(width: 10),
-                Text("Not Yet Assigned",
-                    style: headerText.copyWith(color: Colors.grey[100])),
-              ],
-            ),
-          ];
   }
 
-  Widget _buildAvatar(profile, {double radius = 60}) {
+  Widget buildTeamMemberRow(List<Profile> members) {
+    Function routeToSelectMembers = () {
+      final kanbanController =
+          Provider.of<KanbanController>(context, listen: false);
+      Dialog channelMembersDialog = Dialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0)), //this right here
+        child: SelectTaskMembers(
+            kanbanController: kanbanController, task: widget.task),
+      );
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => channelMembersDialog).then((val) {
+        if (val != null) {
+          setState(() {
+            widget.task.taskDoers = val;
+            kanbanController.updateTaskDoers(val, widget.task,
+                Provider.of<Auth>(context, listen: false).myProfile.accountId);
+          });
+        }
+      });
+    };
+    return (members.isNotEmpty)
+        ? GestureDetector(
+              onTap: () => routeToSelectMembers(),
+              child:Container(
+            width: SizeConfig.widthMultiplier * 100,
+            child:  Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Stack(
+                    children: [
+                      ...members
+                          .asMap()
+                          .map((i, e) => MapEntry(
+                              i,
+                              Transform.translate(
+                                  offset: Offset(i * 50.0, 0),
+                                  child: _buildAvatar(
+                                    e,
+                                  ))))
+                          .values
+                          .toList(),
+                    ],
+                  ),
+                ],
+              ),
+            ))
+        : Row(
+            children: [
+              drawAddButton(members: members, onTap: routeToSelectMembers),
+              SizedBox(width: 10),
+              Text("Not Yet Assigned",
+                  style: headerText.copyWith(color: Colors.grey[100])),
+            ],
+          );
+  }
+
+  Widget _buildAvatar(profile, {double radius = 60.0}) {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(color: Colors.grey[300], width: 2),
