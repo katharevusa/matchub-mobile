@@ -34,31 +34,55 @@ class _PManagementTeamMemberState extends State<PManagementTeamMember> {
           ListTile(
             title: Text(
               "Team Members",
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                  fontFamily: 'Monaco'),
             ),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(
-                Icons.notifications,
-                color: Colors.black,
+              SizedBox(
+                width: 20,
               ),
-              Text(buildJoinRequest(widget.project)),
+              Stack(children: <Widget>[
+                Icon(Icons.notifications, color: Color(0xff48284A), size: 30),
+                buildJoinRequest(widget.project) != 0
+                    ? Positioned(
+                        top: -1.0,
+                        right: -1.0,
+                        child: new Stack(children: <Widget>[
+                          new Icon(
+                            Icons.brightness_1,
+                            size: 12.0,
+                            color: Colors.red.shade400,
+                          ),
+                        ]))
+                    : Container(),
+              ]),
+              Text(' You have ',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+              Text(
+                buildJoinRequest(widget.project).toString(),
+                style: TextStyle(
+                    color: Colors.red.shade400,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600),
+              ),
             ],
           ),
+          Text("New Join Request",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
           SizedBox(
             height: 10,
           ),
-          Stack(
-            children: [
-              ...buildProjectMembers(context, widget.project.teamMembers),
-            ],
-          ),
+          widget.project.teamMembers.isNotEmpty
+              ? Stack(
+                  children: [
+                    ...buildProjectMembers(context, widget.project.teamMembers),
+                  ],
+                )
+              : Text(
+                  "0 Team Members",
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                )
         ],
       ),
     );
@@ -102,12 +126,15 @@ class _PManagementTeamMemberState extends State<PManagementTeamMember> {
         bottom: 0,
         child: Container(
           height: 10,
-          // alignment: Alignment.centerRight,
-          child: Text(
-            (l - teamMembers.length).toString() + ' more...',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 10),
-          ),
+          child: l - teamMembers.length != 0
+              ? Text(
+                  (l - teamMembers.length).toString() + ' more...',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 10),
+                )
+              : Container(),
         ),
       ),
     );
@@ -126,13 +153,13 @@ class _PManagementTeamMemberState extends State<PManagementTeamMember> {
     );
   }
 
-  String buildJoinRequest(Project project) {
+  num buildJoinRequest(Project project) {
     num counter = 0;
     for (JoinRequest jr in project.joinRequests) {
       if (jr.status == "ON_HOLD") {
         counter++;
       }
     }
-    return (counter.toString() + ' New Join Requests');
+    return (counter);
   }
 }

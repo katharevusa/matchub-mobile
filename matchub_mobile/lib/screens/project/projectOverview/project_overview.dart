@@ -290,8 +290,8 @@ class BottomScreen extends StatelessWidget {
                             Divider(),
                             Row(
                               children: [
-                                PManagementTeamMember(
-                                    myProfile.projectsOwned[index]),
+                                // PManagementTeamMember(
+                                //     myProfile.projectsOwned[index]),
                                 Spacer(),
                                 Container(
                                   padding: EdgeInsets.all(10),
@@ -414,8 +414,8 @@ class BottomScreen extends StatelessWidget {
                             Divider(),
                             Row(
                               children: [
-                                PManagementTeamMember(
-                                    myProfile.projectsJoined[index]),
+                                // PManagementTeamMember(
+                                //     myProfile.projectsJoined[index]),
                                 Spacer(),
                                 Container(
                                   padding: EdgeInsets.all(10),
