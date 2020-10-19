@@ -9,11 +9,10 @@ import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
-import 'package:matchub_mobile/screens/project/project_overview.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
-import 'package:matchub_mobile/screens/project_management/project_management.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/project_management.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_incoming/resource_incoming_screen.dart';
@@ -313,11 +312,9 @@ class _TabsScreenState extends State<TabsScreen> {
             builder: (context) =>
                 ProjectManagementOverview(settings.arguments as Project),
             settings: settings);
-                          case SearchResults.routeName:
-                return MaterialPageRoute(
-            builder: (context) =>
-               SearchResults(),
-            settings: settings);
+      case SearchResults.routeName:
+        return MaterialPageRoute(
+            builder: (context) => SearchResults(), settings: settings);
       default:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);

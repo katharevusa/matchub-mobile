@@ -27,8 +27,9 @@ class TeamMembers extends StatefulWidget {
 class _TeamMembersState extends State<TeamMembers> {
   @override
   initState() {
-    Provider.of<ManageProject>(context, listen: false)
-        .getProject(widget.project.projectId, Provider.of<Auth>(context, listen: false).accessToken);
+    Provider.of<ManageProject>(context, listen: false).getProject(
+        widget.project.projectId,
+        Provider.of<Auth>(context, listen: false).accessToken);
     super.initState();
   }
 
@@ -155,6 +156,7 @@ class _TeamMembersState extends State<TeamMembers> {
   }
 
   buildCurrentTeamMembersView() {
+    print(widget.project.teamMembers.length);
     return ListView.builder(
         itemBuilder: (context, index) {
           return Slidable(

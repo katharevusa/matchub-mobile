@@ -3,7 +3,7 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
-import 'package:matchub_mobile/screens/project_management/project_management.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/project_management.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -216,7 +216,7 @@ class _ProjectVerticalCardState extends State<ProjectVerticalCard> {
               Positioned(
                 top: 1 * SizeConfig.heightMultiplier,
                 child: Hero(
-                  tag: widget.project.projectProfilePic+"123",
+                  tag: widget.project.projectProfilePic + "123",
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: ClipRRect(

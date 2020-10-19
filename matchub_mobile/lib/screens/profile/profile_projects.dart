@@ -4,7 +4,6 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
-import 'package:matchub_mobile/screens/project_management/project_management.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/project_vertical_card.dart';
@@ -22,10 +21,9 @@ class ProfileProjects extends StatelessWidget {
           ? Center(
               child: Text("No Projects Available", style: AppTheme.titleLight))
           : ListView.builder(
-            shrinkWrap:true,
+              shrinkWrap: true,
               itemBuilder: (context, index) => ProjectVerticalCard(
-                  project: projects[index],
-                  isOwner: isOwner),
+                  project: projects[index], isOwner: isOwner),
               itemCount: projects.length,
             ),
     );
