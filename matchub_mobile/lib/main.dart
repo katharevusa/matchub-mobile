@@ -16,11 +16,15 @@ import 'package:matchub_mobile/services/manage_resource.dart';
 import 'package:matchub_mobile/services/notification_service.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 
+import 'services/kanban_controller.dart';
+
 void main() async {
   HttpOverrides.global = new MyHttpOverrides();
+  ApiBaseHelper api = ApiBaseHelper();
   runApp(MyApp());
 }
 
@@ -44,6 +48,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => ManageResource()),
             ChangeNotifierProvider(create: (_) => ManageOutgoingRequest()),
             ChangeNotifierProvider(create: (_) => ManageNotification()),
+            ChangeNotifierProvider(create: (_) => KanbanController()),
           ],
           child: Consumer<Auth>(
             builder: (context, auth, widget) => MaterialApp(

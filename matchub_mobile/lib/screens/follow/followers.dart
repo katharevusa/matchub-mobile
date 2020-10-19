@@ -35,7 +35,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
 
   // getFollowers() async {
   //   Map<String, dynamic> responseData;
-  //   responseData = await ApiBaseHelper().getProtected(
+  //   responseData = await ApiBaseHelper.instance.getProtected(
   //       "authenticated/getFollowers/${widget.user.accountId}",
   //       Provider.of<Auth>(context, listen: false).accessToken);
   //   followers = (responseData['content'] as List)

@@ -3,7 +3,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 
 class ManageOutgoingRequest with ChangeNotifier {
-  ApiBaseHelper _apiHelper = ApiBaseHelper();
+  ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   List<ResourceRequest> requestsToOtherResource = [];
   List<ResourceRequest> requestToOtherProject = [];
   List<ResourceRequest> requestToMyResource = [];

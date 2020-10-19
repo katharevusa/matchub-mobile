@@ -8,6 +8,7 @@ import 'package:matchub_mobile/navigation/resource_navigator.dart';
 import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
+import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
@@ -25,6 +26,7 @@ import 'package:matchub_mobile/screens/user/account-settings/change_password.dar
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/screens/user/user_screen.dart';
+import 'package:matchub_mobile/widgets/resourceCategoryPicker.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import './project_navigator.dart';
 import 'home_navigator.dart';
@@ -219,9 +221,6 @@ class _TabsScreenState extends State<TabsScreen> {
       case HomeScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);
-      case ProjectScreen.routeName:
-        return MaterialPageRoute(
-            builder: (context) => ProjectScreen(), settings: settings);
       case ResourceScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ResourceScreen(), settings: settings);
@@ -253,6 +252,12 @@ class _TabsScreenState extends State<TabsScreen> {
       case ResetPassword.routeName:
         return MaterialPageRoute(
             builder: (context) => ResetPassword(), settings: settings);
+      case ResourceCategoryPicker.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ResourceCategoryPicker(
+                  categories: settings.arguments as List,
+                ),
+            settings: settings);
       case FollowOverviewScreen.routeName:
         final user =
             (settings.arguments as Map<String, dynamic>)['profile'] as Profile;
@@ -312,6 +317,17 @@ class _TabsScreenState extends State<TabsScreen> {
             builder: (context) =>
                 ProjectManagementOverview(settings.arguments as Project),
             settings: settings);
+      case SearchResults.routeName:
+        return MaterialPageRoute(
+            builder: (context) => SearchResults(), settings: settings);
+      case ProjectManagementOverview.routeName:
+        return MaterialPageRoute(
+            builder: (context) =>
+                ProjectManagementOverview(settings.arguments as Project),
+            settings: settings);
+      case ViewTask.routeName:
+        return MaterialPageRoute(
+            builder: (context, ) => ViewTask(task: settings.arguments as TaskEntity), settings: settings,fullscreenDialog: true);
       case SearchResults.routeName:
         return MaterialPageRoute(
             builder: (context) => SearchResults(), settings: settings);

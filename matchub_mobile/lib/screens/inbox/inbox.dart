@@ -41,7 +41,6 @@ class _InboxScreenState extends State<InboxScreen> {
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(40),
               child: Container(
-                padding: EdgeInsets.only(left: 20),
                 alignment: Alignment.centerLeft,
                 child: TabBar(
                     labelColor: Colors.grey[600],

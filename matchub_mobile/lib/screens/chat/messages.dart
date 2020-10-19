@@ -159,7 +159,7 @@ class _MessagesState extends State<Messages> {
               backgroundImage: widget.recipient.profilePhoto.isEmpty
                   ? AssetImage("assets/images/avatar2.jpg")
                   : NetworkImage(
-                      "${ApiBaseHelper().baseUrl}${widget.recipient.profilePhoto.substring(30)}"),
+                      "${ApiBaseHelper.instance.baseUrl}${widget.recipient.profilePhoto.substring(30)}"),
             ),
             title: Text(widget.recipient.name,
                 style: TextStyle(color: Colors.white)),

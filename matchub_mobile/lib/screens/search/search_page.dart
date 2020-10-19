@@ -1,14 +1,17 @@
 import 'package:country_list_pick/support/code_country.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:matchub_mobile/helpers/sdgs.dart';
+import 'package:matchub_mobile/screens/search/resources_search.dart';
 // import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/search.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/countrylistpicker.dart';
+import 'package:matchub_mobile/widgets/resourceCategoryPicker.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart';
@@ -50,6 +53,9 @@ class _SearchResultsState extends State<SearchResults>
     "country": null,
     "status": null,
     "sdgs": [],
+    "categoryIds": [],
+    "startDate": null,
+    "endDate": null
   };
 
   @override
@@ -69,6 +75,14 @@ class _SearchResultsState extends State<SearchResults>
       if (ind == 2) {
         searchType = SearchType.RESOURCES;
       }
+      filterOptions = {
+        "country": null,
+        "status": null,
+        "sdgs": [],
+        "categoryIds": [],
+        "startDate": null,
+        "endDate": null
+      };
       setState(() {});
     });
     WidgetsBinding.instance.addPostFrameCallback(
@@ -76,17 +90,38 @@ class _SearchResultsState extends State<SearchResults>
     super.initState();
   }
 
+  executeSearch(search) async {
+    setState(() {
+      searchComplete = false;
+    });
+    if (searchType == SearchType.PROJECTS) {
+      await search.globalSearchForProjects(searchQuery,
+          filterOptions: filterOptions);
+    } else if (searchType == SearchType.PROFILES) {
+      await search.globalSearchForUsers(searchQuery,
+          filterOptions: filterOptions);
+    } else {
+      await search.globalSearchForResources(searchQuery,
+          filterOptions: filterOptions);
+    }
+    setState(() {
+      searchComplete = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var noOfFilters = 0;
-    if (filterOptions['country'] != null) {
-      noOfFilters++;
-    }
-    if (filterOptions['status'] != null) {
-      noOfFilters++;
-    }
-    if (filterOptions['sdgs'].isNotEmpty) {
-      noOfFilters++;
+    for (var i in filterOptions.keys) {
+      if (filterOptions[i] != null && (i != 'sdgs' && i != 'categoryIds')) {
+        noOfFilters++;
+      }
+      if (i == 'sdgs' && filterOptions[i].isNotEmpty) {
+        noOfFilters++;
+      }
+      if (i == 'categoryIds' && filterOptions[i].isNotEmpty) {
+        noOfFilters++;
+      }
     }
     return ChangeNotifierProvider(
       create: (_) =>
@@ -100,17 +135,7 @@ class _SearchResultsState extends State<SearchResults>
               title: TextFormField(
                 textInputAction: TextInputAction.search,
                 onFieldSubmitted: (val) async {
-                  setState(() {
-                    searchComplete = false;
-                  });
-                  if (searchType == SearchType.PROJECTS) {
-                    await search.globalSearchForProjects(val, filterOptions: filterOptions);
-                  } else {
-                    await search.globalSearchForUsers(val, filterOptions: filterOptions);
-                  }
-                  setState(() {
-                    searchComplete = true;
-                  });
+                  executeSearch(search);
                 },
                 onChanged: (val) => searchQuery = val,
                 initialValue: searchQuery,
@@ -118,6 +143,7 @@ class _SearchResultsState extends State<SearchResults>
                 style: TextStyle(
                   fontSize: 20,
                 ),
+                onEditingComplete: () => searchFocus.unfocus(),
                 decoration: InputDecoration(
                     hintText:
                         "Search " + searchTypeToString(searchType) + " ...",
@@ -127,8 +153,10 @@ class _SearchResultsState extends State<SearchResults>
               ),
               actions: [
                 Badge(
-                  badgeContent: Text(noOfFilters.toString()),
-                  badgeColor: kAccentColor,
+                  badgeContent: Text(
+                    noOfFilters.toString(),
+                  ),
+                  badgeColor: kAccentColor.withOpacity(0.8),
                   showBadge: noOfFilters > 0,
                   position: BadgePosition.topStart(
                       top: SizeConfig.heightMultiplier * 0.5,
@@ -142,19 +170,7 @@ class _SearchResultsState extends State<SearchResults>
                                     FilterSheet(filterOptions, searchType))
                             .then((value) async {
                           if (value != null && value) {
-                            setState(() {
-                              searchComplete = false;
-                            });
-                            if (searchType == SearchType.PROJECTS) {
-                              await search.globalSearchForProjects(searchQuery,
-                                  filterOptions: filterOptions);
-                            } else {
-                              await search.globalSearchForUsers(searchQuery,
-                                  filterOptions: filterOptions);
-                            }
-                            setState(() {
-                              searchComplete = true;
-                            });
+                            executeSearch(search);
                           }
                         });
                       }),
@@ -202,7 +218,7 @@ class _SearchResultsState extends State<SearchResults>
                       search: search,
                       searchQuery: searchQuery,
                     ),
-                    SearchProfiles(
+                    SearchResources(
                       search: search,
                       searchQuery: searchQuery,
                     )
@@ -235,6 +251,8 @@ class FilterSheet extends StatefulWidget {
 }
 
 class _FilterSheetState extends State<FilterSheet> {
+  // TextEditingController startTimeController = TextEditingController();
+  // TextEditingController endTimeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -248,7 +266,7 @@ class _FilterSheetState extends State<FilterSheet> {
           children: [
             AppBar(
               automaticallyImplyLeading: false,
-              title: Text("Filter"),
+              title: Text("Filters"),
               actions: [
                 FlatButton(
                   child: Text("DONE",
@@ -262,7 +280,7 @@ class _FilterSheetState extends State<FilterSheet> {
                 )
               ],
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 5),
             if (widget.searchType == SearchType.PROJECTS)
               ListTile(
                 leading: Icon(FlutterIcons.clock_fea),
@@ -307,7 +325,6 @@ class _FilterSheetState extends State<FilterSheet> {
                         return DropdownMenuItem(
                             child: Text(value), value: value);
                       }).toList(),
-                      // value: widget.filterOptions['status'],
                       onChanged: (value) {
                         widget.filterOptions['status'] = value;
                         setState(() {});
@@ -316,8 +333,84 @@ class _FilterSheetState extends State<FilterSheet> {
                   ),
                 ),
               ),
+            if (widget.searchType == SearchType.RESOURCES) ...[
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Row(children: [
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Icon(
+                        FlutterIcons.clock_fea,
+                        color: Colors.grey[700],
+                      )),
+                  Flexible(
+                    flex: 2,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                      child: Theme(
+                        data: AppTheme.lightTheme.copyWith(
+                          colorScheme:
+                              ColorScheme.light(primary: kSecondaryColor),
+                        ),
+                        child: DateTimePicker(
+                          initialValue: widget.filterOptions['startDate'],
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          dateLabelText: 'Start Date',
+                          onChanged: (val) {
+                            widget.filterOptions['startDate'] = val;
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 2,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                      child: Theme(
+                        data: AppTheme.lightTheme.copyWith(
+                          colorScheme:
+                              ColorScheme.light(primary: kSecondaryColor),
+                        ),
+                        child: DateTimePicker(
+                          initialValue: widget.filterOptions['endDate'],
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          dateLabelText: 'End Date',
+                          onChanged: (val) {
+                            widget.filterOptions['endDate'] = val;
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ),
+                  )
+                ]),
+              ),
+              ListTile(
+                leading: Icon(FlutterIcons.tags_faw5s),
+                title: Text("Category"),
+                trailing: Badge(
+                    badgeColor: kSecondaryColor,
+                    badgeContent: Text(
+                        "${widget.filterOptions['categoryIds'].length}",
+                        style: TextStyle(color: Colors.white)),
+                    showBadge: widget.filterOptions['categoryIds'].isNotEmpty),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(ResourceCategoryPicker.routeName,
+                        arguments: widget.filterOptions['categoryIds'])
+                    .then((value) {
+                  setState(() {
+                    if (value != null)
+                      widget.filterOptions['categoryIds'] = value;
+                    print(value);
+                  });
+                }),
+              ),
+            ],
             ListTile(
-              // contentPadding: EdgeInsets.only(left: 16, right: 20),
               leading: Icon(FlutterIcons.map_marked_alt_faw5s),
               title: Text("Country"),
               subtitle: Text(widget.filterOptions['country'] ?? ""),
@@ -334,18 +427,19 @@ class _FilterSheetState extends State<FilterSheet> {
                     setState(() {});
                   }),
             ),
-            ListTile(
-              leading: Icon(FlutterIcons.tags_faw5s),
-              title: Text("SDGs"),
-              onTap: () => Navigator.of(context)
-                  .pushNamed(SDGPicker.routeName)
-                  .then((value) {
-                setState(() {
-                  if (value != null) widget.filterOptions['sdgs'] = value;
-                  print(value);
-                });
-              }),
-            ),
+            if (widget.searchType != SearchType.RESOURCES)
+              ListTile(
+                leading: Icon(FlutterIcons.tags_faw5s),
+                title: Text("SDGs"),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(SDGPicker.routeName)
+                    .then((value) {
+                  setState(() {
+                    if (value != null) widget.filterOptions['sdgs'] = value;
+                    print(value);
+                  });
+                }),
+              ),
             if (widget.filterOptions['sdgs'].isNotEmpty) buildSDGTags(),
             FlatButton(
               child: Text("Reset All Filters",
@@ -353,10 +447,15 @@ class _FilterSheetState extends State<FilterSheet> {
                       color: kSecondaryColor,
                       fontSize: SizeConfig.textMultiplier * 1.8)),
               onPressed: () {
-                widget.filterOptions['country'] = null;
-                widget.filterOptions['status'] = null;
-                widget.filterOptions['sdgs'] = [];
-                setState(() {});
+                setState(() {
+                  widget.filterOptions['country'] = null;
+                  widget.filterOptions['status'] = null;
+                  widget.filterOptions['startDate'] = null;
+                  widget.filterOptions['endDate'] = null;
+                  widget.filterOptions['categoryIds'] = [];
+                  widget.filterOptions['sdgs'] = [];
+                });
+                Navigator.pop(context);
               },
             ),
             SizedBox(height: 20),
@@ -447,58 +546,58 @@ class _SearchProjectsState extends State<SearchProjects> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      controller: scrollController,
-      separatorBuilder: (ctx, idx) => Divider(height: 4, thickness: 0),
-      itemBuilder: (context, index) {
-        if (widget.searchQuery.isEmpty &&
-            widget.search.searchProjectResults.isEmpty) return Container();
-        if (widget.searchQuery.isNotEmpty &&
-            widget.search.searchProjectResults.isEmpty)
-          return Container(
-              padding: EdgeInsets.only(top: SizeConfig.heightMultiplier * 6),
-              height: SizeConfig.heightMultiplier * 60,
-              child: Column(
-                children: [
-                  Container(
-                      height: 300,
-                      child: Image.asset("assets/images/not-found.png")),
-                  Text(
-                    "Oops, no matches",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[700]),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "We couldn't find any search results, \ntry modifying your query",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 14, height: 1.5, color: Colors.grey[500]),
-                  )
-                ],
-              ));
-        if (index < widget.search.searchProjectResults.length) {
-          return ProjectSearchCard(
-              project: widget.search.searchProjectResults[index]);
-        }
-        if (index == widget.search.searchProjectResults.length &&
-            widget.search.hasMoreProjects) {
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 32.0),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        } else {
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 32.0),
-            child: Center(
-                child: Text(
-                    'Didn\'t find what you\'re looking for? \nTry searching for something else!')),
-          );
-        }
-      },
-      itemCount: widget.search.searchProjectResults.length + 1,
+    return Scaffold(
+      body: SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          children: [
+            if (widget.searchQuery.isNotEmpty)
+              Container(alignment: Alignment.centerLeft,
+                color: Colors.grey[100],
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  height: 60,
+                  width: 100 * SizeConfig.widthMultiplier,
+                  child: Text("Search results for: ${widget.searchQuery}",
+                      style: AppTheme.titleLight.copyWith(color: Colors.grey[800]))),
+            Container(
+              child: ListView.separated(
+                physics: NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                separatorBuilder: (ctx, idx) =>
+                    Divider(height: 4, thickness: 0),
+                itemBuilder: (context, index) {
+                  if (widget.searchQuery.isEmpty &&
+                      widget.search.searchProjectResults.isEmpty)
+                    return Container();
+                  if (widget.searchQuery.isNotEmpty &&
+                      widget.search.searchProjectResults.isEmpty)
+                    return SearchNotFound();
+                  if (index < widget.search.searchProjectResults.length) {
+                    return ProjectSearchCard(
+                        project: widget.search.searchProjectResults[index]);
+                  }
+                  if (index == widget.search.searchProjectResults.length &&
+                      widget.search.hasMoreProjects) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 32.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  } else {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 32.0),
+                      child: Center(
+                          child: Text(
+                              'Didn\'t find what you\'re looking for? \nTry searching for something else!')),
+                    );
+                  }
+                },
+                itemCount: widget.search.searchProjectResults.length + 1,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -552,31 +651,7 @@ class _SearchProfilesState extends State<SearchProfiles> {
       itemBuilder: (context, index) {
         if (widget.searchQuery.isEmpty &&
             widget.search.searchProfileResults.isEmpty) return Container();
-        if (widget.search.searchProfileResults.isEmpty)
-          return Container(
-              padding: EdgeInsets.only(top: SizeConfig.heightMultiplier * 6),
-              height: SizeConfig.heightMultiplier * 60,
-              child: Column(
-                children: [
-                  Container(
-                      height: 300,
-                      child: Image.asset("assets/images/not-found.png")),
-                  Text(
-                    "Oops, no matches",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[700]),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "We couldn't find any search results, \ntry modifying your query",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 14, height: 1.5, color: Colors.grey[500]),
-                  )
-                ],
-              ));
+        if (widget.search.searchProfileResults.isEmpty) return SearchNotFound();
         if (index < widget.search.searchProfileResults.length) {
           return ProfileVerticalCard(
               profile: widget.search.searchProfileResults[index]);
@@ -592,11 +667,120 @@ class _SearchProfilesState extends State<SearchProfiles> {
             padding: EdgeInsets.symmetric(vertical: 32.0),
             child: Center(
                 child: Text(
-                    'Didn\'t find what you\'re looking for? \nTry searching for seomthing else!')),
+                    'Didn\'t find what you\'re looking for? \nTry searching for something else!')),
           );
         }
       },
       itemCount: widget.search.searchProfileResults.length + 1,
+      controller: scrollController,
+    );
+  }
+}
+
+class SearchNotFound extends StatelessWidget {
+  const SearchNotFound({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.only(top: SizeConfig.heightMultiplier * 6),
+        height: SizeConfig.heightMultiplier * 60,
+        child: Column(
+          children: [
+            Container(
+                height: 300, child: Image.asset("assets/images/not-found.png")),
+            Text(
+              "Oops, no matches",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[700]),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "We couldn't find any search results, \ntry modifying your query",
+              textAlign: TextAlign.center,
+              style:
+                  TextStyle(fontSize: 14, height: 1.5, color: Colors.grey[500]),
+            )
+          ],
+        ));
+  }
+}
+
+class SearchResources extends StatefulWidget {
+  Search search;
+  String searchQuery;
+
+  SearchResources({
+    this.search,
+    this.searchQuery,
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _SearchResourcesState createState() => _SearchResourcesState();
+}
+
+class _SearchResourcesState extends State<SearchResources> {
+  final scrollController = ScrollController();
+  int pageNo;
+  @override
+  void initState() {
+    pageNo = 0;
+    scrollController.addListener(() async {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        await Future.delayed(Duration(seconds: 1));
+        if (widget.search.hasMoreResources) {
+          pageNo++;
+          await widget.search
+              .globalSearchForResources(widget.searchQuery, pageNo: pageNo);
+        }
+        setState(() {});
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      shrinkWrap: true,
+      separatorBuilder: (ctx, idx) => Divider(height: 4, thickness: 0),
+      itemBuilder: (context, index) {
+        if (widget.searchQuery.isEmpty &&
+            widget.search.searchResourcesResults.isEmpty) return Container();
+        if (widget.search.searchResourcesResults.isEmpty)
+          return SearchNotFound();
+        if (index < widget.search.searchResourcesResults.length) {
+          return ResourcesSearchCard(
+              resource: widget.search.searchResourcesResults[index]);
+        }
+        if (index == widget.search.searchResourcesResults.length &&
+            widget.search.hasMoreResources) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 32.0),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        } else {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 32.0),
+            child: Center(
+                child: Text(
+                    'Didn\'t find what you\'re looking for? \nTry searching for something else!')),
+          );
+        }
+      },
+      itemCount: widget.search.searchResourcesResults.length + 1,
       controller: scrollController,
     );
   }

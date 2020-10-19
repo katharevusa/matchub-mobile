@@ -7,13 +7,15 @@ class Search with ChangeNotifier {
   List<Project> searchProjectResults = [];
   List<Resources> searchResourcesResults = [];
   String accessToken;
-  ApiBaseHelper _apiHelper = ApiBaseHelper();
+  ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   bool hasMoreProjects;
   bool hasMoreProfiles;
+  bool hasMoreResources;
 
   Search({this.accessToken});
 
-  globalSearchForUsers(String searchQuery, {pageNo = 0, Map<String, dynamic> filterOptions}) async {
+  globalSearchForUsers(String searchQuery,
+      {pageNo = 0, Map<String, dynamic> filterOptions}) async {
     if (pageNo == 0) searchProfileResults.clear();
     var filter = "";
     if (filterOptions != null) {
@@ -22,12 +24,12 @@ class Search with ChangeNotifier {
         filter += countryQuery;
       }
       for (num i in filterOptions['sdgs']) {
-        filter += "&sdgIds=${i+1}";
+        filter += "&sdgIds=${i + 1}";
       }
     }
     var responseData = await _apiHelper.getProtected(
         "authenticated/globalSearchAllUsers?search=$searchQuery&size=8&page=$pageNo$filter",
-        accessToken);
+         accessToken:accessToken);
     searchProfileResults.addAll((responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
         .toList());
@@ -52,19 +54,44 @@ class Search with ChangeNotifier {
         filter += statusQuery;
       }
       if (filterOptions['country'] != null) {
-        var countryQuery = "&country=${filterOptions['country']}";
-        filter += countryQuery;
+        filter += "&country=${filterOptions['country']}";
       }
       for (num i in filterOptions['sdgs']) {
-        filter += "&sdgIds=${i+1}";
+        filter += "&sdgIds=${i + 1}";
       }
     }
     var responseData = await _apiHelper.getProtected(
         "authenticated/projectGlobalSearch?keywords=$searchQuery&size=10&page=$pageNo$filter",
-        accessToken);
+        accessToken: accessToken);
     searchProjectResults.addAll((responseData['content'] as List)
         .map((e) => Project.fromJson(e))
         .toList());
     hasMoreProjects = !responseData['last'];
+  }
+
+  globalSearchForResources(String searchQuery,
+      {pageNo = 0, Map<String, dynamic> filterOptions}) async {
+    if (pageNo == 0) searchResourcesResults.clear();
+    var filter = "";
+    if (filterOptions != null) {
+      if (filterOptions['startDate'] != null) {
+        filter += "&startTime=${filterOptions['startDate']}T00:00:00";
+      }
+      if (filterOptions['endDate'] != null) {
+        filter += "&endTime=${filterOptions['endDate']}T00:00:00";
+      }
+      if (filterOptions['categoryIds'].isNotEmpty) {
+        for (num i in filterOptions['categoryIds']) {
+          filter += "&categoryIds=$i";
+        }
+      }
+    }
+    var responseData = await _apiHelper.getProtected(
+        "authenticated/resourceGlobalSearch?keywords=$searchQuery&size=10&page=$pageNo&availability=true$filter",
+        accessToken: accessToken);
+    searchResourcesResults.addAll((responseData['content'] as List)
+        .map((e) => Resources.fromJson(e))
+        .toList());
+    hasMoreResources = !responseData['last'];
   }
 }

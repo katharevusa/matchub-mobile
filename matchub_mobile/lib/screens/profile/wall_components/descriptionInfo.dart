@@ -22,7 +22,7 @@ class DescriptionInfo extends StatefulWidget {
 }
 
 class _DescriptionInfoState extends State<DescriptionInfo> {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   List<Profile> members;
   List<Profile> kahs;
   Future membersFuture;

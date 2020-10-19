@@ -76,8 +76,7 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
 
   loadProject() async {
     await Provider.of<ManageProject>(context, listen: false).getProject(
-        widget.project.projectId,
-        Provider.of<Auth>(context, listen: false).accessToken);
+        widget.project.projectId,);
     setState(() {
       isLoaded = true;
     });

@@ -78,43 +78,43 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Inbox",
-            style: TextStyle(
-                color: Colors.grey[850],
-                fontSize: 3 * SizeConfig.textMultiplier,
-                fontWeight: FontWeight.w700)),
-        elevation: 0,
-        backgroundColor: kScaffoldColor,
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-        // bottom: PreferredSize(
-        //   preferredSize: Size(SizeConfig.widthMultiplier * 100, 60),
-        //   child: Container(
-        //     margin: EdgeInsets.all(5),
-        //     padding: EdgeInsets.all(16),
-        //     decoration: BoxDecoration(
-        //         color: Colors.white.withOpacity(0.3),
-        //         borderRadius: BorderRadius.all(
-        //           Radius.circular(50),
-        //         )),
-        //     child:TextField(
-        //         decoration: InputDecoration(
-        //           border: InputBorder.none,
-        //           prefixIcon: Icon(
-        //             FlutterIcons.search_fea,
-        //             color: Colors.black54,
-        //           ),
-        //           hintText: "Search",
-        //           hintStyle: TextStyle(
-        //             color: Colors.black54,
-        //           ),
-        //         ),
+      // appBar: AppBar(
+      //   title: Text("Inbox",
+      //       style: TextStyle(
+      //           color: Colors.grey[850],
+      //           fontSize: 3 * SizeConfig.textMultiplier,
+      //           fontWeight: FontWeight.w700)),
+      //   elevation: 0,
+      //   backgroundColor: kScaffoldColor,
+      //   centerTitle: false,
+      //   automaticallyImplyLeading: false,
+      //   // bottom: PreferredSize(
+      //   //   preferredSize: Size(SizeConfig.widthMultiplier * 100, 60),
+      //   //   child: Container(
+      //   //     margin: EdgeInsets.all(5),
+      //   //     padding: EdgeInsets.all(16),
+      //   //     decoration: BoxDecoration(
+      //   //         color: Colors.white.withOpacity(0.3),
+      //   //         borderRadius: BorderRadius.all(
+      //   //           Radius.circular(50),
+      //   //         )),
+      //   //     child:TextField(
+      //   //         decoration: InputDecoration(
+      //   //           border: InputBorder.none,
+      //   //           prefixIcon: Icon(
+      //   //             FlutterIcons.search_fea,
+      //   //             color: Colors.black54,
+      //   //           ),
+      //   //           hintText: "Search",
+      //   //           hintStyle: TextStyle(
+      //   //             color: Colors.black54,
+      //   //           ),
+      //   //         ),
 
-        //     ),
-        //   ),
-        // ),
-      ),
+      //   //     ),
+      //   //   ),
+      //   // ),
+      // ),
       body: SingleChildScrollView(
         child: Column(children: [
           chatRoomsList(),
@@ -149,8 +149,8 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
   }
 
   getUserDetails() async {
-    final response = await ApiBaseHelper().getProtected(
-        "authenticated/getAccountByUUID/${widget.uuid}",
+    final response = await ApiBaseHelper.instance.getProtected(
+        "authenticated/getAccountByUUID/${widget.uuid}", accessToken:
         Provider.of<Auth>(context, listen: false).accessToken);
     user = Profile.fromJson(response);
     getNoOfUnread();
@@ -172,7 +172,6 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
 
   @override
   Widget build(BuildContext context) {
-    Profile myProfile = Provider.of<Auth>(context).myProfile;
     DateTime date;
     if (widget.recentDate != null) {
       date = widget.recentDate.toDate();
@@ -209,7 +208,7 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
                     backgroundImage: user.profilePhoto.isEmpty
                         ? AssetImage("assets/images/avatar2.jpg")
                         : NetworkImage(
-                            "${ApiBaseHelper().baseUrl}${user.profilePhoto.substring(30)}"),
+                            "${ApiBaseHelper.instance.baseUrl}${user.profilePhoto.substring(30)}"),
                   ),
                   title: Text(user.name),
                   subtitle: Text(

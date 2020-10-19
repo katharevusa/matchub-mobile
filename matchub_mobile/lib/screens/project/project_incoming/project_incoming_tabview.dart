@@ -158,7 +158,7 @@
 // }
 
 // class _RequestTicketState extends State<RequestTicket> {
-//   ApiBaseHelper _helper = ApiBaseHelper();
+//   ApiBaseHelper _helper = ApiBaseHelper.instance;
 //   Resources resource;
 //   ResourceCategory resourceCategory;
 //   Project project;
@@ -200,7 +200,7 @@
 
 //   /* Get the project*/
 //   retrieveProject() async {
-//     final responseData = await ApiBaseHelper().getProtected(
+//     final responseData = await ApiBaseHelper.instance.getProtected(
 //         "authenticated/getProject?projectId=${widget.request.projectId}",
 //         Provider.of<Auth>(this.context, listen: false).accessToken);
 //     project = Project.fromJson(responseData);
@@ -218,14 +218,14 @@
 //   respondToRequest(bool response) async {
 //     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
 //     if (response == true) {
-//       final responseData = await ApiBaseHelper().getProtected(
+//       final responseData = await ApiBaseHelper.instance.getProtected(
 //           "authenticated/respondToResourceRequest?requestId=${widget.request.requestId}&responderId=${profile.accountId}&response=${true}",
 //           Provider.of<Auth>(this.context, listen: false).accessToken);
 //       _customAlertDialog(context, AlertDialogType.SUCCESS, "Accepted",
 //           "You have accepted the request!");
 //       await loadRequests();
 //     } else {
-//       final responseData = await ApiBaseHelper().getProtected(
+//       final responseData = await ApiBaseHelper.instance.getProtected(
 //           "authenticated/respondToResourceRequest?requestId=${widget.request.requestId}&responderId=${profile.accountId}&response=${false}",
 //           Provider.of<Auth>(this.context, listen: false).accessToken);
 //       _customAlertDialog(context, AlertDialogType.WARNING, "Rejected",

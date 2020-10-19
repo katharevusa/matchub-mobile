@@ -26,7 +26,7 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
   Profile resourceOwner;
   Future resourceOwnerFuture;
   // Future categoryFuture;
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   ResourceCategory category;
   ResourceRequest newResourceRequest = new ResourceRequest();
   Map<String, dynamic> resourceRequest;
@@ -59,14 +59,14 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
     final url =
         'authenticated/getResourceCategoryById?resourceCategoryId=${widget.resource.resourceCategoryId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context).accessToken);
+        url,  accessToken:Provider.of<Auth>(this.context).accessToken);
     category = ResourceCategory.fromJson(responseData);
   }
 
   getResourceOwner() async {
     final url = 'authenticated/getAccount/${widget.resource.resourceOwnerId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url,  accessToken:Provider.of<Auth>(context, listen: false).accessToken);
     resourceOwner = Profile.fromJson(responseData);
     await getCategoryById();
   }
@@ -78,7 +78,7 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
     final url = "authenticated/createNewResourceRequestByProjectOwner";
     var accessToken = Provider.of<Auth>(context).accessToken;
     try {
-      final response = await ApiBaseHelper().postProtected(url,
+      final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(resourceRequest));
       print("Success");
       Navigator.of(context).pop(true);

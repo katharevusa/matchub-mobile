@@ -25,7 +25,7 @@ class AnnouncementDetail extends StatefulWidget {
 }
 
 class _AnnouncementDetailState extends State<AnnouncementDetail> {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   Profile creator;
   Future loadFuture;
   Project project;
@@ -40,15 +40,15 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
   getCreator() async {
     final url = 'authenticated/getAccount/${widget.announcement.creatorId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url, accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     creator = Profile.fromJson(responseData);
     // await retrieveProject();
   }
 
   retrieveProject() async {
-    final responseData = await ApiBaseHelper().getProtected(
+    final responseData = await ApiBaseHelper.instance.getProtected(
         "authenticated/getProject?projectId=${widget.announcement.projectId}",
-        Provider.of<Auth>(this.context, listen: false).accessToken);
+         accessToken:Provider.of<Auth>(this.context, listen: false).accessToken);
     project = Project.fromJson(responseData);
   }
 
@@ -76,7 +76,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
           "authenticated/deleteProjectInternalAnnouncement?announcementId=${widget.announcement.announcementId}&userId=${profileId}";
       try {
         var accessToken = Provider.of<Auth>(context).accessToken;
-        final responseData = await ApiBaseHelper().deleteProtected(url,
+        final responseData = await ApiBaseHelper.instance.deleteProtected(url,
             accessToken: Provider.of<Auth>(context).accessToken);
         print("Success");
         await loadAnnouncements();
@@ -106,7 +106,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
           "authenticated/deleteProjectPublicAnnouncement?announcementId=${widget.announcement.announcementId}&userId=${profileId}";
       try {
         var accessToken = Provider.of<Auth>(context).accessToken;
-        final responseData = await ApiBaseHelper().deleteProtected(url,
+        final responseData = await ApiBaseHelper.instance.deleteProtected(url,
             accessToken: Provider.of<Auth>(context).accessToken);
         print("Success");
         await loadAnnouncements();
@@ -134,7 +134,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
           "authenticated/deleteAnAnnouncementForUser?announcementId=${widget.announcement.announcementId}&userId=${profileId}";
       try {
         var accessToken = Provider.of<Auth>(context).accessToken;
-        final responseData = await ApiBaseHelper().deleteProtected(url,
+        final responseData = await ApiBaseHelper.instance.deleteProtected(url,
             accessToken: Provider.of<Auth>(context).accessToken);
         print("Success");
         // Provider.of<Auth>(context).retrieveUser();

@@ -27,18 +27,16 @@ class TeamMembers extends StatefulWidget {
 class _TeamMembersState extends State<TeamMembers> {
   @override
   initState() {
-    Provider.of<ManageProject>(context, listen: false).getProject(
-        widget.project.projectId,
-        Provider.of<Auth>(context, listen: false).accessToken);
+    Provider.of<ManageProject>(context, listen: false)
+        .getProject(widget.project.projectId);
     super.initState();
   }
 
   bool isExpanded = false;
   updateProject() async {
-    final instance = Provider.of<Auth>(context, listen: false);
     try {
       final response = await Provider.of<ManageProject>(context)
-          .getProject(widget.project.projectId, instance.accessToken);
+          .getProject(widget.project.projectId,);
       setState(() {});
     } catch (error) {
       showErrorDialog(error.toString(), context);
@@ -48,7 +46,7 @@ class _TeamMembersState extends State<TeamMembers> {
   respondToJoinRequest(int requestId, bool decision) async {
     final instance = Provider.of<Auth>(context, listen: false);
     try {
-      await ApiBaseHelper().postProtected(
+      await ApiBaseHelper.instance.postProtected(
           "authenticated/respondToJoinRequest?decisionMakerId=${instance.myProfile.accountId}&requestId=$requestId&decision=$decision",
           accessToken: instance.accessToken);
       await updateProject();
@@ -70,9 +68,9 @@ class _TeamMembersState extends State<TeamMembers> {
     }
     String chatRoomId =
         await DatabaseMethods().getChatRoomId(myProfile.uuid, recipient.uuid);
-    Profile recipientProfile = Profile.fromJson(await ApiBaseHelper()
+    Profile recipientProfile = Profile.fromJson(await ApiBaseHelper.instance
         .getProtected("authenticated/getAccount/${recipient.accountId}",
-            Provider.of<Auth>(context, listen: false).accessToken));
+            accessToken: Provider.of<Auth>(context, listen: false).accessToken));
     print(chatRoomId);
     Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
         builder: (context) =>
@@ -82,7 +80,7 @@ class _TeamMembersState extends State<TeamMembers> {
   _removeTeamMember(int teamMemberId) async {
     final instance = Provider.of<Auth>(context, listen: false);
     try {
-      await ApiBaseHelper().deleteProtected(
+      await ApiBaseHelper.instance.deleteProtected(
           "authenticated/removeTeamMember?projectId=${widget.project.projectId}&memberId=$teamMemberId&decisionMakerId=${instance.myProfile.accountId}",
           accessToken: instance.accessToken);
       await updateProject();
@@ -169,7 +167,7 @@ class _TeamMembersState extends State<TeamMembers> {
                           .project.teamMembers[index].profilePhoto.isEmpty
                       ? AssetImage("assets/images/avatar2.jpg")
                       : NetworkImage(
-                          "${ApiBaseHelper().baseUrl}${widget.project.teamMembers[index].profilePhoto.substring(30)}"),
+                          "${ApiBaseHelper.instance.baseUrl}${widget.project.teamMembers[index].profilePhoto.substring(30)}"),
                 ),
                 title: Text(widget.project.teamMembers[index].name,
                     style: TextStyle(
@@ -214,7 +212,7 @@ class _TeamMembersState extends State<TeamMembers> {
                       .profilePhoto.isEmpty
                   ? AssetImage("assets/images/avatar.png")
                   : NetworkImage(
-                      "${ApiBaseHelper().baseUrl}${widget.project.joinRequests[index].requestor.profilePhoto.substring(30)}"),
+                      "${ApiBaseHelper.instance.baseUrl}${widget.project.joinRequests[index].requestor.profilePhoto.substring(30)}"),
             ),
             title: Text(widget.project.joinRequests[index].requestor.name,
                 style: TextStyle(

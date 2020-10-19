@@ -295,7 +295,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
     try {
       var accessToken = Provider.of<Auth>(context).accessToken;
       final response =
-          await ApiBaseHelper().postProtected(url, accessToken: accessToken);
+          await ApiBaseHelper.instance.postProtected(url, accessToken: accessToken);
       print("Success");
       Provider.of<Auth>(context).retrieveUser();
       Navigator.of(context).pop(true);
@@ -333,7 +333,7 @@ class _ResourceHeaderState extends State<ResourceHeader> {
 
   Future resourceOwnerFuture;
 
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
 
   @override
   void initState() {
@@ -344,7 +344,7 @@ class _ResourceHeaderState extends State<ResourceHeader> {
   getResourceOwner() async {
     final url = 'authenticated/getAccount/${widget.resource.resourceOwnerId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url,  accessToken:Provider.of<Auth>(context, listen: false).accessToken);
     resourceOwner = Profile.fromJson(responseData);
   }
 
@@ -483,7 +483,7 @@ class Description extends StatefulWidget {
 class _DescriptionState extends State<Description> {
   Resources resource;
   _DescriptionState(this.resource);
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   ResourceCategory category;
   Future categoryFuture;
 
@@ -496,7 +496,7 @@ class _DescriptionState extends State<Description> {
   getCategoryById(int id) async {
     final url = 'authenticated/getResourceCategoryById?resourceCategoryId=$id';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(this.context).accessToken);
+        url,  accessToken:Provider.of<Auth>(this.context).accessToken);
     category = ResourceCategory.fromJson(responseData);
   }
 

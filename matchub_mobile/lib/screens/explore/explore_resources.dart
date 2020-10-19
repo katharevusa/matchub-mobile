@@ -15,7 +15,7 @@ class ExploreResources extends StatefulWidget {
 class _ExploreResourcesState extends State<ExploreResources> {
   List<Resources> allResources = [];
   Future allResourcesFuture;
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _ExploreResourcesState extends State<ExploreResources> {
   retrieveAllResources() async {
     final url = 'authenticated/getAllAvailableResources';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url, accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     print("======================");
     print(responseData['first']);
     allResources = (responseData['content'] as List)

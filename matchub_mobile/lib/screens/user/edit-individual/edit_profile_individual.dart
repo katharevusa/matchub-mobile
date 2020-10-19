@@ -122,34 +122,14 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
     final url = "authenticated/updateIndividual";
     print(url);
     try {
-      final response = await ApiBaseHelper().postProtected(url,
+      final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(editedProfile));
-      // Provider.of<Auth>(context).retrieveUser();
-      
-      print(response);
-      Provider.of<Auth>(context).myProfile = Profile.fromJson(response);
-      print("reached here");
-      print(Provider.of<Auth>(context).myProfile.profilePhoto);
-      print("Success");
+      Provider.of<Auth>(context, listen: false).myProfile = Profile.fromJson(response);
       Navigator.of(context).pop(true);
+      print("Success");
     } catch (error) {
-      // final responseData = error.body as Map<String, dynamic>;
-      // print("Failure");
+      print("Failure");
       showErrorDialog(error.toString(), context);
-      // showDialog(
-      //     context: context,
-      //     builder: (ctx) => AlertDialog(
-      //           title: Text(responseData['error']),
-      //           content: Text(responseData['message']),
-      //           actions: <Widget>[
-      //             FlatButton(
-      //               child: Text('Okay'),
-      //               onPressed: () {
-      //                 Navigator.of(ctx).pop();
-      //               },
-      //             )
-      //           ],
-      //         ));
     }
   }
 }

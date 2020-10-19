@@ -21,7 +21,7 @@ class _ManageOrganisationMembersScreenState
     extends State<ManageOrganisationMembersScreen> {
   Future organisationMembersFuture;
 
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   List<Profile> members = [];
   Profile myProfile;
   List<Profile> searchResult = [];
@@ -56,7 +56,7 @@ class _ManageOrganisationMembersScreenState
     final url =
         'authenticated/organisation/viewMembers/${widget.user.accountId}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url,  accessToken:Provider.of<Auth>(context, listen: false).accessToken);
     members = (responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
         .toList();
@@ -70,7 +70,7 @@ class _ManageOrganisationMembersScreenState
   getSearchedUsers(String value) async {
     final url = 'authenticated/searchIndividuals?search=${value}';
     final responseData = await _helper.getProtected(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
+        url,  accessToken:Provider.of<Auth>(context, listen: false).accessToken);
     setState(() {
       searchResult = (responseData['content'] as List)
           .map((e) => Profile.fromJson(e))
@@ -96,7 +96,7 @@ class _ManageOrganisationMembersScreenState
       try {
         var accessToken = Provider.of<Auth>(this.context).accessToken;
         final response =
-            await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+            await ApiBaseHelper.instance.putProtected(url, accessToken: accessToken);
         await loadMembers();
         print("Success");
         // Navigator.of(this.context).pop(true);
@@ -124,7 +124,7 @@ class _ManageOrganisationMembersScreenState
       try {
         var accessToken = Provider.of<Auth>(this.context).accessToken;
         final response =
-            await ApiBaseHelper().putProtected(url, accessToken: accessToken);
+            await ApiBaseHelper.instance.putProtected(url, accessToken: accessToken);
         print("Success");
         // Navigator.of(this.context).pop(true);
       } catch (error) {

@@ -28,7 +28,7 @@ class DrawerMenu extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(height: 5.0),
                   SizedBox(height: 30.0),
-                  _buildRow(Icons.home, "Overview", ProjectScreen(), context),
+                  // _buildRow(Icons.home, "Overview", ProjectScreen(), context),
                   _buildDivider(),
                   _buildRow(Icons.calendar_today, "Calendar",
                       ProjectManagement(), context),

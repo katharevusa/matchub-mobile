@@ -26,7 +26,7 @@ class _ResourceScreenState extends State<ResourceScreen>
   List<Resources> listOfResources = [];
   Future resourcesFuture;
   Resources resources;
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper.instance;
   bool _isLoading;
 
   void selectOwnResource(BuildContext ctx) {

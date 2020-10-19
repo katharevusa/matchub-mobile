@@ -89,7 +89,7 @@ class ResetPassword extends StatelessWidget {
                     onPressed: () async {
                       if (!_formKey.currentState.validate()) return;
                       try {
-                        await ApiBaseHelper().post(
+                        await ApiBaseHelper.instance.post(
                           "public/forgotPassword?email=$email",
                         );
                         Navigator.of(context).pop();

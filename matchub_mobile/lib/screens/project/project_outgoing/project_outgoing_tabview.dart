@@ -150,7 +150,7 @@
 // }
 
 // class _RequestTicketState extends State<RequestTicket> {
-//   ApiBaseHelper _helper = ApiBaseHelper();
+//   ApiBaseHelper _helper = ApiBaseHelper.instance;
 //   Resources resource;
 //   ResourceCategory resourceCategory;
 //   Project project;
@@ -197,7 +197,7 @@
 
 //   /* Get the project*/
 //   retrieveProject() async {
-//     final responseData = await ApiBaseHelper().getProtected(
+//     final responseData = await ApiBaseHelper.instance.getProtected(
 //         "authenticated/getProject?projectId=${widget.request.projectId}",
 //         Provider.of<Auth>(this.context, listen: false).accessToken);
 //     project = Project.fromJson(responseData);
@@ -214,7 +214,7 @@
 
 //   terminate() async {
 //     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-//     final responseData = await ApiBaseHelper().deleteProtected(
+//     final responseData = await ApiBaseHelper.instance.deleteProtected(
 //         "authenticated/deleteResourceRequest?requestId=${widget.request.requestId}&terminatorId=${profile.accountId}",
 //         accessToken: Provider.of<Auth>(context).accessToken);
 //     _customAlertDialog(context, AlertDialogType.WARNING, "Terminated",

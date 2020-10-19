@@ -44,7 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else {
         url = "public/createNewIndividual";
       }
-      await ApiBaseHelper().post(url, body: json.encode(newStakeholder));
+      await ApiBaseHelper.instance.post(url, body: json.encode(newStakeholder));
       print("Success");
       Navigator.pop(context);
     } catch (error) {
@@ -104,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   //   onPressed: () async {
                   //     if (!_formKey.currentState.validate()) return;
                   //     try {
-                  //       await ApiBaseHelper().post(
+                  //       await ApiBaseHelper.instance.post(
                   //         "public/forgotPassword?email=$email",
                   //       );
                   //       Navigator.of(context).pop();

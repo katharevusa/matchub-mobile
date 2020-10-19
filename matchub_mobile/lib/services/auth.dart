@@ -23,7 +23,7 @@ class Auth with ChangeNotifier {
   String _accountId;
   String _username;
   bool _isIndividual;
-  ApiBaseHelper _apiHelper = ApiBaseHelper();
+  ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   Profile myProfile;
   bool biometricsEnabled;
 
@@ -86,6 +86,7 @@ class Auth with ChangeNotifier {
     _expiryDate = DateTime.now().add(
       Duration(seconds: responseData['expires_in']),
     );
+    ApiBaseHelper.accessToken = _accessToken;
     final prefs = await SharedPreferences.getInstance();
     final userData = json.encode(
       {
@@ -144,7 +145,8 @@ class Auth with ChangeNotifier {
     _accessToken = extractedUserData['accessToken'];
     _refreshToken = extractedUserData['refreshToken'];
     _expiryDate = DateTime.parse(extractedUserData['expiryDate']);
-    
+
+    ApiBaseHelper.accessToken = _accessToken;
     if (expiryDate.subtract(Duration(seconds: 600)).isBefore(DateTime.now())) {
       // accessToken expired
       try {
@@ -177,7 +179,7 @@ class Auth with ChangeNotifier {
 
   Future<void> retrieveUser() async {
     final url = 'authenticated/me';
-    final responseData = await _apiHelper.getProtected(url, _accessToken);
+    final responseData = await _apiHelper.getProtected(url);
     myProfile = Profile.fromJson(responseData);
     _accountId = responseData['accountId'].toString();
     _username = responseData['email'].toString();

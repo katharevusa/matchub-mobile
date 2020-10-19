@@ -5,6 +5,7 @@ const kPrimaryColor = Color(0xFF40858C);
 const kAccentColor = Color(0xFFfc8b6f);
 const kSecondaryColor = Color(0xFF70A9A1);
 const kTertiaryColor = Color(0xFF70A9A1);
+const kKanbanColor = Color(0XFF2CC09C);
 
 const kTextColor = Color(0xFF50505D);
 const kTextLightColor = Color(0xFF6A727D);
@@ -71,7 +72,7 @@ class AppTheme {
 
   static final TextStyle searchLight = TextStyle(
     color: Colors.grey[800],
-    fontSize: 1.4 * SizeConfig.textMultiplier,
+    fontSize: 1.5 * SizeConfig.textMultiplier,
     fontFamily: "Lato",
   );
 

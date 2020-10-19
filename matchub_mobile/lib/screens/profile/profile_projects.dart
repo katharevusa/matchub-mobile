@@ -1,13 +1,8 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
-import 'package:matchub_mobile/widgets/attachment_image.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/project_vertical_card.dart';
-import 'package:random_color/random_color.dart';
 
 class ProfileProjects extends StatelessWidget {
   List<Project> projects;

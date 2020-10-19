@@ -34,7 +34,7 @@ class _ExploreListState extends State<ExploreList> {
 
   @override
   Widget build(BuildContext context) {
-    Profile myProfile = Provider.of<Auth>(context).myProfile;
+    Profile myProfile = Provider.of<Auth>(context,listen: false).myProfile;
     List<Project> allProjects = [];
     allProjects
       ..addAll(myProfile.projectsOwned)

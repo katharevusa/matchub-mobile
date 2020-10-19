@@ -18,8 +18,7 @@ class _PManagementTeamMemberState extends State<PManagementTeamMember> {
   @override
   initState() {
     Provider.of<ManageProject>(context, listen: false).getProject(
-        widget.project.projectId,
-        Provider.of<Auth>(context, listen: false).accessToken);
+        widget.project.projectId,);
     super.initState();
   }
 

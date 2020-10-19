@@ -17,7 +17,7 @@
 
 // class _ProjectIncomingScreenState extends State<ProjectIncomingScreen>
 //     with SingleTickerProviderStateMixin {
-//   ApiBaseHelper _helper = ApiBaseHelper();
+//   ApiBaseHelper _helper = ApiBaseHelper.instance;
 //   List<ResourceRequest> listOfIncomingRequests = [];
 //   List<ResourceRequest> listOfIncomingPending = [];
 //   List<ResourceRequest> listOfIncomingApproved = [];
