@@ -6,6 +6,7 @@ import 'package:matchub_mobile/screens/resource/resource_incoming/resource_incom
 import 'package:matchub_mobile/screens/resource/resource_outgoing/resource_outgoing_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_notification.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
@@ -62,9 +63,9 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
   loadAnnouncements() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
-    await Provider.of<ManageNotification>(context, listen: false)
+    await Provider.of<ManageProject>(context, listen: false)
         .getAllProjectInternal(project, profile, accessToken);
-    await Provider.of<ManageNotification>(context, listen: false)
+    await Provider.of<ManageProject>(context, listen: false)
         .getAllProjectPublic(project, profile, accessToken);
   }
 

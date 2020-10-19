@@ -24,7 +24,7 @@ class _PManagementTeamMemberState extends State<PManagementTeamMember> {
 
   @override
   Widget build(BuildContext context) {
-    widget.project = Provider.of<ManageProject>(context).managedProject;
+    widget.project = Provider.of<ManageProject>(context, listen: false).managedProject;
     return Container(
       height: 150,
       width: 180,

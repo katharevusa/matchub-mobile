@@ -9,6 +9,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_notification.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/widgets/WaveClipper.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
@@ -59,9 +60,9 @@ class _AllNotificationsState extends State<AllNotifications> {
   loadAnnouncements() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
-    await Provider.of<ManageNotification>(context, listen: false)
+    await Provider.of<ManageProject>(context, listen: false)
         .getAllProjectInternal(widget.project, profile, accessToken);
-    await Provider.of<ManageNotification>(context, listen: false)
+    await Provider.of<ManageProject>(context, listen: false)
         .getAllProjectPublic(widget.project, profile, accessToken);
     setState(() {
       _isLoading = false;
@@ -122,7 +123,7 @@ class _AllNotificationsState extends State<AllNotifications> {
 
   Widget buildPublicAnnouncements() {
     publicAnnouncements =
-        Provider.of<ManageNotification>(context).projectPublicAnnouncement;
+        Provider.of<ManageProject>(context).projectPublicAnnouncement;
     return Column(
       children: <Widget>[
         Container(
@@ -276,7 +277,7 @@ class _AllNotificationsState extends State<AllNotifications> {
 
   Widget buildInternalAnnouncements() {
     internalAnnouncements =
-        Provider.of<ManageNotification>(context).projectInternalAnnouncement;
+        Provider.of<ManageProject>(context).projectInternalAnnouncement;
     return Column(
       children: <Widget>[
         Container(
@@ -527,9 +528,9 @@ class _AllNotificationsState extends State<AllNotifications> {
       newAnnouncement = new Announcement();
       await loadAnnouncements();
       internalAnnouncements =
-          Provider.of<ManageNotification>(context).projectInternalAnnouncement;
+          Provider.of<ManageProject>(context).projectInternalAnnouncement;
       publicAnnouncements =
-          Provider.of<ManageNotification>(context).projectPublicAnnouncement;
+          Provider.of<ManageProject>(context).projectPublicAnnouncement;
 
       // int insertIndex = 0;
       // if (flag == 0) {

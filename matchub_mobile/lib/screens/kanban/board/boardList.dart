@@ -238,7 +238,7 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
     "taskCreatorOrEditorId": null,
     "kanbanboardId": null,
   };
-
+  final GlobalKey<FormState>  _formController = GlobalKey();
   Profile selectedTaskLeader;
   @override
   void initState() {
@@ -271,151 +271,162 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
           ),
         ),
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Row(
-                  children: [
-                    Icon(
-                      FlutterIcons.columns_faw5s,
-                      size: 14,
-                      color: Colors.grey[400],
-                    ),
-                    SizedBox(width: 10),
-                    Text(widget.columnList.title,
-                        style: AppTheme.searchLight.copyWith(
-                            color: Colors.grey[400],
-                            fontSize: 2 * SizeConfig.textMultiplier)),
-                  ],
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1),
-                  child: FlatButton(
-                      color: kKanbanColor,
-                      onPressed: () async {
-                        if (newTask['taskTitle'] != null) {
-                          await Provider.of<KanbanController>(context,listen: false)
-                              .createTask(newTask);
-                          Navigator.pop(context);
-                        }
-                      },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        "Create Task",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 2 * SizeConfig.textMultiplier),
-                      )),
-                ),
-              ]),
-              SizedBox(height: 6),
-              TextFormField(
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "Please enter a task name";
-                  }
-                },
-                onChanged: (val) {
-                  newTask['taskTitle'] = val;
-                },
-                textCapitalization: TextCapitalization.sentences,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                focusNode: taskNameFocus,
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    hintText: "Task Name...",
-                    hintStyle: TextStyle(color: Colors.grey[700])),
-              ),
-              Row(children: [
-                FlatButton(
-                  onPressed: () {
-                    final kanbanController =
-                        Provider.of<KanbanController>(context, listen: false);
-                    Dialog channelMembersDialog = Dialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(20.0)), //this right here
-                      child:
-                          SelectTaskMember(kanbanController: kanbanController),
-                    );
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) =>
-                            channelMembersDialog).then((val) {
-                      if (val != null) {
-                        setState(() {
-                          selectedTaskLeader = val;
-                          newTask['taskLeaderId'] =
-                              selectedTaskLeader.accountId;
-                          print(selectedTaskLeader);
-                        });
-                      }
-                    });
-                  },
-                  padding: EdgeInsets.zero,
-                  child: Row(
+          child: Form(
+            key: _formController,
+                      child: Column(
+              children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Row(
                     children: [
-                      Icon(FlutterIcons.user_circle_faw5s,
-                          color: Colors.grey[400]),
+                      Icon(
+                        FlutterIcons.columns_faw5s,
+                        size: 14,
+                        color: Colors.grey[400],
+                      ),
+                      SizedBox(width: 10),
+                      Text(widget.columnList.title,
+                          style: AppTheme.searchLight.copyWith(
+                              color: Colors.grey[400],
+                              fontSize: 2 * SizeConfig.textMultiplier)),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 1),
+                    child: FlatButton(
+                        color: kKanbanColor,
+                        onPressed: () async {
+                           _formController.currentState.save();
+                          if (newTask['taskTitle'] != null &&
+                              newTask['expectedDeadline'] != null) {
+                            await Provider.of<KanbanController>(context,
+                                    listen: false)
+                                .createTask(newTask);
+                            Navigator.pop(context);
+                          }
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          "Create Task",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 2 * SizeConfig.textMultiplier),
+                        )),
+                  ),
+                ]),
+                SizedBox(height: 6),
+                TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Please enter a task name";
+                    }
+                  },
+                  onChanged: (val) {
+                    newTask['taskTitle'] = val;
+                  },
+                  textCapitalization: TextCapitalization.sentences,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  focusNode: taskNameFocus,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      hintText: "Task Name...",
+                      hintStyle: TextStyle(color: Colors.grey[700])),
+                ),
+                Row(children: [
+                  FlatButton(
+                    onPressed: () {
+                      final kanbanController =
+                          Provider.of<KanbanController>(context, listen: false);
+                      Dialog channelMembersDialog = Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(20.0)), //this right here
+                        child:
+                            SelectTaskMember(kanbanController: kanbanController),
+                      );
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              channelMembersDialog).then((val) {
+                        if (val != null) {
+                          setState(() {
+                            selectedTaskLeader = val;
+                            newTask['taskLeaderId'] =
+                                selectedTaskLeader.accountId;
+                            print(selectedTaskLeader);
+                          });
+                        }
+                      });
+                    },
+                    padding: EdgeInsets.zero,
+                    child: Row(
+                      children: [
+                        Icon(FlutterIcons.user_circle_faw5s,
+                            color: Colors.grey[400]),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        if (selectedTaskLeader == null)
+                          Text("Unassigned",
+                              style: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 1.6 * SizeConfig.textMultiplier)),
+                        if (selectedTaskLeader != null)
+                          Text(selectedTaskLeader.name,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 1.6 * SizeConfig.textMultiplier)),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Row(
+                    children: [
+                      Icon(FlutterIcons.calendar_fea, color: Colors.grey[400]),
                       SizedBox(
                         width: 4,
                       ),
-                      if (selectedTaskLeader == null)
-                        Text("Unassigned",
-                            style: TextStyle(
-                                color: Colors.grey[400],
-                                fontSize: 1.6 * SizeConfig.textMultiplier)),
-                      if (selectedTaskLeader != null)
-                        Text(selectedTaskLeader.name,
+                      Container(
+                        width: 200,
+                        child: Theme(
+                          data: AppTheme.lightTheme.copyWith(
+                            colorScheme:
+                                ColorScheme.light(primary: kSecondaryColor),
+                          ),
+                          child: DateTimePicker(
+                            validator: (val) {
+                              if (val.isEmpty) {
+                                return "Please input a deadline";
+                              }
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              labelText: 'Deadline',
+                              labelStyle: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 1.6 * SizeConfig.textMultiplier),
+                            ),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2100),
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 1.6 * SizeConfig.textMultiplier)),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 10),
-                Row(
-                  children: [
-                    Icon(FlutterIcons.calendar_fea, color: Colors.grey[400]),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    Container(
-                      width: 100,
-                      child: Theme(
-                        data: AppTheme.lightTheme.copyWith(
-                          colorScheme:
-                              ColorScheme.light(primary: kSecondaryColor),
-                        ),
-                        child: DateTimePicker(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            labelText: 'Deadline',
-                            labelStyle: TextStyle(
-                                color: Colors.grey[400],
                                 fontSize: 1.6 * SizeConfig.textMultiplier),
+                            onChanged: (val) {
+                              newTask['expectedDeadline'] = val + "T00:00:00";
+                              setState(() {});
+                            },
                           ),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 1.6 * SizeConfig.textMultiplier),
-                          onChanged: (val) {
-                            newTask['expectedDeadline'] = val + "T00:00:00";
-                            setState(() {});
-                          },
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ]),
-            ],
+                    ],
+                  ),
+                ]),
+              ],
+            ),
           ),
         ),
       ),

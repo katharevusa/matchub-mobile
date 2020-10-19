@@ -28,7 +28,7 @@ class _ProjectOverviewState extends State<ProjectOverview> {
 
   @override
   Widget build(BuildContext context) {
-    Profile myProfile = Provider.of<Auth>(context).myProfile;
+    Profile myProfile = Provider.of<Auth>(context, listen: false).myProfile;
     allProjects
       ..addAll(myProfile.projectsOwned)
       ..addAll(myProfile.projectsJoined);

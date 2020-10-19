@@ -17,6 +17,12 @@ class KanbanController with ChangeNotifier {
     }
   }
 
+  retrieveTaskReporterById(accountId)async {
+    final response = await ApiBaseHelper.instance.getProtected(
+        "authenticated/getAccount/$accountId");
+    return Profile.fromJson(response);
+  }
+
   retrieveKanbanByChannelId(channelId) async {
     final response = await ApiBaseHelper.instance.getProtected(
         "authenticated/getKanbanBoardByChannelUid?channelUId=$channelId");

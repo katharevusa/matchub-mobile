@@ -48,14 +48,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   getProjects() async {
-    // final responseData = await ApiBaseHelper.instance.getProtected(
-    //     "authenticated/getProject?projectId=${widget.project.projectId}",
-    //     accessToken: Provider.of<Auth>(this.context, listen: false).accessToken);
+    final responseData = await ApiBaseHelper.instance.getProtected(
+        "authenticated/getProject?projectId=${widget.project.projectId}",
+        accessToken: Provider.of<Auth>(this.context, listen: false).accessToken);
 
-    // project = Project.fromJson(responseData);
-    // documentKeys = project.documents.keys.toList();
+    project = Project.fromJson(responseData);
+    documentKeys = project.documents.keys.toList();
 
-    // setState(() => _isLoading = false);
+    setState(() => _isLoading = false);
   }
 
   List<Widget> getPhotoList(photos) {
@@ -354,9 +354,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         ),
       ),
       Container(
-        // padding: EdgeInsets.all(0),
-        // margin: EdgeInsets.all(0),
-        // color: AppTheme.appBackgroundColor,
         height: 16 * SizeConfig.heightMultiplier,
         child: ListView.builder(
             cacheExtent: 20,
@@ -821,23 +818,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       print("Success");
       Navigator.of(this.context).pop(true);
     } catch (error) {
-      // final responseData = error.body as Map<String, dynamic>;
       print("Failure");
       showErrorDialog(error.toString(), this.context);
-      // showDialog(
-      //     context: this.context,
-      //     builder: (ctx) => AlertDialog(
-      //           title: Text(responseData['error']),
-      //           content: Text(responseData['message']),
-      //           actions: <Widget>[
-      //             FlatButton(
-      //               child: Text('Okay'),
-      //               onPressed: () {
-      //                 Navigator.of(ctx).pop();
-      //               },
-      //             )
-      //           ],
-      //         ));
     }
   }
 

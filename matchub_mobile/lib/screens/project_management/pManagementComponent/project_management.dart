@@ -36,7 +36,7 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
   List<Announcement> internalAnnouncements = [];
   List<Announcement> publicAnnouncements = [];
 
-  AnimationController _animationController;
+  // AnimationController _animationController;
   bool isLoaded;
 
   @override
@@ -47,28 +47,28 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
 
     loadAnnouncements();
     loadProject();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 10),
-    );
+    // _animationController = AnimationController(
+    //   vsync: this,
+    //   duration: Duration(seconds: 10),
+    // );
 
-    _animationController.addListener(() => setState(() {}));
-    _animationController.repeat();
+    // _animationController.addListener(() => setState(() {}));
+    // _animationController.repeat();
     super.initState();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    // _animationController.dispose();
     super.dispose();
   }
 
   loadAnnouncements() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
-    await Provider.of<ManageNotification>(context, listen: false)
+    await Provider.of<ManageProject>(context, listen: false)
         .getAllProjectInternal(widget.project, profile, accessToken);
-    await Provider.of<ManageNotification>(context, listen: false)
+    await Provider.of<ManageProject>(context, listen: false)
         .getAllProjectPublic(widget.project, profile, accessToken);
   }
 
@@ -83,9 +83,9 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
   @override
   Widget build(BuildContext context) {
     publicAnnouncements =
-        Provider.of<ManageNotification>(context).projectPublicAnnouncement;
+        Provider.of<ManageProject>(context).projectPublicAnnouncement;
     internalAnnouncements =
-        Provider.of<ManageNotification>(context).projectInternalAnnouncement;
+        Provider.of<ManageProject>(context).projectInternalAnnouncement;
     return Consumer<ManageProject>(
         builder: (context, project, child) => Scaffold(
               drawer: ProjectManagementDrawer(project: project.managedProject),
