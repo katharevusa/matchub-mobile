@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
-import 'package:matchub_mobile/screens/project/project_overview.dart';
+import 'package:matchub_mobile/screens/project/projectOverview/project_overview.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
-import 'package:matchub_mobile/screens/project_management/project_management.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/project_management.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 
@@ -31,8 +31,10 @@ class _ProjectNavigatorState extends State<ProjectNavigator> {
               );
             case AnnouncementDetail.routeName:
               return AnnouncementDetail(
-                announcement: (settings.arguments as Map<String, dynamic> )['announcement'] as Announcement,
-                isProjectOnwer: (settings.arguments as Map<String, dynamic> )['isProjectOwner'],
+                announcement: (settings.arguments
+                    as Map<String, dynamic>)['announcement'] as Announcement,
+                isProjectOnwer: (settings.arguments
+                    as Map<String, dynamic>)['isProjectOwner'],
               );
             case ProjectManagementOverview.routeName:
               return ProjectManagementOverview(settings.arguments as Project);

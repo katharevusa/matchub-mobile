@@ -154,6 +154,7 @@ class _TeamMembersState extends State<TeamMembers> {
   }
 
   buildCurrentTeamMembersView() {
+    print(widget.project.teamMembers.length);
     return ListView.builder(
         itemBuilder: (context, index) {
           return Slidable(

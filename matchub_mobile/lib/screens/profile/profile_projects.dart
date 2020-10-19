@@ -16,10 +16,9 @@ class ProfileProjects extends StatelessWidget {
           ? Center(
               child: Text("No Projects Available", style: AppTheme.titleLight))
           : ListView.builder(
-            shrinkWrap:true,
+              shrinkWrap: true,
               itemBuilder: (context, index) => ProjectVerticalCard(
-                  project: projects[index],
-                  isOwner: isOwner),
+                  project: projects[index], isOwner: isOwner),
               itemCount: projects.length,
             ),
     );
