@@ -63,13 +63,8 @@ class _ChannelMessagesState extends State<ChannelMessages> {
     final response = await ApiBaseHelper.instance.getProtected(
         "authenticated/getWholeProjectGroup?projectId=${widget.project.projectId}",
          accessToken:Provider.of<Auth>(context, listen: false).accessToken);
-    print(response);
     allContributors =
         (response as List).map((e) => Profile.fromJson(e)).toList();
-    print(allContributors);
-    // setState(() {
-    //   isLoaded = true;
-    // });
   }
 
   loadMessages() async {
@@ -77,7 +72,6 @@ class _ChannelMessagesState extends State<ChannelMessages> {
         .getChatMessages(widget.channelData['id'])
         .then((val) {
       setState(() {
-        print('rached herer');
         chats = val;
       });
     });
@@ -90,7 +84,6 @@ class _ChannelMessagesState extends State<ChannelMessages> {
         if (!snapshot.hasData) {
           return Container();
         }
-        print(snapshot.data.documents.length);
         // _scrollController.jumpTo(
         //   _scrollController.position.maxScrollExtent ,
         // );
@@ -118,14 +111,13 @@ class _ChannelMessagesState extends State<ChannelMessages> {
   }
 
   addMessage() {
-    print("reached here - 0");
     if (messageEditingController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
         "sentBy": Provider.of<Auth>(context).myProfile.uuid,
         "messageText": messageEditingController.text.trim(),
         'sentAt': DateTime.now()
       };
-      print(widget.channelData['id']);
+      print("Send Message By: "+widget.channelData['id']+", contents: " + messageEditingController.text.trim());
       DatabaseMethods()
           .sendMessage(widget.channelData['id'], chatMessageMap, true);
 
@@ -301,7 +293,6 @@ class _MessageTileState extends State<MessageTile> {
 
   @override
   void initState() {
-    print(widget.project.teamMembers);
     var allContributors = [];
     allContributors
       ..addAll(widget.project.teamMembers)

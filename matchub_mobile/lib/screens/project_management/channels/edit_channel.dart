@@ -12,7 +12,7 @@ class EditChannel extends StatelessWidget {
       appBar: AppBar(
         title: Text("Edit"),
       ),
-      body: InfoPage(channelMap: channelMap, functionChannel: DatabaseMethods().updateChannel,),
+      body: InfoPage(channelMap: channelMap, createChannelChat: DatabaseMethods().updateChannel,),
     );
   }
 }

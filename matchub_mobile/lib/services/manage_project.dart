@@ -6,9 +6,9 @@ class ManageProject with ChangeNotifier {
   ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   Project managedProject;
 
-  getProject(int projectId, accessToken) async {
+  getProject(int projectId) async {
     final response = await _apiHelper.getProtected(
-        "authenticated/getProject?projectId=$projectId", accessToken: accessToken);
+        "authenticated/getProject?projectId=$projectId",);
     managedProject = Project.fromJson(response);
     notifyListeners();
     return managedProject;

@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/project/drawerMenu.dart';
-import 'package:matchub_mobile/screens/project/project_management_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
-import 'channels/channel_messages.dart';
 import 'pManagement_drawer.dart';
 
 class ProjectManagementOverview extends StatefulWidget {
@@ -36,8 +32,7 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview> {
   }
 
   loadProject() async {
-    await Provider.of<ManageProject>(context, listen: false).getProject(widget.project.projectId,
-        Provider.of<Auth>(context, listen: false).accessToken);
+    await Provider.of<ManageProject>(context, listen: false).getProject(widget.project.projectId );
     setState(() {
       isLoaded = true;
     });

@@ -99,7 +99,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> postProtected(String url,
-      {String body = "", String accessToken = ""}) async {
+      {String body = "", String accessToken}) async {
     var responseJson;
     if(accessToken == null) {
       accessToken = ApiBaseHelper.accessToken;
@@ -123,7 +123,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> putProtected(String url,
-      {String body = "", String accessToken = ""}) async {
+      {String body = "", String accessToken}) async {
     var responseJson;
     if(accessToken == null) {
       accessToken = ApiBaseHelper.accessToken;
@@ -146,7 +146,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> deleteProtected(String url, {String accessToken = ""}) async {
+  Future<dynamic> deleteProtected(String url, {String accessToken}) async {
     var responseJson;
     if(accessToken == null) {
       accessToken = ApiBaseHelper.accessToken;

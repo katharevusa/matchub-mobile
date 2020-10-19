@@ -2,8 +2,14 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/kanban_controller.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
+import 'package:provider/provider.dart';
 
 import 'boardItem.dart';
 import 'boardView.dart';
@@ -151,7 +157,7 @@ class BoardListState extends State<BoardList> {
                           backgroundColor: Colors.white,
                           context: context,
                           builder: (context) =>
-                              TaskCreatePopup(widget: widget)),
+                              TaskCreatePopup(columnList: widget)),
                     );
                   }
                   if (widget.items[index].boardList == null ||
@@ -210,12 +216,12 @@ class BoardListState extends State<BoardList> {
 }
 
 class TaskCreatePopup extends StatefulWidget {
+  final BoardList columnList;
+
   const TaskCreatePopup({
     Key key,
-    @required this.widget,
+    @required this.columnList,
   }) : super(key: key);
-
-  final BoardList widget;
 
   @override
   _TaskCreatePopupState createState() => _TaskCreatePopupState();
@@ -223,6 +229,17 @@ class TaskCreatePopup extends StatefulWidget {
 
 class _TaskCreatePopupState extends State<TaskCreatePopup> {
   FocusNode taskNameFocus = new FocusNode();
+  Map<String, dynamic> newTask = {
+    "taskTitle": null,
+    "taskDescription": null,
+    "taskLeaderId": null,
+    "expectedDeadline": null,
+    "taskColumnId": null,
+    "taskCreatorOrEditorId": null,
+    "kanbanboardId": null,
+  };
+
+  Profile selectedTaskLeader;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -232,6 +249,15 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
 
   @override
   Widget build(BuildContext context) {
+    final kanban = Provider.of<KanbanController>(context, listen: false).kanban;
+    newTask['kanbanboardId'] = kanban.kanbanBoardId;
+    newTask['taskCreatorOrEditorId'] =
+        Provider.of<Auth>(context, listen: false).myProfile.accountId;
+    newTask['taskColumnId'] = kanban.taskColumns
+        .firstWhere((element) => element.columnTitle == widget.columnList.title)
+        .taskColumnId;
+    newTask['kanbanboardId'] = kanban.kanbanBoardId;
+
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: Container(
@@ -256,7 +282,7 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                       color: Colors.grey[400],
                     ),
                     SizedBox(width: 10),
-                    Text(widget.widget.title,
+                    Text(widget.columnList.title,
                         style: AppTheme.searchLight.copyWith(
                             color: Colors.grey[400],
                             fontSize: 2 * SizeConfig.textMultiplier)),
@@ -265,13 +291,18 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 1),
                   child: FlatButton(
+                      color: kKanbanColor,
+                      onPressed: () => newTask['taskTitle'] != null
+                          ? Provider.of<KanbanController>(context)
+                              .createTask(newTask)
+                          : null,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: BorderSide(color: kTertiaryColor, width: 2)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       child: Text(
                         "Create Task",
                         style: TextStyle(
-                            color: kSecondaryColor,
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 2 * SizeConfig.textMultiplier),
                       )),
@@ -284,6 +315,9 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                     return "Please enter a task name";
                   }
                 },
+                onChanged: (val) {
+                  newTask['taskTitle'] = val;
+                },
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 focusNode: taskNameFocus,
                 decoration: InputDecoration(
@@ -294,7 +328,29 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
               ),
               Row(children: [
                 FlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    final kanbanController =
+                        Provider.of<KanbanController>(context, listen: false);
+                    Dialog channelMembersDialog = Dialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(20.0)), //this right here
+                      child:
+                          SelectTaskMembers(kanbanController: kanbanController),
+                    );
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            channelMembersDialog).then((val) {
+                      if (val != null) {
+                        setState(() {selectedTaskLeader = val;
+                        newTask['taskLeaderId'] =
+                            selectedTaskLeader.accountId;
+                        print(selectedTaskLeader);
+                        });
+                      }
+                    });
+                  },
                   padding: EdgeInsets.zero,
                   child: Row(
                     children: [
@@ -303,10 +359,16 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                       SizedBox(
                         width: 4,
                       ),
-                      Text("Unassigned",
-                          style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 1.6 * SizeConfig.textMultiplier))
+                      if (selectedTaskLeader == null)
+                        Text("Unassigned",
+                            style: TextStyle(
+                                color: Colors.grey[400],
+                                fontSize: 1.6 * SizeConfig.textMultiplier)),
+                      if (selectedTaskLeader != null)
+                        Text(selectedTaskLeader.name,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 1.6 * SizeConfig.textMultiplier)),
                     ],
                   ),
                 ),
@@ -333,12 +395,12 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                                 color: Colors.grey[400],
                                 fontSize: 1.6 * SizeConfig.textMultiplier),
                           ),
-                          // initialValue: widget.filterOptions['endDate'],
                           firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-
+                          lastDate: DateTime(2100),style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 1.6 * SizeConfig.textMultiplier),
                           onChanged: (val) {
-                            // widget.filterOptions['endDate'] = val;
+                            newTask['expectedDeadline'] = val + "T00:00:00";
                             setState(() {});
                           },
                         ),
@@ -352,5 +414,105 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
         ),
       ),
     );
+  }
+}
+
+class SelectTaskMembers extends StatefulWidget {
+  SelectTaskMembers({
+    Key key,
+    @required this.kanbanController,
+  }) : super(key: key);
+
+  final KanbanController kanbanController;
+
+  @override
+  _SelectTaskMembersState createState() => _SelectTaskMembersState();
+}
+
+class _SelectTaskMembersState extends State<SelectTaskMembers> {
+  Profile selectedTaskLeader;
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: [
+      Container(
+        height: SizeConfig.heightMultiplier * 50,
+        width: SizeConfig.widthMultiplier * 80,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 30.0, left: 20, right: 20, bottom: 10),
+            child: Text(
+                "Channel Members - ${widget.kanbanController.channelMembers.length.toString()}",
+                style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 1.9 * SizeConfig.heightMultiplier,
+                    fontWeight: FontWeight.w700)),
+          ),
+          Scrollbar(
+            radius: Radius.circular(5),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.kanbanController.channelMembers.length,
+              itemBuilder: (context, index) => ListTile(
+                onTap: () {
+                  setState(() {
+                    selectedTaskLeader =
+                        widget.kanbanController.channelMembers[index];
+                    print(selectedTaskLeader);
+                  });
+                },
+                contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                leading: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: selectedTaskLeader ==
+                                  widget.kanbanController.channelMembers[index]
+                              ? kKanbanColor
+                              : Colors.grey[300],
+                          width: 3),
+                      shape: BoxShape.circle),
+                  height: 50,
+                  width: 50,
+                  child: ClipOval(
+                      child: AttachmentImage(widget.kanbanController
+                          .channelMembers[index].profilePhoto)),
+                ),
+                title: Text(widget.kanbanController.channelMembers[index].name,
+                    style: TextStyle(
+                        color: selectedTaskLeader ==
+                                widget.kanbanController.channelMembers[index]
+                            ? kKanbanColor
+                            : Colors.grey[900],
+                        fontSize: 1.8 * SizeConfig.heightMultiplier,
+                        fontWeight: FontWeight.w500)),
+              ),
+            ),
+          ),
+        ]),
+      ),
+      Positioned(
+        bottom: 20,
+        right: 5 * SizeConfig.widthMultiplier,
+        left: 5 * SizeConfig.widthMultiplier,
+        child: FlatButton(
+          color: kKanbanColor,
+          onPressed: () => Navigator.pop(context, selectedTaskLeader),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: Container(
+              alignment: Alignment.center,
+              height: 50,
+              width: 60 * SizeConfig.widthMultiplier,
+              child: Text(
+                "Assign Task Leader",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 2 * SizeConfig.textMultiplier),
+              )),
+        ),
+      ),
+    ]);
   }
 }

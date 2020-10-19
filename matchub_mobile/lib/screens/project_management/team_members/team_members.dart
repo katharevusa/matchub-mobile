@@ -28,16 +28,15 @@ class _TeamMembersState extends State<TeamMembers> {
   @override
   initState() {
     Provider.of<ManageProject>(context, listen: false)
-        .getProject(widget.project.projectId, Provider.of<Auth>(context, listen: false).accessToken);
+        .getProject(widget.project.projectId);
     super.initState();
   }
 
   bool isExpanded = false;
   updateProject() async {
-    final instance = Provider.of<Auth>(context, listen: false);
     try {
       final response = await Provider.of<ManageProject>(context)
-          .getProject(widget.project.projectId, instance.accessToken);
+          .getProject(widget.project.projectId,);
       setState(() {});
     } catch (error) {
       showErrorDialog(error.toString(), context);

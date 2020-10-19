@@ -222,9 +222,6 @@ class _TabsScreenState extends State<TabsScreen> {
       case HomeScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);
-      case ProjectScreen.routeName:
-        return MaterialPageRoute(
-            builder: (context) => ProjectScreen(), settings: settings);
       case ResourceScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ResourceScreen(), settings: settings);

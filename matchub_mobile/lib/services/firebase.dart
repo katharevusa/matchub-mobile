@@ -155,17 +155,21 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  createChannel(Map<String, dynamic> channelMap) async {
-    firestoreInstance
+  Future<String> createChannel(Map<String, dynamic> channelMap) async {
+    String channelId;
+    await firestoreInstance
         .collection("channels")
         .add(channelMap)
-        .then((value) => firestoreInstance
+        .then((value){firestoreInstance
             .collection("channels")
             .doc(value.id)
-            .set({"id": value.id}, SetOptions(merge: true)))
+            .set({"id": value.id}, SetOptions(merge: true));
+            channelId = value.id;
+            })
         .catchError((e) {
       print(e);
     });
+    return channelId;
   }
 
   updateChannel(Map<String, dynamic> channelMap) async {

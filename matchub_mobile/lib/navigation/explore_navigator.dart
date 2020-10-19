@@ -26,7 +26,7 @@ class _ExploreNavigatorState extends State<ExploreNavigator> {
         builder: (BuildContext context) {
           switch (settings.name) {
             case '/':
-              return KanbanView();
+              return InboxScreen();
             case ProjectDetailScreen.routeName:
               return ProjectDetailScreen(
                 project: settings.arguments as Project,

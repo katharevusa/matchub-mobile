@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
@@ -78,7 +81,7 @@ class _ChannelCreationState extends State<ChannelCreation> {
               channelMap: channelMap),
           InfoPage(
               channelMap: channelMap,
-              functionChannel: DatabaseMethods().createChannel),
+              createChannelChat: DatabaseMethods().createChannel),
         ],
       ),
     );
@@ -175,12 +178,20 @@ class InfoPage extends StatelessWidget {
   InfoPage({
     Key key,
     @required this.channelMap,
-    @required this.functionChannel,
+    @required this.createChannelChat,
   }) : super(key: key);
 
   final Map<String, dynamic> channelMap;
   final GlobalKey<FormState> _formKey = GlobalKey();
-  final Function functionChannel;
+  final Function createChannelChat;
+
+  createKanbanBoard(channelId, projectId) async {
+    await ApiBaseHelper.instance.postProtected("authenticated/createKanbanBoard", body: json.encode({
+      "channelUid": channelId,
+      "projectId": projectId
+    }));
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -272,7 +283,8 @@ class InfoPage extends StatelessWidget {
                         if (!_formKey.currentState.validate()) {
                           return;
                         }
-                        await functionChannel(channelMap);
+                        String newChannelId = await createChannelChat(channelMap);
+                        await createKanbanBoard(newChannelId, channelMap['projectId']);
                         Navigator.pop(context, true);
                       },
                       child: Text("Submit",
