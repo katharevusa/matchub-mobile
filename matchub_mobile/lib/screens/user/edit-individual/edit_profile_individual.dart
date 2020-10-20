@@ -102,7 +102,7 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
                       InfoEditPage(editedProfile, controller),
                       InterestEditPage(
                           editedProfile, controller,),
-                      ProfilePhotoPicker(editedProfile, controller, _updateProfile)
+                      ProfilePhotoPicker(editedProfile, controller, _updateProfile),
                     ],
                   ),
                 ),
