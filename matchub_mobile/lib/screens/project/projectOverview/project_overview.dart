@@ -86,7 +86,7 @@ class _TopScreenState extends State<TopScreen> {
                     height: 30,
                   ),
                   Container(
-                    width: 300,
+                    width: 500,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

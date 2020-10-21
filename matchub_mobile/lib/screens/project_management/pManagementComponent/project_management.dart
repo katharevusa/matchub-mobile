@@ -39,7 +39,6 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
   List<Announcement> internalAnnouncements = [];
   List<Announcement> publicAnnouncements = [];
 
-  AnimationController _animationController;
   bool isLoaded;
   Profile profile;
   @override
@@ -47,22 +46,13 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
     setState(() {
       isLoaded = false;
     });
-
     loadAnnouncements();
     loadProject();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 10),
-    );
-
-    _animationController.addListener(() => setState(() {}));
-    _animationController.repeat();
     super.initState();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     super.dispose();
   }
 

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/kanban/kanban.dart';
+import 'package:matchub_mobile/screens/project_management/channels/channel_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
@@ -56,7 +57,15 @@ class _PManagementChannelsState extends State<PManagementChannels> {
         }
         return Column(
           children: [
-            ListTile(title: Text("Channels")),
+            ListTile(
+              title: Text("Channels"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => ChannelsScreen(
+                          project: widget.project,
+                        )));
+              },
+            ),
             Container(
               color: Colors.transparent,
               height: 170.0,

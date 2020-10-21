@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:intl/intl.dart';
 
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
@@ -132,6 +133,13 @@ class _KanbanViewState extends State<KanbanView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              "${DateFormat.yMMMd().format(task.expectedDeadline)} | ${task.expectedDeadline.difference(DateTime.now()).inDays.toString()} days",
+              style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 1.8 * SizeConfig.textMultiplier,
+                  fontWeight: FontWeight.w700),
+            ),
             Text(
               task.taskTitle,
               style: TextStyle(
