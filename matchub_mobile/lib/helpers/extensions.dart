@@ -11,6 +11,8 @@ extension CapExtension on String {
   }
 
   String get allInCaps => this.toUpperCase();
+
+  Color get hexToColor => Color(int.parse(this.substring(1, 7), radix: 16) + 0xFF000000);
 }
 
 extension TimeOfDayComparison on TimeOfDay {
@@ -21,18 +23,18 @@ extension TimeOfDayComparison on TimeOfDay {
     return false;
   }
 }
+
 extension DifferenceInTime on DateTime {
   String differenceFrom(DateTime date) {
     Duration difference = this.difference(date);
-    if(difference.inMinutes==0){
+    if (difference.inMinutes == 0) {
       return difference.inMinutes.toString() + " seconds ago";
-    } else if(difference.inHours==0){
+    } else if (difference.inHours == 0) {
       return difference.inMinutes.toString() + " minutes ago";
-    } else if (difference.inDays ==0){
+    } else if (difference.inDays == 0) {
       return difference.inHours.toString() + " hours ago";
     } else {
       return difference.inDays.toString() + " days ago";
     }
   }
-  
 }

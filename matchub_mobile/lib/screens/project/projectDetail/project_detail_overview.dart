@@ -734,7 +734,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         Text("Mark as Complete", style: AppTheme.titleLight),
                       ],
                     )),
-              if (project.projStatus == "ACTIVE" || project.projStatus == "ON_HOLD")
+              if (project.projStatus == "ACTIVE" ||
+                  project.projStatus == "ON_HOLD")
                 FlatButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -776,6 +777,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     }
   }
 
+  followProject() async {}
   joinProject() async {
     final url =
         "authenticated/createJoinRequest?projectId=${widget.project.projectId}&profileId=${myProfile.accountId}";

@@ -31,12 +31,12 @@ class _SelectTaskMembersState extends State<SelectTaskMembers> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Padding(
             padding: const EdgeInsets.only(
-                top: 30.0, left: 20, right: 20, bottom: 10),
+                top: 20.0, left: 20, right: 20, bottom: 10),
             child: Text(
                 "Channel Members - ${widget.kanbanController.channelMembers.length.toString()}",
                 style: TextStyle(
                     color: Colors.grey[850],
-                    fontSize: 1.9 * SizeConfig.heightMultiplier,
+                    fontSize: 2.2 * SizeConfig.heightMultiplier,
                     fontWeight: FontWeight.w700)),
           ),
           Scrollbar(

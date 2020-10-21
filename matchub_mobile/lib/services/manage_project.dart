@@ -21,7 +21,7 @@ class ManageProject with ChangeNotifier {
     allAnnouncementForUsers = [];
     final url =
         'authenticated/getAnnouncementsByUserId?userId=${profile.accountId}';
-    final responseData = await _apiHelper.getWODecode(url, accessToken);
+    final responseData = await _apiHelper.getWODecode(url);
     (responseData as List)
         .forEach((e) => allAnnouncementForUsers.add(Announcement.fromJson(e)));
     notifyListeners();
@@ -32,7 +32,7 @@ class ManageProject with ChangeNotifier {
     projectInternalAnnouncement = [];
     final url =
         'authenticated/viewProjectInternalAnnouncements?projectId=${project.projectId}';
-    final responseData = await _apiHelper.getWODecode(url, accessToken);
+    final responseData = await _apiHelper.getWODecode(url);
     (responseData as List).forEach(
         (e) => projectInternalAnnouncement.add(Announcement.fromJson(e)));
     notifyListeners();
@@ -43,7 +43,7 @@ class ManageProject with ChangeNotifier {
     projectPublicAnnouncement = [];
     final url =
         'authenticated/viewProjectPublicAnnouncements?projectId=${project.projectId}';
-    final responseData = await _apiHelper.getWODecode(url, accessToken);
+    final responseData = await _apiHelper.getWODecode(url);
     (responseData as List).forEach(
         (e) => projectPublicAnnouncement.add(Announcement.fromJson(e)));
     notifyListeners();

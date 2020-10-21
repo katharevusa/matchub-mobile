@@ -12,7 +12,7 @@ class ManageOutgoingRequest with ChangeNotifier {
     requestsToOtherResource = [];
     final url =
         'authenticated/getAllOutgoingDonationRequests?userId=${profile.accountId}';
-    final responseData = await _apiHelper.getWODecode(url, accessToken);
+    final responseData = await _apiHelper.getWODecode(url);
     (responseData as List).forEach(
         (e) => requestsToOtherResource.add(ResourceRequest.fromJson(e)));
     notifyListeners();
@@ -23,7 +23,7 @@ class ManageOutgoingRequest with ChangeNotifier {
     requestToOtherProject = [];
     final url =
         'authenticated/getAllOutgoingResourceRequests?userId=${profile.accountId}';
-    final responseData = await _apiHelper.getWODecode(url, accessToken);
+    final responseData = await _apiHelper.getWODecode(url);
     (responseData as List)
         .forEach((e) => requestToOtherProject.add(ResourceRequest.fromJson(e)));
     notifyListeners();
@@ -34,7 +34,7 @@ class ManageOutgoingRequest with ChangeNotifier {
     requestToMyProject = [];
     final url =
         'authenticated/getAllIncomingResourceDonationRequests?userId=${profile.accountId}';
-    final responseData = await _apiHelper.getWODecode(url, accessToken);
+    final responseData = await _apiHelper.getWODecode(url);
     (responseData as List)
         .forEach((e) => requestToMyProject.add(ResourceRequest.fromJson(e)));
     notifyListeners();
@@ -45,7 +45,7 @@ class ManageOutgoingRequest with ChangeNotifier {
     requestToMyResource = [];
     final url =
         'authenticated/getAllIncomingResourceRequests?userId=${profile.accountId}';
-    final responseData = await _apiHelper.getWODecode(url, accessToken);
+    final responseData = await _apiHelper.getWODecode(url);
     (responseData as List)
         .forEach((e) => requestToMyResource.add(ResourceRequest.fromJson(e)));
     notifyListeners();

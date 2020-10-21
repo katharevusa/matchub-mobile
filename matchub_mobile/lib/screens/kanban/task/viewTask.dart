@@ -1,10 +1,13 @@
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/taskEntity.dart';
 import 'package:matchub_mobile/models/truncatedProfile.dart';
 import 'package:matchub_mobile/screens/kanban/board/boardList.dart';
+import 'package:matchub_mobile/screens/kanban/task/selectStatus.dart';
+import 'package:matchub_mobile/screens/kanban/task/selectTags.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/kanban_controller.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
@@ -38,7 +41,7 @@ class _ViewTaskState extends State<ViewTask> {
       color: Colors.white,
       fontSize: 2 * SizeConfig.textMultiplier);
 
-  bool isTaskReporter = true;
+  bool isTaskReporter = false;
   Profile taskReporter;
   bool isLoading;
   @override
@@ -61,6 +64,12 @@ class _ViewTaskState extends State<ViewTask> {
 
   @override
   Widget build(BuildContext context) {
+    widget.kanban = Provider.of<KanbanController>(context).kanban;
+    var colIndex = widget.kanban.taskColumns
+        .indexWhere((e) => e.columnTitle == widget.task.taskColumn.columnTitle);
+    widget.task = widget.kanban.taskColumns[colIndex].listOfTasks
+        .firstWhere((element) => element.taskId == widget.task.taskId);
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -68,8 +77,6 @@ class _ViewTaskState extends State<ViewTask> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Color(0xFF2c2e45),
-          // automaticallyImplyLeading: false,
-
           title: Text(
             "Task Details",
             style: AppTheme.searchLight.copyWith(
@@ -93,7 +100,7 @@ class _ViewTaskState extends State<ViewTask> {
           ],
         ),
         body: isLoading
-            ? CircularProgressIndicator()
+            ? Container()
             : SingleChildScrollView(
                 child: Form(
                     child: Column(children: [
@@ -105,7 +112,7 @@ class _ViewTaskState extends State<ViewTask> {
                         TextFormField(
                             enableInteractiveSelection: false,
                             initialValue: widget.task.taskTitle,
-                            readOnly: isTaskReporter,
+                            readOnly: !isTaskReporter,
                             validator: (val) {
                               if (val.isEmpty) {
                                 return "Please input a task name";
@@ -125,7 +132,7 @@ class _ViewTaskState extends State<ViewTask> {
                             minLines: 1,
                             enableInteractiveSelection: isTaskReporter,
                             initialValue: widget.task.taskDescription,
-                            readOnly: isTaskReporter,
+                            readOnly: !isTaskReporter,
                             style: displayText,
                             decoration: InputDecoration(
                                 border: defaultBorder,
@@ -185,7 +192,7 @@ class _ViewTaskState extends State<ViewTask> {
                                       primary: kSecondaryColor),
                                 ),
                                 child: DateTimePicker(
-                                  readOnly: isTaskReporter,
+                                  readOnly: !isTaskReporter,
                                   icon: Icon(
                                     FlutterIcons.calendar_fea,
                                     color: Colors.grey[400],
@@ -225,18 +232,20 @@ class _ViewTaskState extends State<ViewTask> {
                           ),
                           color: Color(0xFFF26950),
                           onPressed: () {
-                            showModalBottomSheet(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(15.0),
-                                      topLeft: Radius.circular(15.0)),
-                                ),
-                                context: context,
-                                builder: (ctx) {
-                                  return SelectStatusPopup(
-                                    widget: widget,
-                                  );
-                                });
+                            if (isTaskReporter) {
+                              showModalBottomSheet(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(15.0),
+                                        topLeft: Radius.circular(15.0)),
+                                  ),
+                                  context: context,
+                                  builder: (ctx) {
+                                    return SelectStatusPopup(
+                                      widget: widget,
+                                    );
+                                  });
+                            }
                           },
                           padding:
                               EdgeInsets.symmetric(horizontal: 6, vertical: 4),
@@ -258,9 +267,43 @@ class _ViewTaskState extends State<ViewTask> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text("Labels", style: headerText),
+                        GestureDetector(
+                          onTap: isTaskReporter ? routeToTagsDialog : null,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  child: Text("Labels", style: headerText),
+                                ),
+                                if (widget.task.labelAndColour.isEmpty)
+                                  DottedBorder(
+                                    borderType: BorderType.RRect,
+                                    radius: Radius.circular(5),
+                                    padding: EdgeInsets.all(6),
+                                    color: Colors.grey[100],
+                                    child: Text("None",
+                                        style: headerText.copyWith(
+                                            color: Colors.grey[100])),
+                                  ),
+                                if (widget.task.labelAndColour.isNotEmpty)
+                                  Container(
+                                    constraints: BoxConstraints(
+                                        minHeight: 30, maxHeight: 30),
+                                    child: ListView.builder(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount:
+                                            widget.task.labelAndColour.length,
+                                        itemBuilder: (context, index) {
+                                          MapEntry label = widget
+                                              .task.labelAndColour.entries
+                                              .toList()[index];
+                                          return TaskLabel(label: label);
+                                        }),
+                                  ),
+                              ]),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -269,40 +312,48 @@ class _ViewTaskState extends State<ViewTask> {
                         Row(
                           children: [
                             if (taskReporter == null) ...[
-                            drawAddButton(
-                              onTap: () {
-                                final kanbanController =
-                                    Provider.of<KanbanController>(context,
-                                        listen: false);
-                                Dialog channelMembersDialog = Dialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          20.0)), //this right here
-                                  child: SelectTaskMember(
-                                      kanbanController: kanbanController),
-                                );
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        channelMembersDialog).then((val) {
-                                  if (val != null) {
-                                    setState(() {
-                                      widget.task.taskLeaderId = val.accountId;
-                                      // kanbanController.updateTaskDoers(
-                                      //     val,
-                                      //     widget.task,
-                                      //     Provider.of<Auth>(context, listen: false)
-                                      //         .myProfile
-                                      //         .accountId);
+                              if (isTaskReporter)
+                                drawAddButton(
+                                  onTap: () {
+                                    final kanbanController =
+                                        Provider.of<KanbanController>(context,
+                                            listen: false);
+                                    Dialog channelMembersDialog = Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              20.0)), //this right here
+                                      child: SelectTaskMember(
+                                          kanbanController: kanbanController),
+                                    );
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            channelMembersDialog).then((val) {
+                                      if (val != null) {
+                                        setState(() {
+                                          widget.task.taskLeaderId =
+                                              val.accountId;
+                                          // kanbanController.updateTaskDoers(
+                                          //     val,
+                                          //     widget.task,
+                                          //     Provider.of<Auth>(context, listen: false)
+                                          //         .myProfile
+                                          //         .accountId);
+                                        });
+                                      }
                                     });
-                                  }
-                                });
-                              },
-                            ),
+                                  },
+                                ),
                               SizedBox(width: 10),
-                              Text("Not Yet Assigned",
-                                  style: headerText.copyWith(
-                                      color: Colors.grey[100])),
+                              DottedBorder(
+                                borderType: BorderType.RRect,
+                                radius: Radius.circular(5),
+                                padding: EdgeInsets.all(6),
+                                color: Colors.grey[100],
+                                child: Text("Not Yet Assigned",
+                                    style: headerText.copyWith(
+                                        color: Colors.grey[100])),
+                              )
                             ],
                             if (taskReporter != null) ...[
                               _buildAvatar(taskReporter, radius: 40),
@@ -425,31 +476,51 @@ class _ViewTaskState extends State<ViewTask> {
         ));
   }
 
+  routeToTagsDialog() {
+    final kanbanController =
+        Provider.of<KanbanController>(context, listen: false);
+    Dialog tagsDialog = Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0)), //this right here
+      child: SelectTagsDialog(
+          kanbanController: kanbanController, task: widget.task),
+    );
+    showDialog(context: context, builder: (BuildContext context) => tagsDialog)
+        .then((val) {
+      if (val != null && val.isNotEmpty) {
+        setState(() {
+          widget.task.labelAndColour = val;
+        });
+      }
+    });
+  }
+
+  routeToSelectMembers() {
+    final kanbanController =
+        Provider.of<KanbanController>(context, listen: false);
+    Dialog channelMembersDialog = Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0)), //this right here
+      child: SelectTaskMembers(
+          kanbanController: kanbanController, task: widget.task),
+    );
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => channelMembersDialog).then((val) {
+      if (val != null) {
+        setState(() {
+          widget.task.taskDoers = val;
+          kanbanController.updateTaskDoers(val, widget.task,
+              Provider.of<Auth>(context, listen: false).myProfile.accountId);
+        });
+      }
+    });
+  }
+
   Widget buildTeamMemberRow(List<Profile> members) {
-    Function routeToSelectMembers = () {
-      final kanbanController =
-          Provider.of<KanbanController>(context, listen: false);
-      Dialog channelMembersDialog = Dialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0)), //this right here
-        child: SelectTaskMembers(
-            kanbanController: kanbanController, task: widget.task),
-      );
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => channelMembersDialog).then((val) {
-        if (val != null) {
-          setState(() {
-            widget.task.taskDoers = val;
-            kanbanController.updateTaskDoers(val, widget.task,
-                Provider.of<Auth>(context, listen: false).myProfile.accountId);
-          });
-        }
-      });
-    };
     return (members.isNotEmpty)
         ? GestureDetector(
-            onTap: () => routeToSelectMembers(),
+            onTap: () => isTaskReporter ? routeToSelectMembers : null,
             child: Container(
               width: SizeConfig.widthMultiplier * 100,
               child: Row(
@@ -475,7 +546,8 @@ class _ViewTaskState extends State<ViewTask> {
             ))
         : Row(
             children: [
-              drawAddButton(members: members, onTap: routeToSelectMembers),
+              if (isTaskReporter)
+                drawAddButton(members: members, onTap: routeToSelectMembers),
               SizedBox(width: 10),
               Text("Not Yet Assigned",
                   style: headerText.copyWith(color: Colors.grey[100])),
@@ -491,47 +563,6 @@ class _ViewTaskState extends State<ViewTask> {
       height: radius,
       width: radius,
       child: ClipOval(child: AttachmentImage(profile.profilePhoto)),
-    );
-  }
-}
-
-class SelectStatusPopup extends StatelessWidget {
-  const SelectStatusPopup({
-    Key key,
-    @required this.widget,
-  }) : super(key: key);
-
-  final ViewTask widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
-          child: Text("Status Column",
-              style: TextStyle(
-                  fontSize: 2.2 * SizeConfig.textMultiplier,
-                  color: Colors.grey[850])),
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          itemBuilder: (ctx, index) {
-            return ListTile(
-                title: Text(widget.kanban.taskColumns[index].columnTitle),
-                trailing: (widget.kanban.taskColumns[index].columnTitle ==
-                        widget.task.taskColumn.columnTitle)
-                    ? Icon(
-                        Icons.check_circle_outline_rounded,
-                        color: kKanbanColor,
-                      )
-                    : null);
-          },
-          itemCount: widget.kanban.taskColumns.length,
-        ),
-      ],
     );
   }
 }

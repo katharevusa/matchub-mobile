@@ -536,7 +536,7 @@ class _DescriptionState extends State<Description> {
                       children: <Widget>[
                         ListTile(
                           title: Text("Description"),
-                          subtitle: Text(resource.resourceDescription),
+                          subtitle: Text(resource.resourceDescription?? ""),
                           leading: Icon(Icons.leak_add),
                         ),
                         ListTile(
@@ -555,13 +555,13 @@ class _DescriptionState extends State<Description> {
                           leading: Icon(Icons.event_note),
                         ),
                         ListTile(
-                          title: Text(category.resourceCategoryName),
+                          title: Text(category.resourceCategoryName?? ""),
                           subtitle: Text(category.resourceCategoryDescription),
                           leading: Icon(Icons.category),
                         ),
                         ListTile(
                           title: Text("Unit"),
-                          subtitle: Text(resource.units.toString()),
+                          subtitle: Text(resource.units.toString()?? ""),
                           leading: Icon(Icons.format_underlined),
                         ),
                       ],

@@ -33,7 +33,7 @@ class _BadgeCreationState extends State<BadgeCreation> {
   getAllProjectBadgeIcons() async {
     final url = 'authenticated/getProjectBadgeIcons';
     final response = await _helper.getWODecode(
-            url, Provider.of<Auth>(this.context, listen: false).accessToken)
+            url)
         as List;
     badgesIcon = List<String>.from(response);
   }

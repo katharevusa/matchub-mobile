@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_tags/flutter_tags.dart';
+import 'package:intl/intl.dart';
 
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/kanban/task/selectTags.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
 import 'package:matchub_mobile/screens/search/search_page.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/kanban_controller.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
@@ -53,6 +57,8 @@ class _KanbanViewState extends State<KanbanView> {
     await instance.retrieveKanbanByChannelId(widget.channelData['id']);
     // kanban = instance.kanban;
     await instance.retrieveChannelMembers(widget.channelData['members']);
+    await instance.retrieveChannelAdmins(widget.channelData['admins']);
+    // await instance.retrieveLabelsByKanbanBoard();
     setState(() {
       loading = false;
     });
@@ -89,7 +95,6 @@ class _KanbanViewState extends State<KanbanView> {
             : BoardView2(
                 lists: _lists,
                 boardViewController: boardViewController,
-                width: 80 * SizeConfig.widthMultiplier,
               ),
       );
     });
@@ -98,52 +103,92 @@ class _KanbanViewState extends State<KanbanView> {
   Widget buildBoardItem(TaskEntity task) {
     var kanbanController =
         Provider.of<KanbanController>(context, listen: false);
+    var daysToDeadline =
+        task.expectedDeadline.difference(DateTime.now()).inDays;
+    var daysToDisplay = daysToDeadline.abs();
     return BoardItem(
-        onStartDragItem:
-            (int listIndex, int itemIndex, BoardItemState state) {},
-        onDropItem: (int listIndex, int itemIndex, int oldListIndex,
-            int oldItemIndex, BoardItemState state) {
-          //Used to update our local item data
-          var item = kanban.taskColumns[oldListIndex].listOfTasks[oldItemIndex];
-          kanban.taskColumns[oldListIndex].listOfTasks.removeAt(oldItemIndex);
-          kanban.taskColumns[listIndex].listOfTasks.insert(itemIndex, item);
-          kanbanController.reorderTaskSequence(
-              Provider.of<Auth>(context, listen: false).myProfile.accountId);
-        },
-        onTapItem:
-            (int listIndex, int itemIndex, BoardItemState state) async {
-              Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                  builder: (_) => ViewTask(task: task, kanban: kanban)));
-            },
-        item: Container(
-            height: 120,
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                ),
-              ],
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
+      onStartDragItem: (int listIndex, int itemIndex, BoardItemState state) {},
+      onDropItem: (int listIndex, int itemIndex, int oldListIndex,
+          int oldItemIndex, BoardItemState state) {
+        //Used to update our local item data
+        var item = kanban.taskColumns[oldListIndex].listOfTasks[oldItemIndex];
+        kanban.taskColumns[oldListIndex].listOfTasks.removeAt(oldItemIndex);
+        kanban.taskColumns[listIndex].listOfTasks.insert(itemIndex, item);
+        kanbanController.reorderTaskSequence(
+            Provider.of<Auth>(context, listen: false).myProfile.accountId);
+      },
+      onTapItem: (int listIndex, int itemIndex, BoardItemState state) async {
+        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+            builder: (_) => ViewTask(task: task, kanban: kanban))).then((value) => setState((){}));
+      },
+      item: Container(
+        constraints: BoxConstraints(
+          minHeight: 80,
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 7),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[400].withOpacity(0.9),
+              spreadRadius: 2,
+              blurRadius: 5,
             ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+          ],
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "${DateFormat.yMMMd().format(task.expectedDeadline)} | " +
+                  (daysToDisplay == 0
+                      ? "Today"
+                      : "${daysToDisplay.toString()} days" +
+                          (daysToDeadline.isNegative ? " ago" : "")),
+              style: TextStyle(
+                  color: daysToDeadline > 5
+                      ? kSecondaryColor
+                      : daysToDeadline > 0
+                          ? Colors.orange[200]
+                          : daysToDeadline == 0
+                              ? Colors.red[200]
+                              : Colors.grey[400],
+                  fontSize: 1.4 * SizeConfig.textMultiplier,
+                  fontWeight: FontWeight.w500),
+            ),
+            Text(
+              task.taskTitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 2 * SizeConfig.textMultiplier,
+                  fontWeight: FontWeight.w600),
+            ),
+            SizedBox(height: 7),
+            Row(
               children: [
-                Text(
-                  task.taskTitle,
-                  style: TextStyle(
-                      fontSize: 2.2 * SizeConfig.textMultiplier,
-                      fontWeight: FontWeight.w700),
-                ),
-                ...buildTeamMemberRow(task.taskDoers)
+                Expanded(
+                    child: Tags(
+                      alignment: WrapAlignment.start,
+                      spacing: 0,
+                      runSpacing: 8,
+                      itemBuilder: (index) {
+                        MapEntry label =
+                            task.labelAndColour.entries.toList()[index];
+                        return TaskLabel(label: label);
+                      },
+                      itemCount: task.labelAndColour.length,
+                    )),
+                Flexible(flex: 1, child: buildTeamMemberRow(task.taskDoers)),
               ],
-            ),
-          ),
-        );
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _createBoardList(TaskColumnEntity list) {
@@ -177,33 +222,44 @@ class _KanbanViewState extends State<KanbanView> {
   }
 }
 
-List<Widget> buildTeamMemberRow(List<Profile> members) {
+Widget buildTeamMemberRow(List members) {
+  var newMembers;
+  if (members.length > 3) {
+    newMembers = members.sublist(1, 4);
+  } else {
+    newMembers = members;
+  }
   return (members.isNotEmpty)
-      ? [
-          Container(
-              width: SizeConfig.widthMultiplier * 100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Stack(
-                    children: [
-                      ...members
-                          .asMap()
-                          .map((i, e) => MapEntry(
-                              i,
-                              Transform.translate(
-                                  offset: Offset(i * 30.0, 0),
-                                  child: _buildAvatar(
-                                    e,
-                                  ))))
-                          .values
-                          .toList(),
-                    ],
-                  ),
-                ],
-              ))
-        ]
-      : [];
+      ? Container(
+          alignment: Alignment.bottomRight,
+          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Stack(
+              children: [
+                ...newMembers
+                    .asMap()
+                    .map((i, e) => MapEntry(
+                        i,
+                        Transform.translate(
+                            offset: Offset(i * -30.0, 0),
+                            child: _buildAvatar(
+                              e,
+                            ))))
+                    .values
+                    .toList(),
+                if (members.length > 3)
+                  Transform.translate(
+                      offset: Offset(40.0, 35),
+                      child: Container(
+                        alignment: Alignment.bottomRight,
+                        child: Icon(
+                          Icons.more_horiz_rounded,
+                          color: Colors.grey,
+                        ),
+                      ))
+              ],
+            ),
+          ]))
+      : Container();
 }
 
 Widget _buildAvatar(profile, {double radius = 50}) {
@@ -211,10 +267,10 @@ Widget _buildAvatar(profile, {double radius = 50}) {
     decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.grey[400].withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 3,offset: Offset(0,3)
-          ),
+              color: Colors.grey[400].withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 3,
+              offset: Offset(0, 3)),
         ],
         border: Border.all(color: Colors.white, width: 3),
         shape: BoxShape.circle),

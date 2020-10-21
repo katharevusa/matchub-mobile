@@ -26,7 +26,6 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..country = json['country'] as String ?? ""
     ..city = json['city'] as String ?? ""
     ..address = json['address'] as String ?? ""
-    // ..profilePhoto = "assets/images/avatar2.jpg"
     ..profilePhoto = json['profilePhoto'] ?? ""
     ..reputationPoints = json['reputationPoints'] as num
     ..followers = json['followers'] as List
@@ -39,11 +38,11 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..hostedResources = json['hostedResources'] as List
     ..sdgs = (json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList()
     ..meetings = json['meetings'] as List
-    ..projectsJoined = (json['projectsJoined'] as List)
+    ..projectsJoined = json['projectsJoined'] !=null ? (json['projectsJoined'] as List)
         .map((i) => Project.fromJson(i))
-        .toList()
-    ..projectsOwned =
-        (json['projectsOwned'] as List).map((i) => Project.fromJson(i)).toList()
+        .toList() : []
+    ..projectsOwned = json['projectsOwned'] !=null ? 
+        (json['projectsOwned'] as List).map((i) => Project.fromJson(i)).toList() : []
     ..joinRequests = json['joinRequests'] as List
     ..reviewsReceived = json['reviewsReceived'] as List
     ..badges = (json['badges'] as List).map((i) => Badge.fromJson(i)).toList()
@@ -51,7 +50,7 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..tasks = json['tasks'] as List
     ..managedChannel = json['managedChannel'] as List
     ..joinedChannel = json['joinedChannel'] as List
-    ..likedPosts = json['likedPosts'] as List
+    ..likedPosts = json['likedPosts'] != null ? json['likedPosts'] as List: []
     ..firstName = json['firstName'] as String ?? ""
     ..lastName = json['lastName'] as String ?? ""
     ..genderEnum = json['genderEnum'] as String

@@ -17,8 +17,8 @@ TaskEntity _$TaskEntityFromJson(Map<String, dynamic> json) {
     ..documents = json['documents'] as Map<String, dynamic>
     ..labelAndColour = json['labelAndColour'] as Map<String, dynamic>
     ..taskLeaderId = json['taskLeaderId'] as num
-    ..taskDoers = json['taskDoers'] != null
-        ? (json['taskDoers'] as List)
+    ..taskDoers = json['taskdoers'] != null
+        ? (json['taskdoers'] as List)
             .map((i) => Profile.fromJson(i))
             .toList()
         : [];

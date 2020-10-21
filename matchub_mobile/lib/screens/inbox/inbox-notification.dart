@@ -29,7 +29,7 @@ class _InboxNotificationState extends State<InboxNotification> {
     final url =
         'authenticated/getAnnouncementsByUserId?userId=${user.accountId}';
     final responseData = await _apiHelper.getWODecode(
-        url, Provider.of<Auth>(this.context, listen: false).accessToken);
+        url);
     (responseData as List)
         .forEach((e) => allAnnouncements.add(Announcement.fromJson(e)));
     print(allAnnouncements.length);

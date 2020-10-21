@@ -7,19 +7,41 @@ import 'package:matchub_mobile/models/index.dart';
 class KanbanController with ChangeNotifier {
   KanbanEntity kanban;
   List<Profile> channelMembers = [];
+  List<Profile> channelAdmins = [];
+  Map<String, dynamic> labels = {
+    "Design": "#d11141",
+    "Mapping": "#00b159",
+    "Urgent": "#00aedb",
+  };
+
+  retrieveLabelsByKanbanBoard() async {
+    final response = await ApiBaseHelper.instance.getWODecode(
+        "authenticated/getAllLabelsByKanbanBoardId?kanbanBoardId=${kanban.kanbanBoardId}");
+    print(labels);
+    labels = response as Map<String, dynamic>;
+  }
 
   retrieveChannelMembers(membersList) async {
     channelMembers.clear();
-    for (String s in membersList) {
+    for (String memberUUID in membersList) {
       final response = await ApiBaseHelper.instance
-          .getProtected("authenticated/getAccountByUUID/$s");
+          .getProtected("authenticated/getAccountByUUID/$memberUUID");
       channelMembers.add(Profile.fromJson(response));
     }
   }
 
-  retrieveTaskReporterById(accountId)async {
-    final response = await ApiBaseHelper.instance.getProtected(
-        "authenticated/getAccount/$accountId");
+  retrieveChannelAdmins(adminsList) async {
+    channelAdmins.clear();
+    for (String memberUUID in adminsList) {
+      final response = await ApiBaseHelper.instance
+          .getProtected("authenticated/getAccountByUUID/$memberUUID");
+      channelAdmins.add(Profile.fromJson(response));
+    }
+  }
+
+  retrieveTaskReporterById(accountId) async {
+    final response = await ApiBaseHelper.instance
+        .getProtected("authenticated/getAccount/$accountId");
     return Profile.fromJson(response);
   }
 
@@ -69,15 +91,23 @@ class KanbanController with ChangeNotifier {
   }
 
   updateTaskDoers(List<Profile> newTaskDoerList, task, updaterId) async {
-    String url = 
+    String url =
         "authenticated/updateTaskDoers?taskId=${task.taskId}&updatorId=$updaterId&kanbanBoardId=${kanban.kanbanBoardId}";
-        for(var i in newTaskDoerList){
-          url += "&newTaskDoerList=${i.accountId}";
-        }
+    for (var i in newTaskDoerList) {
+      url += "&newTaskDoerList=${i.accountId}";
+    }
     final response = await ApiBaseHelper.instance.postProtected(url);
     task = TaskEntity.fromJson(response);
     print(task);
     notifyListeners();
+  }
 
+  updateTaskColumn(TaskColumnEntity currentColumn, TaskColumnEntity newColumn,
+      TaskEntity task) {
+    currentColumn.listOfTasks.remove(task);
+    newColumn.listOfTasks.add(task);
+    task.taskColumn = newColumn;
+    notifyListeners();
   }
 }
+
