@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:intl/intl.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
 
 class PManagementSwiperCard extends StatefulWidget {
   Project project;
@@ -16,7 +21,7 @@ class PManagementSwiperCard extends StatefulWidget {
 class _PManagementSwiperCardState extends State<PManagementSwiperCard>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
-
+  Profile myProfile;
   @override
   void initState() {
     _animationController = AnimationController(
@@ -26,6 +31,7 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
 
     _animationController.addListener(() => setState(() {}));
     _animationController.repeat();
+
     super.initState();
   }
 
@@ -37,6 +43,8 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
 
   @override
   Widget build(BuildContext context) {
+    // widget.project = Provider.of<ManageProject>(context).managedProject;
+    myProfile = Provider.of<Auth>(context).myProfile;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
@@ -115,10 +123,15 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                               height: 120,
                               width: 120,
                               decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xFF48284A)),
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                              ),
+                                  border: Border.all(color: Color(0xFF48284A)),
+                                  borderRadius: BorderRadius.circular(20),
+                                  color:
+                                      widget.project.projStatus == "COMPLETED"
+                                          ? Colors.green
+                                          : widget.project.projStatus ==
+                                                  "TERMINATED"
+                                              ? Colors.yellow
+                                              : Colors.white),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -147,7 +160,10 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                               ),
                             ),
                             onTap: () {
-                              projectEndingAction(widget.project, context);
+                              if (myProfile.projectsOwned
+                                  .contains(widget.project)) {
+                                projectEndingAction(widget.project, context);
+                              }
                             },
                           ),
                         ],
@@ -229,31 +245,86 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                     Radius.circular(10),
                   )),
               child: Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        FlatButton(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Text("Terminate Project Early"),
-                          onPressed: () => Navigator.pop(context, true),
-                        ),
-                        Divider(),
-                        FlatButton(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Text("Mark Project as Complete"),
-                          onPressed: () => Navigator.pop(context, true),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
+                  child: project.projStatus == "ACTIVE"
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                FlatButton(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text("Terminate Project Early"),
+                                  onPressed: () async {
+                                    await terminateProject();
+                                    Navigator.pop(context, true);
+                                  },
+                                ),
+                                Divider(),
+                                FlatButton(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text("Mark Project as Complete"),
+                                  onPressed: () async {
+                                    await markProjectAsComplete();
+                                    Navigator.pop(context, true);
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                      : Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "This project has already been " +
+                                  project.projStatus,
+                              style: TextStyle(fontSize: 15),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )),
             ),
           ),
         );
       },
     );
+  }
+
+  terminateProject() async {
+    final url =
+        "authenticated/terminateProject?projectId=${widget.project.projectId}&profileId=${myProfile.accountId}";
+    try {
+      final response = await ApiBaseHelper.instance.putProtected(
+        url,
+      );
+
+      // await Provider.of<ManageProject>(context, listen: false)
+      //     .getAllOwnedProjects(Provider.of<Auth>(context).myProfile,
+      //         Provider.of<Auth>(context, listen: false).accessToken);
+      print("Success");
+      Navigator.of(this.context).pop(true);
+    } catch (error) {
+      // final responseData = error.body as Map<String, dynamic>;
+      print("Failure");
+      showErrorDialog(error.toString(), this.context);
+    }
+  }
+
+  markProjectAsComplete() async {
+    final url =
+        "authenticated/completeProject?projectId=${widget.project.projectId}&profileId=${myProfile.accountId}";
+    try {
+      // var accessToken = Provider.of<Auth>(this.context,listen: false).accessToken;
+      final response = await ApiBaseHelper.instance.putProtected(
+        url,
+      );
+      await Provider.of<ManageProject>(context, listen: false)
+          .getProject(widget.project.projectId);
+      print("Success");
+      Navigator.of(this.context).pop("Completed-Project");
+    } catch (error) {
+      showErrorDialog(error.toString(), this.context);
+      print("Failure");
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/kanban/kanban.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/project/projectOverview/project_overview.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
@@ -38,6 +39,15 @@ class _ProjectNavigatorState extends State<ProjectNavigator> {
               );
             case ProjectManagementOverview.routeName:
               return ProjectManagementOverview(settings.arguments as Project);
+
+            case KanbanView.routeName:
+              return KanbanView(
+                  channelData: (settings.arguments
+                          as Map<String, dynamic>)['channelData']
+                      as Map<String, dynamic>,
+                  project: (settings.arguments
+                      as Map<String, dynamic>)['project'] as Project);
+
             case '/':
               return ProjectOverview();
             case EditIndividualScreen.routeName:

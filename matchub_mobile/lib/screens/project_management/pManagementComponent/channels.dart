@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/kanban/kanban.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
@@ -65,58 +66,68 @@ class _PManagementChannelsState extends State<PManagementChannels> {
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Stack(children: <Widget>[
-                    Container(
-                        margin: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 10.0),
-                        width: 150.0,
-                        height: 200.0,
-                        color: channelColors[index % 5],
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Text(
-                            //   snapshot.data.documents[index].data()['name'],
-                            //   style: TextStyle(
-                            //       color: index % 5 == 2 || index % 5 == 3
-                            //           ? Colors.white
-                            //           : Colors.black),
-                            // ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: CircularStepProgressIndicator(
-                                    totalSteps: 100,
-                                    currentStep: 74,
-                                    stepSize: 10,
-                                    selectedColor: index % 5 == 0
-                                        ? Colors.pink.shade300
-                                        : index % 5 == 1
-                                            ? Colors.yellow.shade800
-                                            : index % 5 == 2
-                                                ? Colors.purple
-                                                : index % 5 == 3
-                                                    ? Colors.red.shade300
-                                                    : Colors.yellow.shade700,
-                                    unselectedColor: Colors.grey[200],
-                                    padding: 0,
-                                    width: 80,
-                                    height: 80,
-                                    selectedStepSize: 15,
-                                    roundedCap: (_, __) => true,
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(
+                          context,
+                        ).pushNamed(KanbanView.routeName, arguments: {
+                          "channelData": snapshot.data.documents[index].data(),
+                          "project": widget.project
+                        });
+                      },
+                      child: Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 10.0),
+                          width: 150.0,
+                          height: 200.0,
+                          color: channelColors[index % 5],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Text(
+                              //   snapshot.data.documents[index].data()['name'],
+                              //   style: TextStyle(
+                              //       color: index % 5 == 2 || index % 5 == 3
+                              //           ? Colors.white
+                              //           : Colors.black),
+                              // ),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CircularStepProgressIndicator(
+                                      totalSteps: 100,
+                                      currentStep: 74,
+                                      stepSize: 10,
+                                      selectedColor: index % 5 == 0
+                                          ? Colors.pink.shade300
+                                          : index % 5 == 1
+                                              ? Colors.yellow.shade800
+                                              : index % 5 == 2
+                                                  ? Colors.purple
+                                                  : index % 5 == 3
+                                                      ? Colors.red.shade300
+                                                      : Colors.yellow.shade700,
+                                      unselectedColor: Colors.grey[200],
+                                      padding: 0,
+                                      width: 80,
+                                      height: 80,
+                                      selectedStepSize: 15,
+                                      roundedCap: (_, __) => true,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  "100%",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                          ],
-                        )),
+                                  Text(
+                                    "100%",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ],
+                          )),
+                    ),
                     Positioned(
                       bottom: 20.0,
                       child: Container(

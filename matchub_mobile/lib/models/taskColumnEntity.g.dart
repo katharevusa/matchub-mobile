@@ -17,5 +17,4 @@ TaskColumnEntity _$TaskColumnEntityFromJson(Map<String, dynamic> json) {
             .map((i) => TaskEntity.fromJson(i))
             .toList()
         : [];
-
 }

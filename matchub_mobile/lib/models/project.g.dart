@@ -1,3 +1,5 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'project.dart';
 
 // **************************************************************************
@@ -16,11 +18,12 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..userFollowers = json['userFollowers'] as List
     ..projStatus = json['projStatus'] as String
     ..upvotes = json['upvotes'] as num
-    ..photos = json['photos'] as List
     ..relatedResources = json['relatedResources'] as List
     ..projCreatorId = json['projCreatorId'] as num
     ..spotlight = json['spotlight'] as bool
     ..spotlightEndTime = json['spotlightEndTime'] ?? ""
+    ..photos = json['photos'] as List
+    ..documents = json['documents'] as Map<String, dynamic>
     ..joinRequests = json['joinRequests'] != null
         ? (json['joinRequests'] as List)
             .map((i) => JoinRequest.fromJson(i))
@@ -42,14 +45,17 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
             .map((i) => TruncatedProfile.fromJson(i))
             .toList()
         : []
+    ..projectFollowers = json['projectFollowers'] != null
+        ? (json['projectFollowers'] as List)
+            .map((i) => TruncatedProfile.fromJson(i))
+            .toList()
+        : []
     ..channels = json['channels'] as List
-    ..documents = json['documents'] as Map<String, dynamic>
     ..projectOwners = json['projectOwners'] != null
         ? (json['projectOwners'] as List)
             .map((i) => TruncatedProfile.fromJson(i))
             .toList()
         : [];
-  ;
 }
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
@@ -62,11 +68,13 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'userFollowers': instance.userFollowers,
       'projStatus': instance.projStatus,
       'upvotes': instance.upvotes,
-      'photos': instance.photos,
       'relatedResources': instance.relatedResources,
       'projCreatorId': instance.projCreatorId,
       'spotlight': instance.spotlight,
       'spotlightEndTime': instance.spotlightEndTime,
+      'projectProfilePic': instance.projectProfilePic,
+      'photos': instance.photos,
+      'documents': instance.documents,
       'joinRequests': instance.joinRequests,
       'reviews': instance.reviews,
       'projectBadge': instance.projectBadge,
@@ -76,6 +84,7 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'sdgs': instance.sdgs,
       'kpis': instance.kpis,
       'teamMembers': instance.teamMembers,
+      'projectFollowers': instance.projectFollowers,
       'channels': instance.channels,
       'projectOwners': instance.projectOwners
     };

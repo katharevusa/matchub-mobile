@@ -12,6 +12,7 @@ import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/user/account-settings/change_password.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
+import 'package:matchub_mobile/screens/user/viewFollowingProjects.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -160,12 +161,17 @@ class _UserScreenState extends State<UserScreen> {
                       ),
                       () {}),
                   buildSettingCard(
-                      "Saved Projects",
+                      "Following Projects",
                       Icon(
                         FlutterIcons.list_alt_faw5s,
                         color: Color(0xFFc3aed6),
-                      ),
-                      () {}),
+                      ), () {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                      builder: (context) =>
+                          ViewFollowingProjects(profile: profile),
+                    ));
+                  }),
                   buildSettingCard(
                       "Comments",
                       Icon(

@@ -16,15 +16,15 @@ import 'package:provider/provider.dart';
 
 import '../../../style.dart';
 
-class TeamMembers extends StatefulWidget {
+class TeamMembersManagement extends StatefulWidget {
   Project project;
 
-  TeamMembers({this.project});
+  TeamMembersManagement({this.project});
   @override
-  _TeamMembersState createState() => _TeamMembersState();
+  _TeamMembersManagementState createState() => _TeamMembersManagementState();
 }
 
-class _TeamMembersState extends State<TeamMembers> {
+class _TeamMembersManagementState extends State<TeamMembersManagement> {
   @override
   initState() {
     Provider.of<ManageProject>(context, listen: false)
@@ -35,8 +35,9 @@ class _TeamMembersState extends State<TeamMembers> {
   bool isExpanded = false;
   updateProject() async {
     try {
-      final response = await Provider.of<ManageProject>(context)
-          .getProject(widget.project.projectId,);
+      final response = await Provider.of<ManageProject>(context).getProject(
+        widget.project.projectId,
+      );
       setState(() {});
     } catch (error) {
       showErrorDialog(error.toString(), context);
@@ -70,7 +71,8 @@ class _TeamMembersState extends State<TeamMembers> {
         await DatabaseMethods().getChatRoomId(myProfile.uuid, recipient.uuid);
     Profile recipientProfile = Profile.fromJson(await ApiBaseHelper.instance
         .getProtected("authenticated/getAccount/${recipient.accountId}",
-            accessToken: Provider.of<Auth>(context, listen: false).accessToken));
+            accessToken:
+                Provider.of<Auth>(context, listen: false).accessToken));
     print(chatRoomId);
     Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
         builder: (context) =>

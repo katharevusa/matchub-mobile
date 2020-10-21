@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/project_screen.dart';
 import 'package:matchub_mobile/screens/project_management/notification/viewAllNotification.dart';
-import 'package:matchub_mobile/screens/project_management/team_members/team_members.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/teamMemberManagement.dart';
 
 import 'channels/channel_screen.dart';
 
@@ -34,7 +34,7 @@ class ProjectManagementDrawer extends StatelessWidget {
                     "Team Members",
                     MaterialPageRoute(
                       settings: RouteSettings(name: "/team-members"),
-                      builder: (_) => TeamMembers(project: project),
+                      builder: (_) => TeamMembersManagement(project: project),
                     ),
                     context),
                 _buildRow(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/teamMemberManagement.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -18,71 +19,86 @@ class _PManagementTeamMemberState extends State<PManagementTeamMember> {
   @override
   initState() {
     Provider.of<ManageProject>(context, listen: false).getProject(
-        widget.project.projectId,);
+      widget.project.projectId,
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     widget.project = Provider.of<ManageProject>(context).managedProject;
-    return Container(
-      height: 150,
-      width: 180,
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(
-              "Team Members",
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+    return Material(
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              settings: RouteSettings(name: "/team-members"),
+              builder: (_) => TeamMembersManagement(
+                    project: widget.project,
+                  )));
+        },
+        child: Container(
+          height: 150,
+          width: 180,
+          child: Column(
             children: [
+              ListTile(
+                title: Text(
+                  "Team Members",
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Stack(children: <Widget>[
+                    Icon(Icons.notifications,
+                        color: Color(0xff48284A), size: 30),
+                    buildJoinRequest(widget.project) != 0
+                        ? Positioned(
+                            top: -1.0,
+                            right: -1.0,
+                            child: new Stack(children: <Widget>[
+                              new Icon(
+                                Icons.brightness_1,
+                                size: 12.0,
+                                color: Colors.red.shade400,
+                              ),
+                            ]))
+                        : Container(),
+                  ]),
+                  Text(' You have ',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                  Text(
+                    buildJoinRequest(widget.project).toString(),
+                    style: TextStyle(
+                        color: Colors.red.shade400,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+              Text("New Join Request",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
               SizedBox(
-                width: 20,
+                height: 10,
               ),
-              Stack(children: <Widget>[
-                Icon(Icons.notifications, color: Color(0xff48284A), size: 30),
-                buildJoinRequest(widget.project) != 0
-                    ? Positioned(
-                        top: -1.0,
-                        right: -1.0,
-                        child: new Stack(children: <Widget>[
-                          new Icon(
-                            Icons.brightness_1,
-                            size: 12.0,
-                            color: Colors.red.shade400,
-                          ),
-                        ]))
-                    : Container(),
-              ]),
-              Text(' You have ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-              Text(
-                buildJoinRequest(widget.project).toString(),
-                style: TextStyle(
-                    color: Colors.red.shade400,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600),
-              ),
+              widget.project.teamMembers.isNotEmpty
+                  ? Stack(
+                      children: [
+                        ...buildProjectMembers(
+                            context, widget.project.teamMembers),
+                      ],
+                    )
+                  : Text(
+                      "0 Team Members",
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    )
             ],
           ),
-          Text("New Join Request",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
-          SizedBox(
-            height: 10,
-          ),
-          widget.project.teamMembers.isNotEmpty
-              ? Stack(
-                  children: [
-                    ...buildProjectMembers(context, widget.project.teamMembers),
-                  ],
-                )
-              : Text(
-                  "0 Team Members",
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                )
-        ],
+        ),
       ),
     );
   }

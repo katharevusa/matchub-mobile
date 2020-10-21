@@ -33,14 +33,14 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
   @override
   void initState() {
     loadFuture = loading();
-    print("============="+widget.isProjectOnwer.toString());
+    print("=============" + widget.isProjectOnwer.toString());
     super.initState();
   }
 
   getCreator() async {
     final url = 'authenticated/getAccount/${widget.announcement.creatorId}';
-    final responseData = await _helper.getProtected(
-        url, accessToken: Provider.of<Auth>(context, listen: false).accessToken);
+    final responseData = await _helper.getProtected(url,
+        accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     creator = Profile.fromJson(responseData);
     // await retrieveProject();
   }
@@ -48,15 +48,17 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
   retrieveProject() async {
     final responseData = await ApiBaseHelper.instance.getProtected(
         "authenticated/getProject?projectId=${widget.announcement.projectId}",
-         accessToken:Provider.of<Auth>(this.context, listen: false).accessToken);
+        accessToken:
+            Provider.of<Auth>(this.context, listen: false).accessToken);
     project = Project.fromJson(responseData);
   }
 
   loading() async {
     if (widget.announcement.creatorId != null) {
       await getCreator();
-      await retrieveProject();
     }
+    await retrieveProject();
+    await readNotification();
   }
 
   loadAnnouncements() async {
@@ -68,10 +70,30 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
         .getAllProjectPublic(project, profile, accessToken);
   }
 
+  readNotification() async {
+    if (widget.isProjectOnwer == false) {
+      Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
+      final url =
+          "authenticated/viewAnnouncement?announcementId=${widget.announcement.announcementId}&viewerId=${profile.accountId}";
+      var accessToken = Provider.of<Auth>(this.context).accessToken;
+      final response = await ApiBaseHelper.instance
+          .putProtected(url, accessToken: accessToken);
+      await loadNotifications();
+      print("Success");
+    }
+  }
+
+  loadNotifications() async {
+    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
+    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
+    await Provider.of<ManageNotification>(context, listen: false)
+        .getAllAnnouncementForUsers(profile, accessToken);
+  }
+
   deleteAnnouncement() async {
     var profileId = Provider.of<Auth>(context).myProfile.accountId;
     if (widget.announcement.type == "PROJECT_INTERNAL_ANNOUNCEMENT" &&
-        widget.announcement.creatorId == profileId) {
+        widget.isProjectOnwer) {
       final url =
           "authenticated/deleteProjectInternalAnnouncement?announcementId=${widget.announcement.announcementId}&userId=${profileId}";
       try {
@@ -101,7 +123,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                 ));
       }
     } else if (widget.announcement.type == "PROJECT_PUBLIC_ANNOUNCEMENT" &&
-        widget.announcement.creatorId == profileId) {
+        widget.isProjectOnwer) {
       final url =
           "authenticated/deleteProjectPublicAnnouncement?announcementId=${widget.announcement.announcementId}&userId=${profileId}";
       try {
@@ -129,7 +151,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                   ],
                 ));
       }
-    } else if (widget.announcement.creatorId == null) {
+    } else if (!widget.isProjectOnwer) {
       final url =
           "authenticated/deleteAnAnnouncementForUser?announcementId=${widget.announcement.announcementId}&userId=${profileId}";
       try {
@@ -137,7 +159,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
         final responseData = await ApiBaseHelper.instance.deleteProtected(url,
             accessToken: Provider.of<Auth>(context).accessToken);
         print("Success");
-        // Provider.of<Auth>(context).retrieveUser();
+        await loadNotifications();
         Navigator.of(context).pop(true);
       } catch (error) {
         final responseData = error.body as Map<String, dynamic>;

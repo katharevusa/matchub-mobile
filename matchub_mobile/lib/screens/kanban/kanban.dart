@@ -17,6 +17,7 @@ import 'board/boardView.dart';
 import 'board/boardViewController.dart';
 
 class KanbanView extends StatefulWidget {
+  static const routeName = "/kanban-view";
   Map<String, dynamic> channelData;
   Project project;
 
@@ -99,51 +100,49 @@ class _KanbanViewState extends State<KanbanView> {
     var kanbanController =
         Provider.of<KanbanController>(context, listen: false);
     return BoardItem(
-        onStartDragItem:
-            (int listIndex, int itemIndex, BoardItemState state) {},
-        onDropItem: (int listIndex, int itemIndex, int oldListIndex,
-            int oldItemIndex, BoardItemState state) {
-          //Used to update our local item data
-          var item = kanban.taskColumns[oldListIndex].listOfTasks[oldItemIndex];
-          kanban.taskColumns[oldListIndex].listOfTasks.removeAt(oldItemIndex);
-          kanban.taskColumns[listIndex].listOfTasks.insert(itemIndex, item);
-          kanbanController.reorderTaskSequence(
-              Provider.of<Auth>(context, listen: false).myProfile.accountId);
-        },
-        onTapItem:
-            (int listIndex, int itemIndex, BoardItemState state) async {
-              Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                  builder: (_) => ViewTask(task: task, kanban: kanban)));
-            },
-        item: Container(
-            height: 120,
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                ),
-              ],
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
+      onStartDragItem: (int listIndex, int itemIndex, BoardItemState state) {},
+      onDropItem: (int listIndex, int itemIndex, int oldListIndex,
+          int oldItemIndex, BoardItemState state) {
+        //Used to update our local item data
+        var item = kanban.taskColumns[oldListIndex].listOfTasks[oldItemIndex];
+        kanban.taskColumns[oldListIndex].listOfTasks.removeAt(oldItemIndex);
+        kanban.taskColumns[listIndex].listOfTasks.insert(itemIndex, item);
+        kanbanController.reorderTaskSequence(
+            Provider.of<Auth>(context, listen: false).myProfile.accountId);
+      },
+      onTapItem: (int listIndex, int itemIndex, BoardItemState state) async {
+        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+            builder: (_) => ViewTask(task: task, kanban: kanban)));
+      },
+      item: Container(
+        height: 120,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
             ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  task.taskTitle,
-                  style: TextStyle(
-                      fontSize: 2.2 * SizeConfig.textMultiplier,
-                      fontWeight: FontWeight.w700),
-                ),
-                ...buildTeamMemberRow(task.taskDoers)
-              ],
+          ],
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              task.taskTitle,
+              style: TextStyle(
+                  fontSize: 2.2 * SizeConfig.textMultiplier,
+                  fontWeight: FontWeight.w700),
             ),
-          ),
-        );
+            ...buildTeamMemberRow(task.taskDoers)
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _createBoardList(TaskColumnEntity list) {
@@ -211,10 +210,10 @@ Widget _buildAvatar(profile, {double radius = 50}) {
     decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.grey[400].withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 3,offset: Offset(0,3)
-          ),
+              color: Colors.grey[400].withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 3,
+              offset: Offset(0, 3)),
         ],
         border: Border.all(color: Colors.white, width: 3),
         shape: BoxShape.circle),

@@ -18,5 +18,4 @@ KanbanEntity _$KanbanEntityFromJson(Map<String, dynamic> json) {
             .map((i) => TaskColumnEntity.fromJson(i))
             .toList()
         : [];
-
 }

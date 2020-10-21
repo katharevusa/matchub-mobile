@@ -25,7 +25,7 @@ class ProjectOverview extends StatefulWidget {
 
 class _ProjectOverviewState extends State<ProjectOverview> {
   List<Project> allProjects = [];
-
+  final newProject = new Project();
   @override
   Widget build(BuildContext context) {
     Profile myProfile = Provider.of<Auth>(context).myProfile;
@@ -34,6 +34,15 @@ class _ProjectOverviewState extends State<ProjectOverview> {
       ..addAll(myProfile.projectsJoined);
     return Scaffold(
       body: TopScreen(myProfile),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FlatButton.icon(
+          onPressed: () => Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ProjectCreationScreen(newProject: newProject)),
+              ),
+          icon: Icon(Icons.add),
+          label: Text("Create project")),
     );
   }
 }
@@ -89,14 +98,14 @@ class _TopScreenState extends State<TopScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text("50",
+                              Text(countActiveProject().toString(),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20.0,
                                     color: Colors.black,
                                   )),
                               const SizedBox(height: 5.0),
-                              Text("Launched project",
+                              Text("Active project",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12.0,
@@ -113,7 +122,7 @@ class _TopScreenState extends State<TopScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text("10",
+                              Text(countPendingProject().toString(),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20.0,
@@ -146,7 +155,7 @@ class _TopScreenState extends State<TopScreen> {
                                     color: Colors.black,
                                   )),
                               const SizedBox(height: 5.0),
-                              Text("Total project",
+                              Text("Owned project",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12.0,
@@ -192,6 +201,26 @@ class _TopScreenState extends State<TopScreen> {
         BottomScreen(widget.myProfile, isOwnProjects)
       ],
     );
+  }
+
+  num countPendingProject() {
+    num counter = 0;
+    for (Project p in widget.myProfile.projectsOwned) {
+      if (p.projStatus == "ON_HOLD") {
+        counter++;
+      }
+    }
+    return counter;
+  }
+
+  num countActiveProject() {
+    num counter = 0;
+    for (Project p in widget.myProfile.projectsOwned) {
+      if (p.projStatus == "ACTIVE") {
+        counter++;
+      }
+    }
+    return counter;
   }
 }
 
@@ -296,7 +325,7 @@ class BottomScreen extends StatelessWidget {
                                 Container(
                                   padding: EdgeInsets.all(10),
                                   height: 30,
-                                  width: 80,
+                                  width: 120,
                                   decoration: BoxDecoration(
                                     color: index % 6 == 0
                                         ? Color(0xffDCF6FC)
@@ -304,17 +333,14 @@ class BottomScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Center(
-                                      child: DateTime.now()
-                                                  .difference(myProfile
-                                                      .projectsOwned[index]
-                                                      .endDate)
-                                                  .inDays >
-                                              0
+                                      child: (myProfile.projectsOwned[index]
+                                                  .projStatus ==
+                                              "ACTIVE")
                                           ? Text(
-                                              DateTime.now()
-                                                      .difference(myProfile
-                                                          .projectsOwned[index]
+                                              (myProfile.projectsOwned[index]
                                                           .endDate)
+                                                      .difference(
+                                                          DateTime.now())
                                                       .inDays
                                                       .toString() +
                                                   ' Days Left',
@@ -322,12 +348,23 @@ class BottomScreen extends StatelessWidget {
                                                   fontSize: 9,
                                                   color: progress[index % 6]),
                                             )
-                                          : Text(
-                                              'Completed',
-                                              style: TextStyle(
-                                                  fontSize: 9,
-                                                  color: progress[index % 6]),
-                                            )),
+                                          : myProfile.projectsOwned[index]
+                                                      .projStatus ==
+                                                  "COMPLETED"
+                                              ? Text(
+                                                  'Completed',
+                                                  style: TextStyle(
+                                                      fontSize: 9,
+                                                      color:
+                                                          progress[index % 6]),
+                                                )
+                                              : Text(
+                                                  'Terminated',
+                                                  style: TextStyle(
+                                                      fontSize: 9,
+                                                      color:
+                                                          progress[index % 6]),
+                                                )),
                                 ),
                                 SizedBox(
                                   width: 10,
@@ -420,7 +457,7 @@ class BottomScreen extends StatelessWidget {
                                 Container(
                                   padding: EdgeInsets.all(10),
                                   height: 30,
-                                  width: 80,
+                                  width: 120,
                                   decoration: BoxDecoration(
                                     color: index % 6 == 0
                                         ? Color(0xffDCF6FC)
@@ -428,17 +465,14 @@ class BottomScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Center(
-                                      child: DateTime.now()
-                                                  .difference(myProfile
-                                                      .projectsJoined[index]
-                                                      .endDate)
-                                                  .inDays >
-                                              0
+                                      child: (myProfile.projectsJoined[index]
+                                                  .projStatus ==
+                                              "ACTIVE")
                                           ? Text(
-                                              DateTime.now()
-                                                      .difference(myProfile
-                                                          .projectsJoined[index]
+                                              (myProfile.projectsJoined[index]
                                                           .endDate)
+                                                      .difference(
+                                                          DateTime.now())
                                                       .inDays
                                                       .toString() +
                                                   ' Days Left',
@@ -446,12 +480,23 @@ class BottomScreen extends StatelessWidget {
                                                   fontSize: 9,
                                                   color: progress[index % 6]),
                                             )
-                                          : Text(
-                                              'Completed',
-                                              style: TextStyle(
-                                                  fontSize: 9,
-                                                  color: progress[index % 6]),
-                                            )),
+                                          : myProfile.projectsJoined[index]
+                                                      .projStatus ==
+                                                  "COMPLETED"
+                                              ? Text(
+                                                  'Completed',
+                                                  style: TextStyle(
+                                                      fontSize: 9,
+                                                      color:
+                                                          progress[index % 6]),
+                                                )
+                                              : Text(
+                                                  'Terminated',
+                                                  style: TextStyle(
+                                                      fontSize: 9,
+                                                      color:
+                                                          progress[index % 6]),
+                                                )),
                                 ),
                                 SizedBox(
                                   width: 10,

@@ -1,65 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectFollowerList.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/widgets/attachment_image.dart';
+import 'package:provider/provider.dart';
 
-class PManagementProjectFollowers extends StatelessWidget {
+class PManagementProjectFollowers extends StatefulWidget {
   Project project;
   PManagementProjectFollowers(this.project);
+
+  @override
+  _PManagementProjectFollowersState createState() =>
+      _PManagementProjectFollowersState();
+}
+
+class _PManagementProjectFollowersState
+    extends State<PManagementProjectFollowers> {
+  @override
+  initState() {
+    Provider.of<ManageProject>(context, listen: false)
+        .getProject(widget.project.projectId);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 150,
-      width: 180,
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(
-              "Project Followers",
-            ),
+    widget.project = Provider.of<ManageProject>(context).managedProject;
+    return Material(
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              settings: RouteSettings(name: "/project-followers"),
+              builder: (_) => ProjectFollowerList(
+                    project: widget.project,
+                  )));
+        },
+        child: Container(
+          height: 150,
+          width: 180,
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  "Project Followers",
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              widget.project.projectFollowers.isNotEmpty
+                  ? Stack(
+                      children: [
+                        ...buildProjectFollowers(
+                            context, widget.project.projectFollowers),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Text(
+                          "0 Followers...",
+                          style: TextStyle(fontSize: 10, color: Colors.grey),
+                        ),
+                        Container(
+                          height: 60,
+                          alignment: Alignment.topCenter,
+                          child: Image.asset(
+                            "assets/images/Empty-pana.png",
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ],
+                    )
+            ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          project.userFollowers.isNotEmpty
-              ? Stack(
-                  children: [
-                    ...buildProjectFollowers(context, project.userFollowers),
-                  ],
-                )
-              : Column(
-                  children: [
-                    Text(
-                      "0 Followers...",
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
-                    ),
-                    Container(
-                      height: 60,
-                      alignment: Alignment.topCenter,
-                      child: Image.asset(
-                        "assets/images/Empty-pana.png",
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ],
-                )
-        ],
+        ),
       ),
     );
   }
 
-  buildProjectFollowers(BuildContext context, List userFollowers) {
-    List<Widget> members = [];
-    var l = userFollowers.length;
-    if (userFollowers.length > 5) {
-      userFollowers = userFollowers.sublist(0, 5);
+  buildProjectFollowers(
+      BuildContext context, List<TruncatedProfile> projectFollowers) {
+    List<Widget> followers = [];
+    var l = projectFollowers.length;
+    if (projectFollowers.length > 5) {
+      projectFollowers = projectFollowers.sublist(0, 5);
     }
-    members.add(Container(
+    followers.add(Container(
       height: 30,
       width: 180,
       color: Colors.transparent,
       child: Stack(
         children: [
-          ...userFollowers
+          ...projectFollowers
               .asMap()
               .map(
                 (i, e) => MapEntry(
@@ -78,15 +111,15 @@ class PManagementProjectFollowers extends StatelessWidget {
         ],
       ),
     ));
-    members.add(
+    followers.add(
       Positioned(
         right: 10,
         bottom: 0,
         child: Container(
           height: 10,
-          child: l - userFollowers.length != 0
+          child: l - projectFollowers.length != 0
               ? Text(
-                  (l - userFollowers.length).toString() + ' more...',
+                  (l - projectFollowers.length).toString() + ' more...',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -96,17 +129,15 @@ class PManagementProjectFollowers extends StatelessWidget {
         ),
       ),
     );
-    return members;
+    return followers;
   }
 
   Widget _buildAvatar(TruncatedProfile e, {double radius = 80}) {
     return CircleAvatar(
       backgroundColor: Colors.white,
       radius: radius,
-      child: CircleAvatar(
-        radius: radius - 2,
-        backgroundImage: NetworkImage(
-            "${ApiBaseHelper().baseUrl}${e.profilePhoto.substring(30)}"),
+      child: ClipOval(
+        child: AttachmentImage(e.profilePhoto),
       ),
     );
   }

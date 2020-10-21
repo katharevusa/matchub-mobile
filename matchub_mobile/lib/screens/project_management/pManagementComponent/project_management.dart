@@ -6,6 +6,7 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/drawerMenu.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/screens/project/project_management_screen.dart';
 import 'package:matchub_mobile/screens/project_management/notification/viewAllNotification.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/channels.dart';
@@ -40,7 +41,7 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
 
   AnimationController _animationController;
   bool isLoaded;
-
+  Profile profile;
   @override
   void initState() {
     setState(() {
@@ -66,7 +67,6 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
   }
 
   loadAnnouncements() async {
-    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageNotification>(context, listen: false)
         .getAllProjectInternal(widget.project, profile, accessToken);
@@ -76,7 +76,8 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
 
   loadProject() async {
     await Provider.of<ManageProject>(context, listen: false).getProject(
-        widget.project.projectId,);
+      widget.project.projectId,
+    );
     setState(() {
       isLoaded = true;
     });
@@ -84,6 +85,7 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
 
   @override
   Widget build(BuildContext context) {
+    profile = Provider.of<Auth>(context, listen: false).myProfile;
     publicAnnouncements =
         Provider.of<ManageNotification>(context).projectPublicAnnouncement;
     internalAnnouncements =
@@ -121,14 +123,25 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.create,
-                      ),
-                    ],
-                  ),
+                  profile.projectsOwned.contains(widget.project)
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Ink(
+                              child: IconButton(
+                                  icon: Icon(Icons.create),
+                                  color: Colors.black,
+                                  onPressed: () =>
+                                      Navigator.of(context, rootNavigator: true)
+                                          .push(MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProjectCreationScreen(
+                                                      newProject:
+                                                          widget.project)))),
+                            ),
+                          ],
+                        )
+                      : Container(),
                   PManagementSwiperCard(widget.project),
                   Container(
                       decoration: BoxDecoration(

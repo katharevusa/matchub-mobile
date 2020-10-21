@@ -147,7 +147,10 @@ class _AllNotificationsState extends State<AllNotifications> {
         ),
         Expanded(
           child: SingleChildScrollView(
-              child: ListView.builder(
+              child: ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return Divider();
+                  },
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   key: _listKey,
@@ -169,106 +172,34 @@ class _AllNotificationsState extends State<AllNotifications> {
                           },
                         );
                       },
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(children: [
-                                Text(
-                                  DateFormat('E').format(
-                                      publicAnnouncements[index].timestamp),
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 10),
-                                ),
-                                Text(
-                                  publicAnnouncements[index]
-                                      .timestamp
-                                      .day
-                                      .toString(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                Text(
-                                  DateFormat('MMM').format(
-                                      publicAnnouncements[index].timestamp),
-                                  style: TextStyle(
-                                      color: Colors.blue, fontSize: 10),
-                                )
-                              ]),
-                              Text(
-                                publicAnnouncements[index].title,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16.0),
-                              ),
-                            ],
+                      child: ListTile(
+                        trailing: Column(children: [
+                          Text(
+                            DateFormat('E')
+                                .format(publicAnnouncements[index].timestamp),
+                            style: TextStyle(color: Colors.grey, fontSize: 10),
                           ),
+                          Text(
+                            publicAnnouncements[index].timestamp.day.toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Text(
+                            DateFormat('MMM')
+                                .format(publicAnnouncements[index].timestamp),
+                            style: TextStyle(color: Colors.blue, fontSize: 10),
+                          )
+                        ]),
+                        title: Text(
+                          publicAnnouncements[index].title,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0),
                         ),
                       ),
                     );
-                  })
-              /*          child: AnimatedList(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                key: _listKey,
-                padding: const EdgeInsets.all(16.0),
-                initialItemCount: publicAnnouncements.length,
-                itemBuilder: (context, index, animation) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(
-                        AnnouncementDetail.routeName,
-                        arguments: internalAnnouncements[index],
-                      );
-                    },
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(children: [
-                              Text(
-                                DateFormat('E').format(
-                                    publicAnnouncements[index].timestamp),
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 10),
-                              ),
-                              Text(
-                                publicAnnouncements[index]
-                                    .timestamp
-                                    .day
-                                    .toString(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              Text(
-                                DateFormat('MMM').format(
-                                    publicAnnouncements[index].timestamp),
-                                style:
-                                    TextStyle(color: Colors.blue, fontSize: 10),
-                              )
-                            ]),
-                            Text(
-                              publicAnnouncements[index].title,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }),*/
-              ),
+                  })),
         )
       ],
     );
@@ -298,7 +229,10 @@ class _AllNotificationsState extends State<AllNotifications> {
         ),
         Expanded(
           child: SingleChildScrollView(
-              child: ListView.builder(
+              child: ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return Divider();
+                  },
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   key: _listKey,
@@ -320,44 +254,33 @@ class _AllNotificationsState extends State<AllNotifications> {
                           },
                         );
                       },
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(children: [
-                                Text(
-                                  DateFormat('E').format(
-                                      internalAnnouncements[index].timestamp),
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 10),
-                                ),
-                                Text(
-                                  internalAnnouncements[index]
-                                      .timestamp
-                                      .day
-                                      .toString(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                Text(
-                                  DateFormat('MMM').format(
-                                      internalAnnouncements[index].timestamp),
-                                  style: TextStyle(
-                                      color: Colors.blue, fontSize: 10),
-                                )
-                              ]),
-                              Text(
-                                internalAnnouncements[index].title,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16.0),
-                              ),
-                            ],
+                      child: ListTile(
+                        trailing: Column(children: [
+                          Text(
+                            DateFormat('E')
+                                .format(internalAnnouncements[index].timestamp),
+                            style: TextStyle(color: Colors.grey, fontSize: 10),
                           ),
+                          Text(
+                            internalAnnouncements[index]
+                                .timestamp
+                                .day
+                                .toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Text(
+                            DateFormat('MMM')
+                                .format(internalAnnouncements[index].timestamp),
+                            style: TextStyle(color: Colors.blue, fontSize: 10),
+                          )
+                        ]),
+                        title: Text(
+                          internalAnnouncements[index].title,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0),
                         ),
                       ),
                     );
