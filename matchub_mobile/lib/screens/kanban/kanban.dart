@@ -19,6 +19,7 @@ import 'board/boardItem.dart';
 import 'board/boardList.dart';
 import 'board/boardView.dart';
 import 'board/boardViewController.dart';
+import 'board/columnCreatePopup.dart';
 
 class KanbanView extends StatefulWidget {
   Map<String, dynamic> channelData;
@@ -118,8 +119,10 @@ class _KanbanViewState extends State<KanbanView> {
             Provider.of<Auth>(context, listen: false).myProfile.accountId);
       },
       onTapItem: (int listIndex, int itemIndex, BoardItemState state) async {
-        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-            builder: (_) => ViewTask(task: task, kanban: kanban))).then((value) => setState((){}));
+        Navigator.of(context, rootNavigator: true)
+            .push(MaterialPageRoute(
+                builder: (_) => ViewTask(task: task, kanban: kanban)))
+            .then((value) => setState(() {}));
       },
       item: Container(
         constraints: BoxConstraints(
@@ -138,54 +141,56 @@ class _KanbanViewState extends State<KanbanView> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "${DateFormat.yMMMd().format(task.expectedDeadline)} | " +
-                  (daysToDisplay == 0
-                      ? "Today"
-                      : "${daysToDisplay.toString()} days" +
-                          (daysToDeadline.isNegative ? " ago" : "")),
-              style: TextStyle(
-                  color: daysToDeadline > 5
-                      ? kSecondaryColor
-                      : daysToDeadline > 0
-                          ? Colors.orange[200]
-                          : daysToDeadline == 0
-                              ? Colors.red[200]
-                              : Colors.grey[400],
-                  fontSize: 1.4 * SizeConfig.textMultiplier,
-                  fontWeight: FontWeight.w500),
-            ),
-            Text(
-              task.taskTitle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 2 * SizeConfig.textMultiplier,
-                  fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 7),
-            Row(
-              children: [
-                Expanded(
-                    child: Tags(
-                      alignment: WrapAlignment.start,
-                      spacing: 0,
-                      runSpacing: 8,
-                      itemBuilder: (index) {
-                        MapEntry label =
-                            task.labelAndColour.entries.toList()[index];
-                        return TaskLabel(label: label);
-                      },
-                      itemCount: task.labelAndColour.length,
-                    )),
-                Flexible(flex: 1, child: buildTeamMemberRow(task.taskDoers)),
-              ],
-            )
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "${DateFormat.yMMMd().format(task.expectedDeadline)} | " +
+                    (daysToDisplay == 0
+                        ? "Today"
+                        : "${daysToDisplay.toString()} days" +
+                            (daysToDeadline.isNegative ? " ago" : "")),
+                style: TextStyle(
+                    color: daysToDeadline > 5
+                        ? kSecondaryColor
+                        : daysToDeadline > 0
+                            ? Colors.orange[200]
+                            : daysToDeadline == 0
+                                ? Colors.red[200]
+                                : Colors.grey[400],
+                    fontSize: 1.4 * SizeConfig.textMultiplier,
+                    fontWeight: FontWeight.w500),
+              ),
+              Text(
+                task.taskTitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 2 * SizeConfig.textMultiplier,
+                    fontWeight: FontWeight.w600),
+              ),
+              if (task.labelAndColour.isNotEmpty) SizedBox(height: 7),
+              Row(
+                children: [
+                  Expanded(
+                      child: Tags(
+                    alignment: WrapAlignment.start,
+                    spacing: 0,
+                    runSpacing: 8,
+                    itemBuilder: (index) {
+                      MapEntry label =
+                          task.labelAndColour.entries.toList()[index];
+                      return TaskLabel(label: label);
+                    },
+                    itemCount: task.labelAndColour.length,
+                  )),
+                  Flexible(flex: 1, child: buildTeamMemberRow(task.taskDoers)),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -216,66 +221,173 @@ class _KanbanViewState extends State<KanbanView> {
                   list.columnTitle,
                   style: TextStyle(fontSize: 20),
                 ))),
+        PopupMenuButton(
+            offset: Offset(0, 50),
+            icon: Icon(Icons.more_vert_rounded),
+            itemBuilder: (BuildContext context) => [
+                  PopupMenuItem(
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                      visualDensity: VisualDensity.compact,
+                      onTap: () => showModalBottomSheet(
+                          useRootNavigator: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          backgroundColor: Colors.white,
+                          context: context,
+                          builder: (context) => ColumnCreatePopup(
+                                columnId: list.taskColumnId,
+                                columnName: list.columnTitle,
+                              )),
+                      dense: true,
+                      leading: Icon(FlutterIcons.edit_3_fea),
+                      title: Text(
+                        "Rename Column",
+                        style: TextStyle(
+                            fontSize: SizeConfig.textMultiplier * 1.8),
+                      ),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                      visualDensity: VisualDensity.compact,
+                      onTap: () {
+                        deleteColumn(this.context, list);
+                        Navigator.pop(context);
+                      },
+                      dense: true,
+                      leading: Icon(FlutterIcons.trash_alt_faw5s),
+                      title: Text(
+                        "Delete Column",
+                        style: TextStyle(
+                            fontSize: SizeConfig.textMultiplier * 1.8),
+                      ),
+                    ),
+                  )
+                ]),
       ],
       items: items,
     );
   }
-}
 
-Widget buildTeamMemberRow(List members) {
-  var newMembers;
-  if (members.length > 3) {
-    newMembers = members.sublist(1, 4);
-  } else {
-    newMembers = members;
-  }
-  return (members.isNotEmpty)
-      ? Container(
-          alignment: Alignment.bottomRight,
-          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            Stack(
-              children: [
-                ...newMembers
-                    .asMap()
-                    .map((i, e) => MapEntry(
-                        i,
-                        Transform.translate(
-                            offset: Offset(i * -30.0, 0),
-                            child: _buildAvatar(
-                              e,
-                            ))))
-                    .values
-                    .toList(),
-                if (members.length > 3)
-                  Transform.translate(
-                      offset: Offset(40.0, 35),
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        child: Icon(
-                          Icons.more_horiz_rounded,
-                          color: Colors.grey,
-                        ),
-                      ))
-              ],
+  deleteColumn(context, TaskColumnEntity col) async {
+    if (col.listOfTasks.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+          title: new Text("Delete Column",),
+          content:
+              new Text("Are you sure you would like to delete this column"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Yes'),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
             ),
-          ]))
-      : Container();
-}
+            FlatButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+          ],
+        ),
+      ).then((response) async {
+        if (response) {
+          await Provider.of<KanbanController>(context, listen: false)
+              .deleteColumn(
+                  col.taskColumnId,
+                  Provider.of<Auth>(context, listen: false)
+                      .myProfile
+                      .accountId);
+        }
+      });
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+          title: new Text("Column has tasks"),
+          content: new Text(
+              "Shift the tasks in this column to a new home before you delete it!"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(),
+      );
+    }
+  }
 
-Widget _buildAvatar(profile, {double radius = 50}) {
-  return Container(
-    decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey[400].withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 3,
-              offset: Offset(0, 3)),
-        ],
-        border: Border.all(color: Colors.white, width: 3),
-        shape: BoxShape.circle),
-    height: radius,
-    width: radius,
-    child: ClipOval(child: AttachmentImage(profile.profilePhoto)),
-  );
+  Widget buildTeamMemberRow(List members) {
+    var newMembers;
+    if (members.length > 3) {
+      newMembers = members.sublist(1, 4);
+    } else {
+      newMembers = members;
+    }
+    return (members.isNotEmpty)
+        ? Container(
+            alignment: Alignment.bottomRight,
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Stack(
+                children: [
+                  ...newMembers
+                      .asMap()
+                      .map((i, e) => MapEntry(
+                          i,
+                          Transform.translate(
+                              offset: Offset(i * -30.0, 0),
+                              child: _buildAvatar(
+                                e,
+                              ))))
+                      .values
+                      .toList(),
+                  if (members.length > 3)
+                    Transform.translate(
+                        offset: Offset(40.0, 35),
+                        child: Container(
+                          alignment: Alignment.bottomRight,
+                          child: Icon(
+                            Icons.more_horiz_rounded,
+                            color: Colors.grey,
+                          ),
+                        ))
+                ],
+              ),
+            ]))
+        : Container();
+  }
+
+  Widget _buildAvatar(profile, {double radius = 50}) {
+    return Container(
+      decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey[400].withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 3,
+                offset: Offset(0, 3)),
+          ],
+          border: Border.all(color: Colors.white, width: 3),
+          shape: BoxShape.circle),
+      height: radius,
+      width: radius,
+      child: ClipOval(child: AttachmentImage(profile.profilePhoto)),
+    );
+  }
 }

@@ -238,7 +238,7 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
     "taskCreatorOrEditorId": null,
     "kanbanboardId": null,
   };
-  final GlobalKey<FormState>  _formController = GlobalKey();
+  final GlobalKey<FormState> _formController = GlobalKey();
   Profile selectedTaskLeader;
   @override
   void initState() {
@@ -261,7 +261,6 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: Container(
-        height: 200,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -273,49 +272,53 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
         child: SingleChildScrollView(
           child: Form(
             key: _formController,
-                      child: Column(
+            child: Column(
               children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Row(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        FlutterIcons.columns_faw5s,
-                        size: 14,
-                        color: Colors.grey[400],
+                      Row(
+                        children: [
+                          Icon(
+                            FlutterIcons.columns_faw5s,
+                            size: 14,
+                            color: Colors.grey[400],
+                          ),
+                          SizedBox(width: 10),
+                          Text(widget.columnList.title,
+                              style: AppTheme.searchLight.copyWith(
+                                  color: Colors.grey[400],
+                                  fontSize: 2 * SizeConfig.textMultiplier)),
+                        ],
                       ),
-                      SizedBox(width: 10),
-                      Text(widget.columnList.title,
-                          style: AppTheme.searchLight.copyWith(
-                              color: Colors.grey[400],
-                              fontSize: 2 * SizeConfig.textMultiplier)),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 1),
-                    child: FlatButton(
-                        color: kKanbanColor,
-                        onPressed: () async {
-                           _formController.currentState.save();
-                          if (newTask['taskTitle'] != null &&
-                              newTask['expectedDeadline'] != null) {
-                            await Provider.of<KanbanController>(context,
-                                    listen: false)
-                                .createTask(newTask);
-                            Navigator.pop(context);
-                          }
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          "Create Task",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 2 * SizeConfig.textMultiplier),
-                        )),
-                  ),
-                ]),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 1),
+                        child: FlatButton(
+                            color: kKanbanColor,
+                            onPressed: () async {
+                              _formController.currentState.save();
+                              if (_formController.currentState.validate()) {
+                                if (newTask['taskTitle'] != null &&
+                                    newTask['expectedDeadline'] != null) {
+                                  await Provider.of<KanbanController>(context,
+                                          listen: false)
+                                      .createTask(newTask);
+                                  Navigator.pop(context);
+                                }
+                              }
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              "Create Task",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 2 * SizeConfig.textMultiplier),
+                            )),
+                      ),
+                    ]),
                 SizedBox(height: 6),
                 TextFormField(
                   validator: (value) {
@@ -332,7 +335,7 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       focusedBorder: InputBorder.none,
-                      hintText: "Task Name...",
+                      hintText: "New task name...",
                       hintStyle: TextStyle(color: Colors.grey[700])),
                 ),
                 Row(children: [
@@ -344,8 +347,8 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                         shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(20.0)), //this right here
-                        child:
-                            SelectTaskMember(kanbanController: kanbanController),
+                        child: SelectTaskMember(
+                            kanbanController: kanbanController),
                       );
                       showDialog(
                           context: context,

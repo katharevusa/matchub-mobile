@@ -69,6 +69,43 @@ class KanbanController with ChangeNotifier {
     notifyListeners();
   }
 
+  createNewColumn(String columnName, editorId) async {
+    final response = await ApiBaseHelper.instance
+        .postProtected("authenticated/createNewColumn",
+            body: json.encode({
+              "columnTitle": columnName,
+              "kanbanBoardId": kanban.kanbanBoardId,
+              "editorId": editorId
+            }));
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    notifyListeners();
+  }
+
+  updateColumn(String columnName, editorId, columnId) async {
+    final response = await ApiBaseHelper.instance
+        .putProtected("authenticated/updateColumn",
+            body: json.encode({
+              "columnTitle": columnName,
+              "columnId" : columnId,
+              "kanbanBoardId": kanban.kanbanBoardId,
+              "editorId": editorId
+            }));
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    notifyListeners();
+  }
+
+  deleteColumn(int columnIdToDelete, deletorId, {transferredColumnId}) async {
+    final response = await ApiBaseHelper.instance
+        .putProtected("authenticated/deleteColumn",
+            body: json.encode({
+              "deleteColumnId": columnIdToDelete,
+              "transferredColumnId": transferredColumnId,
+              "deletorId": deletorId
+            }));
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    notifyListeners();
+  }
+
   reorderTaskSequence(arrangerId) async {
     var newKanbanOrder = {};
     [
@@ -110,4 +147,3 @@ class KanbanController with ChangeNotifier {
     notifyListeners();
   }
 }
-

@@ -86,7 +86,7 @@ class _ViewTaskState extends State<ViewTask> {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.edit_outlined, color: kKanbanColor),
+              icon: Icon(Icons.edit_outlined, color:isTaskReporter ?  kKanbanColor : Colors.grey[200]),
               onPressed: () => setState(() => isTaskReporter = !isTaskReporter),
             ),
             FlatButton(
@@ -312,7 +312,7 @@ class _ViewTaskState extends State<ViewTask> {
                         Row(
                           children: [
                             if (taskReporter == null) ...[
-                              if (isTaskReporter)
+                              if (isTaskReporter) ...[
                                 drawAddButton(
                                   onTap: () {
                                     final kanbanController =
@@ -344,7 +344,7 @@ class _ViewTaskState extends State<ViewTask> {
                                     });
                                   },
                                 ),
-                              SizedBox(width: 10),
+                              SizedBox(width: 10),],
                               DottedBorder(
                                 borderType: BorderType.RRect,
                                 radius: Radius.circular(5),

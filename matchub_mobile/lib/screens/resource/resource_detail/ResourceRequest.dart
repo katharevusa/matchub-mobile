@@ -97,7 +97,8 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
       future: resourceOwnerFuture,
       builder: (context, snapshot) => (snapshot.connectionState ==
               ConnectionState.done)
-          ? Scaffold(
+          ? 
+          Scaffold(
               appBar: AppBar(
                 title: Text("Resource request form"),
               ),

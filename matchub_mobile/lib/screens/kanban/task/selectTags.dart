@@ -80,8 +80,9 @@ class _SelectTagsDialogState extends State<SelectTagsDialog> {
                   setState(() {});
                 },
                 decoration: InputDecoration(
+                  border: InputBorder.none,
                     isCollapsed: true,
-                    hintText: "Search",
+                    hintText: "Search...",
                     hintStyle: TextStyle(color: Colors.grey[700]))),
           ),
           Scrollbar(
@@ -114,15 +115,17 @@ class _SelectTagsDialogState extends State<SelectTagsDialog> {
                                 )
                               : null);
                     }),
-                if (filteredLabels.isEmpty)
+                if (filteredLabels.isEmpty) ...[
+                  SizedBox(height: 20),
                   Container(
-                    height: 140,
+                    height: 160,
                     alignment: Alignment.center,
                     child: Image.asset(
                       "assets/images/nolabel.png",
                       fit: BoxFit.cover,
                     ),
                   ),
+                ]
               ])),
         ]),
       ),

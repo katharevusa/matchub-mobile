@@ -194,25 +194,6 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       project['startDate'] = startProjectTime;
       project['endDate'] = endProjectTime;
       showErrorDialog(error.toString(), context);
-      // final responseData = error.body as Map<String, dynamic>;
-      // print("Failure");
-      // showDialog(
-      //     context: context,
-      //     builder: (ctx) => AlertDialog(
-      //           title: Text(responseData['error']),
-      //           content: Text(responseData['message']),
-      //           actions: <Widget>[
-      //             FlatButton(
-      //               child: Text('Okay'),
-      //               onPressed: () {
-      //                 Navigator.push(
-      //                     context,
-      //                     new MaterialPageRoute(
-      //                         builder: (context) => ResourceScreen()));
-      //               },
-      //             )
-      //           ],
-      //         ));
     }
   }
 
