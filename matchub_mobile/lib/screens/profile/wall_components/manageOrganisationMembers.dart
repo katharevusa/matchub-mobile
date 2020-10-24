@@ -3,7 +3,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manageOrganisationMembers.dart';
+import 'package:matchub_mobile/services/manage_organisationmembers.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';

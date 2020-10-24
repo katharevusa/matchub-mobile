@@ -209,9 +209,9 @@ class _InfoEditPageState extends State<InfoEditPage> {
                                 // isShowCode: true,
                                 isDownIcon: true,
                                 showEnglishName: true,
-                                initialSelection: "+${countryCode}".length > 2
-                                    ? "+${countryCode}"
-                                    : null,
+                                // initialSelection: "+${countryCode}".length > 2
+                                //     ? "+${countryCode}"
+                                //     : null,
                                 appBarBackgroundColor: Colors.transparent,
                                 onChanged: (CountryCode code) {
                                   widget.profile['country'] = code.name;

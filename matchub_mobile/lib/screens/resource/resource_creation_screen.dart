@@ -143,7 +143,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
             "${ApiBaseHelper.instance.baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "photos",
-            context);
+            );
       }
       // Provider.of<Auth>(context).retrieveUser();
       loadResources();
@@ -223,7 +223,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
             "${ApiBaseHelper.instance.baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
             Provider.of<Auth>(context, listen: false).accessToken,
             "photos",
-            context);
+            );
       }
       Provider.of<Auth>(context).retrieveUser();
       Navigator.of(context).pop(true);

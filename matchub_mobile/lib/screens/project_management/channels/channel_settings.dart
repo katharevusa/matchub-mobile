@@ -42,7 +42,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
     for (String uuid in widget.channelData['members']) {
       final response = await ApiBaseHelper.instance.getProtected(
           "authenticated/getAccountByUUID/$uuid",
-           accessToken:Provider.of<Auth>(context, listen: false).accessToken);
+          accessToken: Provider.of<Auth>(context, listen: false).accessToken);
       members.add(Profile.fromJson(response));
     }
     setState(() => _isLoading = false);
@@ -133,29 +133,34 @@ class _ChannelSettingsState extends State<ChannelSettings> {
         ],
       ),
       body: SingleChildScrollView(
-              child: Column(
+        child: Column(
           children: [
             ListTile(
-              title: Text(widget.channelData['name']),
+              title: Text(widget.channelData['name'],
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
               subtitle: Text("Name"),
             ),
             Divider(
               thickness: 1.5,
+              height: 4,
             ),
-            if(widget.channelData['description'].isNotEmpty) ...[ListTile(
-              leading: Icon(
-                FlutterIcons.info_circle_faw5s,
-                color: Colors.grey[400],
+            if (widget.channelData['description'].isNotEmpty) ...[
+              ListTile(
+                leading: Icon(
+                  FlutterIcons.info_circle_faw5s,
+                  color: Colors.grey[400],
+                ),
+                title: Text(
+                  widget.channelData['description'],
+                  style: AppTheme.unSelectedTabLight.copyWith(fontSize: 15),
+                ),
+                subtitle: Text("Description"),
               ),
-              title: Text(
-                widget.channelData['description'],
-                style: AppTheme.unSelectedTabLight,
+              Divider(
+                thickness: 1.5,
+                height: 4,
               ),
-              subtitle: Text("Description"),
-            ),
-            Divider(
-              thickness: 1.5,
-            ),],
+            ],
             ListTile(
               leading: Icon(
                 FlutterIcons.user_friends_faw5s,
@@ -170,8 +175,8 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                   itemBuilder: (ctx, idx) {
                     bool memberIsOwner =
                         widget.channelData['createdBy'] == members[idx].uuid;
-                    bool memberIsAdmin =
-                        widget.channelData['admins'].contains(members[idx].uuid);
+                    bool memberIsAdmin = widget.channelData['admins']
+                        .contains(members[idx].uuid);
                     return ListTile(
                       onLongPress: () {
                         if (loggedInUserIsOwner && memberIsAdmin) {
@@ -181,8 +186,10 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                                       "Confirm transfer of channel ownership to ${members[idx].name}?"))
                               .then((value) {
                             if (value) {
-                              widget.channelData['createdBy'] = members[idx].uuid;
-                              DatabaseMethods().updateChannel(widget.channelData);
+                              widget.channelData['createdBy'] =
+                                  members[idx].uuid;
+                              DatabaseMethods()
+                                  .updateChannel(widget.channelData);
                               exitChannelSettings(true);
                             }
                           });

@@ -21,9 +21,21 @@ class SelectTaskMembers extends StatefulWidget {
 
 class _SelectTaskMembersState extends State<SelectTaskMembers> {
   List<Profile> selectedTaskMembers = [];
+
+  @override
+  initState() {
+    widget.task.taskDoers.forEach((taskDoer) {
+      int idx = widget.kanbanController.channelMembers.indexWhere(
+          (channelMember) => channelMember.accountId == taskDoer.accountId);
+      if (idx >= 0) {
+        selectedTaskMembers.add(widget.kanbanController.channelMembers[idx]);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    selectedTaskMembers = widget.task.taskDoers;
+    print(selectedTaskMembers.map((e) => e.accountId));
     return Stack(children: [
       Container(
         height: SizeConfig.heightMultiplier * 50,
@@ -46,16 +58,19 @@ class _SelectTaskMembersState extends State<SelectTaskMembers> {
               itemCount: widget.kanbanController.channelMembers.length,
               itemBuilder: (context, index) => ListTile(
                 onTap: () {
+                  if (selectedTaskMembers.indexWhere((selectedMember) =>
+                          selectedMember.accountId ==
+                          widget.kanbanController.channelMembers[index]
+                              .accountId) >=
+                      0) {
+                    selectedTaskMembers
+                        .remove(widget.kanbanController.channelMembers[index]);
+                  } else {
+                    selectedTaskMembers
+                        .add(widget.kanbanController.channelMembers[index]);
+                  }
                   setState(() {
-                    if (selectedTaskMembers.contains(
-                        widget.kanbanController.channelMembers[index])) {
-                      selectedTaskMembers
-                          .remove(widget.kanbanController.channelMembers[index]);
-                    } else {
-                      selectedTaskMembers.add(
-                          widget.kanbanController.channelMembers[index]);
-                    }
-                    print(selectedTaskMembers);
+                    print(selectedTaskMembers.map((e) => e.accountId));
                   });
                 },
                 contentPadding: EdgeInsets.symmetric(horizontal: 20),
@@ -63,7 +78,7 @@ class _SelectTaskMembersState extends State<SelectTaskMembers> {
                   decoration: BoxDecoration(
                       border: Border.all(
                           color: selectedTaskMembers.contains(
-                        widget.kanbanController.channelMembers[index])
+                                  widget.kanbanController.channelMembers[index])
                               ? kKanbanColor
                               : Colors.grey[300],
                           width: 3),
@@ -77,7 +92,7 @@ class _SelectTaskMembersState extends State<SelectTaskMembers> {
                 title: Text(widget.kanbanController.channelMembers[index].name,
                     style: TextStyle(
                         color: selectedTaskMembers.contains(
-                        widget.kanbanController.channelMembers[index])
+                                widget.kanbanController.channelMembers[index])
                             ? kKanbanColor
                             : Colors.grey[900],
                         fontSize: 1.8 * SizeConfig.heightMultiplier,

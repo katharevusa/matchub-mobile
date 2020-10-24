@@ -164,7 +164,7 @@ class _UploadVerificationDocumentState
                         "${ApiBaseHelper.instance.baseUrl}public/setupOrganisationProfile/uploadDocuments/${Provider.of<Auth>(context, listen: false).myProfile.uuid}",
                         Provider.of<Auth>(context, listen: false).accessToken,
                         "files",
-                        context);
+                      );
                   }
                   widget.updateProfile(
                       Provider.of<Auth>(context,listen: false).accessToken, context);

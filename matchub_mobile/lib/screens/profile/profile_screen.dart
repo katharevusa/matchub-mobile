@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var responseData = await ApiBaseHelper.instance.getProtected(
         "authenticated/getAccount/${widget.accountId}",
          accessToken:Provider.of<Auth>(
-          context,
+          context,listen:false
         ).accessToken);
     setState(() {
       // if (widget.accountId == Provider.of<Auth>(context).myProfile.accountId) {

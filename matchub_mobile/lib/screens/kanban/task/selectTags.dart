@@ -167,11 +167,11 @@ class TaskLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 3),
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(5)),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
         decoration: BoxDecoration(
             color: (label.value as String).hexToColor.withAlpha(100),
             borderRadius: BorderRadius.circular(5)),

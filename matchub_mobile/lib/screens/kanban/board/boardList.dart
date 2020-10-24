@@ -150,6 +150,7 @@ class BoardListState extends State<BoardList> {
                             )
                           ])),
                       onTap: () => showModalBottomSheet(
+                          isScrollControlled: true,
                           useRootNavigator: true,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
@@ -333,8 +334,8 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   focusNode: taskNameFocus,
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
+                      border: UnderlineInputBorder(),
+                      focusedBorder: UnderlineInputBorder(),
                       hintText: "New task name...",
                       hintStyle: TextStyle(color: Colors.grey[700])),
                 ),
@@ -438,9 +439,11 @@ class _TaskCreatePopupState extends State<TaskCreatePopup> {
 }
 
 class SelectTaskMember extends StatefulWidget {
+  Profile initialTaskLeader;
   SelectTaskMember({
     Key key,
     @required this.kanbanController,
+    this.initialTaskLeader,
   }) : super(key: key);
 
   final KanbanController kanbanController;
@@ -451,6 +454,13 @@ class SelectTaskMember extends StatefulWidget {
 
 class _SelectTaskMemberState extends State<SelectTaskMember> {
   Profile selectedTaskLeader;
+  @override
+  initState() {
+    if (widget.initialTaskLeader != null) {
+      selectedTaskLeader = widget.initialTaskLeader;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -471,42 +481,54 @@ class _SelectTaskMemberState extends State<SelectTaskMember> {
           Scrollbar(
             radius: Radius.circular(5),
             child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: widget.kanbanController.channelMembers.length,
-              itemBuilder: (context, index) => ListTile(
-                onTap: () {
-                  setState(() {
-                    selectedTaskLeader =
-                        widget.kanbanController.channelMembers[index];
-                    print(selectedTaskLeader);
-                  });
-                },
-                contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                leading: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: selectedTaskLeader ==
-                                  widget.kanbanController.channelMembers[index]
-                              ? kKanbanColor
-                              : Colors.grey[300],
-                          width: 3),
-                      shape: BoxShape.circle),
-                  height: 50,
-                  width: 50,
-                  child: ClipOval(
-                      child: AttachmentImage(widget.kanbanController
-                          .channelMembers[index].profilePhoto)),
-                ),
-                title: Text(widget.kanbanController.channelMembers[index].name,
-                    style: TextStyle(
-                        color: selectedTaskLeader ==
+                shrinkWrap: true,
+                itemCount: widget.kanbanController.channelMembers.length,
+                itemBuilder: (context, index) {
+                  bool isSelected;
+                  if (selectedTaskLeader != null) {
+                    isSelected = selectedTaskLeader.accountId ==
+                        widget.kanbanController.channelMembers[index].accountId;
+                  } else {
+                    isSelected = false;
+                  }
+                  ;
+                  return ListTile(
+                    onTap: () {
+                      setState(() {
+                        if (selectedTaskLeader ==null ||
+                            selectedTaskLeader.accountId !=
                                 widget.kanbanController.channelMembers[index]
-                            ? kKanbanColor
-                            : Colors.grey[900],
-                        fontSize: 1.8 * SizeConfig.heightMultiplier,
-                        fontWeight: FontWeight.w500)),
-              ),
-            ),
+                                    .accountId) {
+                          selectedTaskLeader =
+                              widget.kanbanController.channelMembers[index];
+                        } else {
+                          selectedTaskLeader = null;
+                        }
+                        print(selectedTaskLeader);
+                      });
+                    },
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                    leading: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color:
+                                  isSelected ? kKanbanColor : Colors.grey[300],
+                              width: 3),
+                          shape: BoxShape.circle),
+                      height: 50,
+                      width: 50,
+                      child: ClipOval(
+                          child: AttachmentImage(widget.kanbanController
+                              .channelMembers[index].profilePhoto)),
+                    ),
+                    title: Text(
+                        widget.kanbanController.channelMembers[index].name,
+                        style: TextStyle(
+                            color: isSelected ? kKanbanColor : Colors.grey[900],
+                            fontSize: 1.8 * SizeConfig.heightMultiplier,
+                            fontWeight: FontWeight.w500)),
+                  );
+                }),
           ),
         ]),
       ),
@@ -516,7 +538,13 @@ class _SelectTaskMemberState extends State<SelectTaskMember> {
         left: 5 * SizeConfig.widthMultiplier,
         child: FlatButton(
           color: kKanbanColor,
-          onPressed: () => Navigator.pop(context, selectedTaskLeader),
+          onPressed: () {
+            if (selectedTaskLeader != null) {
+              Navigator.pop(context, selectedTaskLeader);
+            } else {
+              Navigator.pop(context, false);
+            }
+          },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
           ),
@@ -525,7 +553,7 @@ class _SelectTaskMemberState extends State<SelectTaskMember> {
               height: 50,
               width: 60 * SizeConfig.widthMultiplier,
               child: Text(
-                "Assign Task Leader",
+                "Assign Task Reporter",
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

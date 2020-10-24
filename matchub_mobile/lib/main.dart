@@ -7,7 +7,7 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 // import 'package:matchub_mobile/screens/login/auth_screen.dart';
 import 'package:matchub_mobile/screens/login/login_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manageOrganisationMembers.dart';
+import 'package:matchub_mobile/services/manage_organisationmembers.dart';
 import 'package:matchub_mobile/services/manage_listOfKah.dart';
 import 'package:matchub_mobile/services/manage_notification.dart';
 import 'package:matchub_mobile/services/manage_outgoingRequest.dart';

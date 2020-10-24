@@ -85,7 +85,7 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                     child: Text("Edit Profile Details",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 24,
                             color: Colors.white)),
                   ),

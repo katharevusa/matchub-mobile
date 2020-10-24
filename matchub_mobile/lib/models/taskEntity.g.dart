@@ -7,6 +7,7 @@ part of 'taskEntity.dart';
 // **************************************************************************
 
 TaskEntity _$TaskEntityFromJson(Map<String, dynamic> json) {
+  print(json['comments']);
   return TaskEntity()
     ..taskId = json['taskId'] as num
     ..taskTitle = json['taskTitle'] as String
@@ -17,9 +18,15 @@ TaskEntity _$TaskEntityFromJson(Map<String, dynamic> json) {
     ..documents = json['documents'] as Map<String, dynamic>
     ..labelAndColour = json['labelAndColour'] as Map<String, dynamic>
     ..taskLeaderId = json['taskLeaderId'] as num
+    ..taskCreatorId = json['taskCreatorId'] as num
     ..taskDoers = json['taskdoers'] != null
         ? (json['taskdoers'] as List)
             .map((i) => Profile.fromJson(i))
+            .toList()
+        : []
+    ..comments = json['comments'] != null
+        ? (json['comments'] as List)
+            .map((i) => Comment.fromJson(i))
             .toList()
         : [];
 

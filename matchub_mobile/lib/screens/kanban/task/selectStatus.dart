@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
+import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/kanban_controller.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -25,6 +25,7 @@ class _SelectStatusPopupState extends State<SelectStatusPopup> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
           child: Text("Status Column",
@@ -36,17 +37,22 @@ class _SelectStatusPopupState extends State<SelectStatusPopup> {
           shrinkWrap: true,
           itemBuilder: (ctx, index) {
             return ListTile(
-                onTap: () {
+                onTap: () async {
                   if (widget.widget.kanban.taskColumns[index].columnTitle !=
                       widget.widget.task.taskColumn.columnTitle) {
-                    Provider.of<KanbanController>(context, listen: false)
-                        .updateTaskColumn(
-                            widget.widget.kanban.taskColumns.firstWhere(
-                                (element) =>
-                                    element.columnTitle ==
-                                    widget.widget.task.taskColumn.columnTitle),
-                            widget.widget.kanban.taskColumns[index],
-                            widget.widget.task);
+                    var instance =
+                        Provider.of<KanbanController>(context, listen: false);
+
+                    instance.reorderTaskSequenceInTaskView(
+                        widget.widget.kanban.taskColumns.firstWhere((element) =>
+                            element.columnTitle ==
+                            widget.widget.task.taskColumn.columnTitle),
+                        widget.widget.kanban.taskColumns[index],
+                        widget.widget.task);
+                    await instance.reorderTaskSequence(
+                        Provider.of<Auth>(context, listen: false)
+                            .myProfile
+                            .accountId);
                   }
                   setState(() {});
                 },

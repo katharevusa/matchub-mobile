@@ -53,8 +53,10 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
     return StreamBuilder<QuerySnapshot>(
       stream: chatRooms,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) {
-          return Container(child: Text(""));
+        if (!snapshot.hasData || snapshot.data.documents.length == 0) {
+          return Container(
+              height: 50 * SizeConfig.heightMultiplier,
+              child: Center(child: Text("No channels here yet...")));
         }
 
         return ListView.builder(
@@ -135,7 +137,7 @@ class _ChannelTileState extends State<ChannelTile> {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () async {
-        Navigator.of(context, rootNavigator: true)
+        Navigator.of(context,)
             .push(MaterialPageRoute(
                 builder: (context) => KanbanView(
                     channelData: widget.channelData, project: widget.project)))

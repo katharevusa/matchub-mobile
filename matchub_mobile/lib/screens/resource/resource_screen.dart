@@ -5,7 +5,7 @@ import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/screens/resource/expiredResource.dart';
 // import 'package:matchub_mobile/screens/resource/navDrawer.dart';
 import 'package:matchub_mobile/screens/resource/ongoingResource.dart';
-import 'package:matchub_mobile/screens/resource/resourceDrawer.dart';
+import 'package:matchub_mobile/screens/resource/resource_drawer.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_resource.dart';
 import 'package:matchub_mobile/sizeconfig.dart';

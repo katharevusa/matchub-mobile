@@ -146,12 +146,6 @@ class _ChannelMessagesState extends State<ChannelMessages> {
           elevation: 5,
           centerTitle: false,
           title: ListTile(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => ChannelSettings(
-                        channelData: widget.channelData,
-                        project: widget.project))),
             contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
             title: Text(
               widget.channelData['name'],
@@ -164,15 +158,15 @@ class _ChannelMessagesState extends State<ChannelMessages> {
                 )),
           ),
           actions: [
-            IconButton(
-              icon: Icon(FlutterIcons.info_circle_faw5s),
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => ChannelSettings(
-                          channelData: widget.channelData,
-                          project: widget.project))),
-            )
+            // IconButton(
+            //   icon: Icon(FlutterIcons.info_circle_faw5s),
+            //   onPressed: () => Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (_) => ChannelSettings(
+            //               channelData: widget.channelData,
+            //               project: widget.project))),
+            // )
           ],
           // IconButton(
           //   alignment: Alignment.bottomCenter,

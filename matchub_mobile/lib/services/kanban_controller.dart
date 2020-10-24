@@ -8,11 +8,12 @@ class KanbanController with ChangeNotifier {
   KanbanEntity kanban;
   List<Profile> channelMembers = [];
   List<Profile> channelAdmins = [];
-  Map<String, dynamic> labels = {
-    "Design": "#d11141",
-    "Mapping": "#00b159",
-    "Urgent": "#00aedb",
-  };
+  Map<String, dynamic> labels = {};
+  // {
+  //   "Design": "#d11141",
+  //   "Mapping": "#00b159",
+  //   "Urgent": "#00aedb",
+  // };
 
   retrieveLabelsByKanbanBoard() async {
     final response = await ApiBaseHelper.instance.getWODecode(
@@ -56,8 +57,12 @@ class KanbanController with ChangeNotifier {
     final response = await ApiBaseHelper.instance.getProtected(
         "authenticated/getKanbanBoardByKanbanBoardId?kanbanBoardId=$kanbanBoardId");
     kanban = KanbanEntity.fromJson(response);
+    await retrieveLabelsByKanbanBoard();
     notifyListeners();
   }
+
+  // ===================================================================================
+  // Task Methods
 
   createTask(Map<String, dynamic> taskEntity) async {
     final response = await ApiBaseHelper.instance.postProtected(
@@ -68,6 +73,93 @@ class KanbanController with ChangeNotifier {
     print(task);
     notifyListeners();
   }
+
+  updateTask(TaskEntity task) async {
+    final response =
+        await ApiBaseHelper.instance.postProtected("authenticated/updateTask",
+            body: json.encode({
+              "taskId": task.taskId,
+              "taskTitle": task.taskTitle,
+              "taskDescription": task.taskDescription,
+              "expectedDeadline": task.expectedDeadline.toIso8601String(),
+              "taskLeaderId": task.taskLeaderId,
+              "taskCreatorOrEditorId": task.taskCreatorId,
+              "kanbanboardId": kanban.kanbanBoardId
+            }));
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    print(task);
+    notifyListeners();
+  }
+
+  updateTaskDoers(List<Profile> newTaskDoerList, task, updaterId) async {
+    String url =
+        "authenticated/updateTaskDoers?taskId=${task.taskId}&updatorId=$updaterId&kanbanBoardId=${kanban.kanbanBoardId}";
+    for (var i in newTaskDoerList) {
+      url += "&newTaskDoerList=${i.accountId}";
+    }
+    if (newTaskDoerList.isEmpty) {
+      url += "&newTaskDoerList=";
+    }
+    final response = await ApiBaseHelper.instance.postProtected(url);
+    task = TaskEntity.fromJson(response);
+    notifyListeners();
+  }
+
+  updateTaskLabels(TaskEntity task) async {
+    String url = "authenticated/updateLabel";
+    final response = await ApiBaseHelper.instance.putProtected(url,
+        body: json.encode(
+            {"labelAndColour": task.labelAndColour, "taskId": task.taskId}));
+    task = TaskEntity.fromJson(response);
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    notifyListeners();
+  }
+
+  deleteDocuments(List<String> docsToDelete, task) async {
+    String url = "authenticated/deleteDocuments?taskId=${task.taskId}";
+    for (var i in docsToDelete) {
+      url += "&docsToDelete=$i";
+    }
+
+    final response = await ApiBaseHelper.instance.putProtected(url);
+    task = TaskEntity.fromJson(response);
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    notifyListeners();
+  }
+
+  deleteTask(TaskEntity task) async {
+    String url = "authenticated/deleteTask?taskId=";
+    final response = await ApiBaseHelper.instance.putProtected(url,
+        body: json.encode(
+            {"labelAndColour": task.labelAndColour, "taskId": task.taskId}));
+    task = TaskEntity.fromJson(response);
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    notifyListeners();
+  }
+
+  addComment(TaskEntity task, String content, int creatorId) async {
+    final response = await ApiBaseHelper.instance
+        .postProtected("authenticated/addCommentToTask?taskId=${task.taskId}",
+            body: json.encode({
+              "content": content,
+              "accountId": creatorId,
+            }));
+    task = TaskEntity.fromJson(response);
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    notifyListeners();
+  }
+
+  deleteComment(TaskEntity task, Comment comment) async {
+    final response = await ApiBaseHelper.instance.putProtected(
+      "authenticated/deleteTaskComment?taskId=${task.taskId}&commentId=${comment.commentId}",
+    );
+    task = TaskEntity.fromJson(response);
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    notifyListeners();
+  }
+
+  // ===================================================================================
+  // Column Methods
 
   createNewColumn(String columnName, editorId) async {
     final response = await ApiBaseHelper.instance
@@ -82,11 +174,11 @@ class KanbanController with ChangeNotifier {
   }
 
   updateColumn(String columnName, editorId, columnId) async {
-    final response = await ApiBaseHelper.instance
-        .putProtected("authenticated/updateColumn",
+    final response =
+        await ApiBaseHelper.instance.putProtected("authenticated/updateColumn",
             body: json.encode({
               "columnTitle": columnName,
-              "columnId" : columnId,
+              "columnId": columnId,
               "kanbanBoardId": kanban.kanbanBoardId,
               "editorId": editorId
             }));
@@ -95,8 +187,8 @@ class KanbanController with ChangeNotifier {
   }
 
   deleteColumn(int columnIdToDelete, deletorId, {transferredColumnId}) async {
-    final response = await ApiBaseHelper.instance
-        .putProtected("authenticated/deleteColumn",
+    final response =
+        await ApiBaseHelper.instance.putProtected("authenticated/deleteColumn",
             body: json.encode({
               "deleteColumnId": columnIdToDelete,
               "transferredColumnId": transferredColumnId,
@@ -106,6 +198,8 @@ class KanbanController with ChangeNotifier {
     notifyListeners();
   }
 
+//========================================================================
+//reordering methods
   reorderTaskSequence(arrangerId) async {
     var newKanbanOrder = {};
     [
@@ -127,23 +221,24 @@ class KanbanController with ChangeNotifier {
     notifyListeners();
   }
 
-  updateTaskDoers(List<Profile> newTaskDoerList, task, updaterId) async {
-    String url =
-        "authenticated/updateTaskDoers?taskId=${task.taskId}&updatorId=$updaterId&kanbanBoardId=${kanban.kanbanBoardId}";
-    for (var i in newTaskDoerList) {
-      url += "&newTaskDoerList=${i.accountId}";
-    }
-    final response = await ApiBaseHelper.instance.postProtected(url);
-    task = TaskEntity.fromJson(response);
-    print(task);
-    notifyListeners();
-  }
-
-  updateTaskColumn(TaskColumnEntity currentColumn, TaskColumnEntity newColumn,
-      TaskEntity task) {
+  reorderTaskSequenceInTaskView(TaskColumnEntity currentColumn,
+      TaskColumnEntity newColumn, TaskEntity task) {
     currentColumn.listOfTasks.remove(task);
     newColumn.listOfTasks.add(task);
     task.taskColumn = newColumn;
+    ApiBaseHelper.instance.putProtected(
+        "authenticated/updateTaskStatus?taskId=${task.taskId}&newColumnId=${newColumn.taskColumnId}&oldColumnId=${currentColumn.taskColumnId}");
+    notifyListeners();
+  }
+
+  reorderTaskColumns(editorId) async {
+    String columnSequence = "";
+    kanban.taskColumns.forEach((element) {
+      columnSequence += "&columnIdSequence=${element.taskColumnId}";
+    });
+    final response = await ApiBaseHelper.instance.putProtected(
+        "authenticated/rearrangeColumn?editorId=$editorId&kanbanBoardId=${kanban.kanbanBoardId}$columnSequence");
+    kanban = KanbanEntity.fromJson(response);
     notifyListeners();
   }
 }

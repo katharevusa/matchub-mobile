@@ -3,7 +3,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 // import 'package:matchub_mobile/screens/resource/navDrawer.dart';
-import 'package:matchub_mobile/screens/resource/resourceDrawer.dart';
+import 'package:matchub_mobile/screens/resource/resource_drawer.dart';
 import 'package:matchub_mobile/unused/resource_incoming_tabview.dart';
 import 'package:matchub_mobile/screens/resource/resource_outgoing/OutgoingRequestTabview.dart';
 import 'package:matchub_mobile/unused/resource_outgoing_tabview.dart';

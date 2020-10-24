@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/model/donationInfo.dart';
 // import 'package:matchub_mobile/screens/resource/navDrawer.dart';
-import 'package:matchub_mobile/screens/resource/resourceDrawer.dart';
+import 'package:matchub_mobile/screens/resource/resource_drawer.dart';
 
 class ResourceDonationHistoryScreen extends StatefulWidget {
   static const routeName = "/resource-request-screen";

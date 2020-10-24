@@ -150,11 +150,11 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                 onPressed: () async {
                   if (pickedProfilePic != null) {
                     await uploadSinglePic(
-                        pickedProfilePic,
-                        "${ApiBaseHelper.instance.baseUrl}authenticated/updateIndividual/updateProfilePic/${Provider.of<Auth>(context, listen: false).myProfile.uuid}",
-                        Provider.of<Auth>(context, listen: false).accessToken,
-                        'file',
-                        context);
+                      pickedProfilePic,
+                      "${ApiBaseHelper.instance.baseUrl}authenticated/updateIndividual/updateProfilePic/${Provider.of<Auth>(context, listen: false).myProfile.uuid}",
+                      Provider.of<Auth>(context, listen: false).accessToken,
+                      'file',
+                    );
                   }
                   widget.updateProfile(
                       Provider.of<Auth>(context).accessToken, context);

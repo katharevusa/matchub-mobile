@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 
 uploadSinglePic(File file, String url, String accessToken, String paramName,
-    context) async {
+    ) async {
   var request = new http.MultipartRequest("POST", Uri.parse(url));
   request.headers.addAll({"Authorization": "Bearer " + accessToken});
   request.files.add(http.MultipartFile.fromBytes(
@@ -20,7 +21,7 @@ uploadSinglePic(File file, String url, String accessToken, String paramName,
 }
 
 uploadMultiFile(List<File> files, String url, String accessToken,
-    String paramName, context) async {
+    String paramName,) async {
   var request = new http.MultipartRequest("POST", Uri.parse(url));
   request.headers.addAll({"Authorization": "Bearer " + accessToken});
   files.forEach((file) {
@@ -37,3 +38,13 @@ uploadMultiFile(List<File> files, String url, String accessToken,
     print(e);
   });
 }
+
+// addAttachment(context) {
+//   showModalBottomSheet(
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.only(
+//             topRight: Radius.circular(15.0), topLeft: Radius.circular(15.0)),
+//       ),
+//       context: context,
+//       builder: (ctx) {}).then((value) => value;);
+// }

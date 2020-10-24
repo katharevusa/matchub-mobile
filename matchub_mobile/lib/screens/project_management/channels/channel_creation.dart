@@ -65,7 +65,7 @@ class _ChannelCreationState extends State<ChannelCreation> {
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           child: Text("Create a New Channel",
               style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 24,
                   color: Colors.white)),
         ),

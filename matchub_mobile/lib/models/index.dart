@@ -14,3 +14,4 @@ export 'post.dart' ;
 export 'taskEntity.dart' ; 
 export 'taskColumnEntity.dart' ; 
 export 'kanbanEntity.dart' ; 
+export 'comment.dart' ; 

@@ -23,7 +23,9 @@ class TaskEntity {
   Map<String, dynamic> documents;
   Map<String, dynamic> labelAndColour;
   num taskLeaderId;
+  num taskCreatorId;
   List<Profile> taskDoers;
+  List<Comment> comments;
 
   factory TaskEntity.fromJson(Map<String, dynamic> json) =>
       _$TaskEntityFromJson(json);

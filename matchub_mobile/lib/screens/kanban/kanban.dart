@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:intl/intl.dart';
+import 'package:matchub_mobile/helpers/profile_helper.dart';
 
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/kanban/task/selectTags.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
+import 'package:matchub_mobile/screens/project_management/channels/channel_messages.dart';
+import 'package:matchub_mobile/screens/project_management/channels/channel_settings.dart';
 import 'package:matchub_mobile/screens/search/search_page.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/kanban_controller.dart';
@@ -32,18 +35,6 @@ class KanbanView extends StatefulWidget {
 }
 
 class _KanbanViewState extends State<KanbanView> {
-  // List<TaskColumnEntity> _listData = [
-  //   TaskColumnEntity(columnTitle: "To Do", listOfTasks: [
-  //     TaskEntity(
-  //         taskTitle: "Help God",
-  //         taskColumn: TaskColumnEntity(columnTitle: "To Do")),
-  //     TaskEntity(taskTitle: "Help Allah"),
-  //     TaskEntity(taskTitle: "Help juah"),
-  //   ]),
-  //   TaskColumnEntity(columnTitle: "In Progress"),
-  //   TaskColumnEntity(columnTitle: "Completed"),
-  //   TaskColumnEntity(columnTitle: "Finalised"),
-  // ];
   KanbanEntity kanban;
   bool loading;
   @override
@@ -56,10 +47,9 @@ class _KanbanViewState extends State<KanbanView> {
   retrieveKanban() async {
     final instance = Provider.of<KanbanController>(context, listen: false);
     await instance.retrieveKanbanByChannelId(widget.channelData['id']);
-    // kanban = instance.kanban;
     await instance.retrieveChannelMembers(widget.channelData['members']);
     await instance.retrieveChannelAdmins(widget.channelData['admins']);
-    // await instance.retrieveLabelsByKanbanBoard();
+    await instance.retrieveLabelsByKanbanBoard();
     setState(() {
       loading = false;
     });
@@ -69,13 +59,6 @@ class _KanbanViewState extends State<KanbanView> {
 
   @override
   Widget build(BuildContext context) {
-    // _listData[0].listOfTasks[0].taskDoers =
-    //     Provider.of<ManageProject>(context).managedProject.teamMembers;
-    // _listData[0].listOfTasks[0].taskLeader =
-    //     Provider.of<Auth>(context).myProfile;
-    // for (int i = 0; i < kanban.taskColumns.length; i++) {
-    //   _lists.add(_createBoardList(kanban.taskColumns[i]));
-    // }
     return Consumer<KanbanController>(builder: (context, controller, child) {
       List<BoardList> _lists = List<BoardList>();
       if (!loading) {
@@ -87,9 +70,33 @@ class _KanbanViewState extends State<KanbanView> {
 
       return Scaffold(
         appBar: AppBar(
-            title: Text(
-          widget.channelData['name'],
-        )),
+          leadingWidth: 44,
+            title: ListTile(contentPadding: EdgeInsets.zero,
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => ChannelSettings(
+                          channelData: widget.channelData,
+                          project: widget.project))),
+              title: Text(
+                widget.channelData['name'],
+                style:
+                  TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+            ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.message_rounded),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true)
+                      .push(MaterialPageRoute(
+                          builder: (_) => ChannelMessages(
+                                channelData: widget.channelData,
+                                project: widget.project,
+                              )));
+                },
+              )
+            ]),
         backgroundColor: Color.fromARGB(255, 235, 236, 240),
         body: loading
             ? Center(child: CircularProgressIndicator())
@@ -156,9 +163,9 @@ class _KanbanViewState extends State<KanbanView> {
                     color: daysToDeadline > 5
                         ? kSecondaryColor
                         : daysToDeadline > 0
-                            ? Colors.orange[200]
+                            ? Colors.orange[300]
                             : daysToDeadline == 0
-                                ? Colors.red[200]
+                                ? Colors.red[300]
                                 : Colors.grey[400],
                     fontSize: 1.4 * SizeConfig.textMultiplier,
                     fontWeight: FontWeight.w500),
@@ -177,8 +184,9 @@ class _KanbanViewState extends State<KanbanView> {
                   Expanded(
                       child: Tags(
                     alignment: WrapAlignment.start,
+                    runAlignment: WrapAlignment.start,
                     spacing: 0,
-                    runSpacing: 8,
+                    runSpacing: 6,
                     itemBuilder: (index) {
                       MapEntry label =
                           task.labelAndColour.entries.toList()[index];
@@ -210,63 +218,68 @@ class _KanbanViewState extends State<KanbanView> {
         var list = kanban.taskColumns[oldListIndex];
         kanban.taskColumns.removeAt(oldListIndex);
         kanban.taskColumns.insert(listIndex, list);
-        print(items.map((e) => e.item).toString());
+        Provider.of<KanbanController>(context, listen: false)
+            .reorderTaskColumns(
+                Provider.of<Auth>(context, listen: false).myProfile.accountId);
       },
       backgroundColor: Colors.transparent,
       header: [
         Expanded(
             child: Padding(
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.only(top: 15, left: 5),
                 child: Text(
                   list.columnTitle,
                   style: TextStyle(fontSize: 20),
                 ))),
-        PopupMenuButton(
-            offset: Offset(0, 50),
-            icon: Icon(Icons.more_vert_rounded),
-            itemBuilder: (BuildContext context) => [
-                  PopupMenuItem(
-                    child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      visualDensity: VisualDensity.compact,
-                      onTap: () => showModalBottomSheet(
-                          useRootNavigator: true,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          backgroundColor: Colors.white,
-                          context: context,
-                          builder: (context) => ColumnCreatePopup(
-                                columnId: list.taskColumnId,
-                                columnName: list.columnTitle,
-                              )),
-                      dense: true,
-                      leading: Icon(FlutterIcons.edit_3_fea),
-                      title: Text(
-                        "Rename Column",
-                        style: TextStyle(
-                            fontSize: SizeConfig.textMultiplier * 1.8),
+        Padding(
+                padding: EdgeInsets.only(top: 15, left: 5),
+          child: PopupMenuButton(
+              offset: Offset(0, 20),
+              icon: Icon(Icons.more_vert_rounded),
+              itemBuilder: (BuildContext context) => [
+                    PopupMenuItem(
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                        visualDensity: VisualDensity.compact,
+                        onTap: () => showModalBottomSheet(
+                            useRootNavigator: true,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            backgroundColor: Colors.white,
+                            context: context,
+                            builder: (context) => ColumnCreatePopup(
+                                  columnId: list.taskColumnId,
+                                  columnName: list.columnTitle,
+                                )),
+                        dense: true,
+                        leading: Icon(FlutterIcons.edit_3_fea),
+                        title: Text(
+                          "Rename Column",
+                          style: TextStyle(
+                              fontSize: SizeConfig.textMultiplier * 1.8),
+                        ),
                       ),
                     ),
-                  ),
-                  PopupMenuItem(
-                    child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      visualDensity: VisualDensity.compact,
-                      onTap: () {
-                        deleteColumn(this.context, list);
-                        Navigator.pop(context);
-                      },
-                      dense: true,
-                      leading: Icon(FlutterIcons.trash_alt_faw5s),
-                      title: Text(
-                        "Delete Column",
-                        style: TextStyle(
-                            fontSize: SizeConfig.textMultiplier * 1.8),
+                    PopupMenuItem(
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                        visualDensity: VisualDensity.compact,
+                        onTap: () {
+                          deleteColumn(this.context, list);
+                          Navigator.pop(context);
+                        },
+                        dense: true,
+                        leading: Icon(FlutterIcons.trash_alt_faw5s),
+                        title: Text(
+                          "Delete Column",
+                          style: TextStyle(
+                              fontSize: SizeConfig.textMultiplier * 1.8),
+                        ),
                       ),
-                    ),
-                  )
-                ]),
+                    )
+                  ]),
+        ),
       ],
       items: items,
     );
@@ -276,21 +289,23 @@ class _KanbanViewState extends State<KanbanView> {
     if (col.listOfTasks.isEmpty) {
       showDialog(
         context: context,
-        builder: (_) => new AlertDialog(
-          title: new Text("Delete Column",),
+        builder: (ctx) => new AlertDialog(
+          title: new Text(
+            "Delete Column",
+          ),
           content:
               new Text("Are you sure you would like to delete this column"),
           actions: <Widget>[
             FlatButton(
               child: Text('Yes'),
               onPressed: () {
-                Navigator.pop(context, true);
+                Navigator.pop(ctx, true);
               },
             ),
             FlatButton(
               child: Text('No'),
               onPressed: () {
-                Navigator.pop(context, false);
+                Navigator.pop(ctx, false);
               },
             ),
           ],
@@ -305,14 +320,10 @@ class _KanbanViewState extends State<KanbanView> {
                       .accountId);
         }
       });
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(),
-      );
     } else {
       showDialog(
         context: context,
-        builder: (_) => new AlertDialog(
+        builder: (ctx) => new AlertDialog(
           title: new Text("Column has tasks"),
           content: new Text(
               "Shift the tasks in this column to a new home before you delete it!"),
@@ -320,15 +331,11 @@ class _KanbanViewState extends State<KanbanView> {
             FlatButton(
               child: Text('Ok'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(ctx).pop();
               },
             ),
           ],
         ),
-      );
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(),
       );
     }
   }
@@ -352,7 +359,7 @@ class _KanbanViewState extends State<KanbanView> {
                           i,
                           Transform.translate(
                               offset: Offset(i * -30.0, 0),
-                              child: _buildAvatar(
+                              child: buildAvatar(
                                 e,
                               ))))
                       .values
@@ -373,21 +380,4 @@ class _KanbanViewState extends State<KanbanView> {
         : Container();
   }
 
-  Widget _buildAvatar(profile, {double radius = 50}) {
-    return Container(
-      decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey[400].withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 3,
-                offset: Offset(0, 3)),
-          ],
-          border: Border.all(color: Colors.white, width: 3),
-          shape: BoxShape.circle),
-      height: radius,
-      width: radius,
-      child: ClipOval(child: AttachmentImage(profile.profilePhoto)),
-    );
-  }
 }
