@@ -1,11 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:matchub_mobile/models/index.dart';
+
+import 'index.dart';
 
 part 'project.g.dart';
 
 @JsonSerializable()
-class Project with ChangeNotifier {
+class Project {
   Project();
 
   num projectId;
@@ -33,6 +33,7 @@ class Project with ChangeNotifier {
   List sdgs;
   List kpis;
   List<TruncatedProfile> teamMembers;
+  List<TruncatedProfile> projectFollowers;
   List channels;
   List<TruncatedProfile> projectOwners;
 

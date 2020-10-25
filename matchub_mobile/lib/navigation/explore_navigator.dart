@@ -33,7 +33,10 @@ class _ExploreNavigatorState extends State<ExploreNavigator> {
               );
             case AnnouncementDetail.routeName:
               return AnnouncementDetail(
-                announcement: settings.arguments as Announcement,
+                announcement: (settings.arguments
+                    as Map<String, dynamic>)['announcement'] as Announcement,
+                isProjectOnwer: (settings.arguments
+                    as Map<String, dynamic>)['isProjectOwner'],
               );
           }
         });

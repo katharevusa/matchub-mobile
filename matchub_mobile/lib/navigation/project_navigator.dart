@@ -39,8 +39,15 @@ class _ProjectNavigatorState extends State<ProjectNavigator> {
               );
             case ProjectManagementOverview.routeName:
               return ProjectManagementOverview(settings.arguments as Project);
+
             case KanbanView.routeName:
-              return KanbanView();
+              return KanbanView(
+                  channelData: (settings.arguments
+                          as Map<String, dynamic>)['channelData']
+                      as Map<String, dynamic>,
+                  project: (settings.arguments
+                      as Map<String, dynamic>)['project'] as Project);
+
             case '/':
               return ProjectOverview();
             case EditIndividualScreen.routeName:

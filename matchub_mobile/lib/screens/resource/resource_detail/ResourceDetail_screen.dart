@@ -156,7 +156,8 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
                     Navigator.pop(context);
                     Navigator.of(context, rootNavigator: true).push(
                         MaterialPageRoute(
-                            builder: (context) => RequestFormScreen(resource)));
+                            builder: (context) =>
+                                RequestFormScreen(resource: resource)));
                   },
                   visualDensity: VisualDensity.comfortable,
                   highlightColor: Colors.transparent,
@@ -295,7 +296,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
     try {
       var accessToken = Provider.of<Auth>(context).accessToken;
       final response =
-          await ApiBaseHelper.instance.postProtected(url, accessToken: accessToken);
+          await ApiBaseHelper().postProtected(url, accessToken: accessToken);
       print("Success");
       Provider.of<Auth>(context).retrieveUser();
       Navigator.of(context).pop(true);
@@ -333,7 +334,7 @@ class _ResourceHeaderState extends State<ResourceHeader> {
 
   Future resourceOwnerFuture;
 
-  ApiBaseHelper _helper = ApiBaseHelper.instance;
+  ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   void initState() {
@@ -343,8 +344,7 @@ class _ResourceHeaderState extends State<ResourceHeader> {
 
   getResourceOwner() async {
     final url = 'authenticated/getAccount/${widget.resource.resourceOwnerId}';
-    final responseData = await _helper.getProtected(
-        url,  accessToken:Provider.of<Auth>(context, listen: false).accessToken);
+    final responseData = await _helper.getProtected(url);
     resourceOwner = Profile.fromJson(responseData);
   }
 
@@ -483,21 +483,22 @@ class Description extends StatefulWidget {
 class _DescriptionState extends State<Description> {
   Resources resource;
   _DescriptionState(this.resource);
-  ApiBaseHelper _helper = ApiBaseHelper.instance;
+  ApiBaseHelper _helper = ApiBaseHelper();
   ResourceCategory category;
   Future categoryFuture;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   categoryFuture = getCategoryById(resource.resourceCategoryId);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    categoryFuture = getCategoryById();
+  }
 
-  getCategoryById(int id) async {
-    final url = 'authenticated/getResourceCategoryById?resourceCategoryId=$id';
-    final responseData = await _helper.getProtected(
-        url,  accessToken:Provider.of<Auth>(this.context).accessToken);
+  getCategoryById() async {
+    final url =
+        'authenticated/getResourceCategoryById?resourceCategoryId=${widget.resource.resourceCategoryId}';
+    final responseData = await _helper.getProtected(url);
     category = ResourceCategory.fromJson(responseData);
+    // print(category.resourceCategoryName);
   }
 
   Widget build(BuildContext context) {
@@ -521,57 +522,61 @@ class _DescriptionState extends State<Description> {
     }
 
     return FutureBuilder(
-      future: getCategoryById(resource.resourceCategoryId),
-      builder: (context, snapshot) => (snapshot.connectionState ==
-              ConnectionState.done)
-          ? SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: Text("Description"),
-                          subtitle: Text(resource.resourceDescription?? ""),
-                          leading: Icon(Icons.leak_add),
+      future: categoryFuture,
+      builder: (context, snapshot) =>
+          (snapshot.connectionState == ConnectionState.done)
+              ? SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
-                        ListTile(
-                          title: Text("Status"),
-                          subtitle: Text(status),
-                          leading: Icon(Icons.event_available),
+                        child: Column(
+                          children: <Widget>[
+                            ListTile(
+                              title: Text("Description"),
+                              subtitle: Text(resource.resourceDescription),
+                              leading: Icon(Icons.leak_add),
+                            ),
+                            ListTile(
+                              title: Text("Status"),
+                              subtitle: Text(status),
+                              leading: Icon(Icons.event_available),
+                            ),
+                            ListTile(
+                              title: Text("Start Date & Time"),
+                              subtitle: Text(DateFormat('dd-MMM-yyyy ')
+                                  .add_jm()
+                                  .format(DateTime.parse(startdatetime))),
+                              leading: Icon(Icons.event_note),
+                            ),
+                            ListTile(
+                              title: Text("End Date & Time"),
+                              subtitle: Text(DateFormat('dd-MMM-yyyy ')
+                                  .add_jm()
+                                  .format(DateTime.parse(enddatetime))),
+                              leading: Icon(Icons.event_note),
+                            ),
+                            ListTile(
+                              title: Text(category.resourceCategoryName),
+                              // subtitle: Text(category.resourceCategoryDescription),
+                              leading: Icon(Icons.category),
+                            ),
+                            ListTile(
+                              title: Text("Unit"),
+                              subtitle: Text(resource.units.toString()),
+                              leading: Icon(Icons.format_underlined),
+                            ),
+                          ],
                         ),
-                        ListTile(
-                          title: Text("Start Date & Time"),
-                          subtitle: Text(DateFormat('dd-MMM-yyyy ').add_jm().format(DateTime.parse(startdatetime))),
-                          leading: Icon(Icons.event_note),
-                        ),
-                        ListTile(
-                          title: Text("End Date & Time"),
-                          subtitle: Text(DateFormat('dd-MMM-yyyy ').add_jm().format(DateTime.parse(enddatetime))),
-                          leading: Icon(Icons.event_note),
-                        ),
-                        ListTile(
-                          title: Text(category.resourceCategoryName?? ""),
-                          subtitle: Text(category.resourceCategoryDescription),
-                          leading: Icon(Icons.category),
-                        ),
-                        ListTile(
-                          title: Text("Unit"),
-                          subtitle: Text(resource.units.toString()?? ""),
-                          leading: Icon(Icons.format_underlined),
-                        ),
-                      ],
-                    ),
+                      ),
+                      Container(child: MatchedProjects(resource)),
+                    ],
                   ),
-                  Container(child: MatchedProjects(resource)),
-                ],
-              ),
-            )
-          : Center(child: CircularProgressIndicator()),
+                )
+              : Center(child: CircularProgressIndicator()),
     );
   }
 }
@@ -620,13 +625,6 @@ class _MatchedProjectsState extends State<MatchedProjects> {
                   "Suggested projects",
                   style: Theme.of(context).textTheme.title,
                 ),
-                FlatButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Refresh",
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                )
               ],
             ),
           ),

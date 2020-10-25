@@ -16,6 +16,7 @@ class ManageProject with ChangeNotifier {
   List<Announcement> allAnnouncementForUsers = [];
   List<Announcement> projectInternalAnnouncement = [];
   List<Announcement> projectPublicAnnouncement = [];
+  List<Project> followingProjects = [];
 
   getAllAnnouncementForUsers(Profile profile, accessToken) async {
     allAnnouncementForUsers = [];
@@ -49,4 +50,17 @@ class ManageProject with ChangeNotifier {
     notifyListeners();
     return projectPublicAnnouncement;
   }
+  
+
+  getAllFollowingProjects(Profile profile) async {
+    followingProjects = [];
+    final url =
+        'authenticated/getListOfFollowingProjectsByUserId?userId=${profile.accountId}';
+    final responseData =
+        await _apiHelper.getWODecode(url);
+    (responseData as List)
+        .forEach((e) => followingProjects.add(Project.fromJson(e)));
+    notifyListeners();
+    return followingProjects;
   }
+}

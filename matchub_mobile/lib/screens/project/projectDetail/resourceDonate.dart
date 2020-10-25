@@ -54,8 +54,8 @@ class _DonateFormScreenState extends State<DonateFormScreen> {
 
   getProjectOwner() async {
     final url = 'authenticated/getAccount/${widget.project.projCreatorId}';
-    final responseData = await _helper.getProtected(
-        url,  accessToken:Provider.of<Auth>(context, listen: false).accessToken);
+    final responseData = await _helper.getProtected(url,
+        accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     projectOwner = Profile.fromJson(responseData);
     await retrieveResources();
   }
@@ -65,27 +65,28 @@ class _DonateFormScreenState extends State<DonateFormScreen> {
     var profileId =
         Provider.of<Auth>(context, listen: false).myProfile.accountId;
     final url = 'authenticated/getHostedResources?profileId=${profileId}';
-    final responseData = await _helper.getProtected(
-        url, accessToken: Provider.of<Auth>(context, listen: false).accessToken);
+    final responseData = await _helper.getProtected(url,
+        accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     resources = (responseData['content'] as List)
         .map((e) => Resources.fromJson(e))
         .toList();
   }
 
   getCategoryById() async {
+    print(selectedResource.resourceName);
     final url =
         'authenticated/getResourceCategoryById?resourceCategoryId=${selectedResource.resourceCategoryId}';
-    final responseData = await _helper.getProtected(
-        url, accessToken: Provider.of<Auth>(this.context,listen: false).accessToken);
+    final responseData = await _helper.getProtected(url);
     category = ResourceCategory.fromJson(responseData);
+    print(category.resourceCategoryName);
   }
 
   donate() async {
     resourceRequest["requestorId"] =
-        Provider.of<Auth>(context,listen: false).myProfile.accountId;
+        Provider.of<Auth>(context, listen: false).myProfile.accountId;
     resourceRequest['projectId'] = widget.project.projectId;
     final url = "authenticated/createNewResourceRequestByResourceOwner";
-    var accessToken = Provider.of<Auth>(context,listen: false).accessToken;
+    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     Navigator.of(context).pop(true);
     try {
       final response = await ApiBaseHelper.instance.postProtected(url,

@@ -9,7 +9,6 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_notification.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/widgets/WaveClipper.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
@@ -31,6 +30,7 @@ class _AllNotificationsState extends State<AllNotifications> {
   ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   Announcement newAnnouncement = new Announcement();
   Map<String, dynamic> announcement;
+  Profile myProfile;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
   bool _isLoading;
@@ -60,9 +60,9 @@ class _AllNotificationsState extends State<AllNotifications> {
   loadAnnouncements() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
-    await Provider.of<ManageProject>(context, listen: false)
+    await Provider.of<ManageNotification>(context, listen: false)
         .getAllProjectInternal(widget.project, profile, accessToken);
-    await Provider.of<ManageProject>(context, listen: false)
+    await Provider.of<ManageNotification>(context, listen: false)
         .getAllProjectPublic(widget.project, profile, accessToken);
     setState(() {
       _isLoading = false;
@@ -71,6 +71,7 @@ class _AllNotificationsState extends State<AllNotifications> {
 
   @override
   Widget build(BuildContext context) {
+    myProfile = Provider.of<Auth>(context).myProfile;
     return _isLoading
         ? Container(child: Center(child: Text("I am loading")))
         : DefaultTabController(
@@ -123,32 +124,40 @@ class _AllNotificationsState extends State<AllNotifications> {
 
   Widget buildPublicAnnouncements() {
     publicAnnouncements =
-        Provider.of<ManageProject>(context).projectPublicAnnouncement;
+        Provider.of<ManageNotification>(context).projectPublicAnnouncement;
     return Column(
       children: <Widget>[
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-          child: RaisedButton(
-            highlightElevation: 0,
-            elevation: 0,
-            child: Text(
-              "Create Public Announcement",
-              style: TextStyle(fontSize: 15),
-            ),
-            textColor: kSecondaryColor,
-            color: Colors.white,
-            onPressed: () => showModalBottomSheet(
-                context: context,
-                builder: (context) => buildMorePopUp(
-                      context,
-                      0,
-                    )).then((value) => setState(() {})),
-          ),
-        ),
+        myProfile.projectsOwned.indexWhere(
+                    (e) => e.projectId == widget.project.projectId) >=
+                0
+            ? Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                child: RaisedButton(
+                  highlightElevation: 0,
+                  elevation: 0,
+                  child: Text(
+                    "Create Public Announcement",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  textColor: kSecondaryColor,
+                  color: Colors.white,
+                  onPressed: () => showModalBottomSheet(
+                      context: context,
+                      builder: (context) => buildMorePopUp(
+                            context,
+                            0,
+                          )).then((value) => setState(() {})),
+                ),
+              )
+            : Container(),
         Expanded(
           child: SingleChildScrollView(
-              child: ListView.builder(
+              child: ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return Divider();
+                  },
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   key: _listKey,
@@ -170,106 +179,34 @@ class _AllNotificationsState extends State<AllNotifications> {
                           },
                         );
                       },
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(children: [
-                                Text(
-                                  DateFormat('E').format(
-                                      publicAnnouncements[index].timestamp),
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 10),
-                                ),
-                                Text(
-                                  publicAnnouncements[index]
-                                      .timestamp
-                                      .day
-                                      .toString(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                Text(
-                                  DateFormat('MMM').format(
-                                      publicAnnouncements[index].timestamp),
-                                  style: TextStyle(
-                                      color: Colors.blue, fontSize: 10),
-                                )
-                              ]),
-                              Text(
-                                publicAnnouncements[index].title,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16.0),
-                              ),
-                            ],
+                      child: ListTile(
+                        trailing: Column(children: [
+                          Text(
+                            DateFormat('E')
+                                .format(publicAnnouncements[index].timestamp),
+                            style: TextStyle(color: Colors.grey, fontSize: 10),
                           ),
+                          Text(
+                            publicAnnouncements[index].timestamp.day.toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Text(
+                            DateFormat('MMM')
+                                .format(publicAnnouncements[index].timestamp),
+                            style: TextStyle(color: Colors.blue, fontSize: 10),
+                          )
+                        ]),
+                        title: Text(
+                          publicAnnouncements[index].title,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0),
                         ),
                       ),
                     );
-                  })
-              /*          child: AnimatedList(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                key: _listKey,
-                padding: const EdgeInsets.all(16.0),
-                initialItemCount: publicAnnouncements.length,
-                itemBuilder: (context, index, animation) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(
-                        AnnouncementDetail.routeName,
-                        arguments: internalAnnouncements[index],
-                      );
-                    },
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(children: [
-                              Text(
-                                DateFormat('E').format(
-                                    publicAnnouncements[index].timestamp),
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 10),
-                              ),
-                              Text(
-                                publicAnnouncements[index]
-                                    .timestamp
-                                    .day
-                                    .toString(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              Text(
-                                DateFormat('MMM').format(
-                                    publicAnnouncements[index].timestamp),
-                                style:
-                                    TextStyle(color: Colors.blue, fontSize: 10),
-                              )
-                            ]),
-                            Text(
-                              publicAnnouncements[index].title,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }),*/
-              ),
+                  })),
         )
       ],
     );
@@ -277,29 +214,37 @@ class _AllNotificationsState extends State<AllNotifications> {
 
   Widget buildInternalAnnouncements() {
     internalAnnouncements =
-        Provider.of<ManageProject>(context).projectInternalAnnouncement;
+        Provider.of<ManageNotification>(context).projectInternalAnnouncement;
     return Column(
       children: <Widget>[
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-          child: RaisedButton(
-            highlightElevation: 0,
-            elevation: 0,
-            child: Text(
-              "Create Internal Announcement",
-              style: TextStyle(fontSize: 15),
-            ),
-            textColor: kSecondaryColor,
-            color: Colors.white,
-            onPressed: () => showModalBottomSheet(
-                context: context,
-                builder: (context) => buildMorePopUp(context, 1)),
-          ),
-        ),
+        myProfile.projectsOwned.indexWhere(
+                    (e) => e.projectId == widget.project.projectId) >=
+                0
+            ? Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                child: RaisedButton(
+                  highlightElevation: 0,
+                  elevation: 0,
+                  child: Text(
+                    "Create Internal Announcement",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  textColor: kSecondaryColor,
+                  color: Colors.white,
+                  onPressed: () => showModalBottomSheet(
+                      context: context,
+                      builder: (context) => buildMorePopUp(context, 1)),
+                ),
+              )
+            : Container(),
         Expanded(
           child: SingleChildScrollView(
-              child: ListView.builder(
+              child: ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return Divider();
+                  },
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   key: _listKey,
@@ -316,49 +261,38 @@ class _AllNotificationsState extends State<AllNotifications> {
                         ).pushNamed(
                           AnnouncementDetail.routeName,
                           arguments: {
-                            "announcement": publicAnnouncements[index],
+                            "announcement": internalAnnouncements[index],
                             "isProjectOwner": true
                           },
                         );
                       },
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(children: [
-                                Text(
-                                  DateFormat('E').format(
-                                      internalAnnouncements[index].timestamp),
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 10),
-                                ),
-                                Text(
-                                  internalAnnouncements[index]
-                                      .timestamp
-                                      .day
-                                      .toString(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                Text(
-                                  DateFormat('MMM').format(
-                                      internalAnnouncements[index].timestamp),
-                                  style: TextStyle(
-                                      color: Colors.blue, fontSize: 10),
-                                )
-                              ]),
-                              Text(
-                                internalAnnouncements[index].title,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16.0),
-                              ),
-                            ],
+                      child: ListTile(
+                        trailing: Column(children: [
+                          Text(
+                            DateFormat('E')
+                                .format(internalAnnouncements[index].timestamp),
+                            style: TextStyle(color: Colors.grey, fontSize: 10),
                           ),
+                          Text(
+                            internalAnnouncements[index]
+                                .timestamp
+                                .day
+                                .toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Text(
+                            DateFormat('MMM')
+                                .format(internalAnnouncements[index].timestamp),
+                            style: TextStyle(color: Colors.blue, fontSize: 10),
+                          )
+                        ]),
+                        title: Text(
+                          internalAnnouncements[index].title,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0),
                         ),
                       ),
                     );
@@ -528,9 +462,9 @@ class _AllNotificationsState extends State<AllNotifications> {
       newAnnouncement = new Announcement();
       await loadAnnouncements();
       internalAnnouncements =
-          Provider.of<ManageProject>(context).projectInternalAnnouncement;
+          Provider.of<ManageNotification>(context).projectInternalAnnouncement;
       publicAnnouncements =
-          Provider.of<ManageProject>(context).projectPublicAnnouncement;
+          Provider.of<ManageNotification>(context).projectPublicAnnouncement;
 
       // int insertIndex = 0;
       // if (flag == 0) {

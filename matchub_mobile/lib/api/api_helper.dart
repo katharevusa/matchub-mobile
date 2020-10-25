@@ -171,7 +171,7 @@ class ApiBaseHelper {
   dynamic _returnResponse(http.Response response) {
     print(response.statusCode);
     if (response.contentLength == 0) return;
-    print(response.body);
+    //print(response.body);
     var responseJson =
         json.decode(response.body.toString()) as Map<String, dynamic>;
     switch (response.statusCode) {

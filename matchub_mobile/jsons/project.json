@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "projectId": 1,
     "projectTitle": "Empowering Communities in Bangladesh",
@@ -113,4 +114,659 @@
             "skillSet": []
         }
     ]
+=======
+{
+    "projectId": 1,
+    "projectTitle": "Empowering Communities in Bangladesh",
+    "projectDescription": "To strengthen community resilience to prepare and respond to the risks associated with disasters and climate change by fostering economic empowerment, inclusive leadership and disaster preparedness.",
+    "country": "Bangladesh",
+    "startDate": "2020-10-21 20:41",
+    "endDate": "2021-05-05 11:50",
+    "userFollowers": [],
+    "projStatus": "ACTIVE",
+    "upvotes": 21,
+    "relatedResources": [
+        "Phone",
+        "Desktop",
+        "Tablet"
+    ],
+    "projCreatorId": 5,
+    "spotlight": false,
+    "spotlightEndTime": null,
+    "projectProfilePic": "https://localhost:8443/api/v1/files/init/project1.jpg",
+    "photos": [
+        "https://localhost:8443/api/v1/files/init/project1.jpg",
+        "https://localhost:8443/api/v1/files/init/Bangladesh.jpg",
+        "https://localhost:8443/api/v1/files/init/Bangladesh1.jpg",
+        "https://localhost:8443/api/v1/files/init/Bangladesh2.jpg"
+    ],
+    "documents": {},
+    "joinRequests": [],
+    "reviews": [],
+    "projectBadge": {
+        "badgeId": 1,
+        "badgeType": "PROJECT_SPECIFIC",
+        "badgeTitle": "Empowerment in Bangladesh",
+        "icon": "https://localhost:8443/api/v1/files/badgeIcons/cities.png"
+    },
+    "fundsCampaign": [],
+    "meetings": [],
+    "listOfRequests": [],
+    "sdgs": [
+        {
+            "sdgId": 1,
+            "sdgName": "No Poverty",
+            "sdgDescription": "End poverty in all its forms everywhere"
+        },
+        {
+            "sdgId": 2,
+            "sdgName": "Zero Hunger",
+            "sdgDescription": "End hunger, achieve food security and improved nutrition and promote sustainable agriculture"
+        }
+    ],
+    "kpis": [],
+    "teamMembers": [],
+    "projectFollowers": [
+        {
+            "accountId": 2,
+            "uuid": "2c441b97-b930-4e67-8e0e-d63fddbb9e09",
+            "email": "user1@gmail.com",
+            "accountLocked": false,
+            "accountExpired": false,
+            "disabled": true,
+            "roles": [
+                "USER"
+            ],
+            "isVerified": false,
+            "joinDate": "2020-10-21T20:41:36",
+            "activeMonths": 0,
+            "countryCode": null,
+            "phoneNumber": null,
+            "country": null,
+            "city": null,
+            "profilePhoto": null,
+            "reputationPoints": 0,
+            "followers": [
+                4
+            ],
+            "following": [],
+            "upvotedProjectIds": [],
+            "downvotedProjectIds": [],
+            "spotlightChances": 0,
+            "posts": [],
+            "announcements": [],
+            "savedResources": [],
+            "firstName": "Phil",
+            "lastName": "Lim",
+            "genderEnum": "MALE",
+            "profileDescription": null,
+            "skillSet": []
+        },
+        {
+            "accountId": 3,
+            "uuid": "df1a2b9f-6e8f-4f0f-adce-2f130d1788aa",
+            "email": "user2@gmail.com",
+            "accountLocked": false,
+            "accountExpired": false,
+            "disabled": true,
+            "roles": [
+                "USER"
+            ],
+            "isVerified": false,
+            "joinDate": "2020-10-21T20:41:36",
+            "activeMonths": 0,
+            "countryCode": null,
+            "phoneNumber": null,
+            "country": null,
+            "city": null,
+            "profilePhoto": null,
+            "reputationPoints": 0,
+            "followers": [
+                4,
+                5,
+                6
+            ],
+            "following": [],
+            "upvotedProjectIds": [],
+            "downvotedProjectIds": [],
+            "spotlightChances": 0,
+            "posts": [],
+            "announcements": [],
+            "savedResources": [],
+            "organizationName": "NUS",
+            "organizationDescription": "description",
+            "address": "address",
+            "verificationDocHashMap": {},
+            "employees": [],
+            "kahs": [],
+            "areasOfExpertise": []
+        },
+        {
+            "accountId": 4,
+            "uuid": "ee933153-faa2-4809-8006-16adef084730",
+            "email": "alexlow@gmail.com",
+            "accountLocked": false,
+            "accountExpired": false,
+            "disabled": false,
+            "roles": [
+                "USER"
+            ],
+            "isVerified": true,
+            "joinDate": "2020-10-21T20:41:36",
+            "activeMonths": 0,
+            "countryCode": "+65",
+            "phoneNumber": "91234567",
+            "country": "Singapore",
+            "city": "Singapore",
+            "profilePhoto": "https://localhost:8443/api/v1/files/init/alexlow.jpg",
+            "reputationPoints": 0,
+            "followers": [
+                8,
+                9
+            ],
+            "following": [
+                2,
+                3
+            ],
+            "upvotedProjectIds": [],
+            "downvotedProjectIds": [],
+            "spotlightChances": 0,
+            "posts": [],
+            "announcements": [
+                {
+                    "announcementId": 5,
+                    "title": "Response to your join request",
+                    "content": "Your request to join project 'Supporting rural families, Cambodia' has been approved.",
+                    "timestamp": "2020-10-21T22:39:05",
+                    "projectId": null,
+                    "taskId": null,
+                    "postId": null,
+                    "type": "ACCEPT_JOIN_REQUEST",
+                    "viewedUserIds": [],
+                    "creatorId": null,
+                    "resourceId": 1,
+                    "resourceRequestId": null,
+                    "joinRequestId": null,
+                    "newFollowerAndNewPosterUUID": null,
+                    "newFollowerAndNewPosterProfileId": null
+                }
+            ],
+            "savedResources": [],
+            "firstName": "Alex",
+            "lastName": "Low",
+            "genderEnum": "MALE",
+            "profileDescription": "Highly Passionate Individual with a love for contributing back to the society!",
+            "skillSet": [
+                "Good Communication Skills",
+                "Professional Painter",
+                "Project Management Skills",
+                "Leadership Skills"
+            ]
+        },
+        {
+            "accountId": 5,
+            "uuid": "e524d74e-a71a-4bf8-bde1-97d9cbc5d9e9",
+            "email": "ikjun@gmail.com",
+            "accountLocked": false,
+            "accountExpired": false,
+            "disabled": false,
+            "roles": [
+                "USER"
+            ],
+            "isVerified": true,
+            "joinDate": "2020-10-21T20:41:36",
+            "activeMonths": 0,
+            "countryCode": "+82",
+            "phoneNumber": "011-465-9876",
+            "country": "Korea, Republic of South Korea",
+            "city": "Seoul",
+            "profilePhoto": "https://localhost:8443/api/v1/files/init/ikjun.jpeg",
+            "reputationPoints": 0,
+            "followers": [
+                8,
+                9,
+                10,
+                11
+            ],
+            "following": [
+                3,
+                9,
+                10,
+                11
+            ],
+            "upvotedProjectIds": [],
+            "downvotedProjectIds": [],
+            "spotlightChances": 0,
+            "posts": [],
+            "announcements": [
+                {
+                    "announcementId": 3,
+                    "title": "Join Project Request",
+                    "content": "Jeong Ha Ahn has applied to join your 'Build School Toilets for Nepal' project.",
+                    "timestamp": "2020-10-21T20:41:40",
+                    "projectId": 13,
+                    "taskId": null,
+                    "postId": null,
+                    "type": "JOIN_PROJ_REQUEST",
+                    "viewedUserIds": [],
+                    "creatorId": null,
+                    "resourceId": null,
+                    "resourceRequestId": null,
+                    "joinRequestId": 3,
+                    "newFollowerAndNewPosterUUID": null,
+                    "newFollowerAndNewPosterProfileId": null
+                },
+                {
+                    "announcementId": 4,
+                    "title": "Join Project Request",
+                    "content": "Billy Chan has applied to join your 'Build School Toilets for Nepal' project.",
+                    "timestamp": "2020-10-21T20:41:41",
+                    "projectId": 13,
+                    "taskId": null,
+                    "postId": null,
+                    "type": "JOIN_PROJ_REQUEST",
+                    "viewedUserIds": [],
+                    "creatorId": null,
+                    "resourceId": null,
+                    "resourceRequestId": null,
+                    "joinRequestId": 4,
+                    "newFollowerAndNewPosterUUID": null,
+                    "newFollowerAndNewPosterProfileId": null
+                }
+            ],
+            "savedResources": [],
+            "firstName": "Ik Jun",
+            "lastName": "Lee",
+            "genderEnum": "MALE",
+            "profileDescription": "Highly Passionate Individual with a love for contributing back to the society!",
+            "skillSet": [
+                "Playing the Guitar",
+                "Singing",
+                "Trilingual",
+                "Verified First Aider",
+                "General Surgery (GS)"
+            ]
+        },
+        {
+            "accountId": 7,
+            "uuid": "9e9f785c-62b4-4c75-882c-b6b6a9ea92ea",
+            "email": "genc@gmail.com",
+            "accountLocked": false,
+            "accountExpired": false,
+            "disabled": false,
+            "roles": [
+                "USER"
+            ],
+            "isVerified": true,
+            "joinDate": "2020-10-21T20:41:36",
+            "activeMonths": 0,
+            "countryCode": "+1",
+            "phoneNumber": "866 293 4483",
+            "country": "Canada",
+            "city": "Toronto",
+            "profilePhoto": "https://localhost:8443/api/v1/files/init/genc.jpg",
+            "reputationPoints": 0,
+            "followers": [],
+            "following": [
+                6,
+                9,
+                11
+            ],
+            "upvotedProjectIds": [],
+            "downvotedProjectIds": [],
+            "spotlightChances": 0,
+            "posts": [],
+            "announcements": [],
+            "savedResources": [],
+            "organizationName": "Gender Equality Network Canada (GENC)",
+            "organizationDescription": "GENC is a national network of over 150 diverse women leaders from across Canada.",
+            "address": "1920 Yonge St., Suite 302, Toronto, Ontario M4S 3E2",
+            "verificationDocHashMap": {},
+            "employees": [
+                6,
+                12
+            ],
+            "kahs": [
+                6
+            ],
+            "areasOfExpertise": [
+                "Work together to advocate for policy changes",
+                "Collective Action to Advance Gender Equality",
+                "Inclusive Intersectional Leadership"
+            ]
+        }
+    ],
+    "channels": [],
+    "projectOwners": [
+        {
+            "accountId": 5,
+            "uuid": "e524d74e-a71a-4bf8-bde1-97d9cbc5d9e9",
+            "email": "ikjun@gmail.com",
+            "accountLocked": false,
+            "accountExpired": false,
+            "disabled": false,
+            "roles": [
+                "USER"
+            ],
+            "isVerified": true,
+            "joinDate": "2020-10-21T20:41:36",
+            "activeMonths": 0,
+            "countryCode": "+82",
+            "phoneNumber": "011-465-9876",
+            "country": "Korea, Republic of South Korea",
+            "city": "Seoul",
+            "profilePhoto": "https://localhost:8443/api/v1/files/init/ikjun.jpeg",
+            "reputationPoints": 0,
+            "followers": [
+                8,
+                9,
+                10,
+                11
+            ],
+            "following": [
+                3,
+                9,
+                10,
+                11
+            ],
+            "upvotedProjectIds": [],
+            "downvotedProjectIds": [],
+            "spotlightChances": 0,
+            "posts": [],
+            "announcements": [
+                {
+                    "announcementId": 3,
+                    "title": "Join Project Request",
+                    "content": "Jeong Ha Ahn has applied to join your 'Build School Toilets for Nepal' project.",
+                    "timestamp": "2020-10-21T20:41:40",
+                    "projectId": 13,
+                    "taskId": null,
+                    "postId": null,
+                    "type": "JOIN_PROJ_REQUEST",
+                    "viewedUserIds": [],
+                    "creatorId": null,
+                    "resourceId": null,
+                    "resourceRequestId": null,
+                    "joinRequestId": 3,
+                    "newFollowerAndNewPosterUUID": null,
+                    "newFollowerAndNewPosterProfileId": null
+                },
+                {
+                    "announcementId": 4,
+                    "title": "Join Project Request",
+                    "content": "Billy Chan has applied to join your 'Build School Toilets for Nepal' project.",
+                    "timestamp": "2020-10-21T20:41:41",
+                    "projectId": 13,
+                    "taskId": null,
+                    "postId": null,
+                    "type": "JOIN_PROJ_REQUEST",
+                    "viewedUserIds": [],
+                    "creatorId": null,
+                    "resourceId": null,
+                    "resourceRequestId": null,
+                    "joinRequestId": 4,
+                    "newFollowerAndNewPosterUUID": null,
+                    "newFollowerAndNewPosterProfileId": null
+                }
+            ],
+            "hostedResources": [
+                {
+                    "resourceId": 1,
+                    "resourceName": "Bread",
+                    "resourceDescription": "Food Free Bread",
+                    "uploadedFiles": [],
+                    "available": true,
+                    "startTime": "2021-06-05T11:50:55",
+                    "endTime": "2021-07-05T11:50:55",
+                    "resourceCategoryId": 1,
+                    "resourceOwnerId": 5,
+                    "units": 10,
+                    "resourceProfilePic": "https://localhost:8443/api/v1/files/init/resource_bread.jpg",
+                    "photos": [
+                        "https://localhost:8443/api/v1/files/init/resource_bread.jpg",
+                        "https://localhost:8443/api/v1/files/init/bread2.jpg"
+                    ],
+                    "documents": {},
+                    "spotlight": false,
+                    "spotlightEndTime": null,
+                    "matchedProjectId": null,
+                    "country": "Singapore"
+                },
+                {
+                    "resourceId": 2,
+                    "resourceName": "Classroom",
+                    "resourceDescription": "Free classroom",
+                    "uploadedFiles": [],
+                    "available": true,
+                    "startTime": "2021-06-05T11:50:55",
+                    "endTime": "2021-07-05T11:50:55",
+                    "resourceCategoryId": 2,
+                    "resourceOwnerId": 5,
+                    "units": 10,
+                    "resourceProfilePic": "https://localhost:8443/api/v1/files/init/resource_classroom.jpg",
+                    "photos": [
+                        "https://localhost:8443/api/v1/files/init/resource_classroom.jpg",
+                        "https://localhost:8443/api/v1/files/init/classroom.jpg"
+                    ],
+                    "documents": {},
+                    "spotlight": false,
+                    "spotlightEndTime": null,
+                    "matchedProjectId": null,
+                    "country": "Cambodia"
+                },
+                {
+                    "resourceId": 3,
+                    "resourceName": "Water",
+                    "resourceDescription": "10 Free Bottle Water",
+                    "uploadedFiles": [],
+                    "available": true,
+                    "startTime": "2021-06-05T11:50:55",
+                    "endTime": "2021-07-05T11:50:55",
+                    "resourceCategoryId": 3,
+                    "resourceOwnerId": 5,
+                    "units": 10,
+                    "resourceProfilePic": "https://localhost:8443/api/v1/files/init/resource_water.jpg",
+                    "photos": [
+                        "https://localhost:8443/api/v1/files/init/resource_water.jpg",
+                        "https://localhost:8443/api/v1/files/init/water1.jpg"
+                    ],
+                    "documents": {},
+                    "spotlight": false,
+                    "spotlightEndTime": null,
+                    "matchedProjectId": null,
+                    "country": "Cambodia"
+                },
+                {
+                    "resourceId": 18,
+                    "resourceName": "Pacifier",
+                    "resourceDescription": "200 brand new pacifiers",
+                    "uploadedFiles": [],
+                    "available": true,
+                    "startTime": "2020-10-20T11:50:55",
+                    "endTime": "2021-09-21T11:50:55",
+                    "resourceCategoryId": 4,
+                    "resourceOwnerId": 5,
+                    "units": 200,
+                    "resourceProfilePic": "https://localhost:8443/api/v1/files/init/pacifier.jpg",
+                    "photos": [
+                        "https://localhost:8443/api/v1/files/init/pacifier.jpg"
+                    ],
+                    "documents": {},
+                    "spotlight": false,
+                    "spotlightEndTime": null,
+                    "matchedProjectId": null,
+                    "country": "Indonesia"
+                },
+                {
+                    "resourceId": 21,
+                    "resourceName": "Toilet Paper",
+                    "resourceDescription": "200kg of toilet paper",
+                    "uploadedFiles": [],
+                    "available": true,
+                    "startTime": "2020-10-20T11:50:55",
+                    "endTime": "2021-09-21T11:50:55",
+                    "resourceCategoryId": 3,
+                    "resourceOwnerId": 5,
+                    "units": 200,
+                    "resourceProfilePic": "https://localhost:8443/api/v1/files/init/toiletpaper.jpg",
+                    "photos": [
+                        "https://localhost:8443/api/v1/files/init/toiletpaper.jpg"
+                    ],
+                    "documents": {},
+                    "spotlight": false,
+                    "spotlightEndTime": null,
+                    "matchedProjectId": null,
+                    "country": "Nepal"
+                }
+            ],
+            "savedResources": [],
+            "projectsFollowing": [
+                {
+                    "projectId": 1,
+                    "projectTitle": "Empowering Communities in Bangladesh",
+                    "projectDescription": "To strengthen community resilience to prepare and respond to the risks associated with disasters and climate change by fostering economic empowerment, inclusive leadership and disaster preparedness.",
+                    "country": "Bangladesh",
+                    "startDate": "2020-10-21 20:41",
+                    "endDate": "2021-05-05 11:50",
+                    "userFollowers": [],
+                    "projStatus": "ACTIVE",
+                    "upvotes": 21,
+                    "relatedResources": [
+                        "Phone",
+                        "Desktop",
+                        "Tablet"
+                    ],
+                    "projCreatorId": 5,
+                    "spotlight": false,
+                    "spotlightEndTime": null,
+                    "projectProfilePic": "https://localhost:8443/api/v1/files/init/project1.jpg",
+                    "photos": [
+                        "https://localhost:8443/api/v1/files/init/project1.jpg",
+                        "https://localhost:8443/api/v1/files/init/Bangladesh.jpg",
+                        "https://localhost:8443/api/v1/files/init/Bangladesh1.jpg",
+                        "https://localhost:8443/api/v1/files/init/Bangladesh2.jpg"
+                    ],
+                    "documents": {},
+                    "meetings": []
+                },
+                {
+                    "projectId": 2,
+                    "projectTitle": "Women's financial literacy, Malawi",
+                    "projectDescription": "CARE will work with 20,000 women from 1,000 village savings and loans groups in Lilongwe, Dowa and Kasungu Districts, to overcome chronic hunger by expanding their farms or micro-businesses.",
+                    "country": "Malawi",
+                    "startDate": "2019-03-05 11:50",
+                    "endDate": "2020-10-21 20:45",
+                    "userFollowers": [],
+                    "projStatus": "TERMINATED",
+                    "upvotes": 23,
+                    "relatedResources": [
+                        "Food"
+                    ],
+                    "projCreatorId": 5,
+                    "spotlight": false,
+                    "spotlightEndTime": null,
+                    "projectProfilePic": "https://localhost:8443/api/v1/files/init/project2.jpg",
+                    "photos": [
+                        "https://localhost:8443/api/v1/files/init/project2.jpg",
+                        "https://localhost:8443/api/v1/files/init/woman1.jpg",
+                        "https://localhost:8443/api/v1/files/init/woman2.jpg",
+                        "https://localhost:8443/api/v1/files/init/woman3.jpg"
+                    ],
+                    "documents": {},
+                    "meetings": []
+                },
+                {
+                    "projectId": 3,
+                    "projectTitle": "Supporting rural families, Cambodia",
+                    "projectDescription": "To support rural family.",
+                    "country": "Cambodia",
+                    "startDate": "2019-03-05 11:50",
+                    "endDate": "2019-06-05 11:50",
+                    "userFollowers": [],
+                    "projStatus": "ACTIVE",
+                    "upvotes": 25,
+                    "relatedResources": [
+                        "Water",
+                        "Library"
+                    ],
+                    "projCreatorId": 9,
+                    "spotlight": false,
+                    "spotlightEndTime": null,
+                    "projectProfilePic": "https://localhost:8443/api/v1/files/init/project3.jpg",
+                    "photos": [
+                        "https://localhost:8443/api/v1/files/init/project3.jpg",
+                        "https://localhost:8443/api/v1/files/init/rural.jpg",
+                        "https://localhost:8443/api/v1/files/init/rural2.jpg"
+                    ],
+                    "documents": {},
+                    "meetings": []
+                },
+                {
+                    "projectId": 4,
+                    "projectTitle": "Building housing in Phnom Penh, Cambodia",
+                    "projectDescription": "As an alternative to Schoolies, 18 Mosman High year 12 students are travelling to Cambodia to build houses for local Cambodians living in poverty.",
+                    "country": "Cambodia",
+                    "startDate": "2020-10-21 20:41",
+                    "endDate": "2020-10-21 21:00",
+                    "userFollowers": [],
+                    "projStatus": "TERMINATED",
+                    "upvotes": 23,
+                    "relatedResources": [
+                        "Bed",
+                        "Wood"
+                    ],
+                    "projCreatorId": 9,
+                    "spotlight": false,
+                    "spotlightEndTime": null,
+                    "projectProfilePic": "https://localhost:8443/api/v1/files/init/project4.jpg",
+                    "photos": [
+                        "https://localhost:8443/api/v1/files/init/project4.jpg",
+                        "https://localhost:8443/api/v1/files/init/building.jpg",
+                        "https://localhost:8443/api/v1/files/init/building2.jpg",
+                        "https://localhost:8443/api/v1/files/init/building3.jpg"
+                    ],
+                    "documents": {},
+                    "meetings": []
+                },
+                {
+                    "projectId": 5,
+                    "projectTitle": "Promote inclusive access to water, sanitation and hygiene in Pakistan",
+                    "projectDescription": "The project aims to support improvement in the delivery of more inclusive, equitable and sustainable access to water, sanitation and hygiene (WASH) services ",
+                    "country": "Pakistan",
+                    "startDate": "2020-12-05 11:50",
+                    "endDate": "2020-10-21 21:01",
+                    "userFollowers": [],
+                    "projStatus": "COMPLETED",
+                    "upvotes": 25,
+                    "relatedResources": [
+                        "Soap"
+                    ],
+                    "projCreatorId": 9,
+                    "spotlight": false,
+                    "spotlightEndTime": null,
+                    "projectProfilePic": "https://localhost:8443/api/v1/files/init/project5.png",
+                    "photos": [
+                        "https://localhost:8443/api/v1/files/init/project5.png",
+                        "https://localhost:8443/api/v1/files/init/water.jpg",
+                        "https://localhost:8443/api/v1/files/init/water2.jpg",
+                        "https://localhost:8443/api/v1/files/init/water3.jpg"
+                    ],
+                    "documents": {},
+                    "meetings": []
+                }
+            ],
+            "firstName": "Ik Jun",
+            "lastName": "Lee",
+            "genderEnum": "MALE",
+            "profileDescription": "Highly Passionate Individual with a love for contributing back to the society!",
+            "skillSet": [
+                "Playing the Guitar",
+                "Singing",
+                "Trilingual",
+                "Verified First Aider",
+                "General Surgery (GS)"
+            ]
+        }
+    ]
+>>>>>>> 4df641a8d7c5cc2a95ddbfd63877c619a9d19945
 }
