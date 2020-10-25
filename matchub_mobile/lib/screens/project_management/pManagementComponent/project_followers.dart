@@ -3,6 +3,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectFollowerList.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +20,8 @@ class _PManagementProjectFollowersState
     extends State<PManagementProjectFollowers> {
   @override
   initState() {
-    Provider.of<ManageProject>(context, listen: false)
-        .getProject(widget.project.projectId);
+    // Provider.of<ManageProject>(context, listen: false)
+    //     .getProject(widget.project.projectId);
     super.initState();
   }
 
@@ -28,6 +29,7 @@ class _PManagementProjectFollowersState
   Widget build(BuildContext context) {
     widget.project = Provider.of<ManageProject>(context).managedProject;
     return Material(
+      color: Colors.transparent,
       child: InkWell(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
@@ -42,9 +44,30 @@ class _PManagementProjectFollowersState
           child: Column(
             children: [
               ListTile(
-                title: Text(
-                  "Project Followers",
-                ),
+                title: Text("Project Followers",
+                    style: TextStyle(color: Colors.black)),
+              ),
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.supervisor_account,
+                          size: 30, color: Colors.black),
+                      SizedBox(width: 10),
+                      Text(widget.project.projectFollowers.length.toString(),
+                          style: TextStyle(
+                            fontSize: 25,
+                            color: AppTheme.project5,
+                          )),
+                    ],
+                  ),
+                  Text("Followers",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black)),
+                ],
               ),
               SizedBox(
                 height: 10,
@@ -60,15 +83,7 @@ class _PManagementProjectFollowersState
                       children: [
                         Text(
                           "0 Followers...",
-                          style: TextStyle(fontSize: 10, color: Colors.grey),
-                        ),
-                        Container(
-                          height: 60,
-                          alignment: Alignment.topCenter,
-                          child: Image.asset(
-                            "assets/images/Empty-pana.png",
-                            fit: BoxFit.fill,
-                          ),
+                          style: TextStyle(fontSize: 10, color: Colors.black),
                         ),
                       ],
                     )

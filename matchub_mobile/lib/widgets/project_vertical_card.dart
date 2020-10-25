@@ -65,11 +65,11 @@ class _ProjectVerticalCardState extends State<ProjectVerticalCard> {
                   ? Navigator.of(
                       context,
                     ).pushNamed(ProjectManagementOverview.routeName,
-                      arguments: widget.project)
+                      arguments: project)
                   : Navigator.of(
                       context,
                     ).pushNamed(ProjectDetailScreen.routeName,
-                      arguments: widget.project);
+                      arguments: project);
             },
             child: Stack(children: [
               Container(

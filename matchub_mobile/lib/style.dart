@@ -32,11 +32,19 @@ class AppTheme {
   static const Color unSelectedTabBackgroundColor = Color(0xFFFFFFFC);
   static const Color subTitleTextColor = Color(0xFF9F988F);
 
+  static const Color project1 = Color(0xFFE22941);
+  static const Color project2 = Color(0xFFEE846D);
+  static const Color project3 = Color(0xFFFBDC83);
+  static const Color project4 = Color(0xFF6BCDA5);
+  static const Color project5 = Color(0xFFE0A5BE);
+  static const Color project6 = Color(0xFF69528E);
+  static const Color project7 = Color(0xFF1E1E1E);
+  static const Color project8 = Color(0xFFA7796F);
+
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: AppTheme.appBackgroundColor,
     primaryColor: kPrimaryColor,
     accentColor: kAccentColor,
-     
     brightness: Brightness.light,
     textTheme: lightTextTheme,
   );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/widgets/project_vertical_card.dart';
 import 'package:provider/provider.dart';
 
@@ -23,25 +24,33 @@ class _ViewFollowingProjectsState extends State<ViewFollowingProjects> {
   @override
   void initState() {
     super.initState();
-    followingProjectsFuture = getAllFollowingProjects();
+    loadFollowing();
   }
 
-  getAllFollowingProjects() async {
-    final url =
-        'authenticated/getListOfFollowingProjectsByUserId?userId=${widget.profile.accountId}';
-    final responseData = await _apiHelper.getWODecode(
-        url, Provider.of<Auth>(context, listen: false).accessToken);
-    (responseData as List)
-        .forEach((e) => followingProjects.add(Project.fromJson(e)));
+  loadFollowing() async {
+    await Provider.of<ManageProject>(context, listen: false)
+        .getAllFollowingProjects(widget.profile);
   }
+
+  // getAllFollowingProjects() async {
+  //   final url =
+  //       'authenticated/getListOfFollowingProjectsByUserId?userId=${widget.profile.accountId}';
+  //   final responseData = await _apiHelper.getWODecode(
+  //       url, Provider.of<Auth>(context, listen: false).accessToken);
+  //   (responseData as List)
+  //       .forEach((e) => followingProjects.add(Project.fromJson(e)));
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: followingProjectsFuture,
-      builder: (context, snapshot) => (snapshot.connectionState ==
-              ConnectionState.done)
-          ? Scaffold(
+    followingProjects = Provider.of<ManageProject>(context).followingProjects;
+    return 
+    // FutureBuilder(
+    //   future: followingProjectsFuture,
+    //   builder: (context, snapshot) => (snapshot.connectionState ==
+    //           ConnectionState.done)
+    //       ?
+           Scaffold(
               appBar: AppBar(
                 title: Text("Following Projects"),
               ),
@@ -56,8 +65,8 @@ class _ViewFollowingProjectsState extends State<ViewFollowingProjects> {
                           isOwner: checkForOwnership(followingProjects[index])),
                       itemCount: followingProjects.length,
                     ),
-            )
-          : Center(child: CircularProgressIndicator()),
+          //   )
+          // : Center(child: CircularProgressIndicator()),
     );
   }
 

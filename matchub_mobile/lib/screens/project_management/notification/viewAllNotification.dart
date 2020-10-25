@@ -30,6 +30,7 @@ class _AllNotificationsState extends State<AllNotifications> {
   ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   Announcement newAnnouncement = new Announcement();
   Map<String, dynamic> announcement;
+  Profile myProfile;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
   bool _isLoading;
@@ -70,6 +71,7 @@ class _AllNotificationsState extends State<AllNotifications> {
 
   @override
   Widget build(BuildContext context) {
+    myProfile = Provider.of<Auth>(context).myProfile;
     return _isLoading
         ? Container(child: Center(child: Text("I am loading")))
         : DefaultTabController(
@@ -125,26 +127,31 @@ class _AllNotificationsState extends State<AllNotifications> {
         Provider.of<ManageNotification>(context).projectPublicAnnouncement;
     return Column(
       children: <Widget>[
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-          child: RaisedButton(
-            highlightElevation: 0,
-            elevation: 0,
-            child: Text(
-              "Create Public Announcement",
-              style: TextStyle(fontSize: 15),
-            ),
-            textColor: kSecondaryColor,
-            color: Colors.white,
-            onPressed: () => showModalBottomSheet(
-                context: context,
-                builder: (context) => buildMorePopUp(
-                      context,
-                      0,
-                    )).then((value) => setState(() {})),
-          ),
-        ),
+        myProfile.projectsOwned.indexWhere(
+                    (e) => e.projectId == widget.project.projectId) >=
+                0
+            ? Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                child: RaisedButton(
+                  highlightElevation: 0,
+                  elevation: 0,
+                  child: Text(
+                    "Create Public Announcement",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  textColor: kSecondaryColor,
+                  color: Colors.white,
+                  onPressed: () => showModalBottomSheet(
+                      context: context,
+                      builder: (context) => buildMorePopUp(
+                            context,
+                            0,
+                          )).then((value) => setState(() {})),
+                ),
+              )
+            : Container(),
         Expanded(
           child: SingleChildScrollView(
               child: ListView.separated(
@@ -210,23 +217,28 @@ class _AllNotificationsState extends State<AllNotifications> {
         Provider.of<ManageNotification>(context).projectInternalAnnouncement;
     return Column(
       children: <Widget>[
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-          child: RaisedButton(
-            highlightElevation: 0,
-            elevation: 0,
-            child: Text(
-              "Create Internal Announcement",
-              style: TextStyle(fontSize: 15),
-            ),
-            textColor: kSecondaryColor,
-            color: Colors.white,
-            onPressed: () => showModalBottomSheet(
-                context: context,
-                builder: (context) => buildMorePopUp(context, 1)),
-          ),
-        ),
+        myProfile.projectsOwned.indexWhere(
+                    (e) => e.projectId == widget.project.projectId) >=
+                0
+            ? Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                child: RaisedButton(
+                  highlightElevation: 0,
+                  elevation: 0,
+                  child: Text(
+                    "Create Internal Announcement",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  textColor: kSecondaryColor,
+                  color: Colors.white,
+                  onPressed: () => showModalBottomSheet(
+                      context: context,
+                      builder: (context) => buildMorePopUp(context, 1)),
+                ),
+              )
+            : Container(),
         Expanded(
           child: SingleChildScrollView(
               child: ListView.separated(
@@ -249,7 +261,7 @@ class _AllNotificationsState extends State<AllNotifications> {
                         ).pushNamed(
                           AnnouncementDetail.routeName,
                           arguments: {
-                            "announcement": publicAnnouncements[index],
+                            "announcement": internalAnnouncements[index],
                             "isProjectOwner": true
                           },
                         );

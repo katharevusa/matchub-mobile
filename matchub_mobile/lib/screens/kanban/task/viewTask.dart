@@ -412,10 +412,10 @@ class _ViewTaskState extends State<ViewTask> {
     };
     return (members.isNotEmpty)
         ? GestureDetector(
-              onTap: () => routeToSelectMembers(),
-              child:Container(
-            width: SizeConfig.widthMultiplier * 100,
-            child:  Row(
+            onTap: () => routeToSelectMembers(),
+            child: Container(
+              width: SizeConfig.widthMultiplier * 100,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Stack(

@@ -9,13 +9,13 @@ part of 'resourceCategory.dart';
 ResourceCategory _$ResourceCategoryFromJson(Map<String, dynamic> json) {
   return ResourceCategory()
     ..resourceCategoryId = json['resourceCategoryId'] as num
-    ..resourceCategoryName = json['resourceCategoryName'] as String;
-  // ..resourceCategoryDescription =
-  //     json['resourceCategoryDescription'] as String
-  // ..resources = json['resources'] as List
-  // ..communityPointsGuideline = json['communityPointsGuideline'] as num
-  // ..perUnit = json['perUnit'] as num
-  // ..unitName = json['unitName'] as String;
+    ..resourceCategoryName = json['resourceCategoryName'] as String
+    ..resourceCategoryDescription =
+        json['resourceCategoryDescription'] as String
+    ..resources = json['resources'] as List
+    ..communityPointsGuideline = json['communityPointsGuideline'] as num
+    ..perUnit = json['perUnit'] as num
+    ..unitName = json['unitName'] as String;
 }
 
 Map<String, dynamic> _$ResourceCategoryToJson(ResourceCategory instance) =>

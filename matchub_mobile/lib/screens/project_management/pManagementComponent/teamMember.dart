@@ -4,6 +4,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/teamMemberManagement.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
@@ -18,23 +19,25 @@ class PManagementTeamMember extends StatefulWidget {
 class _PManagementTeamMemberState extends State<PManagementTeamMember> {
   @override
   initState() {
-    Provider.of<ManageProject>(context, listen: false).getProject(
-      widget.project.projectId,
-    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    widget.project = Provider.of<ManageProject>(context).managedProject;
+    widget.project =
+        Provider.of<ManageProject>(context, listen: false).managedProject;
     return Material(
+      color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context).push(
+            MaterialPageRoute(
               settings: RouteSettings(name: "/team-members"),
               builder: (_) => TeamMembersManagement(
-                    project: widget.project,
-                  )));
+                project: widget.project,
+              ),
+            ),
+          );
         },
         child: Container(
           height: 150,
@@ -44,6 +47,7 @@ class _PManagementTeamMemberState extends State<PManagementTeamMember> {
               ListTile(
                 title: Text(
                   "Team Members",
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
               Row(
@@ -53,8 +57,11 @@ class _PManagementTeamMemberState extends State<PManagementTeamMember> {
                     width: 20,
                   ),
                   Stack(children: <Widget>[
-                    Icon(Icons.notifications,
-                        color: Color(0xff48284A), size: 30),
+                    Icon(
+                      Icons.notifications,
+                      size: 30,
+                      color: Colors.black,
+                    ),
                     buildJoinRequest(widget.project) != 0
                         ? Positioned(
                             top: -1.0,
@@ -63,25 +70,30 @@ class _PManagementTeamMemberState extends State<PManagementTeamMember> {
                               new Icon(
                                 Icons.brightness_1,
                                 size: 12.0,
-                                color: Colors.red.shade400,
+                                color: AppTheme.project5,
                               ),
                             ]))
                         : Container(),
                   ]),
                   Text(' You have ',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black)),
                   Text(
                     buildJoinRequest(widget.project).toString(),
                     style: TextStyle(
-                        color: Colors.red.shade400,
+                        color: AppTheme.project5,
                         fontSize: 25,
                         fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
               Text("New Join Request",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black)),
               SizedBox(
                 height: 10,
               ),
@@ -93,8 +105,8 @@ class _PManagementTeamMemberState extends State<PManagementTeamMember> {
                       ],
                     )
                   : Text(
-                      "0 Team Members",
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      "No Team Members",
+                      style: TextStyle(fontSize: 12, color: Colors.black),
                     )
             ],
           ),

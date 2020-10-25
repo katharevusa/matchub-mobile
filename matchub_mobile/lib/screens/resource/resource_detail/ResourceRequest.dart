@@ -15,8 +15,9 @@ import 'package:provider/provider.dart';
 import 'package:meta/meta.dart';
 
 class RequestFormScreen extends StatefulWidget {
+  static const routeName = "/request-form";
   Resources resource;
-  RequestFormScreen(this.resource);
+  RequestFormScreen({this.resource});
 
   @override
   _RequestFormScreenState createState() => _RequestFormScreenState();
@@ -38,9 +39,10 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
 
   @override
   void initState() {
-    super.initState();
     resourceOwnerFuture = getResourceOwner();
-    // categoryFuture = getCategoryById();
+
+    super.initState();
+    // // categoryFuture = getCategoryById();
     resourceRequest = {
       'requestId': newResourceRequest.requestId,
       'requestCreationTime': newResourceRequest.requestCreationTime,
@@ -58,15 +60,14 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
   getCategoryById() async {
     final url =
         'authenticated/getResourceCategoryById?resourceCategoryId=${widget.resource.resourceCategoryId}';
-    final responseData = await _helper.getProtected(
-        url,  accessToken:Provider.of<Auth>(this.context).accessToken);
+    final responseData = await _helper.getProtected(url);
     category = ResourceCategory.fromJson(responseData);
+    print(category.unitName);
   }
 
   getResourceOwner() async {
     final url = 'authenticated/getAccount/${widget.resource.resourceOwnerId}';
-    final responseData = await _helper.getProtected(
-        url,  accessToken:Provider.of<Auth>(context, listen: false).accessToken);
+    final responseData = await _helper.getProtected(url);
     resourceOwner = Profile.fromJson(responseData);
     await getCategoryById();
   }
@@ -141,9 +142,7 @@ class _RequestFormScreenState extends State<RequestFormScreen> {
                             "AMOUNT WANTED:",
                             style: label,
                           ),
-                          Text(
-                              ( _n).toString() +
-                                  category.unitName,
+                          Text((_n).toString() + category.unitName,
                               style: label)
                         ],
                       ),

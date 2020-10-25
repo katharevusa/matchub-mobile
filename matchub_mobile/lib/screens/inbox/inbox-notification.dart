@@ -47,94 +47,100 @@ class _InboxNotificationState extends State<InboxNotification> {
     return _isLoading
         ? Center(child: CircularProgressIndicator())
         : Scaffold(
-            body: Column(
-              children: [
-                Row(
-                  children: [
-                    FlatButton(
-                        onPressed: () async {
-                          await readAllAnnouncement();
-                        },
-                        child: Text(
-                          "Read All",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 2 * SizeConfig.textMultiplier),
-                        )),
-                    FlatButton(
-                        onPressed: () async {
-                          await deleteAllAnnouncement();
-                        },
-                        child: Text(
-                          "Delete All",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 2 * SizeConfig.textMultiplier),
-                        )),
-                  ],
-                ),
-                ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return Divider();
-                    },
-                    padding: const EdgeInsets.all(16.0),
-                    shrinkWrap: true,
-                    itemCount: allAnnouncements.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(
-                            context,
-                          ).pushNamed(
-                            AnnouncementDetail.routeName,
-                            arguments: {
-                              "announcement": allAnnouncements[index],
-                              "isProjectOwner": false
-                            },
-                          );
-                        },
-                        child: ListTile(
-                          trailing: Column(children: [
-                            Text(
-                              DateFormat('E')
-                                  .format(allAnnouncements[index].timestamp),
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 10),
-                            ),
-                            Text(
-                              allAnnouncements[index].timestamp.day.toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            Text(
-                              DateFormat('MMM')
-                                  .format(allAnnouncements[index].timestamp),
-                              style:
-                                  TextStyle(color: Colors.blue, fontSize: 10),
-                            )
-                          ]),
-                          title: Text(
-                            allAnnouncements[index].title,
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      FlatButton(
+                          onPressed: () async {
+                            await readAllAnnouncement();
+                          },
+                          child: Text(
+                            "Read All",
                             style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 2 * SizeConfig.textMultiplier),
+                          )),
+                      FlatButton(
+                          onPressed: () async {
+                            await deleteAllAnnouncement();
+                          },
+                          child: Text(
+                            "Delete All",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 2 * SizeConfig.textMultiplier),
+                          )),
+                    ],
+                  ),
+                  ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      separatorBuilder: (context, index) {
+                        return Divider();
+                      },
+                      padding: const EdgeInsets.all(16.0),
+                      shrinkWrap: true,
+                      itemCount: allAnnouncements.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(
+                              context,
+                            ).pushNamed(
+                              AnnouncementDetail.routeName,
+                              arguments: {
+                                "announcement": allAnnouncements[index],
+                                "isProjectOwner": false
+                              },
+                            );
+                          },
+                          child: ListTile(
+                            trailing: Column(children: [
+                              Text(
+                                DateFormat('E')
+                                    .format(allAnnouncements[index].timestamp),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 10),
+                              ),
+                              Text(
+                                allAnnouncements[index]
+                                    .timestamp
+                                    .day
+                                    .toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              Text(
+                                DateFormat('MMM')
+                                    .format(allAnnouncements[index].timestamp),
+                                style:
+                                    TextStyle(color: Colors.blue, fontSize: 10),
+                              )
+                            ]),
+                            title: Text(
+                              allAnnouncements[index].title,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16.0),
+                            ),
+                            subtitle: !allAnnouncements[index]
+                                    .viewedUserIds
+                                    .contains(Provider.of<Auth>(context,
+                                            listen: false)
+                                        .myProfile
+                                        .accountId)
+                                ? Text(
+                                    "(new)",
+                                    style: TextStyle(color: Colors.red),
+                                  )
+                                : Container(),
                           ),
-                          subtitle: !allAnnouncements[index]
-                                  .viewedUserIds
-                                  .contains(
-                                      Provider.of<Auth>(context, listen: false)
-                                          .myProfile
-                                          .accountId)
-                              ? Text(
-                                  "(new)",
-                                  style: TextStyle(color: Colors.red),
-                                )
-                              : Container(),
-                        ),
-                      );
-                    }),
-              ],
+                        );
+                      }),
+                ],
+              ),
             ),
           );
   }

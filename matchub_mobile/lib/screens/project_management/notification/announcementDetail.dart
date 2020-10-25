@@ -277,7 +277,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                                               arguments: project);
                                         },
                                         child: Text(
-                                          project.projectTitle,
+                                          creator.name,
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w400,
