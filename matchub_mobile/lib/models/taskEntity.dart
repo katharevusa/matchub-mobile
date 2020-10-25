@@ -9,9 +9,15 @@ class TaskEntity {
     this.taskId,
     this.taskTitle,
     this.taskDescription,
+    this.createdTime,
     this.expectedDeadline,
     this.taskColumn,
+    this.documents,
+    this.labelAndColour,
+    this.taskLeaderId,
+    this.taskCreatorId,
     this.taskDoers  = const [],
+    this.comments  = const [],
   });
 
   num taskId;
@@ -30,4 +36,19 @@ class TaskEntity {
   factory TaskEntity.fromJson(Map<String, dynamic> json) =>
       _$TaskEntityFromJson(json);
   // Map<String, dynamic> toJson() => _$TaskEntityToJson(this);
+
+    factory TaskEntity.deepCopy(TaskEntity productToCopy) => new TaskEntity(
+    taskId: productToCopy.taskId,
+    taskTitle: productToCopy.taskTitle,
+    taskDescription: productToCopy.taskDescription,
+    createdTime: productToCopy.createdTime,
+    expectedDeadline: productToCopy.expectedDeadline,
+    taskColumn: productToCopy.taskColumn,
+    documents: productToCopy.documents,
+    labelAndColour: productToCopy.labelAndColour,
+    taskLeaderId: productToCopy.taskLeaderId,
+    taskCreatorId: productToCopy.taskCreatorId,
+    taskDoers: productToCopy.taskDoers,
+    comments: productToCopy.comments,
+  );
 }

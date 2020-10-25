@@ -9,10 +9,10 @@ class SelectTaskMembers extends StatefulWidget {
   SelectTaskMembers({
     Key key,
     @required this.kanbanController,
-    @required this.task,
+    @required this.listOfTaskDoers,
   }) : super(key: key);
 
-  final TaskEntity task;
+  final List listOfTaskDoers;
   final KanbanController kanbanController;
 
   @override
@@ -24,7 +24,7 @@ class _SelectTaskMembersState extends State<SelectTaskMembers> {
 
   @override
   initState() {
-    widget.task.taskDoers.forEach((taskDoer) {
+    widget.listOfTaskDoers.forEach((taskDoer) {
       int idx = widget.kanbanController.channelMembers.indexWhere(
           (channelMember) => channelMember.accountId == taskDoer.accountId);
       if (idx >= 0) {

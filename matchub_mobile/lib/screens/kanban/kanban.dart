@@ -6,6 +6,7 @@ import 'package:matchub_mobile/helpers/profile_helper.dart';
 
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/kanban/task/selectTags.dart';
+import 'package:matchub_mobile/screens/kanban/task/selectTaskMembers.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
 import 'package:matchub_mobile/screens/project_management/channels/channel_messages.dart';
 import 'package:matchub_mobile/screens/project_management/channels/channel_settings.dart';
@@ -25,6 +26,7 @@ import 'board/boardViewController.dart';
 import 'board/columnCreatePopup.dart';
 
 class KanbanView extends StatefulWidget {
+  static const routeName = "kanbanboard";
   Map<String, dynamic> channelData;
   Project project;
 
@@ -35,8 +37,15 @@ class KanbanView extends StatefulWidget {
 }
 
 class _KanbanViewState extends State<KanbanView> {
-  KanbanEntity kanban;
+  KanbanEntity filteredKanban;
   bool loading;
+  Map<String, dynamic> filterOptions = {
+    "filteredAssignees": [],
+    "labels": [],
+    "deadlines": []
+  };
+  bool toShowFilters = true;
+  bool assigneeChoice = false;
   @override
   initState() {
     loading = true;
@@ -62,16 +71,21 @@ class _KanbanViewState extends State<KanbanView> {
     return Consumer<KanbanController>(builder: (context, controller, child) {
       List<BoardList> _lists = List<BoardList>();
       if (!loading) {
-        kanban = controller.kanban;
-        for (int i = 0; i < kanban.taskColumns.length; i++) {
-          _lists.add(_createBoardList(kanban.taskColumns[i]));
+        filteredKanban = controller.filteredKanban;
+        for (int i = 0; i < filteredKanban.taskColumns.length; i++) {
+          _lists.add(_createBoardList(filteredKanban.taskColumns[i]));
         }
       }
 
       return Scaffold(
         appBar: AppBar(
-          leadingWidth: 44,
-            title: ListTile(contentPadding: EdgeInsets.zero,
+            iconTheme: IconThemeData(color: Colors.black),
+            backgroundColor: kScaffoldColor,
+            // backgroundColor: kKanbanColor,
+            // backgroundColor: Color(0xFF5BC2A2),
+            leadingWidth: 44,
+            title: ListTile(
+              contentPadding: EdgeInsets.zero,
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -80,12 +94,175 @@ class _KanbanViewState extends State<KanbanView> {
                           project: widget.project))),
               title: Text(
                 widget.channelData['name'],
-                style:
-                  TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600),
               ),
             ),
+            elevation: 2,
+            bottom: toShowFilters
+                ? PreferredSize(
+                    child: Container(
+                        width: 100 * SizeConfig.widthMultiplier,
+                        height: 40,
+                        color: Color(0xFFFAF9FE),
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            SizedBox(width: 20),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 4, vertical: 5),
+                              child: RaisedButton(
+                                visualDensity: VisualDensity.compact,
+                                color: filterOptions['filteredAssignees']
+                                        .isNotEmpty
+                                    ? Color(0xFF52459D)
+                                    : Colors.blueGrey[300],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                    filterOptions['filteredAssignees']
+                                            .isNotEmpty
+                                        ? (filterOptions['filteredAssignees']
+                                                    .length >
+                                                1
+                                            ? List.of(filterOptions[
+                                                    'filteredAssignees'])
+                                                .reduce((e, v) {
+                                                if (e is Profile &&
+                                                    v is Profile) {
+                                                  return "${e.name}, ${v.name}";
+                                                } else if (e is String) {
+                                                  return e + ", ${v.name}";
+                                                } else {
+                                                  return e.name;
+                                                }
+                                              })
+                                            : filterOptions['filteredAssignees']
+                                                    [0]
+                                                .name)
+                                        : 'Assignee',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                                onPressed: () {
+                                  final kanbanController =
+                                      Provider.of<KanbanController>(context,
+                                          listen: false);
+                                  Dialog channelMembersDialog = Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                    child: SelectTaskMembers(
+                                        kanbanController: kanbanController,
+                                        listOfTaskDoers:
+                                            filterOptions['filteredAssignees']),
+                                  );
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          channelMembersDialog).then((val) {
+                                    if (val != null) {
+                                      filterOptions['filteredAssignees'] = val;
+                                      controller.filterBy(filterOptions);
+
+                                      setState(() {});
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 4, vertical: 5),
+                              child: RaisedButton(
+                                visualDensity: VisualDensity.compact,
+                                color: filterOptions['labels'].isNotEmpty
+                                    ? Color(0xFF52459D)
+                                    : Colors.blueGrey[300],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text('Labels',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: Colors.white)),
+                                onPressed: () {
+                                  final kanbanController =
+                                      Provider.of<KanbanController>(context,
+                                          listen: false);
+                                  Dialog tagsDialog = Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            10.0)), //this right here
+                                    child: SelectTagsDialog(
+                                      kanbanController: kanbanController,
+                                    ),
+                                  );
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          tagsDialog).then((val) {
+                                    setState(() {
+                                      if (val != null && val.isNotEmpty) {
+                                        filterOptions['labels'] =
+                                            (val as Map<String, dynamic>)
+                                                .keys
+                                                .toList();
+                                        print(filterOptions['labels']);
+                                        controller.filterBy(filterOptions);
+                                      } else {
+                                        filterOptions['labels'].clear();
+                                      }
+                                    });
+                                  });
+                                },
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            ChoiceChip(
+                              backgroundColor: Colors.blueGrey[300],
+                              label: Text('Deadline',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: Colors.white)),
+                              selectedColor: Color(0xFF52459D),
+                              labelStyle: TextStyle(color: Colors.black),
+                              selected: filterOptions['deadlines'].isNotEmpty,
+                              onSelected: (bool selected) {
+                                setState(() {
+                                  assigneeChoice = !assigneeChoice;
+                                });
+                              },
+                            ),
+                          ],
+                        )),
+                    preferredSize: Size(100 * SizeConfig.widthMultiplier, 40),
+                  )
+                : null,
             actions: [
               IconButton(
+                color: Colors.black,
+                icon: Icon(
+                  Icons.filter_list_rounded,
+                ),
+                onPressed: () {
+                  setState(() {
+                    toShowFilters = !toShowFilters;
+                  });
+                  setState(() {});
+                },
+              ),
+              IconButton(
+                color: Colors.black,
                 icon: Icon(Icons.message_rounded),
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true)
@@ -97,7 +274,8 @@ class _KanbanViewState extends State<KanbanView> {
                 },
               )
             ]),
-        backgroundColor: Color.fromARGB(255, 235, 236, 240),
+        backgroundColor: Color(0xFFFAF9FE),
+        // backgroundColor: Color.fromARGB(255, 235, 236, 240),
         body: loading
             ? Center(child: CircularProgressIndicator())
             : BoardView2(
@@ -119,16 +297,23 @@ class _KanbanViewState extends State<KanbanView> {
       onDropItem: (int listIndex, int itemIndex, int oldListIndex,
           int oldItemIndex, BoardItemState state) {
         //Used to update our local item data
-        var item = kanban.taskColumns[oldListIndex].listOfTasks[oldItemIndex];
-        kanban.taskColumns[oldListIndex].listOfTasks.removeAt(oldItemIndex);
-        kanban.taskColumns[listIndex].listOfTasks.insert(itemIndex, item);
-        kanbanController.reorderTaskSequence(
-            Provider.of<Auth>(context, listen: false).myProfile.accountId);
+        var item =
+            filteredKanban.taskColumns[oldListIndex].listOfTasks[oldItemIndex];
+        filteredKanban.taskColumns[oldListIndex].listOfTasks
+            .removeAt(oldItemIndex);
+        filteredKanban.taskColumns[listIndex].listOfTasks
+            .insert(itemIndex, item);
+        print(kanbanController
+            .kanban.taskColumns[oldListIndex].listOfTasks.length);
+        print(kanbanController
+            .filteredKanban.taskColumns[oldListIndex].listOfTasks.length);
+        // kanbanController.reorderTaskSequence(
+        //     Provider.of<Auth>(context, listen: false).myProfile.accountId);
       },
       onTapItem: (int listIndex, int itemIndex, BoardItemState state) async {
         Navigator.of(context, rootNavigator: true)
             .push(MaterialPageRoute(
-                builder: (_) => ViewTask(task: task, kanban: kanban)))
+                builder: (_) => ViewTask(task: task, kanban: filteredKanban)))
             .then((value) => setState(() {}));
       },
       item: Container(
@@ -215,9 +400,9 @@ class _KanbanViewState extends State<KanbanView> {
       onTapList: (int listIndex) async {},
       onDropList: (int listIndex, int oldListIndex) {
         //Update our local list data
-        var list = kanban.taskColumns[oldListIndex];
-        kanban.taskColumns.removeAt(oldListIndex);
-        kanban.taskColumns.insert(listIndex, list);
+        var list = filteredKanban.taskColumns[oldListIndex];
+        filteredKanban.taskColumns.removeAt(oldListIndex);
+        filteredKanban.taskColumns.insert(listIndex, list);
         Provider.of<KanbanController>(context, listen: false)
             .reorderTaskColumns(
                 Provider.of<Auth>(context, listen: false).myProfile.accountId);
@@ -226,13 +411,13 @@ class _KanbanViewState extends State<KanbanView> {
       header: [
         Expanded(
             child: Padding(
-                padding: EdgeInsets.only(top: 15, left: 5),
+                padding: EdgeInsets.only(top: 0, left: 5),
                 child: Text(
                   list.columnTitle,
                   style: TextStyle(fontSize: 20),
                 ))),
         Padding(
-                padding: EdgeInsets.only(top: 15, left: 5),
+          padding: EdgeInsets.only(top: 0, left: 5),
           child: PopupMenuButton(
               offset: Offset(0, 20),
               icon: Icon(Icons.more_vert_rounded),
@@ -379,5 +564,4 @@ class _KanbanViewState extends State<KanbanView> {
             ]))
         : Container();
   }
-
 }

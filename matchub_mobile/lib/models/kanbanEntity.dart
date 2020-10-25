@@ -19,5 +19,5 @@ class KanbanEntity {
     List<TaskColumnEntity> taskColumns  = const [];
 
     factory KanbanEntity.fromJson(Map<String,dynamic> json) => _$KanbanEntityFromJson(json);
-    // Map<String, dynamic> toJson() => _$KanbanBoardEntityToJson(this);
+    Map<String, dynamic> toJson() => _$KanbanEntityToJson(this);
 }

@@ -6,6 +6,7 @@ import 'package:matchub_mobile/models/index.dart';
 
 class KanbanController with ChangeNotifier {
   KanbanEntity kanban;
+  KanbanEntity filteredKanban;
   List<Profile> channelMembers = [];
   List<Profile> channelAdmins = [];
   Map<String, dynamic> labels = {};
@@ -47,10 +48,24 @@ class KanbanController with ChangeNotifier {
   }
 
   retrieveKanbanByChannelId(channelId) async {
+    //only used to fetch initially
     final response = await ApiBaseHelper.instance.getProtected(
         "authenticated/getKanbanBoardByChannelUid?channelUId=$channelId");
     kanban = KanbanEntity.fromJson(response);
+    setFilteredKanban();
     notifyListeners();
+  }
+
+  setFilteredKanban() {
+    //fking deepcopy
+    filteredKanban = KanbanEntity()
+      ..kanbanBoardId = kanban.kanbanBoardId
+      ..projectId = kanban.kanbanBoardId
+      ..kanbanBoardTitle = kanban.kanbanBoardTitle
+      ..kanbanBoardDescription = kanban.kanbanBoardDescription
+      ..channelUid = kanban.channelUid
+      ..taskColumns = List<TaskColumnEntity>.from(
+          kanban.taskColumns.map((e) => TaskColumnEntity.deepCopy(e)));
   }
 
   retrieveKanbanByKanbanBoardId(kanbanBoardId) async {
@@ -61,6 +76,35 @@ class KanbanController with ChangeNotifier {
     notifyListeners();
   }
 
+//=======================================================================
+//filtering methods
+  filterBy(filterOptions) async {
+    List accountIds = List.of(filterOptions['filteredAssignees'])
+        .map((e) => e.accountId)
+        .toList();
+    List filterlabels = List.of(filterOptions['labels']).toList();
+    print(kanban.taskColumns[1].listOfTasks.length);
+    print(filteredKanban.taskColumns[1].listOfTasks.length);
+    print(kanban == filteredKanban);
+
+    print(kanban.taskColumns[0] == filteredKanban.taskColumns[0]);
+    setFilteredKanban();
+    if (accountIds.length > 0) {
+      filteredKanban.taskColumns.forEach((column) {
+        column.listOfTasks.retainWhere((task) =>
+            task.taskDoers
+                .indexWhere((doer) => accountIds.contains(doer.accountId)) >=
+            0);
+      });
+    }
+    if (filterOptions['labels'].length > 0) {
+      filteredKanban.taskColumns.forEach((column) {
+        column.listOfTasks.retainWhere(
+            (task) => filterlabels.indexWhere((label) => task.labelAndColour.containsKey(label)) >=0);
+      });
+    }
+    notifyListeners();
+  }
   // ===================================================================================
   // Task Methods
 
@@ -127,14 +171,14 @@ class KanbanController with ChangeNotifier {
     notifyListeners();
   }
 
-  deleteTask(TaskEntity task) async {
-    String url = "authenticated/deleteTask?taskId=";
-    final response = await ApiBaseHelper.instance.putProtected(url,
-        body: json.encode(
-            {"labelAndColour": task.labelAndColour, "taskId": task.taskId}));
-    task = TaskEntity.fromJson(response);
-    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
-    notifyListeners();
+  deleteTask(TaskEntity task, deletorId) async {
+    Future.delayed(Duration(seconds: 1), () async {
+      String url =
+          "authenticated/deleteTask?taskId=${task.taskId}&deletorId=$deletorId&kanbanBoardId=${kanban.kanbanBoardId}";
+      final response = await ApiBaseHelper.instance.putProtected(url);
+      await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+      notifyListeners();
+    });
   }
 
   addComment(TaskEntity task, String content, int creatorId) async {

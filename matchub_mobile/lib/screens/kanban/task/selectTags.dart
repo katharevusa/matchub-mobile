@@ -11,10 +11,10 @@ class SelectTagsDialog extends StatefulWidget {
   SelectTagsDialog({
     Key key,
     @required this.kanbanController,
-    @required this.task,
+    // @required this.task,
   }) : super(key: key);
 
-  final TaskEntity task;
+  // final TaskEntity task;
   final KanbanController kanbanController;
 
   @override
@@ -26,7 +26,7 @@ class _SelectTagsDialogState extends State<SelectTagsDialog> {
     filteredLabels.addAll(widget.kanbanController.labels);
   }
 
-  Map<String, dynamic> selectedLabels = {};
+  Map<String, dynamic> selectedLabels = {};  //label name, colo
   Map<String, dynamic> filteredLabels = {};
 
   filterLabels(String searchQuery) {

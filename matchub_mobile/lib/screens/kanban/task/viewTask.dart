@@ -24,6 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../kanban.dart';
 import 'selectTaskMembers.dart';
 
 class ViewTask extends StatefulWidget {
@@ -56,7 +57,7 @@ class _ViewTaskState extends State<ViewTask> {
   bool isLoading;
   String commentContent = "";
   TextEditingController commentController = TextEditingController();
-
+  FocusNode commentFocus = FocusNode();
   @override
   void initState() {
     isLoading = true;
@@ -187,8 +188,16 @@ class _ViewTaskState extends State<ViewTask> {
                           child: ListTile(
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                             visualDensity: VisualDensity.compact,
-                            onTap: () {
-                              Navigator.pop(context);
+                            onTap: () async {
+                              Navigator.of(context)
+                                  .popUntil((route) => route.isFirst);
+                              Provider.of<KanbanController>(context,
+                                      listen: false)
+                                  .deleteTask(
+                                      widget.task,
+                                      Provider.of<Auth>(context, listen: false)
+                                          .myProfile
+                                          .accountId);
                             },
                             dense: true,
                             leading: Icon(FlutterIcons.trash_alt_faw5s),
@@ -410,6 +419,8 @@ class _ViewTaskState extends State<ViewTask> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                        focusNode: commentFocus,
+                        onEditingComplete: () => commentFocus.unfocus(),
                         onChanged: (val) {
                           commentContent = val.trim();
                         },
@@ -486,7 +497,7 @@ class _ViewTaskState extends State<ViewTask> {
             ],
           ),
         ),
-        if (widget.task.comments.isEmpty)
+        if (widget.task.comments.isEmpty) ...[
           Container(
             height: 180,
             alignment: Alignment.center,
@@ -495,22 +506,24 @@ class _ViewTaskState extends State<ViewTask> {
               fit: BoxFit.cover,
             ),
           ),
+          Align(
+            alignment: Alignment.center,
+            child: Text("Be the first to leave a comment",
+                style: TextStyle(
+                    fontSize: 1.8 * SizeConfig.textMultiplier,
+                    color: Colors.grey[700])),
+          ),
+        ],
         ListView.separated(
-          reverse: true,
+            reverse: true,
             separatorBuilder: (_, __) => Divider(),
             itemCount: widget.task.comments.length,
             itemBuilder: (_, idx) {
-              return TaskCommentCard(comment: widget.task.comments[idx], task: widget.task);
+              return TaskCommentCard(
+                  comment: widget.task.comments[idx], task: widget.task);
             },
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics()),
-        // Align(
-        //   alignment: Alignment.center,
-        //   child: Text("Be the first to leave a comment",
-        //       style: TextStyle(
-        //           fontSize: 1.8 * SizeConfig.textMultiplier,
-        //           color: Colors.grey[700])),
-        // ),
         SizedBox(height: 40),
       ]),
     );
@@ -824,9 +837,9 @@ class _ViewTaskState extends State<ViewTask> {
         Provider.of<KanbanController>(context, listen: false);
     Dialog tagsDialog = Dialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0)), //this right here
+          borderRadius: BorderRadius.circular(10.0)), //this right here
       child: SelectTagsDialog(
-          kanbanController: kanbanController, task: widget.task),
+          kanbanController: kanbanController, ),
     );
     showDialog(context: context, builder: (BuildContext context) => tagsDialog)
         .then((val) {
@@ -844,9 +857,9 @@ class _ViewTaskState extends State<ViewTask> {
     final kanbanController =
         Provider.of<KanbanController>(context, listen: false);
     Dialog channelMembersDialog = Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: SelectTaskMembers(
-          kanbanController: kanbanController, task: widget.task),
+          kanbanController: kanbanController, listOfTaskDoers: widget.task.taskDoers),
     );
     showDialog(
         context: context,
@@ -866,7 +879,7 @@ class _ViewTaskState extends State<ViewTask> {
     final kanbanController =
         Provider.of<KanbanController>(context, listen: false);
     Dialog channelMembersDialog = Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: SelectTaskMember(
         kanbanController: kanbanController,
         initialTaskLeader: taskReporter,

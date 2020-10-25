@@ -20,3 +20,12 @@ KanbanEntity _$KanbanEntityFromJson(Map<String, dynamic> json) {
         : [];
 
 }
+
+Map<String, dynamic> _$KanbanEntityToJson(KanbanEntity instance) => <String, dynamic>{
+      'kanbanBoardId': instance.kanbanBoardId,
+      'projectId': instance.projectId,
+      'kanbanBoardTitle': instance.kanbanBoardTitle,
+      'kanbanBoardDescription': instance.kanbanBoardDescription,
+      'channelUid': instance.channelUid,
+      'taskColumns': instance.taskColumns
+    };

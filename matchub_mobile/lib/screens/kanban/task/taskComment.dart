@@ -14,6 +14,7 @@ import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:toast/toast.dart';
 
 class TaskCommentCard extends StatefulWidget {
   TaskEntity task;
@@ -92,8 +93,11 @@ class _TaskCommentCardState extends State<TaskCommentCard> {
                                     EdgeInsets.symmetric(horizontal: 8),
                                 visualDensity: VisualDensity.compact,
                                 onTap: () {
-                                  Clipboard.setData(
-                                      new ClipboardData(text: widget.comment.content));
+                                  Clipboard.setData(new ClipboardData(
+                                      text: widget.comment.content),);
+                                  Toast.show("Copied to clipboard", context,
+                                      duration: Toast.LENGTH_SHORT,
+                                      gravity: Toast.BOTTOM);
                                   Navigator.pop(context);
                                 },
                                 dense: true,
@@ -116,7 +120,10 @@ class _TaskCommentCardState extends State<TaskCommentCard> {
                                       EdgeInsets.symmetric(horizontal: 8),
                                   visualDensity: VisualDensity.compact,
                                   onTap: () async {
-                                    await Provider.of<KanbanController>(context,listen:false).deleteComment(widget.task, widget.comment);
+                                    await Provider.of<KanbanController>(context,
+                                            listen: false)
+                                        .deleteComment(
+                                            widget.task, widget.comment);
                                     Navigator.pop(context);
                                   },
                                   dense: true,
