@@ -405,8 +405,8 @@ class _KanbanViewState extends State<KanbanView> {
             .removeAt(oldItemIndex);
         filteredKanban.taskColumns[listIndex].listOfTasks
             .insert(itemIndex, item);
-        // kanbanController.reorderTaskSequence(
-        //     Provider.of<Auth>(context, listen: false).myProfile.accountId);
+        kanbanController.reorderTaskSequence(oldListIndex, listIndex, itemIndex, item,
+            Provider.of<Auth>(context, listen: false).myProfile.accountId);
       },
       onTapItem: (int listIndex, int itemIndex, BoardItemState state) async {
         Navigator.of(context, rootNavigator: true)

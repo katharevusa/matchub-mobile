@@ -167,6 +167,7 @@ class KanbanController with ChangeNotifier {
               "kanbanboardId": kanban.kanbanBoardId
             }));
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     print(task);
     notifyListeners();
   }
@@ -182,6 +183,8 @@ class KanbanController with ChangeNotifier {
     }
     final response = await ApiBaseHelper.instance.postProtected(url);
     task = TaskEntity.fromJson(response);
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
@@ -192,6 +195,7 @@ class KanbanController with ChangeNotifier {
             {"labelAndColour": task.labelAndColour, "taskId": task.taskId}));
     task = TaskEntity.fromJson(response);
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
@@ -213,7 +217,7 @@ class KanbanController with ChangeNotifier {
           "authenticated/deleteTask?taskId=${task.taskId}&deletorId=$deletorId&kanbanBoardId=${kanban.kanbanBoardId}";
       final response = await ApiBaseHelper.instance.putProtected(url);
       await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
-    filter();
+      filter();
       notifyListeners();
     });
   }
@@ -284,8 +288,24 @@ class KanbanController with ChangeNotifier {
 
 //========================================================================
 //reordering methods
-  reorderTaskSequence(arrangerId) async {
-    var newKanbanOrder = {};
+  reorderTaskSequence(oldListIndex, newListIndex, newItemIndex, task, arrangerId) async {
+
+    int indexToRemove = kanban.taskColumns[oldListIndex].listOfTasks.indexWhere((taskToMove) => taskToMove.taskId == task.taskId);
+    TaskEntity taskToMove = kanban.taskColumns[oldListIndex].listOfTasks.removeAt(indexToRemove);
+      
+    if(filteredKanban.taskColumns[newListIndex].listOfTasks.length==1){ //adding to back of original kanban since placed in empty column
+      kanban.taskColumns[newListIndex].listOfTasks.add(taskToMove);
+    } else if(newItemIndex == 0){//filteredView inserted at first position, find the next item in filtered view, then find in kanban view then insert
+      TaskEntity taskAfter = filteredKanban.taskColumns[newListIndex].listOfTasks[newItemIndex+1];
+      int indexOfTaskAfter = kanban.taskColumns[newListIndex].listOfTasks.indexWhere((taskAfterOriginal) => taskAfterOriginal.taskId == taskAfter.taskId);
+      kanban.taskColumns[newListIndex].listOfTasks.insert(indexOfTaskAfter, taskToMove);
+    } else{
+      TaskEntity taskBefore = filteredKanban.taskColumns[newListIndex].listOfTasks[newItemIndex-1];
+      int indexOfTaskBefore = kanban.taskColumns[newListIndex].listOfTasks.indexWhere((taskBeforeOriginal) => taskBeforeOriginal.taskId == taskBefore.taskId);
+      kanban.taskColumns[newListIndex].listOfTasks.insert(indexOfTaskBefore+1, taskToMove);
+    }
+
+    var newKanbanOrder = {}; //getting the state of the current updated local kanban board, and posting to backend
     [
       ...kanban.taskColumns.map((e) => {
             "${e.taskColumnId}": [...e.listOfTasks.map((e) => e.taskId)]
@@ -306,12 +326,14 @@ class KanbanController with ChangeNotifier {
   }
 
   reorderTaskSequenceInTaskView(TaskColumnEntity currentColumn,
-      TaskColumnEntity newColumn, TaskEntity task) {
+      TaskColumnEntity newColumn, TaskEntity task) async{
     currentColumn.listOfTasks.remove(task);
     newColumn.listOfTasks.add(task);
     task.taskColumn = newColumn;
     ApiBaseHelper.instance.putProtected(
         "authenticated/updateTaskStatus?taskId=${task.taskId}&newColumnId=${newColumn.taskColumnId}&oldColumnId=${currentColumn.taskColumnId}");
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
@@ -323,7 +345,6 @@ class KanbanController with ChangeNotifier {
     final response = await ApiBaseHelper.instance.putProtected(
         "authenticated/rearrangeColumn?editorId=$editorId&kanbanBoardId=${kanban.kanbanBoardId}$columnSequence");
     kanban = KanbanEntity.fromJson(response);
-    setFilteredKanban();
     filter();
     notifyListeners();
   }

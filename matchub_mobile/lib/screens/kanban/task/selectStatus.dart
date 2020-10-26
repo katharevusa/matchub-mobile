@@ -49,10 +49,10 @@ class _SelectStatusPopupState extends State<SelectStatusPopup> {
                             widget.widget.task.taskColumn.columnTitle),
                         widget.widget.kanban.taskColumns[index],
                         widget.widget.task);
-                    await instance.reorderTaskSequence(
-                        Provider.of<Auth>(context, listen: false)
-                            .myProfile
-                            .accountId);
+                    // await instance.reorderTaskSequence(
+                    //     Provider.of<Auth>(context, listen: false)
+                    //         .myProfile
+                    //         .accountId);
                   }
                   setState(() {});
                 },

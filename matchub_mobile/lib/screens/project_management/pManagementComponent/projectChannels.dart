@@ -143,7 +143,7 @@ class _PManagementChannelsState extends State<PManagementChannels> {
                                           snapshot.data.documents[index]
                                               .data()['name'],
                                               overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
+                                              maxLines: 2,
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w600),
