@@ -87,11 +87,11 @@ class KanbanController with ChangeNotifier {
         (Map<String, dynamic>.from(filterOptions['filteredLabels']))
             .keys
             .toList());
-    print(kanban.taskColumns[1].listOfTasks.length);
-    print(filteredKanban.taskColumns[1].listOfTasks.length);
-    print(kanban == filteredKanban);
+    // print(kanban.taskColumns[1].listOfTasks.length);
+    // print(filteredKanban.taskColumns[1].listOfTasks.length);
+    // print(kanban == filteredKanban);
 
-    print(kanban.taskColumns[0] == filteredKanban.taskColumns[0]);
+    // print(kanban.taskColumns[0] == filteredKanban.taskColumns[0]);
     setFilteredKanban();
     if (accountIds.length > 0) {
       filteredKanban.taskColumns.forEach(
@@ -288,24 +288,10 @@ class KanbanController with ChangeNotifier {
 
 //========================================================================
 //reordering methods
-  reorderTaskSequence(oldListIndex, newListIndex, newItemIndex, task, arrangerId) async {
 
-    int indexToRemove = kanban.taskColumns[oldListIndex].listOfTasks.indexWhere((taskToMove) => taskToMove.taskId == task.taskId);
-    TaskEntity taskToMove = kanban.taskColumns[oldListIndex].listOfTasks.removeAt(indexToRemove);
-      
-    if(filteredKanban.taskColumns[newListIndex].listOfTasks.length==1){ //adding to back of original kanban since placed in empty column
-      kanban.taskColumns[newListIndex].listOfTasks.add(taskToMove);
-    } else if(newItemIndex == 0){//filteredView inserted at first position, find the next item in filtered view, then find in kanban view then insert
-      TaskEntity taskAfter = filteredKanban.taskColumns[newListIndex].listOfTasks[newItemIndex+1];
-      int indexOfTaskAfter = kanban.taskColumns[newListIndex].listOfTasks.indexWhere((taskAfterOriginal) => taskAfterOriginal.taskId == taskAfter.taskId);
-      kanban.taskColumns[newListIndex].listOfTasks.insert(indexOfTaskAfter, taskToMove);
-    } else{
-      TaskEntity taskBefore = filteredKanban.taskColumns[newListIndex].listOfTasks[newItemIndex-1];
-      int indexOfTaskBefore = kanban.taskColumns[newListIndex].listOfTasks.indexWhere((taskBeforeOriginal) => taskBeforeOriginal.taskId == taskBefore.taskId);
-      kanban.taskColumns[newListIndex].listOfTasks.insert(indexOfTaskBefore+1, taskToMove);
-    }
-
-    var newKanbanOrder = {}; //getting the state of the current updated local kanban board, and posting to backend
+  updateTaskSequenceBackend(arrangerId) async {
+    var newKanbanOrder =
+        {}; //getting the state of the current updated local kanban board, and posting to backend
     [
       ...kanban.taskColumns.map((e) => {
             "${e.taskColumnId}": [...e.listOfTasks.map((e) => e.taskId)]
@@ -313,7 +299,7 @@ class KanbanController with ChangeNotifier {
     ].forEach((element) {
       newKanbanOrder.addAll(element);
     });
-    print(newKanbanOrder);
+    print("Kanban State: " + newKanbanOrder.toString());
     final response = await ApiBaseHelper.instance
         .putProtected("authenticated/rearrangeTasks",
             body: json.encode({
@@ -322,19 +308,46 @@ class KanbanController with ChangeNotifier {
               "columnIdAndTaskIdSequence": newKanbanOrder
             }));
     kanban = KanbanEntity.fromJson(response);
+    setFilteredKanban();
     notifyListeners();
   }
 
-  reorderTaskSequenceInTaskView(TaskColumnEntity currentColumn,
-      TaskColumnEntity newColumn, TaskEntity task) async{
-    currentColumn.listOfTasks.remove(task);
-    newColumn.listOfTasks.add(task);
-    task.taskColumn = newColumn;
-    ApiBaseHelper.instance.putProtected(
-        "authenticated/updateTaskStatus?taskId=${task.taskId}&newColumnId=${newColumn.taskColumnId}&oldColumnId=${currentColumn.taskColumnId}");
-    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
-    filter();
-    notifyListeners();
+  reorderTaskSequence(
+      oldListIndex, newListIndex, newItemIndex, task, arrangerId) async {
+    int indexToRemove = kanban.taskColumns[oldListIndex].listOfTasks.indexWhere((taskToMove) => taskToMove.taskId == task.taskId);
+    TaskEntity taskToMove = kanban.taskColumns[oldListIndex].listOfTasks.removeAt(indexToRemove);
+
+    if (filteredKanban.taskColumns[newListIndex].listOfTasks.length == 1) {
+      //adding to back of original kanban since placed in empty column
+      kanban.taskColumns[newListIndex].listOfTasks.add(taskToMove);
+    } else if (newItemIndex == 0) {
+      //filteredView inserted at first position, find the next item in filtered view, then find in kanban view then insert
+      TaskEntity taskAfter = filteredKanban.taskColumns[newListIndex].listOfTasks[newItemIndex + 1];
+      int indexOfTaskAfter = kanban.taskColumns[newListIndex].listOfTasks.indexWhere((taskAfterOriginal) =>
+              taskAfterOriginal.taskId == taskAfter.taskId);
+      kanban.taskColumns[newListIndex].listOfTasks.insert(indexOfTaskAfter, taskToMove);
+    } else {
+      TaskEntity taskBefore = filteredKanban
+          .taskColumns[newListIndex].listOfTasks[newItemIndex - 1];
+      int indexOfTaskBefore = kanban.taskColumns[newListIndex].listOfTasks.indexWhere((taskBeforeOriginal) =>
+              taskBeforeOriginal.taskId == taskBefore.taskId);
+      kanban.taskColumns[newListIndex].listOfTasks.insert(indexOfTaskBefore + 1, taskToMove);
+    }
+    await updateTaskSequenceBackend(arrangerId);
+  }
+
+  reorderTaskSequenceInTaskView(
+      currentColumnIndex, newColumnIndex, TaskEntity task, arrangerId) async {
+    task.taskColumn = filteredKanban.taskColumns[newColumnIndex];
+    filteredKanban.taskColumns[currentColumnIndex].listOfTasks.remove(task);
+    filteredKanban.taskColumns[newColumnIndex].listOfTasks.add(task);
+    kanban.taskColumns[currentColumnIndex].listOfTasks.removeWhere((e) => e.taskId == task.taskId);
+    kanban.taskColumns[newColumnIndex].listOfTasks.add(task);
+    // final response = await ApiBaseHelper.instance.putProtected(
+    //     "authenticated/updateTaskStatus?taskId=${task.taskId}&newColumnId=${kanban.taskColumns[newColumnIndex].taskColumnId}&oldColumnId=${kanban.taskColumns[currentColumnIndex].taskColumnId}");
+    // await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    // // filter();
+    await updateTaskSequenceBackend(arrangerId);
   }
 
   reorderTaskColumns(editorId) async {

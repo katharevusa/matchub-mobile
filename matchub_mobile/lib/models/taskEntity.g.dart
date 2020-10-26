@@ -7,7 +7,6 @@ part of 'taskEntity.dart';
 // **************************************************************************
 
 TaskEntity _$TaskEntityFromJson(Map<String, dynamic> json) {
-  print(json['comments']);
   return TaskEntity()
     ..taskId = json['taskId'] as num
     ..taskTitle = json['taskTitle'] as String
