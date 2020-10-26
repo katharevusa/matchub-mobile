@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => ManageListOfKah()),
             ChangeNotifierProvider(create: (_) => ManageResource()),
             ChangeNotifierProvider(create: (_) => ManageOutgoingRequest()),
-            // ChangeNotifierProvider(create: (_) => ManageNotification()),
+            ChangeNotifierProvider(create: (_) => ManageNotification()),
             ChangeNotifierProvider(create: (_) => KanbanController()),
           ],
           child: Consumer<Auth>(

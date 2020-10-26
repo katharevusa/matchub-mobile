@@ -10,6 +10,7 @@ class KanbanController with ChangeNotifier {
   List<Profile> channelMembers = [];
   List<Profile> channelAdmins = [];
   Map<String, dynamic> labels = {};
+  Map<String, dynamic> filterOptions = {};
   // {
   //   "Design": "#d11141",
   //   "Mapping": "#00b159",
@@ -78,11 +79,14 @@ class KanbanController with ChangeNotifier {
 
 //=======================================================================
 //filtering methods
-  filterBy(filterOptions) async {
+  filter() async {
     List accountIds = List.of(filterOptions['filteredAssignees'])
         .map((e) => e.accountId)
         .toList();
-    List filterlabels = List.of(filterOptions['labels']).toList();
+    List filterlabels = List.of(
+        (Map<String, dynamic>.from(filterOptions['filteredLabels']))
+            .keys
+            .toList());
     print(kanban.taskColumns[1].listOfTasks.length);
     print(filteredKanban.taskColumns[1].listOfTasks.length);
     print(kanban == filteredKanban);
@@ -90,18 +94,49 @@ class KanbanController with ChangeNotifier {
     print(kanban.taskColumns[0] == filteredKanban.taskColumns[0]);
     setFilteredKanban();
     if (accountIds.length > 0) {
+      filteredKanban.taskColumns.forEach(
+        (column) {
+          column.listOfTasks.retainWhere((task) =>
+              task.taskDoers
+                  .indexWhere((doer) => accountIds.contains(doer.accountId)) >=
+              0);
+        },
+      );
+    }
+    if (filterOptions['filteredLabels'].length > 0) {
       filteredKanban.taskColumns.forEach((column) {
         column.listOfTasks.retainWhere((task) =>
-            task.taskDoers
-                .indexWhere((doer) => accountIds.contains(doer.accountId)) >=
+            filterlabels.indexWhere(
+                (label) => task.labelAndColour.containsKey(label)) >=
             0);
       });
     }
-    if (filterOptions['labels'].length > 0) {
-      filteredKanban.taskColumns.forEach((column) {
-        column.listOfTasks.retainWhere(
-            (task) => filterlabels.indexWhere((label) => task.labelAndColour.containsKey(label)) >=0);
-      });
+    if (!filterOptions['none']) {
+      print(filterOptions['deadlines']);
+      if (filterOptions['deadlines']['showMyTasks']) {
+        filteredKanban.taskColumns.forEach((column) {
+          column.listOfTasks.retainWhere(
+              (task) => task.taskLeaderId == filterOptions['accountId']);
+        });
+      }
+      DateTime today = DateTime.now();
+      DateTime _lastDayOfWeek =
+          today.add(new Duration(days: 7 - today.weekday));
+      DateTime _lastDayOfNextWeek =
+          today.add(new Duration(days: 14 - today.weekday));
+      if (filterOptions['deadlines']['thisWeek']) {
+        filteredKanban.taskColumns.forEach((column) {
+          column.listOfTasks.retainWhere(
+              (task) => task.expectedDeadline.isBefore(_lastDayOfWeek));
+        });
+      }
+      if (filterOptions['deadlines']['nextWeek']) {
+        filteredKanban.taskColumns.forEach((column) {
+          column.listOfTasks.retainWhere((task) =>
+              task.expectedDeadline.isBefore(_lastDayOfNextWeek) &&
+              task.expectedDeadline.isAfter(_lastDayOfWeek));
+        });
+      }
     }
     notifyListeners();
   }
@@ -115,6 +150,7 @@ class KanbanController with ChangeNotifier {
     final task = TaskEntity.fromJson(response);
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
     print(task);
+    filter();
     notifyListeners();
   }
 
@@ -177,6 +213,7 @@ class KanbanController with ChangeNotifier {
           "authenticated/deleteTask?taskId=${task.taskId}&deletorId=$deletorId&kanbanBoardId=${kanban.kanbanBoardId}";
       final response = await ApiBaseHelper.instance.putProtected(url);
       await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
       notifyListeners();
     });
   }
@@ -214,6 +251,7 @@ class KanbanController with ChangeNotifier {
               "editorId": editorId
             }));
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
@@ -227,6 +265,7 @@ class KanbanController with ChangeNotifier {
               "editorId": editorId
             }));
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
@@ -239,6 +278,7 @@ class KanbanController with ChangeNotifier {
               "deletorId": deletorId
             }));
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
@@ -277,12 +317,14 @@ class KanbanController with ChangeNotifier {
 
   reorderTaskColumns(editorId) async {
     String columnSequence = "";
-    kanban.taskColumns.forEach((element) {
+    filteredKanban.taskColumns.forEach((element) {
       columnSequence += "&columnIdSequence=${element.taskColumnId}";
     });
     final response = await ApiBaseHelper.instance.putProtected(
         "authenticated/rearrangeColumn?editorId=$editorId&kanbanBoardId=${kanban.kanbanBoardId}$columnSequence");
     kanban = KanbanEntity.fromJson(response);
+    setFilteredKanban();
+    filter();
     notifyListeners();
   }
 }

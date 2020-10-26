@@ -157,42 +157,52 @@ class _TeamMembersManagementState extends State<TeamMembersManagement> {
 
   buildCurrentTeamMembersView() {
     print(widget.project.teamMembers.length);
-    return ListView.builder(
-        itemBuilder: (context, index) {
-          return Slidable(
-            actionPane: SlidableDrawerActionPane(),
-            actionExtentRatio: 0.2,
-            child: ListTile(
-                leading: CircleAvatar(
-                  radius: 25,
-                  backgroundImage: widget
-                          .project.teamMembers[index].profilePhoto.isEmpty
-                      ? AssetImage("assets/images/avatar2.jpg")
-                      : NetworkImage(
-                          "${ApiBaseHelper.instance.baseUrl}${widget.project.teamMembers[index].profilePhoto.substring(30)}"),
-                ),
-                title: Text(widget.project.teamMembers[index].name,
-                    style: TextStyle(
-                      color: Colors.grey[850],
-                    ))),
-            secondaryActions: <Widget>[
-              // IconSlideAction(
-              //   caption: 'More',
-              //   color: Colors.black45,
-              //   icon: Icons.more_horiz,
-              //   // onTap: () => _showSnackBar('More'),
-              // ),
-              IconSlideAction(
-                caption: 'Remove',
-                color: Colors.red[300],
-                icon: Icons.delete,
-                onTap: () => _removeTeamMember(
-                    widget.project.teamMembers[index].accountId),
-              ),
-            ],
-          );
-        },
-        itemCount: widget.project.teamMembers.length);
+    return Column(
+      children: [
+        ListView.builder(
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return Slidable(
+                actionPane: SlidableDrawerActionPane(),
+                actionExtentRatio: 0.2,
+                child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 25,
+                      backgroundImage: widget
+                              .project.teamMembers[index].profilePhoto.isEmpty
+                          ? AssetImage("assets/images/avatar2.jpg")
+                          : NetworkImage(
+                              "${ApiBaseHelper.instance.baseUrl}${widget.project.teamMembers[index].profilePhoto.substring(30)}"),
+                    ),
+                    title: Text(widget.project.teamMembers[index].name,
+                        style: TextStyle(
+                          color: Colors.grey[850],
+                        ))),
+                secondaryActions: <Widget>[
+                  // IconSlideAction(
+                  //   caption: 'More',
+                  //   color: Colors.black45,
+                  //   icon: Icons.more_horiz,
+                  //   // onTap: () => _showSnackBar('More'),
+                  // ),
+                  IconSlideAction(
+                    caption: 'Remove',
+                    color: Colors.red[300],
+                    icon: Icons.delete,
+                    onTap: () => _removeTeamMember(
+                        widget.project.teamMembers[index].accountId),
+                  ),
+                ],
+              );
+            },
+            itemCount: widget.project.teamMembers.length),
+        if (widget.project.teamMembers.isEmpty)
+          Container(
+              height: 50 * SizeConfig.heightMultiplier,
+              child: Center(
+                  child: Text("No Team members in this project yet..."))),
+      ],
+    );
   }
 
   buildJoinRequestsView() {

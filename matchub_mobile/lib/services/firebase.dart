@@ -147,7 +147,6 @@ class DatabaseMethods {
   }
 
   getProjectChannels(projectId, userUUID) async {
-    print("fdsafsdfa");
     return firestoreInstance
         .collection("channels")
         .where('projectId', isEqualTo: projectId)

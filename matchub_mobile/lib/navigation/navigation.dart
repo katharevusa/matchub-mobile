@@ -10,7 +10,7 @@ import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
-import 'package:matchub_mobile/screens/project/project_screen.dart';
+import 'package:matchub_mobile/unused/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/project_management.dart';

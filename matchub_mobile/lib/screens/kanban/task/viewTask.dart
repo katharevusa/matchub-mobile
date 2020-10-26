@@ -839,11 +839,12 @@ class _ViewTaskState extends State<ViewTask> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0)), //this right here
       child: SelectTagsDialog(
+        existingLabels: widget.task.labelAndColour,
           kanbanController: kanbanController, ),
     );
     showDialog(context: context, builder: (BuildContext context) => tagsDialog)
         .then((val) {
-      if (val != null && val.isNotEmpty) {
+      if (val != null) {
         setState(() {
           widget.task.labelAndColour = val;
         });
@@ -858,7 +859,7 @@ class _ViewTaskState extends State<ViewTask> {
         Provider.of<KanbanController>(context, listen: false);
     Dialog channelMembersDialog = Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      child: SelectTaskMembers(
+      child: SelectTaskMembers(actionString: "Assign",
           kanbanController: kanbanController, listOfTaskDoers: widget.task.taskDoers),
     );
     showDialog(

@@ -10,9 +10,9 @@ class EditChannel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit"),
+        title: Text("Edit"), 
       ),
-      body: InfoPage(channelMap: channelMap, createChannelChat: DatabaseMethods().updateChannel,),
+      body: InfoPage(channelMap: channelMap, toCreate: false,),
     );
   }
 }
