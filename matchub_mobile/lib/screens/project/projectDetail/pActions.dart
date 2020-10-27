@@ -25,7 +25,6 @@ class _PActionsState extends State<PActions> {
   List<Project> followingProjects = [];
   Future followingProjectsFuture;
   ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
-  // bool _isLoading = true;
   @override
   void didChangeDependencies() {
     followingProjectsFuture = getAllFollowingProjects();
