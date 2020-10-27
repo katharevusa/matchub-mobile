@@ -6,7 +6,7 @@ import 'package:http/io_client.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = "https://192.168.43.224:8443/api/v1/";
+  final String _baseUrl = "https://192.168.1.102:8443/api/v1/";
   static String accessToken;
   static IOClient client;
 
@@ -45,7 +45,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getWODecode(String url,{String accessToken}) async {
+  Future<dynamic> getWODecode(String url, {String accessToken}) async {
     var responseJson;
     print(_baseUrl + url);
     if (accessToken == null) {

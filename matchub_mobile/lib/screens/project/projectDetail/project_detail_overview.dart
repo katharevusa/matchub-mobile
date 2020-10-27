@@ -6,6 +6,7 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pActions.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pAnnouncement.dart';
@@ -155,6 +156,13 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                     PCarousel(project.managedProject),
                                     SizedBox(height: 20),
                                     ListTile(
+                                      onTap: () {
+                                        Navigator.of(
+                                          context,
+                                          rootNavigator: true,
+                                        ).pushNamed(ProfileScreen.routeName,
+                                            arguments: creator.accountId);
+                                      },
                                       leading: ClipOval(
                                           child: Container(
                                               color: Colors.white,
@@ -169,7 +177,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600),
                                       ),
-                                      subtitle: Text("Project creator"),
+                                      subtitle: Text("Resource creator"),
                                       trailing: IconButton(
                                         icon:
                                             Icon(FlutterIcons.share_google_evi),
