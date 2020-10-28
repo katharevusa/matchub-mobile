@@ -13,6 +13,7 @@ import 'package:matchub_mobile/screens/user/account-settings/change_password.dar
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/screens/user/viewFollowingProjects.dart';
+import 'package:matchub_mobile/screens/user/viewSavedResources.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -170,6 +171,18 @@ class _UserScreenState extends State<UserScreen> {
                         .push(MaterialPageRoute(
                       builder: (context) =>
                           ViewFollowingProjects(profile: profile),
+                    ));
+                  }),
+                  buildSettingCard(
+                      "Saved Resources",
+                      Icon(
+                        FlutterIcons.tree_ent,
+                        color: Colors.green,
+                      ), () {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                      builder: (context) =>
+                          ViewSavedResources(profile: profile),
                     ));
                   }),
                   buildSettingCard(

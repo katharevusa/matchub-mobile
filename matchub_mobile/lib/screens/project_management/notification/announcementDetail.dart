@@ -299,7 +299,26 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                                           context,
                                           new MaterialPageRoute(
                                               builder: (context) =>
-                                                  IncomingRequestScreen()));
+                                                  OutgoingRequestScreen()));
+                                    },
+                                    child: Text(
+                                      "Check out the request",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ))
+                                : Container(),
+                            widget.announcement.type == "JOIN_PROJ_REQUEST"
+                                ? GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          new MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OutgoingRequestScreen()));
                                     },
                                     child: Text(
                                       "Check out the request",
@@ -312,14 +331,15 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                                     ))
                                 : Container(),
                             widget.announcement.type == "DONATE_TO_PROJECT" ||
-                                    widget.announcement.type == ""
+                                    widget.announcement.type ==
+                                        "REQUEST_FOR_RESOURCE"
                                 ? GestureDetector(
                                     onTap: () {
                                       Navigator.push(
                                           context,
                                           new MaterialPageRoute(
                                               builder: (context) =>
-                                                  OutgoingRequestScreen()));
+                                                  IncomingRequestScreen()));
                                     },
                                     child: Text(
                                       "Check out the request",

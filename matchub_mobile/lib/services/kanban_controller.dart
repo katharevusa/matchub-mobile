@@ -334,6 +334,7 @@ class KanbanController with ChangeNotifier {
       kanban.taskColumns[newListIndex].listOfTasks.insert(indexOfTaskBefore + 1, taskToMove);
     }
     await updateTaskSequenceBackend(arrangerId);
+    filter();
   }
 
   reorderTaskSequenceInTaskView(

@@ -437,10 +437,10 @@ class _KanbanViewState extends State<KanbanView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${DateFormat.yMMMd().format(task.expectedDeadline)} | " +
+                "${DateFormat("MMM dd").format(task.expectedDeadline)} | Due" +
                     (daysToDisplay == 0
                         ? "Today"
-                        : "${daysToDisplay.toString()} days" +
+                        : " in ${daysToDisplay.toString()} days" +
                             (daysToDeadline.isNegative ? " ago" : "")),
                 style: TextStyle(
                     color: Colors.grey[400],

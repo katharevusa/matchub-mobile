@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/helpers/profile_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pActions.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pAnnouncement.dart';

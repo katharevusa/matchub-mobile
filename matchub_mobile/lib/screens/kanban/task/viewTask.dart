@@ -556,13 +556,12 @@ class _ViewTaskState extends State<ViewTask> {
       TextFormField(
           maxLines: 6,
           minLines: 1,
-          onEditingComplete: () => FocusScope.of(context).unfocus(),
+          // onEditingComplete: () => FocusScope.of(context).unfocus(),
           enableInteractiveSelection: inEditMode,
           initialValue: widget.task.taskDescription,
           readOnly: !inEditMode,
           style: displayText,
           onChanged: (value) {
-            FocusScope.of(context).requestFocus(FocusNode());
             widget.task.taskDescription = value;
           },
           decoration: InputDecoration(

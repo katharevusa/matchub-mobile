@@ -124,6 +124,8 @@ class _TaskCommentCardState extends State<TaskCommentCard> {
                                       EdgeInsets.symmetric(horizontal: 8),
                                   visualDensity: VisualDensity.compact,
                                   onTap: () async {
+                                  FocusManager.instance.primaryFocus
+                                      .unfocus(); //VERY IMPORTANT
                                     await Provider.of<KanbanController>(context,
                                             listen: false)
                                         .deleteComment(

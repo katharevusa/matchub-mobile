@@ -37,12 +37,9 @@ class _PActionsState extends State<PActions> {
     followingProjects = [];
     final url =
         'authenticated/getListOfFollowingProjectsByUserId?userId=${myProfile.accountId}';
-    final responseData = await _apiHelper.getWODecode(
-        url);
+    final responseData = await _apiHelper.getWODecode(url);
     (responseData as List)
         .forEach((e) => followingProjects.add(Project.fromJson(e)));
-    print('----ddd--');
-    print(followingProjects);
   }
 
   @override

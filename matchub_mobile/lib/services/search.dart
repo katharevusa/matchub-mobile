@@ -61,7 +61,7 @@ class Search with ChangeNotifier {
       }
     }
     var responseData = await _apiHelper.getProtected(
-        "authenticated/projectGlobalSearch?keywords=$searchQuery&size=10&page=$pageNo$filter",
+        "authenticated/projectGlobalSearch?keywords=$searchQuery&size=10&page=$pageNo$filter&sort=upvotes",
         accessToken: accessToken);
     searchProjectResults.addAll((responseData['content'] as List)
         .map((e) => Project.fromJson(e))
