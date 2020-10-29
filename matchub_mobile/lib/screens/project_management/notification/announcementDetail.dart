@@ -68,6 +68,8 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
         .getAllProjectInternal(project, profile, accessToken);
     await Provider.of<ManageNotification>(context, listen: false)
         .getAllProjectPublic(project, profile, accessToken);
+    await Provider.of<ManageNotification>(context, listen: false)
+        .getAllAnnouncementForUsers(profile, accessToken);
   }
 
   readNotification() async {
