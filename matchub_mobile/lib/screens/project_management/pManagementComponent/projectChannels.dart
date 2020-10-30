@@ -64,11 +64,17 @@ class _PManagementChannelsState extends State<PManagementChannels> {
                 ),
                 padding: const EdgeInsets.all(2.0),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(ChannelsScreen.routeName, arguments: widget.project,);
+                  Navigator.of(context).pushNamed(
+                    ChannelsScreen.routeName,
+                    arguments: widget.project,
+                  );
                 },
               ),
               onTap: () {
-                  Navigator.of(context).pushNamed(ChannelsScreen.routeName, arguments: widget.project,);
+                Navigator.of(context).pushNamed(
+                  ChannelsScreen.routeName,
+                  arguments: widget.project,
+                );
               },
             ),
             snapshot.data.documents.length != 0
@@ -142,8 +148,8 @@ class _PManagementChannelsState extends State<PManagementChannels> {
                                         child: Text(
                                           snapshot.data.documents[index]
                                               .data()['name'],
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w600),

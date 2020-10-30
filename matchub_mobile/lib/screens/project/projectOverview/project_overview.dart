@@ -472,18 +472,19 @@ class BottomScreen extends StatelessWidget {
                                             .projectsJoined[index].endDate)
                                         ? 100
                                         : (DateTime.now()
-                                                .difference(myProfile
-                                                    .projectsJoined[index]
-                                                    .startDate)
-                                                .inDays /
-                                            (myProfile
-                                                .projectsJoined[index].endDate
-                                                .difference(myProfile
-                                                    .projectsJoined[index]
-                                                    .startDate)
-                                                .inDays
-                                                .toDouble()) *
-                                            100),
+                                                    .difference(myProfile
+                                                        .projectsJoined[index]
+                                                        .startDate)
+                                                    .inDays /
+                                                (myProfile.projectsJoined[index]
+                                                    .endDate
+                                                    .difference(myProfile
+                                                        .projectsJoined[index]
+                                                        .startDate)
+                                                    .inDays
+                                                    .toDouble()) *
+                                                100)
+                                            .round(),
                                 // displayText: '%',
                               ),
                             ),
