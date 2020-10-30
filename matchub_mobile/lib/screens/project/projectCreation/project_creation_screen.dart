@@ -155,6 +155,10 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
         DateTime(endProjectTime.year, endProjectTime.month, endProjectTime.day,
             endProjectTime.hour, endProjectTime.minute, endProjectTime.second),
         [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+
+    File uploadedBadge = project['uploadedBadge'];
+    project['uploadedBadge'] = null;
+
     try {
       final response = await ApiBaseHelper.instance.postProtected(url,
           accessToken: accessToken, body: json.encode(project));
@@ -183,15 +187,32 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
           "documents",
         );
       }
-      if (project['badgeIcon'] != null && project['badgeTitle'] != null) {
+      if (project['badgeTitle'] != null) {
         Map<String, dynamic> badge = {};
         badge['badgeTitle'] = project['badgeTitle'];
-        badge['icon'] = project['badgeIcon'];
+        badge['icon'] = project['badgeIcon'] ?? "";
         badge['projectId'] = newProjectId;
 
-        ApiBaseHelper.instance.postProtected("authenticated/createProjectBadge",
-            body: json.encode(badge),
-            accessToken: Provider.of<Auth>(context, listen: false).accessToken);
+        Badge badgeResult =
+            Badge.fromJson(await ApiBaseHelper.instance.postProtected(
+          "authenticated/createProjectBadge",
+          body: json.encode(badge),
+        ));
+        if (uploadedBadge != null) {
+          await uploadSinglePic(
+            uploadedBadge,
+            "${ApiBaseHelper.instance.baseUrl}authenticated/projectBadge/uploadBadgeIcon/${badgeResult.badgeId}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "icon",
+          );
+          // badge['icon'] = badgeResult.icon;
+
+          // badgeResult = await ApiBaseHelper.instance.putProtected(
+          //     "authenticated/updateProjectBadge/${badgeResult.badgeId}",
+          //     body: json.encode(badge),
+          //     accessToken:
+          //         Provider.of<Auth>(context, listen: false).accessToken);
+        }
       }
       Provider.of<Auth>(context, listen: false).retrieveUser();
       print("Success");
@@ -229,6 +250,10 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
         DateTime(endProjectTime.year, endProjectTime.month, endProjectTime.day,
             endProjectTime.hour, endProjectTime.minute, endProjectTime.second),
         [yyyy, '-', mm, '-', dd, 'T', HH, ':', nn, ':', ss]);
+
+    File uploadedBadge = project['uploadedBadge'];
+    project['uploadedBadge'] = null;
+
     try {
       var accessToken = Provider.of<Auth>(context).accessToken;
       final response = await ApiBaseHelper.instance.putProtected(url,
@@ -258,18 +283,26 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
           "documents",
         );
       }
-      if (project['badgeIcon'] != null && project['badgeTitle'] != null) {
-        print(project['badgeId']);
+      if (project['badgeTitle'] != null) {
         Map<String, dynamic> badge = {};
         badge['badgeTitle'] = project['badgeTitle'];
-        badge['icon'] = project['badgeIcon'];
+        badge['icon'] = project['badgeIcon'] ?? "";
         badge['accountId'] =
             Provider.of<Auth>(context, listen: false).myProfile.accountId;
-        print(badge);
-        ApiBaseHelper.instance.putProtected(
-            "authenticated/updateProjectBadge/${project['badgeId']}",
-            body: json.encode(badge),
-            accessToken: Provider.of<Auth>(context, listen: false).accessToken);
+        Badge badgeResult = Badge.fromJson(await ApiBaseHelper.instance
+            .putProtected(
+                "authenticated/updateProjectBadge/${project['badgeId']}",
+                body: json.encode(badge),
+                accessToken:
+                    Provider.of<Auth>(context, listen: false).accessToken));
+        if (uploadedBadge != null) {
+          await uploadSinglePic(
+            uploadedBadge,
+            "${ApiBaseHelper.instance.baseUrl}authenticated/projectBadge/uploadBadgeIcon/${badgeResult.badgeId}",
+            Provider.of<Auth>(context, listen: false).accessToken,
+            "icon",
+          );
+        }
       }
       Provider.of<Auth>(context).retrieveUser();
       print("Success");
@@ -277,23 +310,8 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     } catch (error) {
       project['startDate'] = startProjectTime;
       project['endDate'] = endProjectTime;
-      // final responseData = error.body as Map<String, dynamic>;
       showErrorDialog(error.toString(), context);
       print("Failure");
-      // showDialog(
-      //     context: context,
-      //     builder: (ctx) => AlertDialog(
-      //           title: Text(responseData['error']),
-      //           content: Text(responseData['message']),
-      //           actions: <Widget>[
-      //             FlatButton(
-      //               child: Text('Okay'),
-      //               onPressed: () {
-      //                 Navigator.of(ctx).pop();
-      //               },
-      //             )
-      //           ],
-      //         ));
     }
   }
 

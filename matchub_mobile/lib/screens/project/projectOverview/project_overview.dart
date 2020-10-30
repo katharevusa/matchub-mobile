@@ -35,14 +35,16 @@ class _ProjectOverviewState extends State<ProjectOverview> {
     return Scaffold(
       body: TopScreen(myProfile),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FlatButton.icon(
+      floatingActionButton: FlatButton.icon(color: kAccentColor,
+      shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
           onPressed: () => Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                     builder: (context) =>
                         ProjectCreationScreen(newProject: newProject)),
               ),
           icon: Icon(Icons.add),
-          label: Text("Create project")),
+          label: Text("Create project",)),
     );
   }
 }

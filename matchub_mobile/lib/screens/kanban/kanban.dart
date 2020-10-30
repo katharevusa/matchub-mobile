@@ -405,7 +405,11 @@ class _KanbanViewState extends State<KanbanView> {
             .removeAt(oldItemIndex);
         filteredKanban.taskColumns[listIndex].listOfTasks
             .insert(itemIndex, item);
-        kanbanController.reorderTaskSequence(oldListIndex, listIndex, itemIndex, item,
+        kanbanController.reorderTaskSequence(
+            oldListIndex,
+            listIndex,
+            itemIndex,
+            item,
             Provider.of<Auth>(context, listen: false).myProfile.accountId);
       },
       onTapItem: (int listIndex, int itemIndex, BoardItemState state) async {
@@ -438,10 +442,11 @@ class _KanbanViewState extends State<KanbanView> {
             children: [
               Text(
                 "${DateFormat("MMM dd").format(task.expectedDeadline)} | Due" +
-                    (daysToDisplay == 0
+                    (daysToDeadline == 0
                         ? "Today"
-                        : " in ${daysToDisplay.toString()} days" +
-                            (daysToDeadline.isNegative ? " ago" : "")),
+                        : daysToDeadline > 0
+                            ? " in ${daysToDisplay.toString()} days"
+                            : " ${daysToDisplay.toString()} ago"),
                 style: TextStyle(
                     color: Colors.grey[400],
                     // daysToDeadline > 5
