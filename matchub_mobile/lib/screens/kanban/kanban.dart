@@ -520,6 +520,7 @@ class _KanbanViewState extends State<KanbanView> {
                   list.columnTitle,
                   style: TextStyle(fontSize: 20),
                 ))),
+        if(Provider.of<KanbanController>(context).channelAdmins.indexWhere((element) => Provider.of<Auth>(context,listen: false).myProfile.accountId == element.accountId)>=0)
         Padding(
           padding: EdgeInsets.only(top: 0, left: 5),
           child: PopupMenuButton(

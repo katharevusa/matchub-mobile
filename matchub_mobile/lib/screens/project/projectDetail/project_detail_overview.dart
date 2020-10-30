@@ -170,8 +170,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                         PFounderTeamAttachBadgeSDG(
                                             project.managedProject),
                                         SizedBox(height: 100),
-                                      ]),
-                                ),
                                 project.managedProject.projCreatorId ==
                                         Provider.of<Auth>(context,
                                                 listen: false)
@@ -179,6 +177,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                             .accountId
                                     ? Container()
                                     : PActions(project.managedProject)
+                                      ]),
+                                ),
                               ],
                             ),
                             // Positioned(
@@ -201,7 +201,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       ),
               ),
             )
-          : Center(child: CircularProgressIndicator()),
+          : Scaffold(body: Center(child: CircularProgressIndicator())),
     );
   }
 }

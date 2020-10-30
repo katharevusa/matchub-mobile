@@ -30,7 +30,7 @@ class _AttachmentPopupState extends State<AttachmentPopup> {
     if (isPhoto) {
       pickedFile = await picker.getImage(source: ImageSource.camera);
     } else {
-      pickedFile = await picker.getVideo(source: ImageSource.camera, );
+      pickedFile = await picker.getVideo(source: ImageSource.camera);
     }
 
     setState(() {

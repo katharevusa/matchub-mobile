@@ -16,6 +16,7 @@ class MatchedProjects extends StatefulWidget {
 class _MatchedProjectsState extends State<MatchedProjects> {
   ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   List<Project> recommendedProjects = [];
+  List<Project> recommendedProjectsCountry = [];
   Future loadRecommendedProjects;
 
   @override
@@ -26,9 +27,15 @@ class _MatchedProjectsState extends State<MatchedProjects> {
 
   getRecommendedProjects() async {
     final responseData = await _apiHelper.getProtected(
-      "authenticated/recommendProjects/pageable/${widget.resource.resourceId}",
+      "authenticated/recommendProjects/page/${widget.resource.resourceId}",
     );
     recommendedProjects = (responseData['content'] as List)
+        .map((e) => Project.fromJson(e))
+        .toList();
+    final responseData2 = await _apiHelper.getProtected(
+      "authenticated/recommendSameCountryProjects/page/${widget.resource.resourceId}",
+    );
+    recommendedProjectsCountry = (responseData2['content'] as List)
         .map((e) => Project.fromJson(e))
         .toList();
   }
@@ -51,64 +58,146 @@ class _MatchedProjectsState extends State<MatchedProjects> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          "Suggested projects",
+                          "Suggested projects in your country",
                           style: Theme.of(context).textTheme.title,
                         ),
                       ],
                     ),
                   ),
-                  Container(
-                    color: Colors.white,
-                    height: 200.0,
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: recommendedProjects.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Material(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(
-                                context,
-                              ).pushNamed(ProjectDetailScreen.routeName,
-                                  arguments: recommendedProjects[index]);
+                  recommendedProjectsCountry.isEmpty
+                      ? Container(
+                          child: Text("No suggestions"),
+                        )
+                      : Container(
+                          color: Colors.transparent,
+                          height: 200.0,
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: recommendedProjectsCountry.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Material(
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(
+                                      context,
+                                    ).pushNamed(ProjectDetailScreen.routeName,
+                                        arguments:
+                                            recommendedProjectsCountry[index]);
+                                  },
+                                  child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 5.0, horizontal: 10.0),
+                                      width: 150.0,
+                                      height: 200.0,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Expanded(
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0),
+                                                  child: Container(
+                                                    child: AttachmentImage(
+                                                        recommendedProjectsCountry[
+                                                                index]
+                                                            .projectProfilePic),
+                                                  ))),
+                                          SizedBox(
+                                            height: 5.0,
+                                          ),
+                                          Text(
+                                              recommendedProjectsCountry[index]
+                                                  .projectTitle,
+                                              maxLines: 2,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subhead
+                                                  .merge(TextStyle(
+                                                      color: Colors
+                                                          .grey.shade600)))
+                                        ],
+                                      )),
+                                ),
+                              );
                             },
-                            child: Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 5.0, horizontal: 10.0),
-                                width: 150.0,
-                                height: 200.0,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expanded(
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                            child: Container(
-                                              child: AttachmentImage(
-                                                  recommendedProjects[index]
-                                                      .projectProfilePic),
-                                            ))),
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                        recommendedProjects[index].projectTitle,
-                                        maxLines: 2,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subhead
-                                            .merge(TextStyle(
-                                                color: Colors.grey.shade600)))
-                                  ],
-                                )),
                           ),
-                        );
-                      },
+                        ),
+                  Container(
+                    color: Colors.transparent,
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "You may also consider",
+                          style: Theme.of(context).textTheme.title,
+                        ),
+                      ],
                     ),
                   ),
+                  recommendedProjects.isEmpty
+                      ? Container(child: Text("No suggestions"))
+                      : Container(
+                          color: Colors.transparent,
+                          height: 200.0,
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: recommendedProjects.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Material(
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(
+                                      context,
+                                    ).pushNamed(ProjectDetailScreen.routeName,
+                                        arguments: recommendedProjects[index]);
+                                  },
+                                  child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 5.0, horizontal: 10.0),
+                                      width: 150.0,
+                                      height: 200.0,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Expanded(
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0),
+                                                  child: Container(
+                                                    child: AttachmentImage(
+                                                        recommendedProjects[
+                                                                index]
+                                                            .projectProfilePic),
+                                                  ))),
+                                          SizedBox(
+                                            height: 5.0,
+                                          ),
+                                          Text(
+                                              recommendedProjects[index]
+                                                  .projectTitle,
+                                              maxLines: 2,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subhead
+                                                  .merge(TextStyle(
+                                                      color: Colors
+                                                          .grey.shade600)))
+                                        ],
+                                      )),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                 ],
               ))
             : Center(child: CircularProgressIndicator()),

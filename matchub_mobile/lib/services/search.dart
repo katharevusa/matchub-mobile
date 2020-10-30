@@ -85,6 +85,9 @@ class Search with ChangeNotifier {
           filter += "&categoryIds=$i";
         }
       }
+      if (filterOptions['country'] != null) {
+        filter += "&country=${filterOptions['country']}";
+      }
     }
     var responseData = await _apiHelper.getProtected(
         "authenticated/resourceGlobalSearch?keywords=$searchQuery&size=10&page=$pageNo&availability=true$filter",

@@ -219,12 +219,32 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
+        // Text(((DateTime.now().difference(widget.project.startDate).inDays /
+        //             (widget.project.endDate
+        //                 .difference(widget.project.startDate)
+        //                 .inDays
+        //                 .toDouble()) *
+        //             100)
+        //         .toDouble())
+        //     .toString()),
         CircularPercentIndicator(
           radius: 100.0,
           animation: true,
           animationDuration: 1200,
           lineWidth: 15.0,
-          percent: 0.74,
+          percent: widget.project.startDate.isAfter(DateTime.now())
+              ? 0.0
+              : DateTime.now().isAfter(widget.project.endDate)
+                  ? 1.0
+                  : (DateTime.now()
+                              .difference(widget.project.startDate)
+                              .inDays /
+                          (widget.project.endDate
+                              .difference(widget.project.startDate)
+                              .inDays
+                              .toDouble()) *
+                          100) /
+                      100,
           circularStrokeCap: CircularStrokeCap.butt,
           backgroundColor: AppTheme.project6.withOpacity(0.5),
           progressColor: AppTheme.project6,
@@ -236,13 +256,37 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("74 %",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w900,
-                    color: AppTheme.project6,
-                  )),
-              Text("Goals Overall Progess",
+              widget.project.startDate.isAfter(DateTime.now())
+                  ? Text("0 %",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                        color: AppTheme.project6,
+                      ))
+                  : DateTime.now().isAfter(widget.project.endDate)
+                      ? Text("100 %",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w900,
+                            color: AppTheme.project6,
+                          ))
+                      : Text(
+                          ((DateTime.now()
+                                          .difference(widget.project.startDate)
+                                          .inDays /
+                                      (widget.project.endDate
+                                          .difference(widget.project.startDate)
+                                          .inDays
+                                          .toDouble()) *
+                                      100)
+                                  .toStringAsFixed(1) +
+                              " %"),
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w900,
+                            color: AppTheme.project6,
+                          )),
+              Text("Overall Progess",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: AppTheme.project6,
@@ -285,7 +329,7 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
             valueColor: AlwaysStoppedAnimation(Colors.red.shade300),
             shapePath: _buildHeartPath(),
             center: Text(
-              widget.project.upvotes.toString(),
+              widget.project.projectPoolPoints.toString(),
               style: TextStyle(
                 color: Color(0xFF916C80),
                 fontSize: 20.0,
@@ -323,13 +367,17 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
             ],
           ),
           Container(
-              height: 12 * SizeConfig.heightMultiplier,
-              width: 12 * SizeConfig.heightMultiplier,
-              child: Center(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey[700], width: 0.5),
+                  shape: BoxShape.circle),
+              child: ClipOval(
                   child: Tooltip(
                       message: widget.project.projectBadge.badgeTitle,
-                      child:
-                          AttachmentImage(widget.project.projectBadge.icon))))
+                      child: Container(
+                          height: 80,
+                          width: 80,
+                          child: AttachmentImage(
+                              widget.project.projectBadge.icon)))))
         ],
       ),
     );

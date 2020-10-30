@@ -64,6 +64,9 @@ class _AllNotificationsState extends State<AllNotifications> {
         .getAllProjectInternal(widget.project, profile, accessToken);
     await Provider.of<ManageNotification>(context, listen: false)
         .getAllProjectPublic(widget.project, profile, accessToken);
+    await Provider.of<ManageNotification>(context, listen: false)
+        .getAllAnnouncementForUsers(profile, accessToken);
+
     setState(() {
       _isLoading = false;
     });

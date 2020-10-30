@@ -5,6 +5,7 @@ import 'package:matchub_mobile/screens/project/projectDetail/resourceDonate.dart
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:path/path.dart';
 import 'package:path/path.dart';
@@ -54,6 +55,8 @@ class _PActionsState extends State<PActions> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.all(32.0),
+                  width: 100*SizeConfig.widthMultiplier,
+                  height: 100,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20.0),

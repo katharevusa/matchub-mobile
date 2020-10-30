@@ -1,9 +1,6 @@
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../../../sizeconfig.dart';
 
 class Start extends StatefulWidget {
   Map<String, dynamic> project;
@@ -18,11 +15,16 @@ class _StartState extends State<Start> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
+          Text(
+            DateFormat.yMMMd().add_jm().format(widget.project['startDate']),
+          ),
           Container(
             height: 300,
             child: CupertinoDatePicker(
               mode: CupertinoDatePickerMode.dateAndTime,
-              minimumDate: (widget.project['projectId'] == null) ? DateTime.now().subtract(Duration(minutes: 30)) : null,
+              minimumDate: (widget.project['projectId'] == null)
+                  ? DateTime.now().subtract(Duration(minutes: 30))
+                  : null,
               initialDateTime: widget.project["startDate"],
               onDateTimeChanged: (newDateTime) {
                 setState(() {

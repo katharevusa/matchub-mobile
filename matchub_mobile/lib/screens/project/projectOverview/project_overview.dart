@@ -62,146 +62,147 @@ class _TopScreenState extends State<TopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Stack(
-          children: <Widget>[
-            Container(
-              height: 210,
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Spacer(),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    width: 500,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(countActiveProject().toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0,
-                                    color: Colors.black,
-                                  )),
-                              const SizedBox(height: 5.0),
-                              Text("Active project",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12.0,
-                                    color: Colors.grey.shade600,
-                                  ))
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(countPendingProject().toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0,
-                                    color: Colors.black,
-                                  )),
-                              const SizedBox(height: 5.0),
-                              Text("Pending project",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12.0,
-                                    color: Colors.grey.shade600,
-                                  ))
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                  widget.myProfile.projectsOwned.length
-                                      .toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0,
-                                    color: Colors.black,
-                                  )),
-                              const SizedBox(height: 5.0),
-                              Text("Owned project",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12.0,
-                                    color: Colors.grey.shade600,
-                                  ))
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
+    return SingleChildScrollView(
+          child: Column(
+        children: [
+          Stack(
+            children: <Widget>[
+              SingleChildScrollView(
+                                  child: Column(
                     children: <Widget>[
-                      InkWell(
-                          onTap: () {
-                            setState(() {
-                              isOwnProjects = true;
-                            });
-                          },
-                          child: ChoiceChip("My Projects", isOwnProjects)),
                       SizedBox(
-                        width: 20,
+                        height: 10,
                       ),
-                      InkWell(
-                          onTap: () {
-                            setState(() {
-                              isOwnProjects = false;
-                            });
-                          },
-                          child: ChoiceChip("Joined Projects", !isOwnProjects)),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: 16,
+                            ),
+                            Spacer(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Container(
+                        width: 500,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(countActiveProject().toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0,
+                                        color: Colors.black,
+                                      )),
+                                  const SizedBox(height: 5.0),
+                                  Text("Active project",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12.0,
+                                        color: Colors.grey.shade600,
+                                      ))
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(countPendingProject().toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0,
+                                        color: Colors.black,
+                                      )),
+                                  const SizedBox(height: 5.0),
+                                  Text("Pending project",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12.0,
+                                        color: Colors.grey.shade600,
+                                      ))
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                      widget.myProfile.projectsOwned.length
+                                          .toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0,
+                                        color: Colors.black,
+                                      )),
+                                  const SizedBox(height: 5.0),
+                                  Text("Owned project",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12.0,
+                                        color: Colors.grey.shade600,
+                                      ))
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isOwnProjects = true;
+                                });
+                              },
+                              child: ChoiceChip("My Projects", isOwnProjects)),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isOwnProjects = false;
+                                });
+                              },
+                              child: ChoiceChip("Joined Projects", !isOwnProjects)),
+                        ],
+                      )
                     ],
-                  )
-                ],
+                ),
               ),
-            ),
-          ],
-        ),
-        BottomScreen(widget.myProfile, isOwnProjects)
-      ],
+            ],
+          ),
+          BottomScreen(widget.myProfile, isOwnProjects)
+        ],
+      ),
     );
   }
 
@@ -253,8 +254,11 @@ class BottomScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return isflightSelected
         ? Container(
-            height: 519.0,
+            // height: 519.0,
+            width: 100*SizeConfig.widthMultiplier,
             child: GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.all(10),
                 itemCount: myProfile.projectsOwned.length,
                 gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
@@ -315,7 +319,27 @@ class BottomScreen extends StatelessWidget {
                                 size: 5,
                                 animatedDuration:
                                     const Duration(milliseconds: 2500),
-                                currentValue: 80,
+                                currentValue: myProfile
+                                        .projectsOwned[index].startDate
+                                        .isAfter(DateTime.now())
+                                    ? 0
+                                    : DateTime.now().isAfter(myProfile
+                                            .projectsOwned[index].endDate)
+                                        ? 100
+                                        : (DateTime.now()
+                                                    .difference(myProfile
+                                                        .projectsOwned[index]
+                                                        .startDate)
+                                                    .inDays /
+                                                (myProfile.projectsOwned[index]
+                                                    .endDate
+                                                    .difference(myProfile
+                                                        .projectsOwned[index]
+                                                        .startDate)
+                                                    .inDays
+                                                    .toDouble()) *
+                                                100)
+                                            .round(),
                               ),
                             ),
                             Divider(),
@@ -384,8 +408,11 @@ class BottomScreen extends StatelessWidget {
                   );
                 }))
         : Container(
-            height: 519.0,
+            // height: 519.0,
+            width: 100*SizeConfig.widthMultiplier,
             child: GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.all(10),
                 itemCount: myProfile.projectsJoined.length,
                 gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
@@ -446,7 +473,26 @@ class BottomScreen extends StatelessWidget {
                                 size: 5,
                                 animatedDuration:
                                     const Duration(milliseconds: 2500),
-                                currentValue: 80,
+                                currentValue: myProfile
+                                        .projectsJoined[index].startDate
+                                        .isAfter(DateTime.now())
+                                    ? 0
+                                    : DateTime.now().isAfter(myProfile
+                                            .projectsJoined[index].endDate)
+                                        ? 100
+                                        : (DateTime.now()
+                                                .difference(myProfile
+                                                    .projectsJoined[index]
+                                                    .startDate)
+                                                .inDays /
+                                            (myProfile
+                                                .projectsJoined[index].endDate
+                                                .difference(myProfile
+                                                    .projectsJoined[index]
+                                                    .startDate)
+                                                .inDays
+                                                .toDouble()) *
+                                            100).round(),
                                 // displayText: '%',
                               ),
                             ),

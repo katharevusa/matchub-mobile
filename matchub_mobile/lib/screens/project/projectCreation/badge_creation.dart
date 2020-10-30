@@ -5,8 +5,6 @@ import 'package:country_list_pick/country_list_pick.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
-import 'package:matchub_mobile/screens/kanban/task/selectStatus.dart';
-import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -25,6 +23,7 @@ class _BadgeCreationState extends State<BadgeCreation> {
   List<String> badgesIcon;
   Future loadBadges;
   int selectedBadgeIndex;
+  File customisedBadge;
   initState() {
     loadBadges = getAllProjectBadgeIcons();
     super.initState();

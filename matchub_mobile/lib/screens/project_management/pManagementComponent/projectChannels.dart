@@ -147,84 +147,97 @@ class _ChannelCardState extends State<ChannelCard> {
     final responseData = await ApiBaseHelper.instance.getWODecode(
         "authenticated/getUnfinishedTasksByChannelUId?channelUId=${widget.channelUId}");
     setState(() {
+      if (responseData != null) {
+        List unfinishedTaskList = (responseData as List);
+        unfinishedTasks = unfinishedTaskList.length;
+      } else {
+        unfinishedTasks = 0;
+      }
       isLoading = false;
-      List unfinishedTaskList = (responseData as List);
-      unfinishedTasks = unfinishedTaskList.length;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return isLoading ? Container() :Container(
-      margin: const EdgeInsets.all(8.0),
-      width: 200.0,
-      height: 200.0,
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: AppTheme.project4.withOpacity(0.5),
-      ),
-      child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-          width: 150.0,
-          height: 150.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.white,
-          ),
-          child: Column(
-            children: [
-              Text(unfinishedTasks.toString() +" unfinished task(s)", style: TextStyle(color: Colors.grey[400]),),
-              // Row(
-              //   children: [
-              //     Padding(
-              //       padding: const EdgeInsets.all(8.0),
-              //       child:
-              //           CircularStepProgressIndicator(
-              //         totalSteps: 100,
-              //         currentStep: 74,
-              //         stepSize: 10,
-              //         selectedColor: AppTheme.project4,
-              //         unselectedColor: Colors.grey[200],
-              //         padding: 0,
-              //         width: 40,
-              //         height: 40,
-              //         selectedStepSize: 15,
-              //         roundedCap: (_, __) => true,
-              //       ),
-              //     ),
-              //     Text(
-              //       "100%",
-              //       style: TextStyle(
-              //           color: Colors.black,
-              //           fontSize: 20,
-              //           fontWeight: FontWeight.bold),
-              //     )
-              //   ],
-              // ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    widget.channelName,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                  ),
+    return isLoading
+        ? Container()
+        : Container(
+            margin: const EdgeInsets.all(8.0),
+            width: 200.0,
+            height: 200.0,
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: AppTheme.project4.withOpacity(0.5),
+            ),
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                width: 150.0,
+                height: 150.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.white,
                 ),
-              ),
-              RaisedButton(
-                elevation: 0,
-                padding: const EdgeInsets.all(10.0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                child: Text("Enter"),
-                color: AppTheme.project5,
-                textColor: Colors.white,
-                onPressed: () {},
-              ),
-            ],
-          )),
-    );
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        unfinishedTasks.toString() + " unfinished task(s)",
+                        style: TextStyle(color: Colors.grey[400]),
+                      ),
+                    ),
+                    // Row(
+                    //   children: [
+                    //     Padding(
+                    //       padding: const EdgeInsets.all(8.0),
+                    //       child:
+                    //           CircularStepProgressIndicator(
+                    //         totalSteps: 100,
+                    //         currentStep: 74,
+                    //         stepSize: 10,
+                    //         selectedColor: AppTheme.project4,
+                    //         unselectedColor: Colors.grey[200],
+                    //         padding: 0,
+                    //         width: 40,
+                    //         height: 40,
+                    //         selectedStepSize: 15,
+                    //         roundedCap: (_, __) => true,
+                    //       ),
+                    //     ),
+                    //     Text(
+                    //       "100%",
+                    //       style: TextStyle(
+                    //           color: Colors.black,
+                    //           fontSize: 20,
+                    //           fontWeight: FontWeight.bold),
+                    //     )
+                    //   ],
+                    // ),
+                     Flexible(flex:1,
+                                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            widget.channelName,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
+                    ),
+                     ),
+                    RaisedButton(
+                      elevation: 0,
+                      padding: const EdgeInsets.all(10.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Text("Enter"),
+                      color: AppTheme.project5,
+                      textColor: Colors.white,
+                      onPressed: () {},
+                    ),
+                  ],
+                )),
+          );
   }
 }

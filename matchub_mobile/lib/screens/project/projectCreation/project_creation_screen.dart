@@ -14,6 +14,7 @@ import 'package:matchub_mobile/models/resources.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/badge_creation.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/basic_information.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/dateTime.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/keyword.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/sdg.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
@@ -98,9 +99,11 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     "Edit Project",
     "Edit Project",
     "Edit Project",
+    "Edit Project",
   ];
 
   final List<String> titles = [
+    "Create New Project",
     "Create New Project",
     "Create New Project",
     "Create New Project",
@@ -116,6 +119,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     "Start Date & Time",
     "End Date & Time",
     "Select SDGs",
+    "Select keyword",
     "Upload Cover Photo",
     "Upload Photo",
     "Upload Documents",
@@ -133,6 +137,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
     Colors.green.shade300,
     Colors.blue.shade300,
     Colors.indigo.shade300,
+    Colors.deepOrange.shade300,
   ];
 
   void createNewProject(context) async {
@@ -214,6 +219,20 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
           //         Provider.of<Auth>(context, listen: false).accessToken);
         }
       }
+      /* if (project['badgeCustomisedIcon'] != null &&
+          project['badgeTitle'] != null) {
+        Map<String, dynamic> badge = {};
+
+        badge['badgeTitle'] = project['badgeTitle'];
+        badge['icon'] = project['badgeIcon'];
+
+        badge['projectId'] = newProjectId;
+
+        ApiBaseHelper.instance.postProtected("authenticated/createProjectBadge",
+            body: json.encode(badge),
+            accessToken: Provider.of<Auth>(context, listen: false).accessToken);
+      }*/
+
       Provider.of<Auth>(context, listen: false).retrieveUser();
       print("Success");
       Navigator.of(context).pop(true);
@@ -337,7 +356,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                     activeSize: 20.0,
                   ),
                 ),
-                itemCount: project["projectId"] == null ? 8 : 6,
+                itemCount: project["projectId"] == null ? 9 : 7,
                 itemBuilder: (context, index) {
                   if (index == 0 && project["projectId"] == null) {
                     return IntroItem(
@@ -388,6 +407,20 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                       bg: colors[index],
                       widget: SDG(project),
                     );
+                  } else if (index == 4 && project["projectId"] != null) {
+                    return IntroItem(
+                      title: titles_edit[index],
+                      subtitle: subtitles[index],
+                      bg: colors[index],
+                      widget: Keywords(project),
+                    );
+                  } else if (index == 4 && project["projectId"] == null) {
+                    return IntroItem(
+                      title: titles[index],
+                      subtitle: subtitles[index],
+                      bg: colors[index],
+                      widget: Keywords(project),
+                    );
                   } else if (index == 3 && project["projectId"] != null) {
                     return IntroItem(
                       title: titles_edit[index],
@@ -395,19 +428,19 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                       bg: colors[index],
                       widget: SDG(project),
                     );
-                  } else if (index == 4 && project["projectId"] == null) {
+                  } else if (index == 5 && project["projectId"] == null) {
                     return IntroItem(
                         title: titles[index],
                         subtitle: subtitles[index],
                         bg: colors[index],
                         widget: Document(project, false, false, coverPhoto));
-                  } else if (index == 4 && project["projectId"] != null) {
+                  } else if (index == 5 && project["projectId"] != null) {
                     return IntroItem(
                         title: titles_edit[index],
                         subtitle: subtitles[index],
                         bg: colors[index],
                         widget: Document(project, false, false, coverPhoto));
-                  } else if (index == 5 && project["projectId"] == null) {
+                  } else if (index == 6 && project["projectId"] == null) {
                     return IntroItem(
                         title: titles[index],
                         subtitle: subtitles[index],
@@ -419,19 +452,19 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
                     //       subtitle: subtitles[index],
                     //       bg: colors[index],
                     //       widget: Document(project, true, false, photos));
-                  } else if (index == 6 && project["projectId"] == null) {
+                  } else if (index == 7 && project["projectId"] == null) {
                     return IntroItem(
                         title: titles[index],
                         subtitle: subtitles[index],
                         bg: colors[index],
                         widget: Document(project, true, true, documents));
-                  } else if (index == 5 && project["projectId"] != null) {
+                  } else if (index == 6 && project["projectId"] != null) {
                     return IntroItem(
                         title: titles_edit[index],
                         subtitle: subtitles[index],
                         bg: colors[index],
                         widget: BadgeCreation(project));
-                  } else if (index == 7 && project["projectId"] == null) {
+                  } else if (index == 8 && project["projectId"] == null) {
                     return IntroItem(
                         title: titles[index],
                         subtitle: subtitles[index],
@@ -451,21 +484,21 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
             Align(
               alignment: Alignment.bottomRight,
               child: IconButton(
-                icon: Icon(((_currentIndex == 7 &&
+                icon: Icon(((_currentIndex == 8 &&
                             project["projectId"] == null) ||
-                        (_currentIndex == 5 && project["projectId"] != null))
+                        (_currentIndex == 6 && project["projectId"] != null))
                     ? Icons.check
                     : Icons.arrow_forward),
                 onPressed: () {
                   FocusScope.of(context).unfocus();
                   if (project["projectId"] == null) {
-                    if (_currentIndex != 7) {
+                    if (_currentIndex != 8) {
                       _controller.next();
                     } else {
                       createNewProject(context);
                     }
                   } else {
-                    if (_currentIndex != 5)
+                    if (_currentIndex != 6)
                       _controller.next();
                     else {
                       updateProject(context);

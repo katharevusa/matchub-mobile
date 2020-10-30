@@ -12,11 +12,17 @@ class Announcement {
   DateTime timestamp;
   List notifiedUsers;
   num projectId;
-  String taskId;
+  num taskId;
   String postId;
   String type;
   List viewedUserIds;
   num creatorId;
+
+  num resourceId;
+  num resourceRequestId;
+  num joinRequestId;
+  String newFollowerAndNewPosterUUID;
+  num newFollowerAndNewPosterProfileId;
 
   factory Announcement.fromJson(Map<String, dynamic> json) =>
       _$AnnouncementFromJson(json);

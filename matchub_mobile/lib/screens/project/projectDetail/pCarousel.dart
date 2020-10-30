@@ -11,9 +11,7 @@ class PCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: project.projectProfilePic,
-      child: CarouselSlider(
+    return  CarouselSlider(
         options: CarouselOptions(
             autoPlay: false,
             aspectRatio: 1.6,
@@ -23,7 +21,6 @@ class PCarousel extends StatelessWidget {
         items: (project.photos.isNotEmpty)
             ? getPhotoList(project.photos)
             : getPhotoList(imgList),
-      ),
     );
   }
 
@@ -83,7 +80,7 @@ class PCarousel extends StatelessWidget {
 }
 
 final List<String> imgList = [
-  "https://localhost:8443/api/v1/files/init/project-default.jpg",
+  "https://localhost:8443/api/v1/files/init/defaultImage.png",
   // "https://localhost:8443/api/v1/files/init/project3.jpg",
   // "https://localhost:8443/api/v1/files/init/project6.jpg",
 ];

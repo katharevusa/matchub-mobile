@@ -47,6 +47,8 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
             .map((i) => TruncatedProfile.fromJson(i))
             .toList()
         : []
+    ..projectPoolPoints = json['projectPoolPoints'] as num
+    ..reputationPoints = json['reputationPoints'] as num
     ..channels = json['channels'] as List
     ..documents = json['documents'] as Map<String, dynamic>
     ..projectOwners = json['projectOwners'] != null
@@ -54,7 +56,6 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
             .map((i) => TruncatedProfile.fromJson(i))
             .toList()
         : [];
-  ;
 }
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
