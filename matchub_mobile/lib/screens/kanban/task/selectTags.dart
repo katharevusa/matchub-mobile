@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/search/search_page.dart';
 import 'package:matchub_mobile/services/kanban_controller.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -11,10 +12,11 @@ class SelectTagsDialog extends StatefulWidget {
   SelectTagsDialog({
     Key key,
     @required this.kanbanController,
-    // @required this.task,
+    @required this.existingLabels,
   }) : super(key: key);
 
   // final TaskEntity task;
+  final Map<String, dynamic> existingLabels;
   final KanbanController kanbanController;
 
   @override
@@ -24,6 +26,7 @@ class SelectTagsDialog extends StatefulWidget {
 class _SelectTagsDialogState extends State<SelectTagsDialog> {
   initState() {
     filteredLabels.addAll(widget.kanbanController.labels);
+    selectedLabels.addAll(widget.existingLabels);
   }
 
   Map<String, dynamic> selectedLabels = {};  //label name, colo
@@ -36,7 +39,7 @@ class _SelectTagsDialogState extends State<SelectTagsDialog> {
         (key, value) => !key.toLowerCase().contains(searchQuery.toLowerCase()));
   }
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     print(selectedLabels);
     return Stack(children: [

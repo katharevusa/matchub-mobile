@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/helpers/profile_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
@@ -28,6 +29,8 @@ import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'pSDGs.dart';
 
 class ProjectDetailScreen extends StatefulWidget {
   static const routeName = "/project-details";
@@ -67,16 +70,14 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   getCreator() async {
     final url = 'authenticated/getAccount/${project.projCreatorId}';
-    final responseData = await _helper.getProtected(url,
-        accessToken:
-            Provider.of<Auth>(this.context, listen: false).accessToken);
+    final responseData = await _helper.getProtected(url);
     creator = Profile.fromJson(responseData);
   }
 
   @override
   Widget build(BuildContext context) {
     myProfile = Provider.of<Auth>(context).myProfile;
-    project = Provider.of<ManageProject>(context).managedProject;
+    // project = Provider.of<ManageProject>(context).managedProject;
     return FutureBuilder(
       future: loadCreator,
       builder: (context, snapshot) => (snapshot.connectionState ==
@@ -85,16 +86,134 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
               builder: (context, project, child) => Scaffold(
                 backgroundColor: Colors.white,
                 key: _projectDetailScaffoldKey,
-                appBar: AppBar(
-                  leading: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: IconButton(
-                      color: Colors.grey[850],
-                      icon: Icon(Icons.close),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                  /*  actions: [
+                body: _isLoading
+                    ? Container()
+                    : SingleChildScrollView(
+                        child: Stack(
+                          children: [
+                            Column(
+                              children: [
+                                Container(
+                                  constraints: BoxConstraints(
+                                      minHeight:
+                                          20 * SizeConfig.heightMultiplier),
+                                  child: Stack(
+                                      overflow: Overflow.visible,
+                                      children: <Widget>[
+                                        PCarousel(project.managedProject),
+                                        AppBar(
+                                          leading: Padding(
+                                            padding: const EdgeInsets.all(15.0),
+                                            child: InkWell(
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.grey.withOpacity(0.4),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  height: 84,
+                                                  width: 84,
+                                                  child: Center(child: Icon(Icons.close, color: Colors.grey[200]))),
+                                              onTap: () =>
+                                                  Navigator.of(context).pop(),
+                                            ),
+                                          ),
+                                          backgroundColor: Colors.transparent,
+                                          elevation: 0,
+                                        ),
+                                        Positioned(bottom: 0, child: PSdgTags())
+                                      ]),
+                                ),
+                                Container(
+                                  width: 100 * SizeConfig.widthMultiplier,
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        ListTile(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 30),
+                                          leading:
+                                              buildAvatar(creator, radius: 50),
+                                          title: Text(
+                                            creator.name,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          subtitle: Text("Project creator"),
+                                          // trailing: IconButton(
+                                          //   icon: Icon(
+                                          //       FlutterIcons.share_google_evi),
+                                          //   onPressed: () {
+                                          //     Share.share(
+                                          //         'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this project on: ${project.managedProject.projectTitle}\nhttp://localhost:3000/project/${project.managedProject.projectId}');
+                                          //   },
+                                          // ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 30),
+                                          child: Text(
+                                            project.managedProject.projectTitle,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 2.6 *
+                                                    SizeConfig.textMultiplier),
+                                          ),
+                                        ),
+                                        PProgressBar(project.managedProject),
+                                        PDescription(project.managedProject),
+                                        PAnnouncement(project.managedProject),
+                                        PFounderTeamAttachBadgeSDG(
+                                            project.managedProject),
+                                        SizedBox(height: 100),
+                                      ]),
+                                ),
+                                project.managedProject.projCreatorId ==
+                                        Provider.of<Auth>(context,
+                                                listen: false)
+                                            .myProfile
+                                            .accountId
+                                    ? Container()
+                                    : PActions(project.managedProject)
+                              ],
+                            ),
+                            // Positioned(
+                            //     top: 28.2 * SizeConfig.heightMultiplier,
+                            //     right: 40,
+                            //     child: FloatingActionButton(
+                            //       elevation: 5,
+                            //       backgroundColor: Colors.white,
+                            //       splashColor: kKanbanColor, // inkwell color
+                            //       child: SizedBox(
+                            //           width: 48,
+                            //           height: 48,
+                            //           child: Icon(Icons.bookmark,
+                            //               size: 30,
+                            //               color: Colors.blueGrey[100])),
+                            //       onPressed: () {},
+                            //     )),
+                          ],
+                        ),
+                      ),
+              ),
+            )
+          : Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
+final List<String> iconList = [
+  "assets/icons/word.png",
+  "assets/icons/ppt.png",
+  "assets/icons/excel.png",
+  "assets/icons/pdf.png",
+];
+
+/*  actions: [
                     IconButton(
                       alignment: Alignment.bottomCenter,
                       visualDensity: VisualDensity.comfortable,
@@ -140,103 +259,3 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       }),
                     ),
                   ],*/
-                  backgroundColor: AppTheme.appBackgroundColor,
-                  elevation: 0,
-                ),
-                body: _isLoading
-                    ? Container()
-                    : Container(
-                        child: Stack(children: <Widget>[
-                          Container(
-                            height: double.infinity,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    PCarousel(project.managedProject),
-                                    SizedBox(height: 20),
-                                    ListTile(
-                                      onTap: () {
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pushNamed(ProfileScreen.routeName,
-                                            arguments: creator.accountId);
-                                      },
-                                      leading: ClipOval(
-                                          child: Container(
-                                              color: Colors.white,
-                                              height: 16 *
-                                                  SizeConfig.widthMultiplier,
-                                              width: 16 *
-                                                  SizeConfig.widthMultiplier,
-                                              child: AttachmentImage(
-                                                  creator.profilePhoto))),
-                                      title: Text(
-                                        creator.name,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      subtitle: Text("Resource creator"),
-                                      trailing: IconButton(
-                                        icon:
-                                            Icon(FlutterIcons.share_google_evi),
-                                        onPressed: () {
-                                          Share.share(
-                                              'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this project on: ${project.managedProject.projectTitle}\nhttp://localhost:3000/project/${project.managedProject.projectId}');
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              8.0 * SizeConfig.widthMultiplier),
-                                      child: Text(
-                                        project.managedProject.projectTitle,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 3.2 *
-                                                SizeConfig.textMultiplier),
-                                      ),
-                                    ),
-                                    PProgressBar(project.managedProject),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    PDescription(project.managedProject),
-                                    PAnnouncement(project.managedProject),
-                                    PFounderTeamAttachBadgeSDG(
-                                        project.managedProject),
-                                    SizedBox(height: 100),
-                                  ]),
-                            ),
-                          ),
-                          project.managedProject.projCreatorId ==
-                                  Provider.of<Auth>(context, listen: false)
-                                      .myProfile
-                                      .accountId
-                              ? Container()
-                              : PActions(project.managedProject)
-                        ]),
-                      ),
-              ),
-            )
-          : Center(child: CircularProgressIndicator()),
-    );
-  }
-}
-
-final List<String> imgList = [
-  "https://localhost:8443/api/v1/files/init/project-default.jpg",
-  // "https://localhost:8443/api/v1/files/init/project3.jpg",
-  // "https://localhost:8443/api/v1/files/init/project6.jpg",
-];
-final List<String> iconList = [
-  "assets/icons/word.png",
-  "assets/icons/ppt.png",
-  "assets/icons/excel.png",
-  "assets/icons/pdf.png",
-];

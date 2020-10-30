@@ -24,6 +24,7 @@ import 'board/boardList.dart';
 import 'board/boardView.dart';
 import 'board/boardViewController.dart';
 import 'board/columnCreatePopup.dart';
+import 'filterDeadlines.dart';
 
 class KanbanView extends StatefulWidget {
   static const routeName = "kanbanboard";
@@ -39,17 +40,25 @@ class KanbanView extends StatefulWidget {
 class _KanbanViewState extends State<KanbanView> {
   KanbanEntity filteredKanban;
   bool loading;
-  Map<String, dynamic> filterOptions = {
-    "filteredAssignees": [],
-    "labels": [],
-    "deadlines": []
-  };
-  bool toShowFilters = true;
+  Map<String, dynamic> filterOptions;
+  bool toShowFilters = false;
   bool assigneeChoice = false;
   @override
   initState() {
     loading = true;
     retrieveKanban();
+
+    Provider.of<KanbanController>(context, listen: false).filterOptions = {
+      "filteredAssignees": [],
+      "filteredLabels": {},
+      "deadlines": {
+        "showMyTasks": false,
+        "thisWeek": false,
+        "nextWeek": false,
+      },
+      "none": true,
+      "accountId": Provider.of<Auth>(context, listen: false).myProfile.accountId
+    };
     super.initState();
   }
 
@@ -68,222 +77,315 @@ class _KanbanViewState extends State<KanbanView> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<KanbanController>(builder: (context, controller, child) {
-      List<BoardList> _lists = List<BoardList>();
-      if (!loading) {
-        filteredKanban = controller.filteredKanban;
-        for (int i = 0; i < filteredKanban.taskColumns.length; i++) {
-          _lists.add(_createBoardList(filteredKanban.taskColumns[i]));
+    filterOptions = Provider.of<KanbanController>(context).filterOptions;
+
+    return Consumer<KanbanController>(
+      builder: (context, controller, child) {
+        List<BoardList> _lists = List<BoardList>();
+        if (!loading) {
+          filteredKanban = controller.filteredKanban;
+          for (int i = 0; i < filteredKanban.taskColumns.length; i++) {
+            _lists.add(_createBoardList(filteredKanban.taskColumns[i]));
+          }
         }
-      }
 
-      return Scaffold(
-        appBar: AppBar(
-            iconTheme: IconThemeData(color: Colors.black),
-            backgroundColor: kScaffoldColor,
-            // backgroundColor: kKanbanColor,
-            // backgroundColor: Color(0xFF5BC2A2),
-            leadingWidth: 44,
-            title: ListTile(
-              contentPadding: EdgeInsets.zero,
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => ChannelSettings(
-                          channelData: widget.channelData,
-                          project: widget.project))),
-              title: Text(
-                widget.channelData['name'],
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600),
-              ),
-            ),
-            elevation: 2,
-            bottom: toShowFilters
-                ? PreferredSize(
-                    child: Container(
-                        width: 100 * SizeConfig.widthMultiplier,
-                        height: 40,
-                        color: Color(0xFFFAF9FE),
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            SizedBox(width: 20),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 4, vertical: 5),
-                              child: RaisedButton(
-                                visualDensity: VisualDensity.compact,
-                                color: filterOptions['filteredAssignees']
-                                        .isNotEmpty
-                                    ? Color(0xFF52459D)
-                                    : Colors.blueGrey[300],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                    filterOptions['filteredAssignees']
-                                            .isNotEmpty
-                                        ? (filterOptions['filteredAssignees']
-                                                    .length >
-                                                1
-                                            ? List.of(filterOptions[
-                                                    'filteredAssignees'])
-                                                .reduce((e, v) {
-                                                if (e is Profile &&
-                                                    v is Profile) {
-                                                  return "${e.name}, ${v.name}";
-                                                } else if (e is String) {
-                                                  return e + ", ${v.name}";
-                                                } else {
-                                                  return e.name;
-                                                }
-                                              })
-                                            : filterOptions['filteredAssignees']
-                                                    [0]
-                                                .name)
-                                        : 'Assignee',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    )),
-                                onPressed: () {
-                                  final kanbanController =
-                                      Provider.of<KanbanController>(context,
-                                          listen: false);
-                                  Dialog channelMembersDialog = Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    child: SelectTaskMembers(
-                                        kanbanController: kanbanController,
-                                        listOfTaskDoers:
-                                            filterOptions['filteredAssignees']),
-                                  );
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          channelMembersDialog).then((val) {
-                                    if (val != null) {
-                                      filterOptions['filteredAssignees'] = val;
-                                      controller.filterBy(filterOptions);
-
-                                      setState(() {});
-                                    }
-                                  });
-                                },
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 4, vertical: 5),
-                              child: RaisedButton(
-                                visualDensity: VisualDensity.compact,
-                                color: filterOptions['labels'].isNotEmpty
-                                    ? Color(0xFF52459D)
-                                    : Colors.blueGrey[300],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text('Labels',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                        color: Colors.white)),
-                                onPressed: () {
-                                  final kanbanController =
-                                      Provider.of<KanbanController>(context,
-                                          listen: false);
-                                  Dialog tagsDialog = Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            10.0)), //this right here
-                                    child: SelectTagsDialog(
-                                      kanbanController: kanbanController,
-                                    ),
-                                  );
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          tagsDialog).then((val) {
-                                    setState(() {
-                                      if (val != null && val.isNotEmpty) {
-                                        filterOptions['labels'] =
-                                            (val as Map<String, dynamic>)
-                                                .keys
-                                                .toList();
-                                        print(filterOptions['labels']);
-                                        controller.filterBy(filterOptions);
-                                      } else {
-                                        filterOptions['labels'].clear();
-                                      }
-                                    });
-                                  });
-                                },
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            ChoiceChip(
-                              backgroundColor: Colors.blueGrey[300],
-                              label: Text('Deadline',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                      color: Colors.white)),
-                              selectedColor: Color(0xFF52459D),
-                              labelStyle: TextStyle(color: Colors.black),
-                              selected: filterOptions['deadlines'].isNotEmpty,
-                              onSelected: (bool selected) {
-                                setState(() {
-                                  assigneeChoice = !assigneeChoice;
-                                });
-                              },
-                            ),
-                          ],
-                        )),
-                    preferredSize: Size(100 * SizeConfig.widthMultiplier, 40),
-                  )
-                : null,
-            actions: [
-              IconButton(
-                color: Colors.black,
-                icon: Icon(
-                  Icons.filter_list_rounded,
+        return Scaffold(
+          appBar: AppBar(
+              iconTheme: IconThemeData(color: Colors.white),
+              // backgroundColor: kScaffoldColor,
+              // backgroundColor: kKanbanColor,
+              // backgroundColor: Color(0xFF5BC2A2),
+              leadingWidth: 44,
+              title: ListTile(
+                contentPadding: EdgeInsets.zero,
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ChannelSettings(
+                            channelData: widget.channelData,
+                            project: widget.project))),
+                title: Text(
+                  widget.channelData['name'],
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600),
                 ),
-                onPressed: () {
-                  setState(() {
-                    toShowFilters = !toShowFilters;
-                  });
-                  setState(() {});
-                },
               ),
-              IconButton(
-                color: Colors.black,
-                icon: Icon(Icons.message_rounded),
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true)
-                      .push(MaterialPageRoute(
-                          builder: (_) => ChannelMessages(
-                                channelData: widget.channelData,
-                                project: widget.project,
-                              )));
-                },
-              )
-            ]),
-        backgroundColor: Color(0xFFFAF9FE),
-        // backgroundColor: Color.fromARGB(255, 235, 236, 240),
-        body: loading
-            ? Center(child: CircularProgressIndicator())
-            : BoardView2(
-                lists: _lists,
-                boardViewController: boardViewController,
-              ),
-      );
-    });
+              elevation: 2,
+              bottom: toShowFilters
+                  ? PreferredSize(
+                      child: Container(
+                          width: 100 * SizeConfig.widthMultiplier,
+                          height: 40,
+                          color: Color(0xFFFAF9FE),
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              SizedBox(width: 20),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 5),
+                                child: RaisedButton(
+                                  visualDensity: VisualDensity.compact,
+                                  color: filterOptions['filteredAssignees']
+                                          .isNotEmpty
+                                      ? Color(0xFF52459D)
+                                      : Colors.blueGrey[100],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                          filterOptions['filteredAssignees']
+                                                  .isNotEmpty
+                                              ? (filterOptions[
+                                                              'filteredAssignees']
+                                                          .length >
+                                                      1
+                                                  ? List.of(filterOptions[
+                                                          'filteredAssignees'])
+                                                      .reduce((e, v) {
+                                                      String tempE, tempV;
+
+                                                      int myAccountId =
+                                                          Provider.of<Auth>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .myProfile
+                                                              .accountId;
+                                                      if (e is Profile) {
+                                                        if (e.accountId ==
+                                                            myAccountId) {
+                                                          tempE = "Me";
+                                                        } else {
+                                                          tempE = e.name;
+                                                        }
+                                                      } else {
+                                                        tempE = e;
+                                                      }
+                                                      if (v is Profile) {
+                                                        if (v.accountId ==
+                                                            myAccountId) {
+                                                          tempV = "Me";
+                                                        } else {
+                                                          tempV = v.name;
+                                                        }
+                                                      } else {
+                                                        tempV = v;
+                                                      }
+                                                      return "$tempE, $tempV";
+                                                    })
+                                                  : filterOptions[
+                                                          'filteredAssignees'][0]
+                                                      .name)
+                                              : 'Assignee',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: filterOptions[
+                                                        'filteredAssignees']
+                                                    .isNotEmpty
+                                                ? Colors.white
+                                                : Colors.grey[850],
+                                            fontWeight: FontWeight.w600,
+                                          )),
+                                      Icon(
+                                        Icons.arrow_drop_down_rounded,
+                                        color:
+                                            filterOptions['filteredAssignees']
+                                                    .isNotEmpty
+                                                ? Colors.white
+                                                : Colors.grey[850],
+                                      )
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    final kanbanController =
+                                        Provider.of<KanbanController>(context,
+                                            listen: false);
+                                    Dialog channelMembersDialog = Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0)),
+                                      child: SelectTaskMembers(
+                                          actionString: "Filter",
+                                          kanbanController: kanbanController,
+                                          listOfTaskDoers: filterOptions[
+                                              'filteredAssignees']),
+                                    );
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            channelMembersDialog).then(
+                                      (val) {
+                                        if (val != null) {
+                                          // get back list of assignees
+                                          filterOptions['filteredAssignees'] =
+                                              val;
+                                          controller.filter();
+
+                                          setState(() {});
+                                        }
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 5),
+                                child: RaisedButton(
+                                  visualDensity: VisualDensity.compact,
+                                  color:
+                                      filterOptions['filteredLabels'].isNotEmpty
+                                          ? Color(0xFF52459D)
+                                          : Colors.blueGrey[100],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text('Labels',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
+                                              color: filterOptions[
+                                                          'filteredLabels']
+                                                      .isNotEmpty
+                                                  ? Colors.white
+                                                  : Colors.grey[850])),
+                                      Icon(Icons.arrow_drop_down_rounded,
+                                          color: filterOptions['filteredLabels']
+                                                  .isNotEmpty
+                                              ? Colors.white
+                                              : Colors.grey[850])
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    final kanbanController =
+                                        Provider.of<KanbanController>(context,
+                                            listen: false);
+                                    Dialog tagsDialog = Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              10.0)), //this right here
+                                      child: SelectTagsDialog(
+                                        existingLabels:
+                                            Map<String, dynamic>.from(
+                                                filterOptions[
+                                                    'filteredLabels']),
+                                        kanbanController: kanbanController,
+                                      ),
+                                    );
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            tagsDialog).then(
+                                      //get back map fo labels
+                                      (val) {
+                                        setState(
+                                          () {
+                                            if (val != null) {
+                                              filterOptions['filteredLabels'] =
+                                                  val;
+                                              print(val);
+                                              controller.filter();
+                                            }
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 5),
+                                child: RaisedButton(
+                                  visualDensity: VisualDensity.compact,
+                                  color: !filterOptions['none']
+                                      ? Color(0xFF52459D)
+                                      : Colors.blueGrey[100],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text('Deadlines',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
+                                              color: !filterOptions['none']
+                                                  ? Colors.white
+                                                  : Colors.grey[850])),
+                                      Icon(Icons.arrow_drop_down_rounded,
+                                          color: !filterOptions['none']
+                                              ? Colors.white
+                                              : Colors.grey[850])
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                        useRootNavigator: true,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(15.0),
+                                              topLeft: Radius.circular(15.0)),
+                                        ),
+                                        context: context,
+                                        builder: (ctx) {
+                                          return SelectDeadline(
+                                            filterOptions: filterOptions,
+                                          );
+                                        }).then((value) => controller.filter());
+                                  },
+                                ),
+                              ),
+                            ],
+                          )),
+                      preferredSize: Size(100 * SizeConfig.widthMultiplier, 40),
+                    )
+                  : null,
+              actions: [
+                IconButton(
+                  color: Colors.white,
+                  icon: Icon(
+                    Icons.filter_list_rounded,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      toShowFilters = !toShowFilters;
+                    });
+                  },
+                ),
+                IconButton(
+                  color: Colors.white,
+                  icon: Icon(Icons.message_rounded),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                            builder: (_) => ChannelMessages(
+                                  channelData: widget.channelData,
+                                  project: widget.project,
+                                )));
+                  },
+                )
+              ]),
+          backgroundColor: Color(0xFFFAF9FE),
+          // backgroundColor: Color.fromARGB(255, 235, 236, 240),
+          body: loading
+              ? Center(child: CircularProgressIndicator())
+              : BoardView2(
+                  lists: _lists,
+                  boardViewController: boardViewController,
+                ),
+        );
+      },
+    );
   }
 
   Widget buildBoardItem(TaskEntity task) {
@@ -303,12 +405,8 @@ class _KanbanViewState extends State<KanbanView> {
             .removeAt(oldItemIndex);
         filteredKanban.taskColumns[listIndex].listOfTasks
             .insert(itemIndex, item);
-        print(kanbanController
-            .kanban.taskColumns[oldListIndex].listOfTasks.length);
-        print(kanbanController
-            .filteredKanban.taskColumns[oldListIndex].listOfTasks.length);
-        // kanbanController.reorderTaskSequence(
-        //     Provider.of<Auth>(context, listen: false).myProfile.accountId);
+        kanbanController.reorderTaskSequence(oldListIndex, listIndex, itemIndex, item,
+            Provider.of<Auth>(context, listen: false).myProfile.accountId);
       },
       onTapItem: (int listIndex, int itemIndex, BoardItemState state) async {
         Navigator.of(context, rootNavigator: true)
@@ -339,19 +437,20 @@ class _KanbanViewState extends State<KanbanView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${DateFormat.yMMMd().format(task.expectedDeadline)} | " +
+                "${DateFormat("MMM dd").format(task.expectedDeadline)} | Due" +
                     (daysToDisplay == 0
                         ? "Today"
-                        : "${daysToDisplay.toString()} days" +
+                        : " in ${daysToDisplay.toString()} days" +
                             (daysToDeadline.isNegative ? " ago" : "")),
                 style: TextStyle(
-                    color: daysToDeadline > 5
-                        ? kSecondaryColor
-                        : daysToDeadline > 0
-                            ? Colors.orange[300]
-                            : daysToDeadline == 0
-                                ? Colors.red[300]
-                                : Colors.grey[400],
+                    color: Colors.grey[400],
+                    // daysToDeadline > 5
+                    //     ? kSecondaryColor
+                    //     : daysToDeadline > 0
+                    //         ? Colors.orange[300]
+                    //         : daysToDeadline == 0
+                    //             ? Colors.red[300]
+                    //             : Colors.grey[400],
                     fontSize: 1.4 * SizeConfig.textMultiplier,
                     fontWeight: FontWeight.w500),
               ),

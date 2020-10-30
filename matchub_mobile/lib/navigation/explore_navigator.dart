@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/chat/chat_screen.dart';
-import 'package:matchub_mobile/screens/explore/explore_screen.dart';
 import 'package:matchub_mobile/screens/inbox/inbox.dart';
 import 'package:matchub_mobile/screens/kanban/kanban.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';

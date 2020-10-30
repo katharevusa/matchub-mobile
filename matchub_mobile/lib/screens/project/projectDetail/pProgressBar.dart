@@ -28,121 +28,144 @@ class _PProgressBarState extends State<PProgressBar> {
   Widget build(BuildContext context) {
     myProfile = Provider.of<Auth>(context).myProfile;
     // project = Provider.of<ManageProject>(context).managedProject;
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: FAProgressBar(
-            progressColor: AppTheme.project1,
-            backgroundColor: Colors.grey.withOpacity(0.7),
-            size: 6,
-            animatedDuration: const Duration(milliseconds: 2500),
-            currentValue: 80,
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    int progress = (DateTime.now().difference(widget.project.startDate).inDays /
+            (widget.project.endDate
+                .difference(widget.project.startDate)
+                .inDays
+                .toDouble()) *
+            100)
+        .toInt();
+    print(progress);
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+        child: Column(
           children: [
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    settings: RouteSettings(name: "/project-followers"),
-                    builder: (_) => ProjectFollowerList(
-                          project: widget.project,
-                        )));
-              },
-              child: Container(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.remove_red_eye,
-                          size: 30,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(widget.project.projectFollowers.length.toString(),
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500)),
-                      ],
-                    ),
-                    Text("Follower",
-                        style: TextStyle(
-                          fontSize: 12,
-                        )),
-                  ],
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: FAProgressBar(
+                progressColor: kKanbanColor,
+                backgroundColor: Colors.grey[200],
+                size: 6,
+                animatedDuration: const Duration(milliseconds: 2500),
+                currentValue: progress,
               ),
             ),
-            InkWell(
-              onTap: () async {
-                if (!myProfile.upvotedProjectIds
-                    .contains(widget.project.projectId)) {
-                  await ApiBaseHelper.instance.postProtected(
-                      "authenticated/upvoteProject?projectId=${widget.project.projectId}&userId=${myProfile.accountId}");
-                } else {
-                  await ApiBaseHelper.instance.postProtected(
-                      "authenticated/revokeUpvote?projectId=${widget.project.projectId}&userId=${myProfile.accountId}");
-                }
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 10.0,
+                left: 20,
+                right: 20,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          settings: RouteSettings(name: "/project-followers"),
+                          builder: (_) => ProjectFollowerList(
+                                project: widget.project,
+                              )));
+                    },
+                    child: Container(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.remove_red_eye,
+                                  size: 24, color: Colors.grey[700]),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                  widget.project.projectFollowers.length
+                                      .toString(),
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                          Text("Followers",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[700])),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      if (!myProfile.upvotedProjectIds
+                          .contains(widget.project.projectId)) {
+                        await ApiBaseHelper.instance.postProtected(
+                            "authenticated/upvoteProject?projectId=${widget.project.projectId}&userId=${myProfile.accountId}");
+                      } else {
+                        await ApiBaseHelper.instance.postProtected(
+                            "authenticated/revokeUpvote?projectId=${widget.project.projectId}&userId=${myProfile.accountId}");
+                      }
 
-                await Provider.of<Auth>(context, listen: false).retrieveUser();
-                setState(() {
-                  getProjects();
-                });
-              },
-              child: Container(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.volunteer_activism,
-                          size: 30,
-                          color: myProfile.upvotedProjectIds
-                                  .contains(widget.project.projectId)
-                              ? kAccentColor
-                              : Colors.grey[300],
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(widget.project.upvotes.toString(),
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500)),
-                      ],
+                      await Provider.of<Auth>(context, listen: false)
+                          .retrieveUser();
+                      setState(() {
+                        getProjects();
+                      });
+                    },
+                    child: Container(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.volunteer_activism,
+                                size: 24,
+                                color: myProfile.upvotedProjectIds
+                                        .contains(widget.project.projectId)
+                                    ? kAccentColor
+                                    : Colors.grey[300],
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(widget.project.upvotes.toString(),
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                          Text("Upvotes",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[700])),
+                        ],
+                      ),
                     ),
-                    Text("Upvotes",
-                        style: TextStyle(
-                          fontSize: 12,
-                        )),
-                  ],
-                ),
+                  ),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.group, size: 24, color: Colors.grey[700]),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(widget.project.teamMembers.length.toString(),
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                      Text("Team size",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[700])),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.group, size: 30),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(widget.project.teamMembers.length.toString(),
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500)),
-                  ],
-                ),
-                Text("Team size",
-                    style: TextStyle(
-                      fontSize: 12,
-                    )),
-              ],
             ),
           ],
-        ),
-      ],
-    );
+        ));
   }
 }

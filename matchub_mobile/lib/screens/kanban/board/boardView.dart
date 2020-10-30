@@ -408,31 +408,31 @@ class BoardView2State extends State<BoardView2> {
           }
         },
       ),
-      Positioned(
-        bottom: -40,
-        child: Container(
-          height: 100,
-          width: 100*SizeConfig.widthMultiplier,
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Expanded(child: Container()),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SmoothPageIndicator(
-                  controller: boardViewController, // PageController
-                  count: widget.lists.length + 1,
-                  effect: WormEffect(
-                    radius: 50,
-                    dotHeight: 12,
-                    dotWidth: 12,
-                    dotColor: Colors.grey[400],
-                    activeDotColor: Colors.blueGrey[300],
-                  ),
-                  onDotClicked: (index) {}),
-            ),
-            Expanded(child: Container()),
-          ]),
-        ),
-      ),
+      // Positioned(
+      //   bottom: -40,
+      //   child: Container(
+      //     height: 100,
+      //     width: 100*SizeConfig.widthMultiplier,
+      //     child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      //       Expanded(child: Container()),
+      //       Padding(
+      //         padding: const EdgeInsets.all(8.0),
+      //         child: SmoothPageIndicator(
+      //             controller: boardViewController, // PageController
+      //             count: widget.lists.length + 1,
+      //             effect: WormEffect(
+      //               radius: 50,
+      //               dotHeight: 12,
+      //               dotWidth: 12,
+      //               dotColor: Colors.grey[400],
+      //               activeDotColor: Colors.blueGrey[300],
+      //             ),
+      //             onDotClicked: (index) {}),
+      //       ),
+      //       Expanded(child: Container()),
+      //     ]),
+      //   ),
+      // ),
     ];
     bool isInBottomWidget = false;
     if (dy != null) {

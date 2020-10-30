@@ -10,9 +10,11 @@ class SelectTaskMembers extends StatefulWidget {
     Key key,
     @required this.kanbanController,
     @required this.listOfTaskDoers,
+    @required this.actionString,
   }) : super(key: key);
 
   final List listOfTaskDoers;
+  final String actionString;
   final KanbanController kanbanController;
 
   @override
@@ -30,7 +32,7 @@ class _SelectTaskMembersState extends State<SelectTaskMembers> {
       if (idx >= 0) {
         selectedTaskMembers.add(widget.kanbanController.channelMembers[idx]);
       }
-    });
+    }); 
   }
 
   @override
@@ -117,7 +119,7 @@ class _SelectTaskMembersState extends State<SelectTaskMembers> {
               height: 50,
               width: 60 * SizeConfig.widthMultiplier,
               child: Text(
-                "Assign",
+                widget.actionString,
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

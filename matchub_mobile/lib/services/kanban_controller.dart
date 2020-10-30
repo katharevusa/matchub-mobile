@@ -10,6 +10,7 @@ class KanbanController with ChangeNotifier {
   List<Profile> channelMembers = [];
   List<Profile> channelAdmins = [];
   Map<String, dynamic> labels = {};
+  Map<String, dynamic> filterOptions = {};
   // {
   //   "Design": "#d11141",
   //   "Mapping": "#00b159",
@@ -78,30 +79,64 @@ class KanbanController with ChangeNotifier {
 
 //=======================================================================
 //filtering methods
-  filterBy(filterOptions) async {
+  filter() async {
     List accountIds = List.of(filterOptions['filteredAssignees'])
         .map((e) => e.accountId)
         .toList();
-    List filterlabels = List.of(filterOptions['labels']).toList();
-    print(kanban.taskColumns[1].listOfTasks.length);
-    print(filteredKanban.taskColumns[1].listOfTasks.length);
-    print(kanban == filteredKanban);
+    List filterlabels = List.of(
+        (Map<String, dynamic>.from(filterOptions['filteredLabels']))
+            .keys
+            .toList());
+    // print(kanban.taskColumns[1].listOfTasks.length);
+    // print(filteredKanban.taskColumns[1].listOfTasks.length);
+    // print(kanban == filteredKanban);
 
-    print(kanban.taskColumns[0] == filteredKanban.taskColumns[0]);
+    // print(kanban.taskColumns[0] == filteredKanban.taskColumns[0]);
     setFilteredKanban();
     if (accountIds.length > 0) {
+      filteredKanban.taskColumns.forEach(
+        (column) {
+          column.listOfTasks.retainWhere((task) =>
+              task.taskDoers
+                  .indexWhere((doer) => accountIds.contains(doer.accountId)) >=
+              0);
+        },
+      );
+    }
+    if (filterOptions['filteredLabels'].length > 0) {
       filteredKanban.taskColumns.forEach((column) {
         column.listOfTasks.retainWhere((task) =>
-            task.taskDoers
-                .indexWhere((doer) => accountIds.contains(doer.accountId)) >=
+            filterlabels.indexWhere(
+                (label) => task.labelAndColour.containsKey(label)) >=
             0);
       });
     }
-    if (filterOptions['labels'].length > 0) {
-      filteredKanban.taskColumns.forEach((column) {
-        column.listOfTasks.retainWhere(
-            (task) => filterlabels.indexWhere((label) => task.labelAndColour.containsKey(label)) >=0);
-      });
+    if (!filterOptions['none']) {
+      print(filterOptions['deadlines']);
+      if (filterOptions['deadlines']['showMyTasks']) {
+        filteredKanban.taskColumns.forEach((column) {
+          column.listOfTasks.retainWhere(
+              (task) => task.taskLeaderId == filterOptions['accountId']);
+        });
+      }
+      DateTime today = DateTime.now();
+      DateTime _lastDayOfWeek =
+          today.add(new Duration(days: 7 - today.weekday));
+      DateTime _lastDayOfNextWeek =
+          today.add(new Duration(days: 14 - today.weekday));
+      if (filterOptions['deadlines']['thisWeek']) {
+        filteredKanban.taskColumns.forEach((column) {
+          column.listOfTasks.retainWhere(
+              (task) => task.expectedDeadline.isBefore(_lastDayOfWeek));
+        });
+      }
+      if (filterOptions['deadlines']['nextWeek']) {
+        filteredKanban.taskColumns.forEach((column) {
+          column.listOfTasks.retainWhere((task) =>
+              task.expectedDeadline.isBefore(_lastDayOfNextWeek) &&
+              task.expectedDeadline.isAfter(_lastDayOfWeek));
+        });
+      }
     }
     notifyListeners();
   }
@@ -115,6 +150,7 @@ class KanbanController with ChangeNotifier {
     final task = TaskEntity.fromJson(response);
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
     print(task);
+    filter();
     notifyListeners();
   }
 
@@ -131,6 +167,7 @@ class KanbanController with ChangeNotifier {
               "kanbanboardId": kanban.kanbanBoardId
             }));
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     print(task);
     notifyListeners();
   }
@@ -146,6 +183,8 @@ class KanbanController with ChangeNotifier {
     }
     final response = await ApiBaseHelper.instance.postProtected(url);
     task = TaskEntity.fromJson(response);
+    await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
@@ -156,6 +195,7 @@ class KanbanController with ChangeNotifier {
             {"labelAndColour": task.labelAndColour, "taskId": task.taskId}));
     task = TaskEntity.fromJson(response);
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
@@ -177,6 +217,7 @@ class KanbanController with ChangeNotifier {
           "authenticated/deleteTask?taskId=${task.taskId}&deletorId=$deletorId&kanbanBoardId=${kanban.kanbanBoardId}";
       final response = await ApiBaseHelper.instance.putProtected(url);
       await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+      filter();
       notifyListeners();
     });
   }
@@ -214,6 +255,7 @@ class KanbanController with ChangeNotifier {
               "editorId": editorId
             }));
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
@@ -227,6 +269,7 @@ class KanbanController with ChangeNotifier {
               "editorId": editorId
             }));
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
@@ -239,13 +282,16 @@ class KanbanController with ChangeNotifier {
               "deletorId": deletorId
             }));
     await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    filter();
     notifyListeners();
   }
 
 //========================================================================
 //reordering methods
-  reorderTaskSequence(arrangerId) async {
-    var newKanbanOrder = {};
+
+  updateTaskSequenceBackend(arrangerId) async {
+    var newKanbanOrder =
+        {}; //getting the state of the current updated local kanban board, and posting to backend
     [
       ...kanban.taskColumns.map((e) => {
             "${e.taskColumnId}": [...e.listOfTasks.map((e) => e.taskId)]
@@ -253,7 +299,7 @@ class KanbanController with ChangeNotifier {
     ].forEach((element) {
       newKanbanOrder.addAll(element);
     });
-    print(newKanbanOrder);
+    print("Kanban State: " + newKanbanOrder.toString());
     final response = await ApiBaseHelper.instance
         .putProtected("authenticated/rearrangeTasks",
             body: json.encode({
@@ -262,27 +308,58 @@ class KanbanController with ChangeNotifier {
               "columnIdAndTaskIdSequence": newKanbanOrder
             }));
     kanban = KanbanEntity.fromJson(response);
+    setFilteredKanban();
     notifyListeners();
   }
 
-  reorderTaskSequenceInTaskView(TaskColumnEntity currentColumn,
-      TaskColumnEntity newColumn, TaskEntity task) {
-    currentColumn.listOfTasks.remove(task);
-    newColumn.listOfTasks.add(task);
-    task.taskColumn = newColumn;
-    ApiBaseHelper.instance.putProtected(
-        "authenticated/updateTaskStatus?taskId=${task.taskId}&newColumnId=${newColumn.taskColumnId}&oldColumnId=${currentColumn.taskColumnId}");
-    notifyListeners();
+  reorderTaskSequence(
+      oldListIndex, newListIndex, newItemIndex, task, arrangerId) async {
+    int indexToRemove = kanban.taskColumns[oldListIndex].listOfTasks.indexWhere((taskToMove) => taskToMove.taskId == task.taskId);
+    TaskEntity taskToMove = kanban.taskColumns[oldListIndex].listOfTasks.removeAt(indexToRemove);
+
+    if (filteredKanban.taskColumns[newListIndex].listOfTasks.length == 1) {
+      //adding to back of original kanban since placed in empty column
+      kanban.taskColumns[newListIndex].listOfTasks.add(taskToMove);
+    } else if (newItemIndex == 0) {
+      //filteredView inserted at first position, find the next item in filtered view, then find in kanban view then insert
+      TaskEntity taskAfter = filteredKanban.taskColumns[newListIndex].listOfTasks[newItemIndex + 1];
+      int indexOfTaskAfter = kanban.taskColumns[newListIndex].listOfTasks.indexWhere((taskAfterOriginal) =>
+              taskAfterOriginal.taskId == taskAfter.taskId);
+      kanban.taskColumns[newListIndex].listOfTasks.insert(indexOfTaskAfter, taskToMove);
+    } else {
+      TaskEntity taskBefore = filteredKanban
+          .taskColumns[newListIndex].listOfTasks[newItemIndex - 1];
+      int indexOfTaskBefore = kanban.taskColumns[newListIndex].listOfTasks.indexWhere((taskBeforeOriginal) =>
+              taskBeforeOriginal.taskId == taskBefore.taskId);
+      kanban.taskColumns[newListIndex].listOfTasks.insert(indexOfTaskBefore + 1, taskToMove);
+    }
+    await updateTaskSequenceBackend(arrangerId);
+    filter();
+  }
+
+  reorderTaskSequenceInTaskView(
+      currentColumnIndex, newColumnIndex, TaskEntity task, arrangerId) async {
+    task.taskColumn = filteredKanban.taskColumns[newColumnIndex];
+    filteredKanban.taskColumns[currentColumnIndex].listOfTasks.remove(task);
+    filteredKanban.taskColumns[newColumnIndex].listOfTasks.add(task);
+    kanban.taskColumns[currentColumnIndex].listOfTasks.removeWhere((e) => e.taskId == task.taskId);
+    kanban.taskColumns[newColumnIndex].listOfTasks.add(task);
+    // final response = await ApiBaseHelper.instance.putProtected(
+    //     "authenticated/updateTaskStatus?taskId=${task.taskId}&newColumnId=${kanban.taskColumns[newColumnIndex].taskColumnId}&oldColumnId=${kanban.taskColumns[currentColumnIndex].taskColumnId}");
+    // await retrieveKanbanByKanbanBoardId(kanban.kanbanBoardId);
+    // // filter();
+    await updateTaskSequenceBackend(arrangerId);
   }
 
   reorderTaskColumns(editorId) async {
     String columnSequence = "";
-    kanban.taskColumns.forEach((element) {
+    filteredKanban.taskColumns.forEach((element) {
       columnSequence += "&columnIdSequence=${element.taskColumnId}";
     });
     final response = await ApiBaseHelper.instance.putProtected(
         "authenticated/rearrangeColumn?editorId=$editorId&kanbanBoardId=${kanban.kanbanBoardId}$columnSequence");
     kanban = KanbanEntity.fromJson(response);
+    filter();
     notifyListeners();
   }
 }

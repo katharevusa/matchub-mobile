@@ -16,9 +16,9 @@ class PCarousel extends StatelessWidget {
       child: CarouselSlider(
         options: CarouselOptions(
             autoPlay: false,
-            aspectRatio: 1.8,
+            aspectRatio: 1.6,
             viewportFraction: 1.0,
-            enlargeCenterPage: true,
+            enlargeCenterPage: false,
             enableInfiniteScroll: false),
         items: (project.photos.isNotEmpty)
             ? getPhotoList(project.photos)
@@ -42,6 +42,7 @@ class PCarousel extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   Container(
+                    height: 50*SizeConfig.heightMultiplier,
                       width: 100 * SizeConfig.widthMultiplier,
                       child: AttachmentImage(item)),
                   Positioned(

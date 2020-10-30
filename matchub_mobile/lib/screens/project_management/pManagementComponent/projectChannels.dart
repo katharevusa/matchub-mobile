@@ -20,13 +20,6 @@ class PManagementChannels extends StatefulWidget {
 
 class _PManagementChannelsState extends State<PManagementChannels> {
   Stream chatRooms;
-  List<Color> channelColors = <Color>[
-    Color(0xffFFC6D9),
-    Color(0xffFFE1C6),
-    Color(0xff48284A),
-    Color(0xff916C80),
-    Color(0xffFFF7AE),
-  ];
   @override
   void initState() {
     getProjectChannels();
@@ -71,17 +64,11 @@ class _PManagementChannelsState extends State<PManagementChannels> {
                 ),
                 padding: const EdgeInsets.all(2.0),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => ChannelsScreen(
-                            project: widget.project,
-                          )));
+                  Navigator.of(context).pushNamed(ChannelsScreen.routeName, arguments: widget.project,);
                 },
               ),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => ChannelsScreen(
-                          project: widget.project,
-                        )));
+                  Navigator.of(context).pushNamed(ChannelsScreen.routeName, arguments: widget.project,);
               },
             ),
             snapshot.data.documents.length != 0
@@ -122,8 +109,6 @@ class _PManagementChannelsState extends State<PManagementChannels> {
                                     color: Colors.white,
                                   ),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
                                     children: [
                                       Row(
                                         children: [
@@ -157,6 +142,8 @@ class _PManagementChannelsState extends State<PManagementChannels> {
                                         child: Text(
                                           snapshot.data.documents[index]
                                               .data()['name'],
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w600),

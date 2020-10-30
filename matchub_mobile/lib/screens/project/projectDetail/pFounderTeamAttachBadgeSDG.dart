@@ -23,7 +23,7 @@ class PFounderTeamAttachBadgeSDG extends StatelessWidget {
         ...buildTeamMemberRow(project.teamMembers),
         ...buildAttachments(),
         ...buildBadgeRow(),
-        ...buildSDGRow(),
+        // ...buildSDGRow(),
       ],
     );
   }
@@ -116,7 +116,7 @@ class PFounderTeamAttachBadgeSDG extends StatelessWidget {
         // padding: EdgeInsets.all(0),
         // margin: EdgeInsets.all(0),
         // color: AppTheme.appBackgroundColor,
-        height: 16 * SizeConfig.heightMultiplier,
+        height: 14 * SizeConfig.heightMultiplier,
         child: ListView.builder(
             cacheExtent: 20,
             scrollDirection: Axis.horizontal,

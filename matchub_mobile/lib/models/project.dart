@@ -30,6 +30,8 @@ class Project {
   List fundsCampaign;
   List meetings;
   List listOfRequests;
+  num reputationPoints;
+  num projectPoolPoints;
   List sdgs;
   List kpis;
   List<TruncatedProfile> teamMembers;

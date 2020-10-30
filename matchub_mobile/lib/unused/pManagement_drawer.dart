@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/project/project_screen.dart';
+import 'package:matchub_mobile/unused/project_screen.dart';
 import 'package:matchub_mobile/screens/project_management/notification/viewAllNotification.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/teamMemberManagement.dart';
 
-import 'channels/channel_screen.dart';
+import '../screens/project_management/channels/channel_screen.dart';
 
 class ProjectManagementDrawer extends StatelessWidget {
   final Project project;

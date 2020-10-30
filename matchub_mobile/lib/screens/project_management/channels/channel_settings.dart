@@ -8,6 +8,7 @@ import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
+import 'channel_screen.dart';
 import 'edit_channel.dart';
 import 'edit_members.dart';
 
@@ -34,7 +35,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
 
   exitChannelSettings(value) {
     if (value != null && value) {
-      Navigator.of(context).popUntil(ModalRoute.withName("/"));
+      Navigator.of(context).popUntil(ModalRoute.withName(ChannelsScreen.routeName));
     }
   }
 
@@ -62,6 +63,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
         actions: [
           (loggedInUserIsAdmin || loggedInUserIsOwner)
               ? PopupMenuButton(
+                  padding: EdgeInsets.zero,
                   offset: Offset(0, 50),
                   icon: Icon(
                     FlutterIcons.ellipsis_v_faw5s,
@@ -71,6 +73,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                   itemBuilder: (BuildContext context) => [
                         PopupMenuItem(
                           child: ListTile(
+                            contentPadding: EdgeInsets.zero,
                             onTap: () async {
                               await Navigator.push(
                                 context,
@@ -92,6 +95,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                         ),
                         PopupMenuItem(
                           child: ListTile(
+                            contentPadding: EdgeInsets.zero,
                             onTap: () async {
                               await Navigator.push(
                                 context,
@@ -113,6 +117,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                         PopupMenuItem(
                             enabled: loggedInUserIsOwner,
                             child: ListTile(
+                              contentPadding: EdgeInsets.zero,
                               onTap: () {
                                 if (loggedInUserIsOwner) {
                                   DatabaseMethods()
@@ -123,7 +128,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                               dense: true,
                               leading: Icon(FlutterIcons.trash_alt_faw5s),
                               title: Text(
-                                "Delete Chat",
+                                "Delete Channel",
                                 style: TextStyle(
                                     fontSize: SizeConfig.textMultiplier * 1.8),
                               ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/teamMemberManagement.dart';
 import 'package:matchub_mobile/screens/resource/resource_incoming/resource_incoming_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_outgoing/resource_outgoing_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
@@ -29,7 +31,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
   Profile creator;
   Future loadFuture;
   Project project;
-
+  Profile follower;
   @override
   void initState() {
     loadFuture = loading();
@@ -53,11 +55,24 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
     project = Project.fromJson(responseData);
   }
 
+  retrieveNewFollower() async {
+    final url =
+        'authenticated/getAccount/${widget.announcement.newFollowerAndNewPosterProfileId}';
+    final responseData = await _helper.getProtected(url,
+        accessToken: Provider.of<Auth>(context, listen: false).accessToken);
+    follower = Profile.fromJson(responseData);
+  }
+
   loading() async {
     if (widget.announcement.creatorId != null) {
       await getCreator();
     }
-    await retrieveProject();
+    if (widget.announcement.projectId != null) {
+      await retrieveProject();
+    }
+    if (widget.announcement.newFollowerAndNewPosterProfileId != null) {
+      await retrieveNewFollower();
+    }
     await readNotification();
   }
 
@@ -268,18 +283,19 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                                       ),
                                     ))
                                 : widget.announcement.type ==
-                                        "NEW_PROFILE_FOLLOWER"
+                                            "NEW_PROFILE_FOLLOWER" ||
+                                        widget.announcement.type ==
+                                            "NEW_PROJECT_FOLLOWER"
                                     ? GestureDetector(
                                         onTap: () {
                                           Navigator.of(
                                             context,
                                             rootNavigator: true,
-                                          ).pushNamed(
-                                              ProjectDetailScreen.routeName,
-                                              arguments: project);
+                                          ).pushNamed(ProfileScreen.routeName,
+                                              arguments: follower.accountId);
                                         },
                                         child: Text(
-                                          creator.name,
+                                          follower.name,
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w400,
@@ -293,8 +309,6 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                                         "RESOURCE_REQUEST_ACCEPTED" ||
                                     widget.announcement.type ==
                                         "RESOURCE_REQUEST_REJECTED"
-                                // widget.announcement.type ==
-                                //     "DONATE_TO_PROJECT"
                                 ? GestureDetector(
                                     onTap: () {
                                       Navigator.push(
@@ -316,14 +330,18 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
                             widget.announcement.type == "JOIN_PROJ_REQUEST"
                                 ? GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          new MaterialPageRoute(
-                                              builder: (context) =>
-                                                  OutgoingRequestScreen()));
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          settings: RouteSettings(
+                                              name: "/team-members"),
+                                          builder: (_) => TeamMembersManagement(
+                                            project: project,
+                                          ),
+                                        ),
+                                      );
                                     },
                                     child: Text(
-                                      "Check out the request",
+                                      "Go to Join project request",
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w400,

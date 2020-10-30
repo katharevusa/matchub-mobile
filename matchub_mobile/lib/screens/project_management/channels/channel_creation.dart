@@ -5,6 +5,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class _ChannelCreationState extends State<ChannelCreation> {
     "projectId": null,
     "members": [],
     "admins": [],
-    "recentMessage":{}
+    "recentMessage": {}
   };
 
   @override
@@ -79,9 +80,7 @@ class _ChannelCreationState extends State<ChannelCreation> {
               contributors: contributors,
               filteredContributors: filteredContributors,
               channelMap: channelMap),
-          InfoPage(
-              channelMap: channelMap,
-              createChannelChat: DatabaseMethods().createChannel),
+          InfoPage(channelMap: channelMap, toCreate: true),
         ],
       ),
     );
@@ -169,6 +168,11 @@ class _SelectMembersState extends State<SelectMembers> {
           },
           itemCount: widget.filteredContributors.length,
         ),
+        if (widget.contributors.isEmpty)
+          Container(
+              height: 50 * SizeConfig.heightMultiplier,
+              child:
+                  Center(child: Text("No Team members in this project yet...")))
       ]),
     );
   }
@@ -178,20 +182,19 @@ class InfoPage extends StatelessWidget {
   InfoPage({
     Key key,
     @required this.channelMap,
-    @required this.createChannelChat,
+    @required this.toCreate,
   }) : super(key: key);
-
+  final bool toCreate; //to create or edit
   final Map<String, dynamic> channelMap;
   final GlobalKey<FormState> _formKey = GlobalKey();
-  final Function createChannelChat;
+  // final Function createChannelChat; //either creation or editing
 
   createKanbanBoard(channelId, projectId) async {
-    await ApiBaseHelper.instance.postProtected("authenticated/createKanbanBoard", body: json.encode({
-      "channelUid": channelId,
-      "projectId": projectId
-    }));
+    await ApiBaseHelper.instance.postProtected(
+        "authenticated/createKanbanBoard",
+        body: json.encode({"channelUid": channelId, "projectId": projectId}));
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -229,6 +232,8 @@ class InfoPage extends StatelessWidget {
                     keyboardType: TextInputType.multiline,
                     minLines: 1,
                     maxLines: 2,
+                    maxLength: 30,
+                    maxLengthEnforced: true,
                     initialValue: channelMap['name'],
                     onChanged: (value) {
                       channelMap['name'] = value;
@@ -283,8 +288,16 @@ class InfoPage extends StatelessWidget {
                         if (!_formKey.currentState.validate()) {
                           return;
                         }
-                        String newChannelId = await createChannelChat(channelMap);
-                        await createKanbanBoard(newChannelId, channelMap['projectId']);
+
+                        if (toCreate) {
+                          String newChannelId =
+                              await DatabaseMethods().createChannel(channelMap);
+                          await createKanbanBoard(
+                              newChannelId, channelMap['projectId']);
+                        } else {
+                          String newChannelId =
+                              await DatabaseMethods().updateChannel(channelMap);
+                        }
                         Navigator.pop(context, true);
                       },
                       child: Text("Submit",

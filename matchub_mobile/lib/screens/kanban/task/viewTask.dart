@@ -172,6 +172,7 @@ class _ViewTaskState extends State<ViewTask> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                             visualDensity: VisualDensity.compact,
                             onTap: () {
+                              FocusManager.instance.primaryFocus.unfocus(); //VERY IMPORTANT
                               setState(() => inEditMode = !inEditMode);
                               Navigator.pop(context);
                             },
@@ -413,14 +414,14 @@ class _ViewTaskState extends State<ViewTask> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               alignment: Alignment.bottomCenter,
-              // height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+              width: SizeConfig.widthMultiplier * 100,
               child: Row(
                 children: [
                   Expanded(
                     child: TextFormField(
                         focusNode: commentFocus,
-                        onEditingComplete: () => commentFocus.unfocus(),
+                        onEditingComplete: () =>
+                            FocusScope.of(context).unfocus(),
                         onChanged: (val) {
                           commentContent = val.trim();
                         },
@@ -538,6 +539,7 @@ class _ViewTaskState extends State<ViewTask> {
           onChanged: (value) {
             widget.task.taskTitle = value;
           },
+          onEditingComplete: () => FocusScope.of(context).unfocus(),
           validator: (val) {
             if (val.isEmpty) {
               return "Please input a task name";
@@ -554,6 +556,7 @@ class _ViewTaskState extends State<ViewTask> {
       TextFormField(
           maxLines: 6,
           minLines: 1,
+          // onEditingComplete: () => FocusScope.of(context).unfocus(),
           enableInteractiveSelection: inEditMode,
           initialValue: widget.task.taskDescription,
           readOnly: !inEditMode,
@@ -839,11 +842,13 @@ class _ViewTaskState extends State<ViewTask> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0)), //this right here
       child: SelectTagsDialog(
-          kanbanController: kanbanController, ),
+        existingLabels: widget.task.labelAndColour,
+        kanbanController: kanbanController,
+      ),
     );
     showDialog(context: context, builder: (BuildContext context) => tagsDialog)
         .then((val) {
-      if (val != null && val.isNotEmpty) {
+      if (val != null) {
         setState(() {
           widget.task.labelAndColour = val;
         });
@@ -859,7 +864,9 @@ class _ViewTaskState extends State<ViewTask> {
     Dialog channelMembersDialog = Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: SelectTaskMembers(
-          kanbanController: kanbanController, listOfTaskDoers: widget.task.taskDoers),
+          actionString: "Assign",
+          kanbanController: kanbanController,
+          listOfTaskDoers: widget.task.taskDoers),
     );
     showDialog(
         context: context,

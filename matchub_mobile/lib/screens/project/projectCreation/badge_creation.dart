@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:badges/badges.dart';
 import 'package:country_list_pick/country_list_pick.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -21,6 +26,7 @@ class _BadgeCreationState extends State<BadgeCreation> {
   List<String> badgesIcon;
   Future loadBadges;
   int selectedBadgeIndex;
+  File customisedBadge;
   initState() {
     loadBadges = getAllProjectBadgeIcons();
     super.initState();
@@ -32,9 +38,7 @@ class _BadgeCreationState extends State<BadgeCreation> {
   TextEditingController _badgeTitleController = new TextEditingController();
   getAllProjectBadgeIcons() async {
     final url = 'authenticated/getProjectBadgeIcons';
-    final response = await _helper.getWODecode(
-            url)
-        as List;
+    final response = await _helper.getWODecode(url) as List;
     badgesIcon = List<String>.from(response);
   }
 
@@ -54,11 +58,13 @@ class _BadgeCreationState extends State<BadgeCreation> {
                   backgroundColor: Colors.white,
                   body: SingleChildScrollView(
                     child: Column(children: <Widget>[
-                      Container( 
+                      Container(
                         padding: EdgeInsets.all(10),
                         margin: EdgeInsets.all(10),
                         child: TextFormField(
-                          initialValue: widget.project["badgeTitle"] != null ? widget.project["badgeTitle"] : "",
+                          initialValue: widget.project["badgeTitle"] != null
+                              ? widget.project["badgeTitle"]
+                              : "",
                           decoration: InputDecoration(hintText: 'Badge Title'),
                           // controller: _badgeTitleController,
                           onChanged: (text) {
@@ -70,8 +76,9 @@ class _BadgeCreationState extends State<BadgeCreation> {
                       ),
                       Text("Please select your project's badge icon"),
                       SizedBox(height: 20),
-                      if (selectedBadgeIndex == null && widget.project['badgeIcon'] !=null)
-                      AttachmentImage(widget.project['badgeIcon']),
+                      if (selectedBadgeIndex == null &&
+                          widget.project['badgeIcon'] != null)
+                        AttachmentImage(widget.project['badgeIcon']),
                       if (selectedBadgeIndex != null)
                         AttachmentImage(badgesIcon[selectedBadgeIndex]),
                       RaisedButton(
@@ -91,7 +98,32 @@ class _BadgeCreationState extends State<BadgeCreation> {
                             }
                           });
                         },
-                      )
+                      ),
+                      /*  RaisedButton(
+                        child: Text("Upload Customised badge"),
+                        onPressed: () async {
+                          FilePickerResult result =
+                              await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: ['jpg', 'png'],
+                          );
+
+                          if (result != null) {
+                            setState(() {
+                              customisedBadge = File(result.files.single.path);
+                              widget.project['badgeCustomisedIcon'] =
+                                  customisedBadge;
+                            });
+                            PlatformFile file = result.files.first;
+
+                            print(file.name);
+                            print(file.bytes);
+                            print(file.size);
+                            print(file.extension);
+                            print(file.path);
+                          }
+                        },
+                      ),*/
                     ]),
                   ),
                 ),

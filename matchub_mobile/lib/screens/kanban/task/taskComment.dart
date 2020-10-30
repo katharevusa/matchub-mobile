@@ -93,12 +93,16 @@ class _TaskCommentCardState extends State<TaskCommentCard> {
                                     EdgeInsets.symmetric(horizontal: 8),
                                 visualDensity: VisualDensity.compact,
                                 onTap: () {
-                                  Clipboard.setData(new ClipboardData(
-                                      text: widget.comment.content),);
+                                  Clipboard.setData(
+                                    new ClipboardData(
+                                        text: widget.comment.content),
+                                  );
                                   Toast.show("Copied to clipboard", context,
                                       duration: Toast.LENGTH_SHORT,
                                       gravity: Toast.BOTTOM);
-                                  Navigator.pop(context);
+                                  FocusManager.instance.primaryFocus
+                                      .unfocus(); //VERY IMPORTANT
+                                  // Navigator.pop(context);
                                 },
                                 dense: true,
                                 leading: Icon(Icons.copy_rounded),
@@ -120,6 +124,8 @@ class _TaskCommentCardState extends State<TaskCommentCard> {
                                       EdgeInsets.symmetric(horizontal: 8),
                                   visualDensity: VisualDensity.compact,
                                   onTap: () async {
+                                  FocusManager.instance.primaryFocus
+                                      .unfocus(); //VERY IMPORTANT
                                     await Provider.of<KanbanController>(context,
                                             listen: false)
                                         .deleteComment(

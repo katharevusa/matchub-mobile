@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
-import 'package:matchub_mobile/screens/project/drawerMenu.dart';
+import 'package:matchub_mobile/unused/drawerMenu.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/project_management.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/teamMember.dart';
@@ -313,7 +313,27 @@ class BottomScreen extends StatelessWidget {
                                 size: 5,
                                 animatedDuration:
                                     const Duration(milliseconds: 2500),
-                                currentValue: 80,
+                                currentValue: myProfile
+                                        .projectsOwned[index].startDate
+                                        .isAfter(DateTime.now())
+                                    ? 0
+                                    : DateTime.now().isAfter(myProfile
+                                            .projectsOwned[index].endDate)
+                                        ? 100
+                                        : (DateTime.now()
+                                                    .difference(myProfile
+                                                        .projectsOwned[index]
+                                                        .startDate)
+                                                    .inDays /
+                                                (myProfile.projectsOwned[index]
+                                                    .endDate
+                                                    .difference(myProfile
+                                                        .projectsOwned[index]
+                                                        .startDate)
+                                                    .inDays
+                                                    .toDouble()) *
+                                                100)
+                                            .round(),
                               ),
                             ),
                             Divider(),
@@ -444,7 +464,26 @@ class BottomScreen extends StatelessWidget {
                                 size: 5,
                                 animatedDuration:
                                     const Duration(milliseconds: 2500),
-                                currentValue: 80,
+                                currentValue: myProfile
+                                        .projectsJoined[index].startDate
+                                        .isAfter(DateTime.now())
+                                    ? 0
+                                    : DateTime.now().isAfter(myProfile
+                                            .projectsJoined[index].endDate)
+                                        ? 100
+                                        : (DateTime.now()
+                                                .difference(myProfile
+                                                    .projectsJoined[index]
+                                                    .startDate)
+                                                .inDays /
+                                            (myProfile
+                                                .projectsJoined[index].endDate
+                                                .difference(myProfile
+                                                    .projectsJoined[index]
+                                                    .startDate)
+                                                .inDays
+                                                .toDouble()) *
+                                            100),
                                 // displayText: '%',
                               ),
                             ),

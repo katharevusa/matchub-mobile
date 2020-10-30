@@ -18,6 +18,12 @@ class Announcement {
   List viewedUserIds;
   num creatorId;
 
+  num resourceId;
+  num resourceRequestId;
+  num joinRequestId;
+  String newFollowerAndNewPosterUUID;
+  num newFollowerAndNewPosterProfileId;
+
   factory Announcement.fromJson(Map<String, dynamic> json) =>
       _$AnnouncementFromJson(json);
   Map<String, dynamic> toJson() => _$AnnouncementToJson(this);

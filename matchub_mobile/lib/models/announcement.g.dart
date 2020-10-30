@@ -18,7 +18,14 @@ Announcement _$AnnouncementFromJson(Map<String, dynamic> json) {
     ..postId = json['postId'] as String
     ..type = json['type'] as String
     ..viewedUserIds = json['viewedUserIds'] as List
-    ..creatorId = json['creatorId'] as num;
+    ..creatorId = json['creatorId'] as num
+    ..resourceId = json['resourceId'] as num
+    ..resourceRequestId = json['resourceRequestId'] as num
+    ..joinRequestId = json['joinRequestId'] as num
+    ..newFollowerAndNewPosterUUID =
+        json['newFollowerAndNewPosterUUID'] as String
+    ..newFollowerAndNewPosterProfileId =
+        json['newFollowerAndNewPosterProfileId'] as num;
 }
 
 Map<String, dynamic> _$AnnouncementToJson(Announcement instance) =>
@@ -33,5 +40,11 @@ Map<String, dynamic> _$AnnouncementToJson(Announcement instance) =>
       'postId': instance.postId,
       'type': instance.type,
       'viewedUserIds': instance.viewedUserIds,
-      'creatorId': instance.creatorId
+      'creatorId': instance.creatorId,
+      'resourceId': instance.resourceId,
+      'resourceRequestId': instance.resourceRequestId,
+      'joinRequestId': instance.joinRequestId,
+      'newFollowerAndNewPosterUUID': instance.newFollowerAndNewPosterUUID,
+      'newFollowerAndNewPosterProfileId':
+          instance.newFollowerAndNewPosterProfileId
     };
