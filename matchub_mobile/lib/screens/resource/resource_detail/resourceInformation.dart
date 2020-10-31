@@ -5,6 +5,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:share/share.dart';
 
@@ -104,6 +105,21 @@ class _ResourceInformationState extends State<ResourceInformation> {
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
+                                widget.resource.country != null
+                                    ? Row(
+                                        children: [
+                                          Icon(
+                                            Icons.location_on,
+                                            color: AppTheme.project5,
+                                          ),
+                                          Text(widget.resource.country,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.grey)),
+                                        ],
+                                      )
+                                    : Container(),
                                 Text(
                                     'Resource category: ' +
                                         category.resourceCategoryName,

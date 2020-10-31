@@ -23,7 +23,8 @@ Resources _$ResourcesFromJson(Map<String, dynamic> json) {
     ..photos = json['photos'] as List
     ..spotlight = json['spotlight'] as bool
     ..spotlightEndTime = json['spotlightEndTime'] ?? ""
-    ..matchedProjectId = json['matchedProjectId'] as num;
+    ..matchedProjectId = json['matchedProjectId'] as num
+    ..country = json['country'] as String;
 }
 
 Map<String, dynamic> _$ResourcesToJson(Resources instance) => <String, dynamic>{
@@ -41,5 +42,6 @@ Map<String, dynamic> _$ResourcesToJson(Resources instance) => <String, dynamic>{
       'photos': instance.photos,
       'spotlight': instance.spotlight,
       'spotlightEndTime': instance.spotlightEndTime,
-      'matchedProjectId': instance.matchedProjectId
+      'matchedProjectId': instance.matchedProjectId,
+      'country': instance.country
     };
