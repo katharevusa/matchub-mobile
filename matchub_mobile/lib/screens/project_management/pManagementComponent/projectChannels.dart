@@ -214,18 +214,19 @@ class _ChannelCardState extends State<ChannelCard> {
                     //     )
                     //   ],
                     // ),
-                     Flexible(flex:1,
-                                            child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            widget.channelName,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w600),
-                          ),
+                    Flexible(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          widget.channelName,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                      ),
                     ),
-                     ),
                     RaisedButton(
                       elevation: 0,
                       padding: const EdgeInsets.all(10.0),

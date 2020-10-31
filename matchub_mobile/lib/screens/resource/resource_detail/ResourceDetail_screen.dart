@@ -94,7 +94,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
         resource.resourceOwnerId ==
                 Provider.of<Auth>(context, listen: false).myProfile.accountId
             ? Container()
-            : ResourceActions(resource),
+            : ResourceActions(resource, Provider.of<Auth>(context).myProfile),
       ]),
     );
   }
