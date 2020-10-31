@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +54,7 @@ class _ViewTaskState extends State<ViewTask> {
       fontSize: 2 * SizeConfig.textMultiplier);
   // VideoPlayerController _controller;
   bool isTaskReporter = false;
+  bool isChannelAdmin = false;
   bool inEditMode = false;
   Profile taskReporter;
   bool isLoading;
@@ -86,13 +89,22 @@ class _ViewTaskState extends State<ViewTask> {
             taskReporter.accountId == myProfile.accountId)) {
       isTaskReporter = true;
     }
+    if (Provider.of<KanbanController>(context, listen: false)
+            .channelAdmins
+            .indexWhere(
+                (element) => myProfile.accountId == element.accountId) >=
+        0) {
+      isChannelAdmin = true;
+    }
     setState(() {
       isLoading = false;
     });
   }
 
   generateVideoThumbnails() async {
+        print("sdfsdf");
     for (var doc in widget.task.documents.entries) {
+        print("sdfsdf");
       if (path.extension(doc.key) == '.mp4') {
         // print("sdfsdff");
         // _controller = VideoPlayerController.network(
@@ -104,14 +116,24 @@ class _ViewTaskState extends State<ViewTask> {
         //       print("sdfsdff");
         //     });
         //   });
-        // vidThumnails['videoPath'] = (await VideoThumbnail.thumbnailFile(
-        //   video: doc.value,
-        //   thumbnailPath: (await getTemporaryDirectory()).path,
-        //   imageFormat: ImageFormat.WEBP,
-        //   maxWidth: 140,
-        //   quality: 75,
-        // ));
-        setState(() {});
+        print(ApiBaseHelper.instance.baseUrl + doc.value.substring(30));
+        vidThumnails[doc.key] = await VideoThumbnail.thumbnailData(
+
+          video: ApiBaseHelper.instance.baseUrl + doc.value.substring(30),
+          // video: "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
+          // thumbnailPath: (await getTemporaryDirectory()).path, 
+          imageFormat: ImageFormat.WEBP,
+          maxWidth: 140,
+          quality: 30,
+        );      
+        // File file = new File(vidThumnails[doc.key]);
+        // print('exists ${file.existsSync()}');
+        // print("sdfsdf");
+        setState(() {
+
+        print(doc.value);
+          print("sdfsd");
+        });
       }
     }
   }
@@ -172,7 +194,8 @@ class _ViewTaskState extends State<ViewTask> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                             visualDensity: VisualDensity.compact,
                             onTap: () {
-                              FocusManager.instance.primaryFocus.unfocus(); //VERY IMPORTANT
+                              FocusManager.instance.primaryFocus
+                                  .unfocus(); //VERY IMPORTANT
                               setState(() => inEditMode = !inEditMode);
                               Navigator.pop(context);
                             },
@@ -185,6 +208,7 @@ class _ViewTaskState extends State<ViewTask> {
                             ),
                           ),
                         ),
+                        if(isChannelAdmin)
                         PopupMenuItem(
                           child: ListTile(
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
@@ -318,9 +342,9 @@ class _ViewTaskState extends State<ViewTask> {
                                         image: DecorationImage(
                                             image: (fileName == "Video" &&
                                                     vidThumnails.containsKey(
-                                                        document.value))
+                                                        document.key))
                                                 ? MemoryImage(vidThumnails[
-                                                    document.value])
+                                                    document.key])
                                                 : fileName == "Image"
                                                     ? NetworkImage(ApiBaseHelper
                                                             .instance.baseUrl +

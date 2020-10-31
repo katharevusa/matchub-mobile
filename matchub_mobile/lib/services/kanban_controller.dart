@@ -58,7 +58,7 @@ class KanbanController with ChangeNotifier {
   }
 
   setFilteredKanban() {
-    //fking deepcopy
+    //deepcopy
     filteredKanban = KanbanEntity()
       ..kanbanBoardId = kanban.kanbanBoardId
       ..projectId = kanban.kanbanBoardId

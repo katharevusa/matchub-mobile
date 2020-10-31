@@ -395,22 +395,42 @@ class _KanbanViewState extends State<KanbanView> {
         task.expectedDeadline.difference(DateTime.now()).inDays;
     var daysToDisplay = daysToDeadline.abs();
     return BoardItem(
-      onStartDragItem: (int listIndex, int itemIndex, BoardItemState state) {},
+      onStartDragItem: (int listIndex, int itemIndex, BoardItemState state) {
+        int loggedInUserId =
+            Provider.of<Auth>(context, listen: false).myProfile.accountId;
+        bool isChannelAdmin = Provider.of<KanbanController>(context, listen:false)
+                .channelAdmins
+                .indexWhere((element) => loggedInUserId == element.accountId) >=
+            0;
+        bool isTaskLeader = task.taskLeaderId == loggedInUserId;
+        return (isTaskLeader || isChannelAdmin);
+      },
       onDropItem: (int listIndex, int itemIndex, int oldListIndex,
           int oldItemIndex, BoardItemState state) {
-        //Used to update our local item data
-        var item =
-            filteredKanban.taskColumns[oldListIndex].listOfTasks[oldItemIndex];
-        filteredKanban.taskColumns[oldListIndex].listOfTasks
-            .removeAt(oldItemIndex);
-        filteredKanban.taskColumns[listIndex].listOfTasks
-            .insert(itemIndex, item);
-        kanbanController.reorderTaskSequence(
-            oldListIndex,
-            listIndex,
-            itemIndex,
-            item,
-            Provider.of<Auth>(context, listen: false).myProfile.accountId);
+        //must be this task leader or channel admin
+        int loggedInUserId =
+            Provider.of<Auth>(context, listen: false).myProfile.accountId;
+        bool isChannelAdmin = Provider.of<KanbanController>(context, listen:false)
+                .channelAdmins
+                .indexWhere((element) => loggedInUserId == element.accountId) >=
+            0;
+        bool isTaskLeader = task.taskLeaderId == loggedInUserId;
+
+        if (isChannelAdmin || isTaskLeader) {
+          //Used to update our local item data
+          var item = filteredKanban
+              .taskColumns[oldListIndex].listOfTasks[oldItemIndex];
+          filteredKanban.taskColumns[oldListIndex].listOfTasks
+              .removeAt(oldItemIndex);
+          filteredKanban.taskColumns[listIndex].listOfTasks
+              .insert(itemIndex, item);
+          kanbanController.reorderTaskSequence(
+              oldListIndex,
+              listIndex,
+              itemIndex,
+              item,
+              Provider.of<Auth>(context, listen: false).myProfile.accountId);
+        }
       },
       onTapItem: (int listIndex, int itemIndex, BoardItemState state) async {
         Navigator.of(context, rootNavigator: true)
@@ -443,7 +463,7 @@ class _KanbanViewState extends State<KanbanView> {
               Text(
                 "${DateFormat("MMM dd").format(task.expectedDeadline)} | Due" +
                     (daysToDeadline == 0
-                        ? "Today"
+                        ? " Today"
                         : daysToDeadline > 0
                             ? " in ${daysToDisplay.toString()} days"
                             : " ${daysToDisplay.toString()} ago"),
@@ -520,56 +540,62 @@ class _KanbanViewState extends State<KanbanView> {
                   list.columnTitle,
                   style: TextStyle(fontSize: 20),
                 ))),
-        if(Provider.of<KanbanController>(context).channelAdmins.indexWhere((element) => Provider.of<Auth>(context,listen: false).myProfile.accountId == element.accountId)>=0)
-        Padding(
-          padding: EdgeInsets.only(top: 0, left: 5),
-          child: PopupMenuButton(
-              offset: Offset(0, 20),
-              icon: Icon(Icons.more_vert_rounded),
-              itemBuilder: (BuildContext context) => [
-                    PopupMenuItem(
-                      child: ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                        visualDensity: VisualDensity.compact,
-                        onTap: () => showModalBottomSheet(
-                            useRootNavigator: true,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            backgroundColor: Colors.white,
-                            context: context,
-                            builder: (context) => ColumnCreatePopup(
-                                  columnId: list.taskColumnId,
-                                  columnName: list.columnTitle,
-                                )),
-                        dense: true,
-                        leading: Icon(FlutterIcons.edit_3_fea),
-                        title: Text(
-                          "Rename Column",
-                          style: TextStyle(
-                              fontSize: SizeConfig.textMultiplier * 1.8),
+        if (Provider.of<KanbanController>(context).channelAdmins.indexWhere(
+                (element) =>
+                    Provider.of<Auth>(context, listen: false)
+                        .myProfile
+                        .accountId ==
+                    element.accountId) >=
+            0)
+          Padding(
+            padding: EdgeInsets.only(top: 0, left: 5),
+            child: PopupMenuButton(
+                offset: Offset(0, 20),
+                icon: Icon(Icons.more_vert_rounded),
+                itemBuilder: (BuildContext context) => [
+                      PopupMenuItem(
+                        child: ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                          visualDensity: VisualDensity.compact,
+                          onTap: () => showModalBottomSheet(
+                              useRootNavigator: true,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              backgroundColor: Colors.white,
+                              context: context,
+                              builder: (context) => ColumnCreatePopup(
+                                    columnId: list.taskColumnId,
+                                    columnName: list.columnTitle,
+                                  )),
+                          dense: true,
+                          leading: Icon(FlutterIcons.edit_3_fea),
+                          title: Text(
+                            "Rename Column",
+                            style: TextStyle(
+                                fontSize: SizeConfig.textMultiplier * 1.8),
+                          ),
                         ),
                       ),
-                    ),
-                    PopupMenuItem(
-                      child: ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                        visualDensity: VisualDensity.compact,
-                        onTap: () {
-                          deleteColumn(this.context, list);
-                          Navigator.pop(context);
-                        },
-                        dense: true,
-                        leading: Icon(FlutterIcons.trash_alt_faw5s),
-                        title: Text(
-                          "Delete Column",
-                          style: TextStyle(
-                              fontSize: SizeConfig.textMultiplier * 1.8),
+                      PopupMenuItem(
+                        child: ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                          visualDensity: VisualDensity.compact,
+                          onTap: () {
+                            deleteColumn(this.context, list);
+                            Navigator.pop(context);
+                          },
+                          dense: true,
+                          leading: Icon(FlutterIcons.trash_alt_faw5s),
+                          title: Text(
+                            "Delete Column",
+                            style: TextStyle(
+                                fontSize: SizeConfig.textMultiplier * 1.8),
+                          ),
                         ),
-                      ),
-                    )
-                  ]),
-        ),
+                      )
+                    ]),
+          ),
       ],
       items: items,
     );

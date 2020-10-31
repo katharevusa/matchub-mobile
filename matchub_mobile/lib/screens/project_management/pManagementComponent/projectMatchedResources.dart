@@ -220,7 +220,7 @@ class _PManagementMatchedResourcesState
                                                       .photos[0],
                                                 )
                                               : Image.asset(
-                                                  "assets/images/resource-default2.png"),
+                                                  "assets/images/resource-default2.png", fit: BoxFit.cover),
                                         ),
                                         SizedBox(width: 10),
                                         Expanded(
@@ -300,7 +300,7 @@ class _PManagementMatchedResourcesState
                                                       .photos[0],
                                                 )
                                               : Image.asset(
-                                                  "assets/images/resource-default2.png"),
+                                                  "assets/images/resource-default2.png", fit: BoxFit.cover),
                                         ),
                                         SizedBox(width: 10),
                                         Expanded(

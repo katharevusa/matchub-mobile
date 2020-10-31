@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io'; 
+import 'package:country_list_pick/country_list_pick.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -53,6 +54,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
       "spotlight": widget.newResource.spotlight,
       "spotlightEndTime": widget.newResource.spotlightEndTime,
       "matchedProjectId": widget.newResource.matchedProjectId,
+      "country": widget.newResource.country
     };
   }
 
@@ -472,6 +474,27 @@ class _Title_descriptionState extends State<Title_description> {
                 },
               ),
             ),
+            Container(
+              padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Select country",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  CountryListPick(
+                      isShowFlag: true,
+                      isShowTitle: true,
+                      isDownIcon: true,
+                      showEnglishName: true,
+                      appBarBackgroundColor: Colors.transparent,
+                      onChanged: (CountryCode code) {
+                        widget.resource["country"] = code.name;
+                      }),
+                ],
+              ),
+            )
           ],
         )));
   }

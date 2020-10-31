@@ -5,7 +5,7 @@ import 'boardList.dart';
 
 typedef void OnDropItem(int listIndex, int itemIndex,int oldListIndex,int oldItemIndex, BoardItemState state);
 typedef void OnTapItem(int listIndex, int itemIndex, BoardItemState state);
-typedef void OnStartDragItem(
+typedef bool OnStartDragItem(
     int listIndex, int itemIndex, BoardItemState state);
 typedef void OnDragItem(int oldListIndex, int oldItemIndex, int newListIndex,
     int newItemIndex, BoardItemState state);
@@ -58,6 +58,8 @@ class BoardItemState extends State<BoardItem> {
         widget.boardList.widget.boardView.onDropItem = onDropItem;
       });
       widget.boardList.widget.boardView.setState(() {
+        if (widget.onStartDragItem(
+              widget.boardList.widget.index, widget.index, this)) {
         widget.boardList.widget.boardView.draggedItemIndex = widget.index;
         widget.boardList.widget.boardView.height = context.size.height;
         widget.boardList.widget.boardView.draggedListIndex =
@@ -65,9 +67,8 @@ class BoardItemState extends State<BoardItem> {
         widget.boardList.widget.boardView.startListIndex = widget.boardList.widget.index;
         widget.boardList.widget.boardView.startItemIndex = widget.index;
         widget.boardList.widget.boardView.draggedItem = item;
-        if (widget.onStartDragItem != null) {
-          widget.onStartDragItem(
-              widget.boardList.widget.index, widget.index, this);
+          // widget.onStartDragItem(
+          //     widget.boardList.widget.index, widget.index, this);
         }
         widget.boardList.widget.boardView.run();
       });

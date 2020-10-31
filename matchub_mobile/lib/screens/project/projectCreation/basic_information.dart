@@ -27,6 +27,7 @@ class _Basic_informationState extends State<Basic_information> {
               padding: EdgeInsets.all(10),
               margin: EdgeInsets.all(10),
               child: TextField(
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(hintText: 'Title'),
                 controller: _titleController,
                 // autofocus: true,

@@ -22,6 +22,7 @@ class Resources {
   List photos;
   bool spotlight;
   String spotlightEndTime;
+  String country;
 
   factory Resources.fromJson(Map<String, dynamic> json) =>
       _$ResourcesFromJson(json);

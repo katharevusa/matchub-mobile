@@ -14,6 +14,7 @@ Resources _$ResourcesFromJson(Map<String, dynamic> json) {
     ..resourceProfilePic = json['resourceProfilePic'] ?? ""
     ..uploadedFiles = json['uploadedFiles'] as List
     ..available = json['available'] as bool
+    ..startTime = json['country'] ?? ""
     ..startTime = json['startTime'] as String
     ..endTime = json['endTime'] as String
     ..listOfRequests = json['listOfRequests'] as List
