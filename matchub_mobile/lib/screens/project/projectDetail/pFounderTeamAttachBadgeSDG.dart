@@ -183,10 +183,13 @@ class PFounderTeamAttachBadgeSDG extends StatelessWidget {
           ),
         ),
         Container(
-            padding: EdgeInsets.only(left: 8.0 * SizeConfig.widthMultiplier),
-            height: 12 * SizeConfig.heightMultiplier,
-            width: 12 * SizeConfig.heightMultiplier,
-            child: Center(
+            margin: EdgeInsets.only(left: 8.0 * SizeConfig.widthMultiplier),
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[700], width: 0.5),
+                shape: BoxShape.circle),
+            child: ClipOval(
                 child: Tooltip(
                     message: project.projectBadge.badgeTitle,
                     child: AttachmentImage(project.projectBadge.icon))))

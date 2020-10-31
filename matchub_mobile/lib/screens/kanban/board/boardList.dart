@@ -135,31 +135,42 @@ class BoardListState extends State<BoardList> {
                 itemCount: widget.items.length + 1,
                 itemBuilder: (ctx, index) {
                   if (index >= widget.items.length) {
-                    return InkWell(
-                      child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(3)),
-                          width: 100 * SizeConfig.widthMultiplier,
-                          height: 40,
-                          child: Row(children: [
-                            Icon(Icons.add),
-                            Text(
-                              "Create Task",
-                              style:
-                                  AppTheme.buttonLight.copyWith(fontSize: 16),
-                            )
-                          ])),
-                      onTap: () => showModalBottomSheet(
-                          isScrollControlled: true,
-                          useRootNavigator: true,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          backgroundColor: Colors.white,
-                          context: context,
-                          builder: (context) =>
-                              TaskCreatePopup(columnList: widget)),
-                    );
+                    if (Provider.of<KanbanController>(context)
+                            .channelAdmins
+                            .indexWhere((element) =>
+                                Provider.of<Auth>(context, listen: false)
+                                    .myProfile
+                                    .accountId ==
+                                element.accountId) >=
+                        0) {
+                      return InkWell(
+                        child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3)),
+                            width: 100 * SizeConfig.widthMultiplier,
+                            height: 40,
+                            child: Row(children: [
+                              Icon(Icons.add),
+                              Text(
+                                "Create Task",
+                                style:
+                                    AppTheme.buttonLight.copyWith(fontSize: 16),
+                              )
+                            ])),
+                        onTap: () => showModalBottomSheet(
+                            isScrollControlled: true,
+                            useRootNavigator: true,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            backgroundColor: Colors.white,
+                            context: context,
+                            builder: (context) =>
+                                TaskCreatePopup(columnList: widget)),
+                      );
+                    } else{
+                      return Container();
+                    }
                   }
                   if (widget.items[index].boardList == null ||
                       widget.items[index].index != index ||
@@ -495,7 +506,7 @@ class _SelectTaskMemberState extends State<SelectTaskMember> {
                   return ListTile(
                     onTap: () {
                       setState(() {
-                        if (selectedTaskLeader ==null ||
+                        if (selectedTaskLeader == null ||
                             selectedTaskLeader.accountId !=
                                 widget.kanbanController.channelMembers[index]
                                     .accountId) {

@@ -136,6 +136,8 @@ class _SearchResultsState extends State<SearchResults>
                 textInputAction: TextInputAction.search,
                 onFieldSubmitted: (val) async {
                   executeSearch(search);
+                  FocusManager.instance.primaryFocus
+                      .unfocus(); //VERY IMPORTANT},
                 },
                 onChanged: (val) => searchQuery = val,
                 initialValue: searchQuery,
@@ -211,17 +213,17 @@ class _SearchResultsState extends State<SearchResults>
               ? TabBarView(
                   children: <Widget>[
                     SearchProjects(
-                      search: search,
-                      searchQuery: searchQuery,
-                    ),
+                        search: search,
+                        searchQuery: searchQuery,
+                        filterOptions: filterOptions),
                     SearchProfiles(
-                      search: search,
-                      searchQuery: searchQuery,
-                    ),
+                        search: search,
+                        searchQuery: searchQuery,
+                        filterOptions: filterOptions),
                     SearchResources(
-                      search: search,
-                      searchQuery: searchQuery,
-                    )
+                        search: search,
+                        searchQuery: searchQuery,
+                        filterOptions: filterOptions)
                   ],
                   controller: controller,
                 )
@@ -506,10 +508,12 @@ class _FilterSheetState extends State<FilterSheet> {
 class SearchProjects extends StatefulWidget {
   Search search;
   String searchQuery;
+  Map filterOptions;
 
   SearchProjects({
     this.search,
     this.searchQuery,
+    this.filterOptions,
     Key key,
   }) : super(key: key);
 
@@ -529,8 +533,8 @@ class _SearchProjectsState extends State<SearchProjects> {
         await Future.delayed(Duration(seconds: 1));
         if (widget.search.hasMoreProjects) {
           pageNo++;
-          await widget.search
-              .globalSearchForProjects(widget.searchQuery, pageNo: pageNo);
+          await widget.search.globalSearchForProjects(widget.searchQuery,
+              pageNo: pageNo, filterOptions: widget.filterOptions);
         }
         setState(() {});
       }
@@ -552,13 +556,15 @@ class _SearchProjectsState extends State<SearchProjects> {
         child: Column(
           children: [
             if (widget.searchQuery.isNotEmpty)
-              Container(alignment: Alignment.centerLeft,
-                color: Colors.grey[100],
+              Container(
+                  alignment: Alignment.centerLeft,
+                  color: Colors.grey[100],
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   height: 60,
                   width: 100 * SizeConfig.widthMultiplier,
                   child: Text("Search results for: ${widget.searchQuery}",
-                      style: AppTheme.titleLight.copyWith(color: Colors.grey[800]))),
+                      style: AppTheme.titleLight
+                          .copyWith(color: Colors.grey[800]))),
             Container(
               child: ListView.separated(
                 physics: NeverScrollableScrollPhysics(),
@@ -605,10 +611,12 @@ class _SearchProjectsState extends State<SearchProjects> {
 class SearchProfiles extends StatefulWidget {
   Search search;
   String searchQuery;
+  Map filterOptions;
 
   SearchProfiles({
     this.search,
     this.searchQuery,
+    this.filterOptions,
     Key key,
   }) : super(key: key);
 
@@ -629,8 +637,8 @@ class _SearchProfilesState extends State<SearchProfiles> {
         await Future.delayed(Duration(seconds: 1));
         if (widget.search.hasMoreProfiles) {
           pageNo++;
-          await widget.search
-              .globalSearchForUsers(widget.searchQuery, pageNo: pageNo);
+          await widget.search.globalSearchForUsers(widget.searchQuery,
+              pageNo: pageNo, filterOptions: widget.filterOptions);
         }
         setState(() {});
       }
@@ -713,10 +721,12 @@ class SearchNotFound extends StatelessWidget {
 class SearchResources extends StatefulWidget {
   Search search;
   String searchQuery;
+  Map filterOptions;
 
   SearchResources({
     this.search,
     this.searchQuery,
+    this.filterOptions,
     Key key,
   }) : super(key: key);
 
@@ -736,8 +746,8 @@ class _SearchResourcesState extends State<SearchResources> {
         await Future.delayed(Duration(seconds: 1));
         if (widget.search.hasMoreResources) {
           pageNo++;
-          await widget.search
-              .globalSearchForResources(widget.searchQuery, pageNo: pageNo);
+          await widget.search.globalSearchForResources(widget.searchQuery,
+              pageNo: pageNo, filterOptions: widget.filterOptions);
         }
         setState(() {});
       }

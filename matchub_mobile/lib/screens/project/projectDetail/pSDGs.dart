@@ -18,33 +18,33 @@ class PSdgTags extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20),
         scrollDirection: Axis.horizontal,shrinkWrap: true,
         children: [
-        Tags(
-          itemCount: 1, // required
-          itemBuilder: (int index) {
-            return ItemTags(
-              key: Key(index.toString()),
-              index: index, // required
-              title: project.sdgs[index].sdgName,
-              color: Color(0xFFFFe49D),
-              activeColor:Color(0xFFFFe49D),
-              // border: Border.all(color: Colors.grey[400]),
-              textColor: Colors.grey[850],
-              textActiveColor: Colors.grey[850],
-              elevation: 3,
-              active: false,
-              pressEnabled: true,
-              onPressed: (_){
-                print("Sdfsd");
-        // Push To Indicator page to go here
-              },
-              textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 12.0),
-            );
-          },
-          alignment: WrapAlignment.end,
-          runAlignment: WrapAlignment.start,
-          spacing: 6,
-          runSpacing: 6,
-        ),
+        // Tags(
+        //   itemCount: project.sdgs.length, // required
+        //   itemBuilder: (int index) {
+        //     return ItemTags(
+        //       key: Key(index.toString() + project.sdgs[index].toString()),
+        //       index: index, // required
+        //       title: project.sdgs[index].sdgName,
+        //       color: Color(0xFFFFe49D),
+        //       activeColor:Color(0xFFFFe49D),
+        //       // border: Border.all(color: Colors.grey[400]),
+        //       textColor: Colors.grey[850],
+        //       textActiveColor: Colors.grey[850],
+        //       elevation: 3,
+        //       active: false,
+        //       pressEnabled: true,
+        //       onPressed: (_){
+        //         print("Sdfsd");
+        // // Push To Indicator page to go here
+        //       },
+        //       textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 12.0),
+        //     );
+        //   },
+        //   alignment: WrapAlignment.end,
+        //   runAlignment: WrapAlignment.start,
+        //   spacing: 6,
+        //   runSpacing: 6,
+        // ),
       ]),
     );
   }

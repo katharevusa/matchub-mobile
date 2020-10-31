@@ -12,7 +12,7 @@ class Announcement {
   DateTime timestamp;
   List notifiedUsers;
   num projectId;
-  String taskId;
+  num taskId;
   String postId;
   String type;
   List viewedUserIds;

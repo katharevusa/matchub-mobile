@@ -14,7 +14,7 @@ Announcement _$AnnouncementFromJson(Map<String, dynamic> json) {
     ..timestamp = DateTime.parse(json['timestamp'])
     ..notifiedUsers = json['notifiedUsers'] as List
     ..projectId = json['projectId'] as num
-    ..taskId = json['taskId'] as String
+    ..taskId = json['taskId'] as num
     ..postId = json['postId'] as String
     ..type = json['type'] as String
     ..viewedUserIds = json['viewedUserIds'] as List

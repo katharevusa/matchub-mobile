@@ -75,6 +75,7 @@ class _InboxNotificationState extends State<InboxNotification> {
                     ],
                   ),
                   ListView.separated(
+                    reverse: true,
                       physics: const NeverScrollableScrollPhysics(),
                       separatorBuilder: (context, index) {
                         return Divider();

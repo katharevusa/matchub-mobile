@@ -34,6 +34,44 @@ class _StartState extends State<Start> {
               },
             ),
           ),
+          // DateTimePicker(
+          //   type: DateTimePickerType.dateTime,
+          //   decoration: InputDecoration(
+          //     border: InputBorder.none,
+          //     focusedBorder: InputBorder.none,
+          //     labelText: 'Start Date',
+          //     labelStyle: TextStyle(
+          //         color: Colors.grey[400],
+          //         fontSize: 1.6 * SizeConfig.textMultiplier),
+          //   ),
+          //   firstDate: DateTime(2000),
+          //   lastDate: DateTime(2100),
+          //   style: TextStyle(
+          //       color: Colors.black, fontSize: 1.6 * SizeConfig.textMultiplier),
+          //   onChanged: (val) {
+          //     widget.project["startDate"] = DateTime.parse(val);
+          //     setState(() {});
+          //   },
+          // ),
+          // DateTimePicker(
+          //   type: DateTimePickerType.dateTime,
+          //   decoration: InputDecoration(
+          //     border: InputBorder.none,
+          //     focusedBorder: InputBorder.none,
+          //     labelText: 'End Date time',
+          //     labelStyle: TextStyle(
+          //         color: Colors.grey[400],
+          //         fontSize: 1.6 * SizeConfig.textMultiplier),
+          //   ),
+          //   firstDate: DateTime(2000),
+          //   lastDate: DateTime(2100),
+          //   style: TextStyle(
+          //       color: Colors.black, fontSize: 1.6 * SizeConfig.textMultiplier),
+          //   onChanged: (val) {
+          //     widget.project["endDate"] = DateTime.parse(val);
+          //     setState(() {});
+          //   },
+          // ),
         ],
       ),
     );

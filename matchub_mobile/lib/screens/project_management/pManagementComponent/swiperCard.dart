@@ -279,14 +279,14 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                                           .inDays
                                           .toDouble()) *
                                       100)
-                                  .toStringAsFixed(2) +
+                                  .toStringAsFixed(1) +
                               " %"),
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.w900,
                             color: AppTheme.project6,
                           )),
-              Text("Goals Overall Progess",
+              Text("Overall Progess",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: AppTheme.project6,
@@ -367,13 +367,17 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
             ],
           ),
           Container(
-              height: 12 * SizeConfig.heightMultiplier,
-              width: 12 * SizeConfig.heightMultiplier,
-              child: Center(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey[700], width: 0.5),
+                  shape: BoxShape.circle),
+              child: ClipOval(
                   child: Tooltip(
                       message: widget.project.projectBadge.badgeTitle,
-                      child:
-                          AttachmentImage(widget.project.projectBadge.icon))))
+                      child: Container(
+                          height: 80,
+                          width: 80,
+                          child: AttachmentImage(
+                              widget.project.projectBadge.icon)))))
         ],
       ),
     );

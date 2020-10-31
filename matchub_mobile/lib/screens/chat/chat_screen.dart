@@ -46,6 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
               height: 80 * SizeConfig.heightMultiplier,
               child: Center(child: Text("No Chats here yet...")));
         }
+        print("reached chatroomlist");
 
         return ListView.builder(
             itemCount: snapshot.data.documents.length,
@@ -142,25 +143,33 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
   String chatRoomId;
 
   @override
-  didChangeDependencies() {
+  initState() {
     isloading = true;
     getUserDetails();
-    super.didChangeDependencies();
+    print("chat room til");
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(ChatRoomsTile oldWidget) {
+    getNoOfUnread();
+    super.didUpdateWidget(oldWidget);
   }
 
   getUserDetails() async {
-    final response = await ApiBaseHelper.instance.getProtected(
-        "authenticated/getAccountByUUID/${widget.uuid}", accessToken:
-        Provider.of<Auth>(context, listen: false).accessToken);
+    final response = await ApiBaseHelper.instance
+        .getProtected("authenticated/getAccountByUUID/${widget.uuid}");
     user = Profile.fromJson(response);
     getNoOfUnread();
   }
 
   getNoOfUnread() async {
-    isloading = true;
+    // isloading = true;
     Profile myProfile = Provider.of<Auth>(context, listen: false).myProfile;
-    chatRoomId =
-        await DatabaseMethods().getChatRoomId(myProfile.uuid, user.uuid);
+    if (chatRoomId == null) {
+      chatRoomId =
+          await DatabaseMethods().getChatRoomId(myProfile.uuid, user.uuid);
+    }
     print(chatRoomId);
     unreadMessages =
         await DatabaseMethods().getUnreadMessages(chatRoomId, myProfile.uuid);
@@ -198,7 +207,9 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
             child: Badge(
               showBadge: unreadMessages != 0,
               badgeContent: Text(unreadMessages.toString()),
-              position: BadgePosition.bottomEnd(bottom: SizeConfig.heightMultiplier* 2, end: SizeConfig.widthMultiplier * 4),
+              position: BadgePosition.bottomEnd(
+                  bottom: SizeConfig.heightMultiplier * 2,
+                  end: SizeConfig.widthMultiplier * 4),
               shape: BadgeShape.circle,
               borderRadius: 15,
               badgeColor: kSecondaryColor,
@@ -215,14 +226,14 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
                     widget.recentMessage,
                     overflow: TextOverflow.ellipsis,
                   ),
-
                   trailing: date != null
                       ? Padding(
-                        padding: EdgeInsets.only(bottom: SizeConfig.heightMultiplier * 3),
-                        child: Text(
+                          padding: EdgeInsets.only(
+                              bottom: SizeConfig.heightMultiplier * 3),
+                          child: Text(
                             DateFormat('kk:mm').format(date),
                           ),
-                      )
+                        )
                       : Text("")),
             ));
   }
@@ -234,7 +245,7 @@ class ChatListLoader extends StatelessWidget {
     double containerWidth = 200;
     double containerHeight = 15;
     return Container(
-      margin: EdgeInsets.symmetric(vertical:7.5),
+      margin: EdgeInsets.symmetric(vertical: 7.5),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

@@ -215,25 +215,22 @@ class _ProjectVerticalCardState extends State<ProjectVerticalCard> {
               ),
               Positioned(
                 top: 1 * SizeConfig.heightMultiplier,
-                child: Hero(
-                  tag: widget.project.projectProfilePic + "123",
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15.0),
-                        child: Container(
-                            decoration: BoxDecoration(boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                              ),
-                            ]),
-                            width: 28 * SizeConfig.widthMultiplier,
-                            height: 20 * SizeConfig.heightMultiplier,
-                            child: AttachmentImage(
-                                widget.project.projectProfilePic))),
-                  ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                            ),
+                          ]),
+                          width: 28 * SizeConfig.widthMultiplier,
+                          height: 20 * SizeConfig.heightMultiplier,
+                          child: AttachmentImage(
+                              widget.project.projectProfilePic))),
                 ),
               ),
             ]),

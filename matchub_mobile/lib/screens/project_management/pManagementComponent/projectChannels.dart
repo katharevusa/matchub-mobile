@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/kanban/kanban.dart';
 import 'package:matchub_mobile/screens/project_management/channels/channel_screen.dart';
@@ -96,79 +97,11 @@ class _PManagementChannelsState extends State<PManagementChannels> {
                               "project": widget.project
                             });
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: 200.0,
-                              height: 200.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: AppTheme.project4.withOpacity(0.5),
-                              ),
-                              child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10.0, horizontal: 10.0),
-                                  width: 150.0,
-                                  height: 150.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: Colors.white,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child:
-                                                CircularStepProgressIndicator(
-                                              totalSteps: 100,
-                                              currentStep: 74,
-                                              stepSize: 10,
-                                              selectedColor: AppTheme.project4,
-                                              unselectedColor: Colors.grey[200],
-                                              padding: 0,
-                                              width: 40,
-                                              height: 40,
-                                              selectedStepSize: 15,
-                                              roundedCap: (_, __) => true,
-                                            ),
-                                          ),
-                                          Text(
-                                            "100%",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          snapshot.data.documents[index]
-                                              .data()['name'],
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
-                                      RaisedButton(
-                                        elevation: 0,
-                                        padding: const EdgeInsets.all(10.0),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Text("Enter"),
-                                        color: AppTheme.project5,
-                                        textColor: Colors.white,
-                                        onPressed: () {},
-                                      ),
-                                    ],
-                                  )),
-                            ),
+                          child: ChannelCard(
+                            channelName:
+                                snapshot.data.documents[index].data()['name'],
+                            channelUId:
+                                snapshot.data.documents[index].data()['id'],
                           ),
                         );
                       },
@@ -186,5 +119,126 @@ class _PManagementChannelsState extends State<PManagementChannels> {
         );
       },
     );
+  }
+}
+
+class ChannelCard extends StatefulWidget {
+  ChannelCard({
+    Key key,
+    this.channelUId,
+    this.channelName,
+  }) : super(key: key);
+  String channelUId;
+  String channelName;
+
+  @override
+  _ChannelCardState createState() => _ChannelCardState();
+}
+
+class _ChannelCardState extends State<ChannelCard> {
+  bool isLoading;
+  int unfinishedTasks;
+  initState() {
+    isLoading = true;
+    getUnfinishedTask();
+  }
+
+  getUnfinishedTask() async {
+    final responseData = await ApiBaseHelper.instance.getWODecode(
+        "authenticated/getUnfinishedTasksByChannelUId?channelUId=${widget.channelUId}");
+    setState(() {
+      if (responseData != null) {
+        List unfinishedTaskList = (responseData as List);
+        unfinishedTasks = unfinishedTaskList.length;
+      } else {
+        unfinishedTasks = 0;
+      }
+      isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isLoading
+        ? Container()
+        : Container(
+            margin: const EdgeInsets.all(8.0),
+            width: 200.0,
+            height: 200.0,
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: AppTheme.project4.withOpacity(0.5),
+            ),
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                width: 150.0,
+                height: 150.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        unfinishedTasks.toString() + " unfinished task(s)",
+                        style: TextStyle(color: Colors.grey[400]),
+                      ),
+                    ),
+                    // Row(
+                    //   children: [
+                    //     Padding(
+                    //       padding: const EdgeInsets.all(8.0),
+                    //       child:
+                    //           CircularStepProgressIndicator(
+                    //         totalSteps: 100,
+                    //         currentStep: 74,
+                    //         stepSize: 10,
+                    //         selectedColor: AppTheme.project4,
+                    //         unselectedColor: Colors.grey[200],
+                    //         padding: 0,
+                    //         width: 40,
+                    //         height: 40,
+                    //         selectedStepSize: 15,
+                    //         roundedCap: (_, __) => true,
+                    //       ),
+                    //     ),
+                    //     Text(
+                    //       "100%",
+                    //       style: TextStyle(
+                    //           color: Colors.black,
+                    //           fontSize: 20,
+                    //           fontWeight: FontWeight.bold),
+                    //     )
+                    //   ],
+                    // ),
+                    Flexible(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          widget.channelName,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    RaisedButton(
+                      elevation: 0,
+                      padding: const EdgeInsets.all(10.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Text("Enter"),
+                      color: AppTheme.project5,
+                      textColor: Colors.white,
+                      onPressed: () {},
+                    ),
+                  ],
+                )),
+          );
   }
 }

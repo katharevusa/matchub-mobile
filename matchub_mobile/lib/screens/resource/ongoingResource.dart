@@ -11,6 +11,7 @@ import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceDetail_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_resource.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
@@ -228,6 +229,8 @@ class _OngoingResourceState extends State<OngoingResource> {
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             floatingActionButton: FlatButton.icon(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
                 onPressed: () => Navigator.of(context, rootNavigator: true)
                         .push(MaterialPageRoute(
                             builder: (
@@ -244,8 +247,11 @@ class _OngoingResourceState extends State<OngoingResource> {
                         _isLoading = false;
                       });
                     }),
+                color: kAccentColor,
                 icon: Icon(Icons.add),
-                label: Text("New")),
+                label: Text(
+                  "Create resource",
+                )),
           );
   }
 }
