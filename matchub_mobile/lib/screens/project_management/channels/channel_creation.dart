@@ -67,7 +67,7 @@ class _ChannelCreationState extends State<ChannelCreation> {
           child: Text("Create a New Channel",
               style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 24,
+                  fontSize: 20,
                   color: Colors.white)),
         ),
         // backgroundColor: kScaffoldColor,

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/screens/home/components/greeting_card.dart';
+import 'package:matchub_mobile/screens/home/home_list.dart';
 import 'package:matchub_mobile/screens/search/search_page.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
-import 'components/explore_list.dart';
+import 'explore_list.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = "/home-screen";
@@ -18,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   TabController controller;
+  ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -28,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(slivers: [
+        child: CustomScrollView(controller: _scrollController, slivers: [
           SliverToBoxAdapter(
             child: Container(child: GreetingCard()),
           ),
@@ -38,7 +40,8 @@ class _HomeScreenState extends State<HomeScreen>
                 color: Colors.grey[850],
                 icon: Icon(FlutterIcons.search_fea),
                 onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pushNamed(SearchResults.routeName);
+                  Navigator.of(context, rootNavigator: true)
+                      .pushNamed(SearchResults.routeName);
                 },
               )
             ],
@@ -56,11 +59,16 @@ class _HomeScreenState extends State<HomeScreen>
               // preferredSize: new Size(
               //     SizeConfig.widthMultiplier, 6 * SizeConfig.heightMultiplier),
               title: TabBar(
+                onTap: (_) {
+                  _scrollController.animateTo(28 * SizeConfig.heightMultiplier,
+                      duration: Duration(milliseconds: 400),
+                      curve: Curves.ease);
+                },
                 isScrollable: true,
                 labelPadding: EdgeInsets.only(
                   right: 20,
                 ),
-                tabs: [Text("Explore"), Text("Feed")],
+                tabs: [Text("Home"), Text("Explore")],
                 controller: controller,
                 unselectedLabelStyle: TextStyle(
                   color: Colors.grey[650],
@@ -78,8 +86,8 @@ class _HomeScreenState extends State<HomeScreen>
           SliverFillRemaining(
             child: TabBarView(
               children: <Widget>[
+                HomeList(),
                 ExploreList(),
-                Text("Tab 2"),
               ],
               controller: controller,
             ),

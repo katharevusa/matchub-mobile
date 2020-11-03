@@ -8,14 +8,13 @@ import 'package:matchub_mobile/services/kanban_controller.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 
 class AttachmentPopup extends StatefulWidget {
   const AttachmentPopup({
     Key key,
-    @required this.widget,
   }) : super(key: key);
 
-  final ViewTask widget;
 
   @override
   _AttachmentPopupState createState() => _AttachmentPopupState();
@@ -108,3 +107,48 @@ class _AttachmentPopupState extends State<AttachmentPopup> {
     );
   }
 }
+
+  Widget getDocumentImage(String fileName) {
+    int ext = 0;
+    switch (path.extension(fileName)) {
+      case '.docx':
+        {
+          ext = 0;
+        }
+        break;
+      case '.doc':
+        {
+          ext = 0;
+        }
+        break;
+      case '.ppt':
+        {
+          ext = 1;
+        }
+        break;
+      case '.xlsx':
+        {
+          ext = 2;
+        }
+        break;
+      case '.pdf':
+        {
+          ext = 3;
+        }
+        break;
+      default:
+        ext = 4;
+    }
+    return Image.asset(
+      iconList[ext],
+      fit: BoxFit.cover,
+    );
+  }
+final List<String> iconList = [
+  "assets/icons/word.png",
+  "assets/icons/ppt.png",
+  "assets/icons/excel.png",
+  "assets/icons/pdf.png",
+  "assets/icons/video.png",
+];
+
