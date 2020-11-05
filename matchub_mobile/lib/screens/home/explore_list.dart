@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/project.dart';
-import 'package:matchub_mobile/screens/home/components/profileCard.dart';
+import 'package:matchub_mobile/screens/home/components/profile_card.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/widgets/project_vertical_card.dart';
@@ -40,7 +40,6 @@ class _ExploreListState extends State<ExploreList> {
   }
 
   getRecoProfiles() async {
-    print('1');
     myProfile = Provider.of<Auth>(context, listen: false).myProfile;
 
     final responseData = await _apiHelper.getProtected(
@@ -114,28 +113,28 @@ class _ExploreListState extends State<ExploreList> {
               ),
             ),
           ),
-          buildProfileScoller(),
+          // buildProfileScoller(),
         ],
       ),
     );
   }
 
-  Widget buildProfileScoller() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child: SizedBox.fromSize(
-        size: Size.fromHeight(245.0),
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          itemCount: recoProfiles.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ProfileCard(recoProfiles[index]);
-          },
-        ),
-      ),
-    );
-  }
+  // Widget buildProfileScoller() {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(top: 16.0),
+  //     child: SizedBox.fromSize(
+  //       size: Size.fromHeight(245.0),
+  //       child: ListView.builder(
+  //         scrollDirection: Axis.horizontal,
+  //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
+  //         itemCount: recoProfiles.length,
+  //         itemBuilder: (BuildContext context, int index) {
+  //           return ProfileCard(recoProfiles[index]);
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 }
 
 class CardScrollWidget extends StatelessWidget {

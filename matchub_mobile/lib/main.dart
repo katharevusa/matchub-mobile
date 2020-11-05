@@ -7,6 +7,7 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 // import 'package:matchub_mobile/screens/login/auth_screen.dart';
 import 'package:matchub_mobile/screens/login/login_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/feed.dart';
 import 'package:matchub_mobile/services/manage_organisationmembers.dart';
 import 'package:matchub_mobile/services/manage_listOfKah.dart';
 import 'package:matchub_mobile/services/manage_notification.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => Auth()),
+            ChangeNotifierProvider(create: (_) => Feed()),
             ChangeNotifierProvider(create: (_) => Profile()),
             ChangeNotifierProvider(create: (_) => ManageProject()),
             ChangeNotifierProvider(create: (_) => ManageOrganisationMembers()),

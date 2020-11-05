@@ -13,7 +13,7 @@ class Announcement {
   List notifiedUsers;
   num projectId;
   num taskId;
-  String postId;
+  num postId;
   String type;
   List viewedUserIds;
   num creatorId;

@@ -197,7 +197,7 @@ class _AllNotificationsState extends State<AllNotifications> {
                           Text(
                             DateFormat('MMM')
                                 .format(publicAnnouncements[index].timestamp),
-                            style: TextStyle(color: Colors.blue, fontSize: 10),
+                            style: TextStyle(color: kTertiaryColor, fontSize: 10),
                           )
                         ]),
                         title: Text(

@@ -85,7 +85,8 @@ class _MessagesState extends State<Messages> {
               readByArray.add(myProfile.uuid);
               Firestore.instance
                   .runTransaction((Transaction myTransaction) async {
-                await myTransaction.update(message.reference, {'readBy': readByArray});
+                await myTransaction
+                    .update(message.reference, {'readBy': readByArray});
               });
             }
           }
@@ -116,7 +117,7 @@ class _MessagesState extends State<Messages> {
         "sentBy": authInstance.myProfile.uuid,
         "messageText": messageEditingController.text,
         'sentAt': DateTime.now(),
-        "readBy" : []
+        "readBy": []
       };
       print(widget.chatRoomId);
       DatabaseMethods().sendMessage(widget.chatRoomId, chatMessageMap, false);
@@ -315,9 +316,9 @@ class MessageTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 1,
+                  blurRadius: 2,
                 ),
               ],
             ),

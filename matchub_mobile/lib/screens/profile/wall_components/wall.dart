@@ -36,7 +36,7 @@ class _WallState extends State<Wall> {
       'photos': newPost.photos ?? [],
       'originalPostId': newPost.originalPostId,
       'previousPostId': newPost.previousPostId,
-      'postCreatorId': newPost.postCreatorId,
+      'postCreatorId': newPost.postCreator,
       'likes': newPost.likes,
       'listOfComments': newPost.listOfComments ?? [],
     };

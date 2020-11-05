@@ -29,8 +29,11 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(controller: _scrollController, slivers: [
+        body: SafeArea(
+            child: NestedScrollView(
+      controller: _scrollController,
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return <Widget>[
           SliverToBoxAdapter(
             child: Container(child: GreetingCard()),
           ),
@@ -68,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen>
                 labelPadding: EdgeInsets.only(
                   right: 20,
                 ),
-                tabs: [Text("Home"), Text("Explore")],
+                tabs: [Text("Explore"),Text("Feed"), ],
                 controller: controller,
                 unselectedLabelStyle: TextStyle(
                   color: Colors.grey[650],
@@ -83,17 +86,25 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          SliverFillRemaining(
-            child: TabBarView(
-              children: <Widget>[
-                HomeList(),
-                ExploreList(),
-              ],
-              controller: controller,
-            ),
-          ),
-        ]),
+          // SliverFillRemaining(
+          //   child: TabBarView(
+          //     children: <Widget>[
+          //       SliverToBoxAdapter(
+          //           child: HomeList(controller: _scrollController)),
+          //       SliverToBoxAdapter(child: ExploreList()),
+          //     ],
+          //     controller: controller,
+          //   ),
+          // )
+        ];
+      },
+      body: TabBarView(
+        children: <Widget>[
+          ExploreList(),
+          HomeList(),
+        ],
+        controller: controller,
       ),
-    );
+    )));
   }
 }

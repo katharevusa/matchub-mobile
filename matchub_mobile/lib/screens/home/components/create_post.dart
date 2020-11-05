@@ -80,8 +80,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           leadingWidth: 30,
           actions: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FlatButton(
+              padding: const EdgeInsets.all(12.0),
+              child: OutlineButton(
+                borderSide: BorderSide(color: Colors.white),
                 visualDensity: VisualDensity.compact,
                 child: Text(
                   "Post",
@@ -290,11 +291,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                       ),
                                       context: context,
                                       builder: (ctx) {
-                                        return AttachmentPopup();
+                                        return UploadImagePopup();
                                       }).then((value) async {
                                     if (value != null) {
-                                      print(value.path);
-                                      attachments.add(value);
+                                      attachments.addAll(value);
                                     }
                                   });
                                 }),

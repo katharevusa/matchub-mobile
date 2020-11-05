@@ -15,8 +15,13 @@ Post _$PostFromJson(Map<String, dynamic> json) {
     ..originalPostId = json['originalPostId'] as num
     ..previousPostId = json['previousPostId'] as num
     ..likes = json['likes'] as num
-    ..postCreatorId = json['postCreatorId'] as num
-    ..listOfComments = json['listOfComments'] as List;
+    ..likedUsersId = json['likedUsersId'] as List
+    ..postCreator = Profile.fromJson(json['postCreator'])
+    ..listOfComments =  json['listOfComments'] != null
+        ? (json['listOfComments'] as List)
+            .map((i) => Comment.fromJson(i))
+            .toList()
+        : [];
 }
 
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
@@ -27,6 +32,6 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'originalPostId': instance.originalPostId,
       'previousPostId': instance.previousPostId,
       'likes': instance.likes,
-      'postCreatorId': instance.postCreatorId,
+      'postCreator': instance.postCreator,
       'listOfComments': instance.listOfComments
     };

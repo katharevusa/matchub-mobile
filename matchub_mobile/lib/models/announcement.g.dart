@@ -15,7 +15,7 @@ Announcement _$AnnouncementFromJson(Map<String, dynamic> json) {
     ..notifiedUsers = json['notifiedUsers'] as List
     ..projectId = json['projectId'] as num
     ..taskId = json['taskId'] as num
-    ..postId = json['postId'] as String
+    ..postId = json['postId'] as num
     ..type = json['type'] as String
     ..viewedUserIds = json['viewedUserIds'] as List
     ..creatorId = json['creatorId'] as num
