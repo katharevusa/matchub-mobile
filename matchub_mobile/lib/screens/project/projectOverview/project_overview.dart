@@ -1,5 +1,7 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/profile.dart';
@@ -25,6 +27,7 @@ class ProjectOverview extends StatefulWidget {
 
 class _ProjectOverviewState extends State<ProjectOverview> {
   List<Project> allProjects = [];
+  bool dialVisible = true;
   final newProject = new Project();
   @override
   Widget build(BuildContext context) {
@@ -45,18 +48,61 @@ class _ProjectOverviewState extends State<ProjectOverview> {
       ),
       body: TopScreen(myProfile),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FlatButton.icon(
-          color: kAccentColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          onPressed: () => Navigator.of(context, rootNavigator: true).push(
+      floatingActionButton: buildSpeedDial(),
+      // floatingActionButton:
+
+      // FlatButton.icon(
+      //     color: kAccentColor,
+      //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      //     onPressed: () => Navigator.of(context, rootNavigator: true).push(
+      //           MaterialPageRoute(
+      //               builder: (context) =>
+      //                   ProjectCreationScreen(newProject: newProject)),
+      //         ),
+      //     icon: Icon(Icons.add),
+      //     label: Text(
+      //       "Create",
+      //     ),),
+    );
+  }
+
+  void setDialVisible(bool value) {
+    setState(() {
+      dialVisible = value;
+    });
+  }
+
+  SpeedDial buildSpeedDial() {
+    return SpeedDial(backgroundColor: Color(0xFFEA4B88),
+      animatedIcon: AnimatedIcons.menu_close,
+      animatedIconTheme: IconThemeData(size: 22.0, color: Colors.white),
+      // child: Icon(Icons.add),
+      onOpen: () => print('OPENING DIAL'),
+      onClose: () => print('DIAL CLOSED'),
+      visible: dialVisible,
+      curve: Curves.bounceIn,
+      children: [
+        SpeedDialChild(
+          child: Icon(FlutterIcons.rocket_faw5s, color: Colors.white, size: 16),
+          backgroundColor: kKanbanColor,
+          onTap: () => Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                     builder: (context) =>
                         ProjectCreationScreen(newProject: newProject)),
               ),
-          icon: Icon(Icons.add),
-          label: Text(
-            "Create",
-          )),
+          label: 'New Project',
+          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelBackgroundColor: Colors.grey[300],
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.campaign_rounded, color: Colors.white),
+          backgroundColor: kKanbanColor,
+          onTap: () => print('New Fundraiser'),
+          label: 'New Fundraiser',
+          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelBackgroundColor: Colors.grey[300],
+        ),
+      ],
     );
   }
 }
@@ -324,7 +370,7 @@ class ProjectDashboard extends StatelessWidget {
                         ),
                         SizedBox(height: 15),
                         Container(
-                          height: 40,
+                          constraints: BoxConstraints(minHeight: 40),
                           child: Text(
                             projects[index].projectTitle,
                             style: TextStyle(
@@ -333,8 +379,15 @@ class ProjectDashboard extends StatelessWidget {
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child:
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
                               Text("Progress", style: TextStyle(fontSize: 9)),
+                              Text(
+                                  "${projects[index].startDate.isAfter(DateTime.now()) ? 0 : DateTime.now().isAfter(projects[index].endDate) ? 100 : (DateTime.now().difference(projects[index].startDate).inDays / (projects[index].endDate.difference(projects[index].startDate).inDays.toDouble()) * 100).round().toString()}%",
+                                  style: TextStyle(fontSize: 9))
+                            ],
+                          ),
                         ),
                         SizedBox(height: 5),
                         FAProgressBar(

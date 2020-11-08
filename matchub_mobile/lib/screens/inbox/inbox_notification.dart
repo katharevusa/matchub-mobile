@@ -5,6 +5,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_notification.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
 import '../../sizeconfig.dart';
@@ -116,7 +117,7 @@ class _InboxNotificationState extends State<InboxNotification> {
                                 DateFormat('MMM')
                                     .format(allAnnouncements[index].timestamp),
                                 style:
-                                    TextStyle(color: Colors.blue, fontSize: 10),
+                                    TextStyle(color: kTertiaryColor, fontSize: 10),
                               )
                             ]),
                             title: Text(

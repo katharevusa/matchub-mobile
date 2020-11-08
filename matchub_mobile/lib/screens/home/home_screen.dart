@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/screens/home/components/greeting_card.dart';
-import 'package:matchub_mobile/screens/home/home_list.dart';
+import 'package:matchub_mobile/screens/home/newsfeed.dart';
 import 'package:matchub_mobile/screens/search/search_page.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
@@ -29,82 +29,88 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-            child: NestedScrollView(
-      controller: _scrollController,
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          SliverToBoxAdapter(
-            child: Container(child: GreetingCard()),
-          ),
-          SliverAppBar(
-            actions: [
-              IconButton(
-                color: Colors.grey[850],
-                icon: Icon(FlutterIcons.search_fea),
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true)
-                      .pushNamed(SearchResults.routeName);
-                },
-              )
-            ],
-            backgroundColor: kScaffoldColor,
-            pinned: true,
-            // floating: true,
-            // snap: true,
-            toolbarHeight: 5.5 * SizeConfig.heightMultiplier,
-            centerTitle: true, stretch: true,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: EdgeInsets.only(
-                  left: 4 * SizeConfig.widthMultiplier,
-                  right: 4 * SizeConfig.widthMultiplier,
-                  bottom: 0.5 * SizeConfig.heightMultiplier),
-              // preferredSize: new Size(
-              //     SizeConfig.widthMultiplier, 6 * SizeConfig.heightMultiplier),
-              title: TabBar(
-                onTap: (_) {
-                  _scrollController.animateTo(28 * SizeConfig.heightMultiplier,
-                      duration: Duration(milliseconds: 400),
-                      curve: Curves.ease);
-                },
-                isScrollable: true,
-                labelPadding: EdgeInsets.only(
-                  right: 20,
-                ),
-                tabs: [Text("Explore"),Text("Feed"), ],
-                controller: controller,
-                unselectedLabelStyle: TextStyle(
-                  color: Colors.grey[650],
-                ),
-                indicatorColor: kScaffoldColor.withOpacity(0),
-                labelColor: Colors.grey[900],
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 2.7 * SizeConfig.textMultiplier,
-                ),
-                unselectedLabelColor: Colors.grey[400],
+      body: SafeArea(
+        child: NestedScrollView(
+          controller: _scrollController,
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverToBoxAdapter(
+                child: Container(child: GreetingCard()),
               ),
-            ),
+              SliverAppBar(
+                actions: [
+                  IconButton(
+                    color: Colors.grey[850],
+                    icon: Icon(FlutterIcons.search_fea),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true)
+                          .pushNamed(SearchResults.routeName);
+                    },
+                  )
+                ],
+                backgroundColor: kScaffoldColor,
+                pinned: true,
+                // floating: true,
+                // snap: true,
+                toolbarHeight: 5.5 * SizeConfig.heightMultiplier,
+                centerTitle: true, stretch: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding: EdgeInsets.only(
+                      left: 4 * SizeConfig.widthMultiplier,
+                      right: 4 * SizeConfig.widthMultiplier,
+                      bottom: 0.5 * SizeConfig.heightMultiplier),
+                  // preferredSize: new Size(
+                  //     SizeConfig.widthMultiplier, 6 * SizeConfig.heightMultiplier),
+                  title: TabBar(
+                    onTap: (_) {
+                      _scrollController.animateTo(
+                          28 * SizeConfig.heightMultiplier,
+                          duration: Duration(milliseconds: 400),
+                          curve: Curves.ease);
+                    },
+                    isScrollable: true,
+                    labelPadding: EdgeInsets.only(
+                      right: 20,
+                    ),
+                    tabs: [
+                      Text("Explore"),
+                      Text("Feed"),
+                    ],
+                    controller: controller,
+                    unselectedLabelStyle: TextStyle(
+                      color: Colors.grey[650],
+                    ),
+                    indicatorColor: kScaffoldColor.withOpacity(0),
+                    labelColor: Colors.grey[900],
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 2.7 * SizeConfig.textMultiplier,
+                    ),
+                    unselectedLabelColor: Colors.grey[400],
+                  ),
+                ),
+              ),
+              // SliverFillRemaining(
+              //   child: TabBarView(
+              //     children: <Widget>[
+              //       SliverToBoxAdapter(
+              //           child: HomeList(controller: _scrollController)),
+              //       SliverToBoxAdapter(child: ExploreList()),
+              //     ],
+              //     controller: controller,
+              //   ),
+              // )
+            ];
+          },
+          body: TabBarView(
+            children: <Widget>[
+              ExploreList(),
+              HomeList(),
+            ],
+            controller: controller,
           ),
-          // SliverFillRemaining(
-          //   child: TabBarView(
-          //     children: <Widget>[
-          //       SliverToBoxAdapter(
-          //           child: HomeList(controller: _scrollController)),
-          //       SliverToBoxAdapter(child: ExploreList()),
-          //     ],
-          //     controller: controller,
-          //   ),
-          // )
-        ];
-      },
-      body: TabBarView(
-        children: <Widget>[
-          ExploreList(),
-          HomeList(),
-        ],
-        controller: controller,
+        ),
       ),
-    )));
+    );
   }
 }

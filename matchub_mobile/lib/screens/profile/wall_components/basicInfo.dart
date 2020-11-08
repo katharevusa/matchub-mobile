@@ -76,82 +76,48 @@ class _BasicInfoState extends State<BasicInfo> {
                         Text("Stakeholder", style: AppTheme.subTitleLight),
                         SizedBox(height: 10),
                         Container(
-                            width: 44 * SizeConfig.widthMultiplier,
-                            constraints: BoxConstraints(
-                                minHeight: 8 * SizeConfig.heightMultiplier),
-                            decoration: BoxDecoration(
-                              color: Color(0xFF7B89A4).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(children: [
-                              Flexible(
-                                  fit: FlexFit.tight,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(
-                                        1.25 * SizeConfig.widthMultiplier),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Rep.",
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                        Text(
-                                          NumberFormat.compactCurrency(
-                                                  decimalDigits: 0, symbol: '')
-                                              .format(widget
-                                                  .profile.reputationPoints),
-                                          style: TextStyle(fontSize: 17),
-                                        ),
-                                      ],
-                                    ),
-                                  )),
-                              Flexible(
+                          width: 44 * SizeConfig.widthMultiplier,
+                          constraints: BoxConstraints(
+                              minHeight: 8 * SizeConfig.heightMultiplier),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF7B89A4).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(children: [
+                            Flexible(
                                 fit: FlexFit.tight,
-                                child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pushNamed(
-                                        FollowOverviewScreen.routeName,
-                                        arguments: {
-                                          "profile": widget.profile,
-                                          "initialTab": 0
-                                        },
-                                      );
-                                    },
-                                    child: Padding(
-                                        padding: EdgeInsets.all(
-                                            1.25 * SizeConfig.widthMultiplier),
-                                        child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "Followers",
-                                                style: TextStyle(fontSize: 10),
-                                              ),
-                                              Text(
-                                                NumberFormat.compactCurrency(
-                                                        decimalDigits: 0,
-                                                        symbol: '')
-                                                    .format(widget.profile
-                                                        .followers.length),
-                                                style: TextStyle(fontSize: 17),
-                                              ),
-                                            ]))),
-                              ),
-                              Flexible(
-                                fit: FlexFit.tight,
-                                child: GestureDetector(
+                                child: Padding(
+                                  padding: EdgeInsets.all(
+                                      1.25 * SizeConfig.widthMultiplier),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Rep.",
+                                        style: TextStyle(fontSize: 10),
+                                      ),
+                                      Text(
+                                        NumberFormat.compactCurrency(
+                                                decimalDigits: 0, symbol: '')
+                                            .format(widget
+                                                .profile.reputationPoints),
+                                        style: TextStyle(fontSize: 17),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            Flexible(
+                              fit: FlexFit.tight,
+                              child: GestureDetector(
                                   onTap: () {
                                     Navigator.of(context, rootNavigator: true)
                                         .pushNamed(
-                                            FollowOverviewScreen.routeName,
-                                            arguments: {
-                                          "profile": widget.profile,
-                                          "initialTab": 1
-                                        });
+                                      FollowOverviewScreen.routeName,
+                                      arguments: {
+                                        "profile": widget.profile,
+                                        "initialTab": 0
+                                      },
+                                    );
                                   },
                                   child: Padding(
                                       padding: EdgeInsets.all(
@@ -161,7 +127,7 @@ class _BasicInfoState extends State<BasicInfo> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              "Following",
+                                              "Followers",
                                               style: TextStyle(fontSize: 10),
                                             ),
                                             Text(
@@ -169,13 +135,46 @@ class _BasicInfoState extends State<BasicInfo> {
                                                       decimalDigits: 0,
                                                       symbol: '')
                                                   .format(widget.profile
-                                                      .following.length),
+                                                      .followers.length),
                                               style: TextStyle(fontSize: 17),
                                             ),
-                                          ])),
-                                ),
-                              )
-                            ])),
+                                          ]))),
+                            ),
+                            Flexible(
+                              fit: FlexFit.tight,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pushNamed(FollowOverviewScreen.routeName,
+                                          arguments: {
+                                        "profile": widget.profile,
+                                        "initialTab": 1
+                                      });
+                                },
+                                child: Padding(
+                                    padding: EdgeInsets.all(
+                                        1.25 * SizeConfig.widthMultiplier),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Following",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                          Text(
+                                            NumberFormat.compactCurrency(
+                                                    decimalDigits: 0,
+                                                    symbol: '')
+                                                .format(widget
+                                                    .profile.following.length),
+                                            style: TextStyle(fontSize: 17),
+                                          ),
+                                        ])),
+                              ),
+                            )
+                          ]),
+                        ),
                       ],
                     ),
                   )

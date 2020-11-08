@@ -9,6 +9,7 @@ import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/screens/home/components/create_post.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
+import 'package:matchub_mobile/screens/profile/view_profile.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/unused/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
@@ -240,6 +241,12 @@ class _TabsScreenState extends State<TabsScreen> {
       case ProfileScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ProfileScreen(
+                  accountId: settings.arguments as int,
+                ),
+            settings: settings);
+      case ViewProfile.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ViewProfile(
                   accountId: settings.arguments as int,
                 ),
             settings: settings);

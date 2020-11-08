@@ -9,6 +9,7 @@ import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'dart:convert';
 // import 'package:matchub_mobile/model/individual.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/profile/view_profile.dart';
 import 'package:matchub_mobile/screens/user/account-settings/change_password.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
@@ -75,7 +76,7 @@ class _UserScreenState extends State<UserScreen> {
                     Navigator.of(
                       context,
                       rootNavigator: true,
-                    ).pushNamed(ProfileScreen.routeName,
+                    ).pushNamed(ViewProfile.routeName,
                         arguments:
                             Provider.of<Auth>(context).myProfile.accountId);
                   }),

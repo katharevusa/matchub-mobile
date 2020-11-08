@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 
-Widget buildAvatar(profile, {double radius = 50}) {
+Widget buildAvatar(profile, {double radius = 50, Color borderColor = Colors.white}) {
   return Container(
     decoration: BoxDecoration(
         boxShadow: [
@@ -11,7 +11,7 @@ Widget buildAvatar(profile, {double radius = 50}) {
               blurRadius: 3,
               offset: Offset(0, 3)),
         ],
-        border: Border.all(color: Colors.white, width: 3),
+        border: Border.all(color: borderColor, width: 3),
         shape: BoxShape.circle),
     height: radius,
     width: radius,

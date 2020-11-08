@@ -289,7 +289,7 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                             fontWeight: FontWeight.w900,
                             color: AppTheme.project6,
                           )),
-              Text("Overall Progess",
+              Text("Overall Progress",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: AppTheme.project6,
