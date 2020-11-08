@@ -19,6 +19,7 @@ import 'package:matchub_mobile/screens/resource/resource_detail/resourceGallery.
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceInformation.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceSuggestProject.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manage_resource.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -26,18 +27,28 @@ import 'package:provider/provider.dart';
 
 class ResourceDetailScreen extends StatefulWidget {
   static const routeName = "/own-resource-detail";
+  Resources resource;
+  ResourceDetailScreen(this.resource);
 
   @override
   _ResourceDetailScreenState createState() => _ResourceDetailScreenState();
 }
 
 class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
-  Resources resource;
+  @override
+  void initState() {
+    loadResource();
+    super.initState();
+  }
+
+  loadResource() async {
+    await Provider.of<ManageResource>(context, listen: false)
+        .getResourceById(widget.resource.resourceId);
+  }
 
   @override
   Widget build(BuildContext context) {
-    resource = ModalRoute.of(context).settings.arguments;
-    // Provider.of<Auth>(context).retrieveUser();
+    widget.resource = Provider.of<ManageResource>(context).resource;
     return Scaffold(
       backgroundColor: AppTheme.appBackgroundColor,
       extendBodyBehindAppBar: true,
@@ -52,7 +63,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
           ),
         ),
         actions: [
-          resource.resourceOwnerId ==
+          widget.resource.resourceOwnerId ==
                   Provider.of<Auth>(context, listen: false).myProfile.accountId
               ? IconButton(
                   alignment: Alignment.bottomCenter,
@@ -79,22 +90,23 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
                 Padding(
                   padding: EdgeInsets.only(top: 100),
                   child: Column(children: <Widget>[
-                    RGallery(resource),
-                    ResourceInformation(resource),
+                    RGallery(widget.resource),
+                    ResourceInformation(widget.resource),
                   ]),
                   // ),
                 ),
-                resource.matchedProjectId == null
-                    ? MatchedProjects(resource)
-                    : ConnectedProject(resource),
+                widget.resource.matchedProjectId == null
+                    ? MatchedProjects(widget.resource)
+                    : ConnectedProject(widget.resource),
               ],
             ),
           ),
         ),
-        resource.resourceOwnerId ==
+        widget.resource.resourceOwnerId ==
                 Provider.of<Auth>(context, listen: false).myProfile.accountId
             ? Container()
-            : ResourceActions(resource, Provider.of<Auth>(context).myProfile),
+            : ResourceActions(
+                widget.resource, Provider.of<Auth>(context).myProfile),
       ]),
     );
   }
@@ -104,13 +116,13 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
         height: 300,
         child: Column(
           children: [
-            if (resource.resourceOwnerId ==
+            if (widget.resource.resourceOwnerId ==
                 Provider.of<Auth>(context).myProfile.accountId) ...[
               FlatButton(
                   onPressed: () => Navigator.of(context, rootNavigator: true)
                           .push(MaterialPageRoute(
                               builder: (context) => ResourceCreationScreen(
-                                  newResource: resource)))
+                                  newResource: widget.resource)))
                           .then((value) {
                         setState(() {
                           Provider.of<Auth>(context).retrieveUser();
@@ -250,7 +262,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
   void terminateResource() async {
     var profileId = Provider.of<Auth>(context).myProfile.accountId;
     final url =
-        "authenticated/terminateResource?resourceId=${resource.resourceId}&terminatorId=${profileId}";
+        "authenticated/terminateResource?resourceId=${widget.resource.resourceId}&terminatorId=${profileId}";
     try {
       var accessToken = Provider.of<Auth>(context).accessToken;
       final response =

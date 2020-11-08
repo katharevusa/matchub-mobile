@@ -13,7 +13,7 @@ import 'package:matchub_mobile/widgets/rounded_bordered_container.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 
-import '../../../sizeconfig.dart';
+import '../../sizeconfig.dart';
 
 class ExploreList extends StatefulWidget {
   @override
@@ -292,21 +292,3 @@ class CardScrollWidget extends StatelessWidget {
     );
   }
 }
-
-List<String> images = [
-  "assets/images/kathmandu1.jpg",
-  "assets/images/fries.jpg",
-  "assets/images/pablo-sign-in.png",
-  "assets/images/kathmandu1.jpg",
-  "assets/images/fries.jpg",
-  "assets/images/pablo-sign-in.png",
-];
-
-List<String> title = [
-  "Hounted Ground",
-  "Fallen In Love",
-  "The Dreaming Moon",
-  "Hounted Ground",
-  "Fallen In Love",
-  "The Dreaming Moon",
-];

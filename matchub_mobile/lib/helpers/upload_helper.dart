@@ -30,10 +30,11 @@ uploadMultiFile(List<File> files, String url, String accessToken,
         filename: file.path.substring(58)));
   });
   await request.send().then((response) async {
-    response.stream.transform(utf8.decoder).listen((value) {
-      print(value);
-      var res = json.decode(value) as Map<String, dynamic>;
-    });
+    // response.stream.transform(utf8.decoder).listen((value) {
+    //   print(value);
+    //   var res = json.decode(value) as Map<String, dynamic>;
+    // });
+    print("Successfully uploaded");
   }).catchError((e) {
     print(e);
   });

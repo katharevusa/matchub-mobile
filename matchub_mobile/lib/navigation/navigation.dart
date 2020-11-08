@@ -7,6 +7,7 @@ import 'package:matchub_mobile/navigation/profile_navigator.dart';
 import 'package:matchub_mobile/navigation/resource_navigator.dart';
 import 'package:matchub_mobile/screens/chat/chat_screen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
+import 'package:matchub_mobile/screens/home/components/create_post.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/unused/project_screen.dart';
@@ -220,6 +221,9 @@ class _TabsScreenState extends State<TabsScreen> {
       case HomeScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => HomeScreen(), settings: settings);
+      case CreatePostScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => CreatePostScreen(), settings: settings);
       case ResourceScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ResourceScreen(), settings: settings);
@@ -299,7 +303,8 @@ class _TabsScreenState extends State<TabsScreen> {
             settings: settings);
       case ResourceDetailScreen.routeName:
         return MaterialPageRoute(
-            builder: (context) => ResourceDetailScreen(),
+            builder: (context) =>
+                ResourceDetailScreen(settings.arguments as Resources),
             // fullscreenDialog: true,
             settings: settings);
 
@@ -326,7 +331,12 @@ class _TabsScreenState extends State<TabsScreen> {
             settings: settings);
       case ViewTask.routeName:
         return MaterialPageRoute(
-            builder: (context, ) => ViewTask(task: settings.arguments as TaskEntity), settings: settings,fullscreenDialog: true);
+            builder: (
+              context,
+            ) =>
+                ViewTask(task: settings.arguments as TaskEntity),
+            settings: settings,
+            fullscreenDialog: true);
       case SearchResults.routeName:
         return MaterialPageRoute(
             builder: (context) => SearchResults(), settings: settings);

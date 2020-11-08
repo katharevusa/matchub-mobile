@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/screens/chat/chat_screen.dart';
-import 'package:matchub_mobile/screens/inbox/inbox-notification.dart';
+import 'package:matchub_mobile/screens/inbox/inbox_notification.dart';
 
 import '../../sizeconfig.dart';
 import '../../style.dart';

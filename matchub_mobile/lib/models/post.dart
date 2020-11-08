@@ -10,10 +10,10 @@ class Post {
   String content;
   DateTime timeCreated;
   List photos;
-  String originalPostId;
-  String previousPostId;
+  num originalPostId;
+  num previousPostId;
   num likes;
-  String postCreatorId;
+  num postCreatorId;
   List listOfComments;
 
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectFollowerList.dart';
+import 'package:matchub_mobile/unused/projectFollowerList.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/style.dart';
@@ -17,6 +17,7 @@ class PProgressBar extends StatefulWidget {
 }
 
 class _PProgressBarState extends State<PProgressBar> {
+  GlobalKey _toolTipKey = GlobalKey();
   Profile myProfile;
   getProjects() async {
     await Provider.of<ManageProject>(this.context, listen: false).getProject(
@@ -117,7 +118,7 @@ class _PProgressBarState extends State<PProgressBar> {
                           Row(
                             children: [
                               Icon(
-                                Icons.volunteer_activism,
+                                Icons.thumb_up_alt,
                                 size: 24,
                                 color: myProfile.upvotedProjectIds
                                         .contains(widget.project.projectId)
@@ -141,6 +142,78 @@ class _PProgressBarState extends State<PProgressBar> {
                         ],
                       ),
                     ),
+                  ),
+                  // myProfile.reputationPoints >= 50
+                  InkWell(
+                    onTap: myProfile.reputationPoints >= 50
+                        ? () async {
+                            if (!myProfile.downvotedProjectIds
+                                .contains(widget.project.projectId)) {
+                              await ApiBaseHelper.instance.postProtected(
+                                  "authenticated/downvoteProject?projectId=${widget.project.projectId}&userId=${myProfile.accountId}");
+                            } else {
+                              await ApiBaseHelper.instance.postProtected(
+                                  "authenticated/revokeDownvote?projectId=${widget.project.projectId}&userId=${myProfile.accountId}");
+                            }
+
+                            await Provider.of<Auth>(context, listen: false)
+                                .retrieveUser();
+                            setState(() {
+                              getProjects();
+                            });
+                          }
+                        : () {
+                            final dynamic tooltip = _toolTipKey.currentState;
+                            tooltip.ensureTooltipVisible();
+                          },
+                    child: myProfile.reputationPoints >= 50
+                        ? Container(
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.thumb_down_alt,
+                                      size: 24,
+                                      color: myProfile.downvotedProjectIds
+                                              .contains(
+                                                  widget.project.projectId)
+                                          ? kAccentColor
+                                          : Colors.grey[300],
+                                    ),
+                                  ],
+                                ),
+                                Text("Downvote",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey[700])),
+                              ],
+                            ),
+                          )
+                        : Tooltip(
+                            key: _toolTipKey,
+                            message: 'You have not unlock this achievement',
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.thumb_down_alt,
+                                        size: 24,
+                                        color: Colors.grey[300],
+                                      ),
+                                    ],
+                                  ),
+                                  Text("Downvote",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey[700])),
+                                ],
+                              ),
+                            )),
                   ),
                   Column(
                     children: [

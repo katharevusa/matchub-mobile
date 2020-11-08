@@ -5,7 +5,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:provider/provider.dart';
 
-import '../../../style.dart';
+import '../style.dart';
 
 class ProjectFollowerList extends StatefulWidget {
   Project project;

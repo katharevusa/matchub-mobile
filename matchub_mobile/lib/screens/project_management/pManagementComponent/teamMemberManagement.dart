@@ -25,10 +25,22 @@ class TeamMembersManagement extends StatefulWidget {
 }
 
 class _TeamMembersManagementState extends State<TeamMembersManagement> {
+  List<TruncatedProfile> allMembers = [];
   @override
   initState() {
     Provider.of<ManageProject>(context, listen: false)
         .getProject(widget.project.projectId);
+    for (TruncatedProfile tp in widget.project.teamMembers) {
+      if (!allMembers.contains(tp)) {
+        allMembers.add(tp);
+      }
+    }
+    for (TruncatedProfile tp in widget.project.projectOwners) {
+      if (!allMembers.contains(tp)) {
+        allMembers.add(tp);
+      }
+    }
+
     super.initState();
   }
 
@@ -91,27 +103,50 @@ class _TeamMembersManagementState extends State<TeamMembersManagement> {
     }
   }
 
+  _addProjectOwner(int teamMemberId) async {
+    final instance = Provider.of<Auth>(context, listen: false);
+    final url =
+        "authenticated/addProjectOwner?projOwnerId=${instance.myProfile.accountId}&projOwnerToAddId=$teamMemberId&projectId=${widget.project.projectId}";
+    final response = await ApiBaseHelper.instance.putProtected(url);
+    await updateProject();
+  }
+
+  _removeProjectOwner(int teamMemberId) async {
+    final instance = Provider.of<Auth>(context, listen: false);
+    final url =
+        "authenticated/removeProjectOwner?editorId=${instance.myProfile.accountId}&projOwnerToRemoveId=$teamMemberId&projectId=${widget.project.projectId}";
+    final response = await ApiBaseHelper.instance.putProtected(url);
+    await updateProject();
+  }
+
   @override
   Widget build(BuildContext context) {
     widget.project = Provider.of<ManageProject>(context).managedProject;
     return DefaultTabController(
-        length: 2,
+        length: (widget.project.projectOwners.indexWhere((element) =>
+                    element.accountId ==
+                    Provider.of<Auth>(context, listen: false)
+                        .myProfile
+                        .accountId) !=
+                -1)
+            ? 2
+            : 1,
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: kScaffoldColor,
-            elevation: 0,
-            title: Text("Manage Team Members",
-                style: TextStyle(color: Colors.black)),
-            // automaticallyImplyLeading: true,
-            iconTheme: IconThemeData(
-              color: Colors.black, //change your color here
-            ),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(40),
-              child: Container(
-                padding: EdgeInsets.only(left: 20),
-                alignment: Alignment.centerLeft,
-                child: TabBar(
+            appBar: AppBar(
+              backgroundColor: kScaffoldColor,
+              elevation: 0,
+              title: Text("Manage Team Members",
+                  style: TextStyle(color: Colors.black)),
+              // automaticallyImplyLeading: true,
+              iconTheme: IconThemeData(
+                color: Colors.black, //change your color here
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(40),
+                child: Container(
+                  padding: EdgeInsets.only(left: 20),
+                  alignment: Alignment.centerLeft,
+                  child: TabBar(
                     labelColor: Colors.white,
                     isScrollable: true,
                     indicatorSize: TabBarIndicatorSize.tab,
@@ -122,41 +157,61 @@ class _TeamMembersManagementState extends State<TeamMembersManagement> {
                         tabBarIndicatorSize: TabBarIndicatorSize.tab,
                         padding: EdgeInsets.all(10)),
                     unselectedLabelColor: Colors.grey[600],
-                    // indicator: UnderlineTabIndicator(
-                    //     borderSide: BorderSide(
-                    //       width: 4,
-                    //       color: kSecondaryColor,
-                    //       // color: Color(0xFF646464),
-                    //     ),
-                    //     insets: EdgeInsets.only(left: 8, right: 8, bottom: 4)),
-                    // isScrollable: true,
-                    // labelPadding: EdgeInsets.only(left: 0, right: 0),
-                    // indicatorSize: TabBarIndicatorSize.label,
-                    // indicator: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(50),
-                    //     color: Color(0xFF68b0ab)),
-                    tabs: [
-                      Tab(
-                        text: ("Current"),
-                      ),
-                      Tab(
-                        text: ("Requests"),
-                      ),
-                    ]),
+                    tabs: (widget.project.projectOwners.indexWhere((element) =>
+                                element.accountId ==
+                                Provider.of<Auth>(context, listen: false)
+                                    .myProfile
+                                    .accountId) !=
+                            -1)
+                        ? [
+                            Tab(
+                              text: ("Current"),
+                            ),
+                            Tab(
+                              text: ("Requests"),
+                            ),
+                          ]
+                        : [
+                            Tab(
+                              text: ("Current"),
+                            ),
+                          ],
+                  ),
+                ),
               ),
             ),
-          ),
-          body: TabBarView(
-            children: [
-              buildCurrentTeamMembersView(),
-              buildJoinRequestsView(),
-            ],
-          ),
-        ));
+            body: (widget.project.projectOwners.indexWhere((element) =>
+                        element.accountId ==
+                        Provider.of<Auth>(context, listen: false)
+                            .myProfile
+                            .accountId) !=
+                    -1)
+                ? TabBarView(
+                    children: [
+                      buildCurrentTeamMembersView(),
+                      buildJoinRequestsView(),
+                    ],
+                  )
+                : TabBarView(
+                    children: [
+                      buildCurrentTeamMembersView(),
+                    ],
+                  )));
   }
 
   buildCurrentTeamMembersView() {
-    print(widget.project.teamMembers.length);
+    // print(widget.project.teamMembers.length);
+    // for (TruncatedProfile tp in widget.project.teamMembers) {
+    //   if (!allMembers.contains(tp)) {
+    //     allMembers.add(tp);
+    //   }
+    // }
+    // for (TruncatedProfile tp in widget.project.projectOwners) {
+    //   if (!allMembers.contains(tp)) {
+    //     allMembers.add(tp);
+    //   }
+    // }
+
     return Column(
       children: [
         ListView.builder(
@@ -168,35 +223,64 @@ class _TeamMembersManagementState extends State<TeamMembersManagement> {
                 child: ListTile(
                     leading: CircleAvatar(
                       radius: 25,
-                      backgroundImage: widget
-                              .project.teamMembers[index].profilePhoto.isEmpty
+                      backgroundImage: allMembers[index].profilePhoto.isEmpty
                           ? AssetImage("assets/images/avatar2.jpg")
                           : NetworkImage(
-                              "${ApiBaseHelper.instance.baseUrl}${widget.project.teamMembers[index].profilePhoto.substring(30)}"),
+                              "${ApiBaseHelper.instance.baseUrl}${allMembers[index].profilePhoto.substring(30)}"),
                     ),
-                    title: Text(widget.project.teamMembers[index].name,
+                    trailing: widget.project.projectOwners.indexWhere(
+                                (element) =>
+                                    element.accountId ==
+                                    allMembers[index].accountId) !=
+                            -1
+                        ? Icon(Icons.star)
+                        : Text(''),
+                    title: Text(allMembers[index].name,
                         style: TextStyle(
                           color: Colors.grey[850],
                         ))),
-                secondaryActions: <Widget>[
-                  // IconSlideAction(
-                  //   caption: 'More',
-                  //   color: Colors.black45,
-                  //   icon: Icons.more_horiz,
-                  //   // onTap: () => _showSnackBar('More'),
-                  // ),
-                  IconSlideAction(
-                    caption: 'Remove',
-                    color: Colors.red[300],
-                    icon: Icons.delete,
-                    onTap: () => _removeTeamMember(
-                        widget.project.teamMembers[index].accountId),
-                  ),
-                ],
+                secondaryActions: (Provider.of<Auth>(context, listen: false)
+                                .myProfile
+                                .accountId ==
+                            allMembers[index].accountId) ||
+                        (widget.project.projectOwners.indexWhere((element) =>
+                                element.accountId ==
+                                Provider.of<Auth>(context, listen: false)
+                                    .myProfile
+                                    .accountId) ==
+                            -1)
+                    ? <Widget>[]
+                    : <Widget>[
+                        widget.project.projectOwners.indexWhere((element) =>
+                                    element.accountId ==
+                                    allMembers[index].accountId) ==
+                                -1
+                            ? IconSlideAction(
+                                caption: 'Promote',
+                                color: AppTheme.project4,
+                                icon: Icons.star,
+                                onTap: () => _addProjectOwner(
+                                    allMembers[index].accountId),
+                              )
+                            : IconSlideAction(
+                                caption: 'Demote',
+                                color: AppTheme.project4,
+                                icon: Icons.star,
+                                onTap: () => _removeProjectOwner(
+                                    allMembers[index].accountId),
+                              ),
+                        IconSlideAction(
+                          caption: 'Remove',
+                          color: Colors.red[300],
+                          icon: Icons.delete,
+                          onTap: () =>
+                              _removeTeamMember(allMembers[index].accountId),
+                        ),
+                      ],
               );
             },
-            itemCount: widget.project.teamMembers.length),
-        if (widget.project.teamMembers.isEmpty)
+            itemCount: allMembers.length),
+        if (allMembers.isEmpty)
           Container(
               height: 50 * SizeConfig.heightMultiplier,
               child: Center(

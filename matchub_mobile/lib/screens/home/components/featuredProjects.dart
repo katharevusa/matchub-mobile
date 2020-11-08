@@ -96,9 +96,6 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                                     ])),
                               ),
                             ),
-                            // Positioned(
-                            //   left: 10,
-                            //   bottom: 10,
                             Flexible(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -124,6 +121,7 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                     );
                   },
                   itemWidth: 300.0,
+                  itemHeight: 400.0,
                   layout: SwiperLayout.STACK,
                 ),
               ),
@@ -146,6 +144,9 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
               ),
               Expanded(
                 child: Swiper(
+                  itemWidth: 300.0,
+                  itemHeight: 400.0,
+                  layout: SwiperLayout.STACK,
                   pagination: SwiperPagination(margin: const EdgeInsets.only()),
                   viewportFraction: 0.9,
                   itemCount: spotLightResources.length,

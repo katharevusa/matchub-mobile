@@ -5,6 +5,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 //import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
+import 'package:matchub_mobile/screens/search/resources_search.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
@@ -57,8 +58,9 @@ class _ProfileResourceState extends State<ProfileResource> {
                       ? Center(
                           child: Text("No Resources Available",
                               style: AppTheme.titleLight))
-                      : ListView.builder(
-                          itemBuilder: (context, index) => ResourceVerticalCard(
+                      : ListView.separated(
+                        separatorBuilder: (_,__) => Divider(height: 8, thickness:0),
+                          itemBuilder: (context, index) => ResourcesSearchCard(
                             resource: listOfResources[index],
                           ),
                           itemCount: listOfResources.length,

@@ -25,7 +25,7 @@ class _ResourceNavigatorState extends State<ResourceNavigator> {
             case '/':
               return ResourceScreen();
             case ResourceDetailScreen.routeName:
-              return ResourceDetailScreen();
+              return ResourceDetailScreen(settings.arguments as Resources);
             case ResourceScreen.routeName:
               return ResourceScreen();
             case RequestFormScreen.routeName:
