@@ -74,7 +74,7 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: IconButton(
-                        color: Colors.grey[850],
+                        color: Colors.white,
                         icon: Icon(Icons.close),
                         onPressed: () => Navigator.of(context).pop(),
                       ),
@@ -86,7 +86,7 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
                     child: Text("Edit Profile Details",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            fontSize: 24,
+                            fontSize: 20,
                             color: Colors.white)),
                   ),
                   // backgroundColor: kScaffoldColor,

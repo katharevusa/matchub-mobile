@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/pProjectFollowers.dart';
+import 'package:matchub_mobile/unused/teamMember.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/style.dart';
@@ -14,6 +16,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
 import '../../../sizeconfig.dart';
+import 'pTeamMembers.dart';
 
 class PManagementSwiperCard extends StatefulWidget {
   Project project;
@@ -50,7 +53,7 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
   Widget build(BuildContext context) {
     myProfile = Provider.of<Auth>(context).myProfile;
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(bottom: 10.0, right: 10, left: 10),
       child: Column(
         children: <Widget>[
           Container(color: Colors.white, child: buildCircularProgress()),
@@ -69,15 +72,15 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                       child: Container(
                         height: 120,
                         color: AppTheme.project4,
-                        child: buildEndDate(),
+                        child: buildProjectBadge(),
                       ),
-                      onTap: () {
-                        if (myProfile.projectsOwned.indexWhere((e) =>
-                                e.projectId == widget.project.projectId) >=
-                            0) {
-                          projectEndingAction(widget.project, context);
-                        }
-                      },
+                      // onTap: () {
+                      //   if (myProfile.projectsOwned.indexWhere((e) =>
+                      //           e.projectId == widget.project.projectId) >=
+                      //       0) {
+                      //     projectEndingAction(widget.project, context);
+                      //   }
+                      // },
                     ),
                   ],
                 ),
@@ -89,13 +92,13 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                     Container(
                       height: 120,
                       color: AppTheme.project4,
-                      child: buildStartDate(),
+                      child: PManagementTeamMembers(widget.project),   // previous pManagementTeamMember
                     ),
                     const SizedBox(height: 10.0),
                     Container(
                       height: 190,
                       color: AppTheme.project5,
-                      child: buildProjectBadge(),
+                      child: PManagementProjectFollowers(widget.project), // previous PManagementProjectFollower
                     ),
                   ],
                 ),
@@ -344,8 +347,8 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
 
   Widget buildProjectBadge() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -365,7 +368,7 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                     color: Colors.white),
               ),
             ],
-          ),
+          ),SizedBox(width:10),
           Container(
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey[700], width: 0.5),

@@ -102,9 +102,9 @@ class _ViewTaskState extends State<ViewTask> {
   }
 
   generateVideoThumbnails() async {
-        print("sdfsdf");
+    print("sdfsdf");
     for (var doc in widget.task.documents.entries) {
-        print("sdfsdf");
+      print("sdfsdf");
       if (path.extension(doc.key) == '.mp4') {
         // print("sdfsdff");
         // _controller = VideoPlayerController.network(
@@ -118,20 +118,18 @@ class _ViewTaskState extends State<ViewTask> {
         //   });
         print(ApiBaseHelper.instance.baseUrl + doc.value.substring(30));
         vidThumnails[doc.key] = await VideoThumbnail.thumbnailData(
-
           video: ApiBaseHelper.instance.baseUrl + doc.value.substring(30),
           // video: "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
-          // thumbnailPath: (await getTemporaryDirectory()).path, 
+          // thumbnailPath: (await getTemporaryDirectory()).path,
           imageFormat: ImageFormat.WEBP,
           maxWidth: 140,
           quality: 30,
-        );      
+        );
         // File file = new File(vidThumnails[doc.key]);
         // print('exists ${file.existsSync()}');
         // print("sdfsdf");
         setState(() {
-
-        print(doc.value);
+          print(doc.value);
           print("sdfsd");
         });
       }
@@ -208,31 +206,33 @@ class _ViewTaskState extends State<ViewTask> {
                             ),
                           ),
                         ),
-                        if(isChannelAdmin)
-                        PopupMenuItem(
-                          child: ListTile(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                            visualDensity: VisualDensity.compact,
-                            onTap: () async {
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
-                              Provider.of<KanbanController>(context,
-                                      listen: false)
-                                  .deleteTask(
-                                      widget.task,
-                                      Provider.of<Auth>(context, listen: false)
-                                          .myProfile
-                                          .accountId);
-                            },
-                            dense: true,
-                            leading: Icon(FlutterIcons.trash_alt_faw5s),
-                            title: Text(
-                              "Delete Task",
-                              style: TextStyle(
-                                  fontSize: SizeConfig.textMultiplier * 1.8),
+                        if (isChannelAdmin)
+                          PopupMenuItem(
+                            child: ListTile(
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 8),
+                              visualDensity: VisualDensity.compact,
+                              onTap: () async {
+                                Navigator.of(context)
+                                    .popUntil((route) => route.isFirst);
+                                Provider.of<KanbanController>(context,
+                                        listen: false)
+                                    .deleteTask(
+                                        widget.task,
+                                        Provider.of<Auth>(context,
+                                                listen: false)
+                                            .myProfile
+                                            .accountId);
+                              },
+                              dense: true,
+                              leading: Icon(FlutterIcons.trash_alt_faw5s),
+                              title: Text(
+                                "Delete Task",
+                                style: TextStyle(
+                                    fontSize: SizeConfig.textMultiplier * 1.8),
+                              ),
                             ),
-                          ),
-                        )
+                          )
                       ]),
           ],
         ),
@@ -343,8 +343,8 @@ class _ViewTaskState extends State<ViewTask> {
                                             image: (fileName == "Video" &&
                                                     vidThumnails.containsKey(
                                                         document.key))
-                                                ? MemoryImage(vidThumnails[
-                                                    document.key])
+                                                ? MemoryImage(
+                                                    vidThumnails[document.key])
                                                 : fileName == "Image"
                                                     ? NetworkImage(ApiBaseHelper
                                                             .instance.baseUrl +
@@ -365,13 +365,15 @@ class _ViewTaskState extends State<ViewTask> {
                                             child:
                                                 getDocumentImage(document.key)),
                                         SizedBox(width: 5),
-                                        Text(fileName,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w400)),
+                                        Expanded(
+                                          child: Text(fileName,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w400)),
+                                        ),
                                       ],
                                     )),
                               );
@@ -388,9 +390,7 @@ class _ViewTaskState extends State<ViewTask> {
                                     ),
                                     context: context,
                                     builder: (ctx) {
-                                      return AttachmentPopup(
-                                        widget: widget,
-                                      );
+                                      return AttachmentPopup();
                                     }).then((value) async {
                                   if (value != null) {
                                     print(value.path);
@@ -533,7 +533,7 @@ class _ViewTaskState extends State<ViewTask> {
           ),
           Align(
             alignment: Alignment.center,
-            child: Text("Be the first to leave a comment",
+            child: Text("Be the first to leave a comment.",
                 style: TextStyle(
                     fontSize: 1.8 * SizeConfig.textMultiplier,
                     color: Colors.grey[700])),
@@ -967,49 +967,4 @@ class _ViewTaskState extends State<ViewTask> {
       ),
     );
   }
-
-  Widget getDocumentImage(String fileName) {
-    int ext = 0;
-    switch (path.extension(fileName)) {
-      case '.docx':
-        {
-          ext = 0;
-        }
-        break;
-      case '.doc':
-        {
-          ext = 0;
-        }
-        break;
-      case '.ppt':
-        {
-          ext = 1;
-        }
-        break;
-      case '.xlsx':
-        {
-          ext = 2;
-        }
-        break;
-      case '.pdf':
-        {
-          ext = 3;
-        }
-        break;
-      default:
-        ext = 4;
-    }
-    return Image.asset(
-      iconList[ext],
-      fit: BoxFit.cover,
-    );
-  }
 }
-
-final List<String> iconList = [
-  "assets/icons/word.png",
-  "assets/icons/ppt.png",
-  "assets/icons/excel.png",
-  "assets/icons/pdf.png",
-  "assets/icons/video.png",
-];

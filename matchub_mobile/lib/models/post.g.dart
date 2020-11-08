@@ -12,10 +12,10 @@ Post _$PostFromJson(Map<String, dynamic> json) {
     ..content = json['content'] as String
     ..timeCreated = DateTime.parse(json['timeCreated'])
     ..photos = json['photos'] as List
-    ..originalPostId = json['originalPostId'] as String
-    ..previousPostId = json['previousPostId'] as String
+    ..originalPostId = json['originalPostId'] as num
+    ..previousPostId = json['previousPostId'] as num
     ..likes = json['likes'] as num
-    ..postCreatorId = json['postCreatorId'] as String
+    ..postCreatorId = json['postCreatorId'] as num
     ..listOfComments = json['listOfComments'] as List;
 }
 

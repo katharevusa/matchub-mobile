@@ -87,7 +87,7 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
                     child: Text("Edit Profile Details",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            fontSize: 24,
+                            fontSize: 20,
                             color: Colors.white)),
                   ),
                   // backgroundColor: kScaffoldColor,
