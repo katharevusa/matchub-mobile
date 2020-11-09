@@ -13,6 +13,8 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..verificationDocuments =
         json['verificationDocuments'] as Map<String, dynamic>
     ..employees = json['employees'] as List
+    ..stripeAccountUid = json['stripeAccountUid'] as String
+    ..stripeAccountChargesEnabled = json['stripeAccountChargesEnabled'] as bool
     ..uuid = json['uuid'] as String
     ..email = json['email'] as String
     ..accountLocked = json['accountLocked'] as bool

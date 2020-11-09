@@ -12,6 +12,8 @@ class Profile with ChangeNotifier {
   String uuid;
   String email;
   String name;
+  bool stripeAccountChargesEnabled;
+  String stripeAccountUid;
   List employees;
   String countryCode;
   String address;

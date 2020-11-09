@@ -96,6 +96,7 @@ dependencies:
   firebase_messaging: ^7.0.2
   flutter_local_notifications: ^1.4.4+5
 
+  webview_flutter: "1.0.0"
   #Security
   local_auth: ^0.6.3+2
 

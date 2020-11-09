@@ -64,7 +64,7 @@ class _ChannelCreationState extends State<ChannelCreation> {
         automaticallyImplyLeading: false,
         title: Container(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          child: Text("Create a New Channel",
+          child: Text("Create a new Channel",
               style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
@@ -211,7 +211,7 @@ class InfoPage extends StatelessWidget {
                       labelText: 'Channel Name',
                       hintText: 'Fill in your channel\'s name here.',
                       labelStyle:
-                          TextStyle(color: Colors.grey[850], fontSize: 14),
+                          TextStyle(color: Colors.grey[600], fontSize: 12),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: kSecondaryColor),
                       ),
@@ -225,7 +225,7 @@ class InfoPage extends StatelessWidget {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Colors.grey[850],
+                          color: Colors.grey[600],
                         ),
                       ),
                     ),
@@ -251,7 +251,7 @@ class InfoPage extends StatelessWidget {
                       labelText: 'Description',
                       hintText: 'Fill in your channel\'s description here.',
                       labelStyle:
-                          TextStyle(color: Colors.grey[850], fontSize: 14),
+                          TextStyle(color: Colors.grey[600], fontSize: 12),
                       fillColor: Colors.grey[100],
                       hoverColor: Colors.grey[100],
                       border: OutlineInputBorder(
@@ -263,7 +263,7 @@ class InfoPage extends StatelessWidget {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Colors.grey[850],
+                          color: Colors.grey[600],
                         ),
                       ),
                     ),

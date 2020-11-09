@@ -45,7 +45,7 @@ class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: AppTheme.appBackgroundColor,
     primaryColor: kPrimaryColor,
-    accentColor: kAccentColor,
+    accentColor: Colors.blueGrey[200],
     brightness: Brightness.light,
     textTheme: lightTextTheme,
   );

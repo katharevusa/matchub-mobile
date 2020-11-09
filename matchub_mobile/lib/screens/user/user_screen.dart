@@ -5,6 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:matchub_mobile/helpers/sdgs.dart';
 import 'package:matchub_mobile/models/profile.dart';
+import 'package:matchub_mobile/screens/campaign/wallet_screen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'dart:convert';
 // import 'package:matchub_mobile/model/individual.dart';
@@ -149,12 +150,16 @@ class _UserScreenState extends State<UserScreen> {
                     ));
                   }),
                   buildSettingCard(
-                      "Privacy",
+                      "Stripe Wallet",
                       Icon(
-                        FlutterIcons.user_friends_faw5s,
+                        FlutterIcons.wallet_faw5s,
                         color: Color(0xFF4e89ae),
-                      ),
-                      () {}),
+                      ), () {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                      builder: (context) => WalletScreen(),
+                    ));
+                  }),
                   buildSettingCard(
                       "Announcements",
                       Icon(
