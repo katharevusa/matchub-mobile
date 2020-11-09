@@ -41,39 +41,16 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
     super.initState();
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   membersFuture = getMembers();
-  //   kahsFuture = getKah();
-  // }
-
-  // getMembers() async {
-  //   final url =
-  //       'authenticated/organisation/viewMembers/${widget.profile.accountId}';
-  //   final responseData = await _helper.getProtected(
-  //       url, Provider.of<Auth>(this.context, listen: false).accessToken);
-  //   members = (responseData['content'] as List)
-  //       .map((e) => Profile.fromJson(e))
-  //       .toList();
-  // }
-
   loadMembers() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageOrganisationMembers>(context, listen: false)
-        .getMembers(widget.profile, accessToken);
-    // setState(() {
-    //   _isLoading = false;
-    // });
-    // await getKah();
+        .getMembers(widget.profile);
   }
 
   loadKah() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
-    await Provider.of<ManageListOfKah>(context, listen: false)
-        .getKahs(widget.profile, accessToken);
+    await Provider.of<ManageOrganisationMembers>(context, listen: false)
+        .getKahs(widget.profile);
     setState(() {
       _isLoading = false;
     });
@@ -82,7 +59,7 @@ class _DescriptionInfoState extends State<DescriptionInfo> {
 
   @override
   Widget build(BuildContext context) {
-    kahs = Provider.of<ManageListOfKah>(context).listOfKah;
+    kahs = Provider.of<ManageOrganisationMembers>(context).listOfKah;
     members = Provider.of<ManageOrganisationMembers>(context).members;
     return _isLoading
         ? Container(child: Center(child: Text("I am loading")))

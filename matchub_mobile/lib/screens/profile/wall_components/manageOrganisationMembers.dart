@@ -42,9 +42,8 @@ class _ManageOrganisationMembersScreenState
 
   loadMembers() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageOrganisationMembers>(context, listen: false)
-        .getMembers(profile, accessToken);
+        .getMembers(profile);
 
     setState(() {
       _isLoading = false;

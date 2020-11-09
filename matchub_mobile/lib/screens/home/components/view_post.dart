@@ -60,11 +60,16 @@ class _ViewPostState extends State<ViewPost> {
                     popupmenu.PopupMenuItem(
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
-                        onTap: () {},
+                        onTap: () async {
+                          Navigator.of(context).pop();
+                          await ApiBaseHelper.instance.deleteProtected(
+                              "authenticated/deletePost/${widget.post.postId}/${Provider.of<Auth>(context, listen: false).myProfile.accountId}");
+                          Navigator.of(context).pop(true);
+                        },
                         dense: true,
                         leading: Icon(FlutterIcons.trash_alt_faw5s),
                         title: Text(
-                          "Delete Chat",
+                          "Delete Post",
                           style: TextStyle(
                               fontSize: SizeConfig.textMultiplier * 1.8),
                         ),

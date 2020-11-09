@@ -7,6 +7,7 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
+import 'package:matchub_mobile/screens/profile/view_profile.dart';
 
 class FollowersScreen extends StatefulWidget {
   Profile user;
@@ -82,7 +83,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
             separatorBuilder: (context, index) => SizedBox(height: 5),
             itemBuilder: (context, index) => ListTile(
               onTap: () => Navigator.of(context).pushNamed(
-                  ProfileScreen.routeName,
+                  ViewProfile.routeName,
                   arguments: filteredFollowers[index].accountId),
               leading: 
                     ClipOval(

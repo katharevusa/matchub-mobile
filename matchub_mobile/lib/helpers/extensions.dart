@@ -28,7 +28,7 @@ extension DifferenceInTime on DateTime {
   String differenceFrom(DateTime date) {
     Duration difference = this.difference(date);
     if (difference.inMinutes == 0) {
-      return difference.inMinutes.toString() + " seconds ago";
+      return difference.inSeconds.toString() + " seconds ago";
     } else if (difference.inHours == 0) {
       return difference.inMinutes.toString() + " minutes ago";
     } else if (difference.inDays == 0) {

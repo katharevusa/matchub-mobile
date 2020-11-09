@@ -37,11 +37,16 @@ class _PostCardState extends State<PostCard> {
   }
 
   fetchOriginalPost() async {
-    originalPost = Post.fromJson(await ApiBaseHelper.instance
-        .getProtected("authenticated/getPost/${widget.post.originalPostId}"));
-    setState(() {
-      isLoading = false;
-    });
+    try {
+      originalPost = Post.fromJson(await ApiBaseHelper.instance
+          .getProtected("authenticated/getPost/${widget.post.originalPostId}"));
+    } catch (ex) {
+      originalPost = null;
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -52,11 +57,29 @@ class _PostCardState extends State<PostCard> {
         ? Container()
         : InkWell(
             onTap: () {
-              // if (!widget.isRepost) {
-                Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(
-                        builder: (_) => ViewPost(post: widget.post)));
-              // }
+              Navigator.of(context, rootNavigator: true)
+                  .push(
+                MaterialPageRoute(
+                  builder: (_) => ViewPost(post: widget.post),
+                ),
+              )
+                  .then(
+                (value) {
+                  if (value != null && value) {
+                  } else {
+                    ApiBaseHelper.instance
+                        .getProtected(
+                            "authenticated/getPost/${widget.post.postId}")
+                        .then(
+                          (value) => setState(
+                            () {
+                              widget.post = Post.fromJson(value);
+                            },
+                          ),
+                        );
+                  }
+                },
+              );
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -93,15 +116,15 @@ class _PostCardState extends State<PostCard> {
                               fontSize: 16,
                               color: Colors.grey[850]),
                         ),
-                        if(originalPost != null && !widget.isRepost)
-                        Text(
-                          " shared a post",
-                          overflow: TextOverflow.fade,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13,
-                              color: Colors.grey[700]),
-                        ),
+                        if (originalPost != null && !widget.isRepost)
+                          Text(
+                            " shared a post",
+                            overflow: TextOverflow.fade,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13,
+                                color: Colors.grey[700]),
+                          ),
                       ],
                     ),
                     subtitle: Text(
@@ -123,13 +146,36 @@ class _PostCardState extends State<PostCard> {
                           fontWeight: FontWeight.w400),
                     ),
                   ),
-                  if (!widget.isRepost && originalPost!=null)
+                  if (!widget.isRepost && originalPost != null)
                     Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        child: PostCard(
-                          post: originalPost,
-                          isRepost: true,
-                        )),
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      child: PostCard(
+                        post: originalPost,
+                        isRepost: true,
+                      ),
+                    ),
+                  if (!widget.isRepost &&
+                      originalPost == null &&
+                      widget.post.originalPostId == 0)
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.grey[300], width: 2),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "This post has been deleted by its creator.",
+                          style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
                   if (widget.post.photos.isNotEmpty)
                     Padding(
                       padding:
@@ -235,10 +281,19 @@ class _PostCardState extends State<PostCard> {
                               ],
                             ),
                             onPressed: () {
-                              Navigator.of(context, rootNavigator: true).push(
-                                  MaterialPageRoute(
-                                      builder: (_) => SharePost(
-                                          originalPost: widget.post)));
+                              Navigator.of(context, rootNavigator: true)
+                                  .push(
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          SharePost(originalPost: widget.post),
+                                    ),
+                                  )
+                                  .then((value) => ApiBaseHelper.instance
+                                      .getProtected(
+                                          "authenticated/getPost/${widget.post.postId}"))
+                                  .then((value) =>
+                                      widget.post = Post.fromJson(value));
+                              setState(() {});
                             },
                           ),
                         ],

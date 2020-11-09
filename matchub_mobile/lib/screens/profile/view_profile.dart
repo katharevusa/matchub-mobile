@@ -5,11 +5,13 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/home/components/greeting_card.dart';
 import 'package:matchub_mobile/screens/home/explore_list.dart';
 import 'package:matchub_mobile/screens/home/newsfeed.dart';
+import 'package:matchub_mobile/screens/profile/profile_comments.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
 import 'package:matchub_mobile/screens/profile/profile_resource.dart';
 import 'package:matchub_mobile/screens/profile/profile_reviews.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:share/share.dart';
 
 import 'header.dart';
 
@@ -48,10 +50,10 @@ class _ViewProfileState extends State<ViewProfile>
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Container()
-        : Scaffold(
-            body: SafeArea(
+    return Scaffold(
+      body: isLoading
+          ? Container()
+          : SafeArea(
               child: NestedScrollView(
                 controller: _scrollController,
                 headerSliverBuilder:
@@ -60,7 +62,18 @@ class _ViewProfileState extends State<ViewProfile>
                     SliverAppBar(
                       toolbarHeight: 50,
                       automaticallyImplyLeading: true,
-                      actions: [],
+                      actions: [
+                        IconButton(
+                            icon: Icon(
+                              FlutterIcons.share_faw5s,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              Share.share(
+                                  'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this profile, he\'s been doing great work!\nhttp://localhost:3000/profile/${profile.uuid}');
+                            })
+                      ],
                     ),
                     SliverToBoxAdapter(
                       child: Container(
@@ -115,15 +128,16 @@ class _ViewProfileState extends State<ViewProfile>
                 },
                 body: TabBarView(
                   children: <Widget>[
-                    ProfileProjects(projects: profile.projectsOwned),
-                    ProfileProjects(projects: profile.projectsOwned),
-                    ProfileResource(profile),
+                    ProfileActivity(profile: profile, scrollable: false),
+                    ProfileProjects(
+                        projects: profile.projectsOwned, scrollable: false),
+                    ProfileResource(profile, scrollable: false),
                     ProfileReviews(),
                   ],
                   controller: controller,
                 ),
               ),
             ),
-          );
+    );
   }
 }
