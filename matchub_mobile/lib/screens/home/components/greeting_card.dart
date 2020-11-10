@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
@@ -95,10 +96,8 @@ class _GreetingCardState extends State<GreetingCard> {
                       begin: Alignment.bottomLeft,
                       end: Alignment.topRight,
                       colors: [
-                        Color(0xFF086564),
-                        Color(0xFF179996),
-                        Color(0xFF87D6C1),
-                        Color(0xFFABF4E1)
+                        AppTheme.project4,
+                        AppTheme.project4,
                       ])),
               alignment: Alignment.bottomLeft,
               child: Padding(

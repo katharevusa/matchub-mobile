@@ -6,6 +6,7 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectAnnouncement.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/unused/drawerMenu.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/unused/project_management_screen.dart';
@@ -22,6 +23,7 @@ import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
+import 'package:slide_countdown_clock/slide_countdown_clock.dart';
 
 class ProjectManagementOverview extends StatefulWidget {
   static const routeName = "/project-management";
@@ -36,6 +38,8 @@ class ProjectManagementOverview extends StatefulWidget {
 
 class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
     with SingleTickerProviderStateMixin {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  Duration _duration = Duration(seconds: 1000000);
   List<Announcement> internalAnnouncements = [];
   List<Announcement> publicAnnouncements = [];
   bool isLoaded;
@@ -70,6 +74,144 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
     setState(() {
       isLoaded = true;
     });
+  }
+
+  spotlightDuration(Project project, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            child: Container(
+              padding: EdgeInsets.all(15),
+              height: 200,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  )),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Text("Spotlight will end in",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w500)),
+                  ),
+                  SlideCountdownClock(
+                    duration: Duration(
+                        days: DateTime.parse(widget.project.spotlightEndTime)
+                            .difference(DateTime.now())
+                            .inDays,
+                        minutes: DateTime.parse(widget.project.spotlightEndTime)
+                            .difference(DateTime.now())
+                            .inMinutes),
+                    slideDirection: SlideDirection.Up,
+                    separator: ":",
+                    textStyle: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    shouldShowDays: true,
+                    onDone: () {
+                      _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(content: Text('Spotlight has ended')));
+                    },
+                  ),
+                  CircleAvatar(
+                    radius: 55,
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                      image: AssetImage(
+                        './././assets/images/spotlight.png',
+                      ),
+                    ))),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  spotlightAction(Project project, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            child: Container(
+              padding: EdgeInsets.all(15),
+              height: 200,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  )),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Text(
+                        "Spotlight your project so that your project will appear on the featured projects on explore.",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w500)),
+                  ),
+                  // myProfile.spotlightChances != 0
+                  // ?
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          FlatButton(
+                            color: AppTheme.project3,
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text("Spotlight project",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w400)),
+                            onPressed: () async {
+                              await spotlightProject();
+                              Navigator.pop(context, true);
+                            },
+                          ),
+                          Text(
+                            '${myProfile.spotlightChances} ' + "chances left.",
+                            style: TextStyle(fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                      CircleAvatar(
+                        radius: 55,
+                        backgroundColor: Colors.transparent,
+                        child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                          image: AssetImage(
+                            './././assets/images/spotlight.png',
+                          ),
+                        ))),
+                      ),
+                    ],
+                  ),
+
+                  // : Text("You do not have any spotlight chances.")
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   projectEndingAction(Project project, BuildContext context) {
@@ -134,6 +276,21 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
     );
   }
 
+  spotlightProject() async {
+    final url =
+        "authenticated/spotlightProject/${widget.project.projectId}/${myProfile.accountId}";
+    try {
+      final response = await ApiBaseHelper.instance.putProtected(
+        url,
+      );
+      await loadProject();
+      print("Success");
+    } catch (error) {
+      print("Failure");
+      showErrorDialog(error.toString(), this.context);
+    }
+  }
+
   terminateProject() async {
     final url =
         "authenticated/terminateProject?projectId=${widget.project.projectId}&profileId=${myProfile.accountId}";
@@ -143,7 +300,7 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
       );
 
       print("Success");
-      Navigator.of(this.context).pop(true);
+      await loadProject();
     } catch (error) {
       print("Failure");
       showErrorDialog(error.toString(), this.context);
@@ -158,10 +315,9 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
       final response = await ApiBaseHelper.instance.putProtected(
         url,
       );
-      await Provider.of<ManageProject>(context, listen: false)
-          .getProject(widget.project.projectId);
       print("Success");
-      Navigator.of(this.context).pop("Completed-Project");
+      await loadProject();
+      // Navigator.of(this.context).pop("Completed-Project");
     } catch (error) {
       showErrorDialog(error.toString(), this.context);
       print("Failure");
@@ -252,46 +408,115 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
                       ),
                     ),
                     Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Row(
-                          children: [
-                            (myProfile.projectsOwned.indexWhere((e) =>
-                                        e.projectId ==
-                                        widget.project.projectId) >=
-                                    0)
-                                ? IconButton(visualDensity: VisualDensity.compact,
-                                    iconSize: 22,
-                                    icon: Icon(Icons.create),
-                                    color: Colors.white,
-                                    onPressed: () => Navigator.of(context,
-                                            rootNavigator: true)
-                                        .push(MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProjectCreationScreen(
-                                                    newProject: 
-                                                        widget.project))))
-                                : Container(),
-                            IconButton(
-                                iconSize: 24,
-                                icon: Icon(Icons.more_vert_rounded),
-                                color: Colors.white,
-                                onPressed: () => projectEndingAction(
-                                    widget.project, context))
-                          ],
-                        ),),
+                      top: 8,
+                      right: 8,
+                      child: Row(
+                        children: [
+                          (myProfile.projectsOwned.indexWhere((e) =>
+                                      e.projectId ==
+                                      widget.project.projectId) >=
+                                  0)
+                              ? IconButton(
+                                  visualDensity: VisualDensity.compact,
+                                  iconSize: 22,
+                                  icon: Icon(Icons.create),
+                                  color: Colors.white,
+                                  onPressed: () => Navigator.of(context,
+                                          rootNavigator: true)
+                                      .push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProjectCreationScreen(
+                                                  newProject: widget.project))))
+                              : Container(),
+                          IconButton(
+                              iconSize: 24,
+                              icon: Icon(Icons.more_vert_rounded),
+                              color: Colors.white,
+                              onPressed: () =>
+                                  projectEndingAction(widget.project, context))
+                        ],
+                      ),
+                    ),
                     Positioned(
-                        bottom: 20,
-                        right: 20,
-                        child: Text(
-                          DateFormat.yMMMd().format(widget.project.startDate) + " - " +
-                          DateFormat.yMMMd().format(widget.project.endDate),
-                           style: TextStyle(color:Colors.white, fontSize: 12, fontWeight: FontWeight.w400)
-                        ),
-                       )
+                      bottom: 20,
+                      right: 20,
+                      child: Text(
+                          DateFormat.yMMMd().format(widget.project.startDate) +
+                              " - " +
+                              DateFormat.yMMMd().format(widget.project.endDate),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400)),
+                    ),
+                    Positioned(
+                      bottom: 20,
+                      left: 20,
+                      child: !widget.project.spotlight &&
+                              widget.project.projStatus != "COMPLETED" &&
+                              widget.project.projStatus != "TERMINATED" &&
+                              (myProfile.projectsOwned.indexWhere((e) =>
+                                      e.projectId ==
+                                      widget.project.projectId) >=
+                                  0)
+                          ? InkWell(
+                              onTap: () {
+                                spotlightAction(widget.project, context);
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 90,
+                                decoration: BoxDecoration(
+                                  color: AppTheme.project3,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.star_border,
+                                      color: Colors.black,
+                                    ),
+                                    Text("Spotlight"),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : widget.project.projStatus != "COMPLETED" &&
+                                  widget.project.projStatus != "TERMINATED"
+                              ? InkWell(
+                                  onTap: () {
+                                    spotlightDuration(widget.project, context);
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.project3,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.black,
+                                        ),
+                                        Text("Under Spotlight"),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                    ),
                   ]),
                   PManagementSwiperCard(widget.project),
-                  PAnnouncementCard(publicAnnouncements: publicAnnouncements, internalAnnouncements: internalAnnouncements, widget: widget,),
+                  PAnnouncementCard(
+                    publicAnnouncements: publicAnnouncements,
+                    internalAnnouncements: internalAnnouncements,
+                    widget: widget,
+                  ),
                 ]),
               )
             : Container(),
@@ -299,4 +524,3 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
     );
   }
 }
-
