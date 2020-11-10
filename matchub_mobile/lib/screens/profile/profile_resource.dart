@@ -17,7 +17,8 @@ import 'package:provider/provider.dart';
 class ProfileResource extends StatefulWidget {
   Profile profile;
 
-  ProfileResource(this.profile);
+  bool scrollable;
+  ProfileResource(this.profile, {this.scrollable = true});
 
   @override
   _ProfileResourceState createState() => _ProfileResourceState();
@@ -51,22 +52,23 @@ class _ProfileResourceState extends State<ProfileResource> {
     // print(listOfResources.length.toString() + "========================");
     return FutureBuilder(
       future: listOfHostedResourcesFuture,
-      builder: (context, snapshot) =>
-          (snapshot.connectionState == ConnectionState.done)
-              ? Scaffold(
-                  body: (listOfResources.isEmpty)
-                      ? Center(
-                          child: Text("No Resources Available",
-                              style: AppTheme.titleLight))
-                      : ListView.separated(
-                        separatorBuilder: (_,__) => Divider(height: 8, thickness:0),
-                          itemBuilder: (context, index) => ResourcesSearchCard(
-                            resource: listOfResources[index],
-                          ),
-                          itemCount: listOfResources.length,
-                        ),
+      builder: (context, snapshot) => (snapshot.connectionState ==
+              ConnectionState.done)
+          ? (listOfResources.isEmpty)
+              ? Center(
+                  child: Text("No Resources Available",
+                      style: AppTheme.titleLight))
+              : ListView.separated(
+                  physics: widget.scrollable
+                      ? BouncingScrollPhysics()
+                      : NeverScrollableScrollPhysics(),
+                  separatorBuilder: (_, __) => Divider(height: 8, thickness: 0),
+                  itemBuilder: (context, index) => ResourcesSearchCard(
+                    resource: listOfResources[index],
+                  ),
+                  itemCount: listOfResources.length,
                 )
-              : Center(child: CircularProgressIndicator()),
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }

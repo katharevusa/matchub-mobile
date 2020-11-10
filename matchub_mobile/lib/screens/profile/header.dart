@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/helpers/profile_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/chat/messages.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
+import 'package:matchub_mobile/screens/profile/wall_components/manageKahsScreen.dart';
+import 'package:matchub_mobile/screens/profile/wall_components/manageOrganisationMembers.dart';
+import 'package:matchub_mobile/screens/profile/wall_components/viewOrganisationMembers.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
+import 'package:matchub_mobile/services/manage_organisationmembers.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -25,6 +30,15 @@ class ProfileHeader extends StatefulWidget {
 
 class _ProfileHeaderState extends State<ProfileHeader> {
   Profile myProfile;
+  List<Profile> members = [];
+  List<Profile> kahs = [];
+  bool _isLoading = false;
+  initState() {
+    myProfile = Provider.of<Auth>(context, listen: false).myProfile;
+    if (myProfile.isOrganisation) {
+      loadMembers();
+    }
+  }
 
   toggleFollowing(int followId) async {
     Profile myProfile = Provider.of<Auth>(context, listen: false).myProfile;
@@ -32,12 +46,10 @@ class _ProfileHeaderState extends State<ProfileHeader> {
       var responseData;
       if (myProfile.following.indexOf(followId) != -1) {
         responseData = await ApiBaseHelper.instance.postProtected(
-            "authenticated/unfollowProfile?unfollowId=${followId}&accountId=${myProfile.accountId}",
-            accessToken: Provider.of<Auth>(context, listen: false).accessToken);
+            "authenticated/unfollowProfile?unfollowId=${followId}&accountId=${myProfile.accountId}");
       } else {
         responseData = await ApiBaseHelper.instance.postProtected(
-            "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}",
-            accessToken: Provider.of<Auth>(context, listen: false).accessToken);
+            "authenticated/followProfile?followId=${followId}&accountId=${myProfile.accountId}");
       }
       setState(() {});
     } catch (error) {
@@ -46,9 +58,25 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     }
   }
 
+  loadMembers() async {
+    setState(() {
+      _isLoading = false;
+    });
+    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
+    await Provider.of<ManageOrganisationMembers>(context, listen: false)
+        .getMembers(widget.profile);
+
+    await Provider.of<ManageOrganisationMembers>(context, listen: false)
+        .getKahs(widget.profile);
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    myProfile = Provider.of<Auth>(context, listen: false).myProfile;
+    kahs = Provider.of<ManageOrganisationMembers>(context).listOfKah;
+    members = Provider.of<ManageOrganisationMembers>(context).members;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
@@ -72,9 +100,34 @@ class _ProfileHeaderState extends State<ProfileHeader> {
               SizedBox(width: 10),
               IconButton(
                   iconSize: 24,
-                  icon: Icon(Icons.more_vert_rounded),
+                  icon: Icon(Icons.info_outline_rounded),
                   color: Colors.grey[850],
-                  onPressed: () {})
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return _isLoading
+                            ? Container()
+                            : Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      buildBadges(),
+                                      buildKah(context),
+                                      ...buildOrganisationMembers(
+                                          context, members),
+                                    ],
+                                  ),
+                                ),
+                              );
+                      },
+                    );
+                  })
             ],
           ),
           SizedBox(height: 10),
@@ -94,7 +147,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                         NumberFormat.compactCurrency(
                                 decimalDigits: 0, symbol: '')
                             .format(widget.profile.reputationPoints),
-                        style: TextStyle(fontSize: 17),
+                        style: TextStyle(fontSize: 20, color: kPrimaryColor),
                       ),
                     ],
                   ),
@@ -122,7 +175,8 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                               NumberFormat.compactCurrency(
                                       decimalDigits: 0, symbol: '')
                                   .format(widget.profile.followers.length),
-                              style: TextStyle(fontSize: 17),
+                              style:
+                                  TextStyle(fontSize: 20, color: kPrimaryColor),
                             ),
                           ]))),
             ),
@@ -147,7 +201,8 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             NumberFormat.compactCurrency(
                                     decimalDigits: 0, symbol: '')
                                 .format(widget.profile.following.length),
-                            style: TextStyle(fontSize: 17),
+                            style:
+                                TextStyle(fontSize: 20, color: kPrimaryColor),
                           ),
                         ])),
               ),
@@ -157,6 +212,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
           Row(
             children: [
               if (widget.profile.accountId != myProfile.accountId) ...[
+                SizedBox(width: 10),
                 Expanded(
                     child: OutlineButton(
                   borderSide: BorderSide(color: kPrimaryColor, width: 1.5),
@@ -183,7 +239,11 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   },
                   shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(5.0)),
-                  child: Text("Contact"),
+                  child: Text("Contact",
+                      style: TextStyle(
+                          color: kPrimaryColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold)),
                 )),
                 SizedBox(width: 10),
                 Expanded(
@@ -206,25 +266,30 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(5.0)),
                   child: (widget.profile.accountId == myProfile.accountId)
-                      ? Text("Me")
+                      ? Text("Me",
+                          style: TextStyle(
+                              color: kPrimaryColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold))
                       : (myProfile.following.indexOf(widget.profile.accountId) >
                               -1)
-                          ? Text("Unfollow")
-                          : Text("Follow"),
+                          ? Text(
+                              "Unfollow",
+                              style: TextStyle(
+                                  color: kPrimaryColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : Text(
+                              "Follow",
+                              style: TextStyle(
+                                  color: kPrimaryColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
                 )),
                 SizedBox(width: 10),
               ],
-              Expanded(
-                  child: OutlineButton(
-                borderSide: BorderSide(color: kPrimaryColor, width: 1.5),
-                onPressed: () {
-                  Share.share(
-                      'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this profile, he\'s been doing great work!\nhttp://localhost:3000/profile/${widget.profile.uuid}');
-                },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(5.0)),
-                child: Text("Share"),
-              ))
             ],
           ),
           Padding(
@@ -275,8 +340,285 @@ class _ProfileHeaderState extends State<ProfileHeader> {
               ],
             ),
           ),
+          buildSkillset(),
+          buildSDGTags(),
         ],
       ),
     );
+  }
+
+  Row buildSkillset() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text("Skillsets"),
+              )),
+          Flexible(
+            flex: 3,
+            child: Tags(
+              horizontalScroll: true,
+              itemCount: widget.profile.skillSet.length,
+              itemBuilder: (int index) {
+                return ItemTags(
+                  alignment: MainAxisAlignment.center,
+                  key: Key(index.toString()),
+                  index: index,
+                  title: widget.profile.skillSet[index],
+                  color: kScaffoldColor,
+                  border: Border.all(color: Colors.grey[400]),
+                  textColor: Colors.grey[600],
+                  elevation: 0,
+                  active: false,
+                  pressEnabled: false,
+                  textStyle:
+                      TextStyle(fontWeight: FontWeight.w400, fontSize: 12.0),
+                );
+              },
+              heightHorizontalScroll: 40,
+              alignment: WrapAlignment.end,
+              runAlignment: WrapAlignment.start,
+            ),
+          ),
+        ]);
+  }
+
+  Row buildSDGTags() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(
+            flex: 1,
+            child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text("SDG Interests")),
+          ),
+          Flexible(
+            flex: 3,
+            child: Tags(
+              horizontalScroll: true,
+              itemCount: widget.profile.sdgs.length, // required
+              itemBuilder: (int index) {
+                return ItemTags(
+                  key: Key(index.toString()),
+                  index: index, // required
+                  title: widget.profile.sdgs[index].sdgName,
+                  color: kScaffoldColor,
+                  border: Border.all(color: Colors.grey[400]),
+                  textColor: Colors.grey[600],
+                  elevation: 0,
+                  active: false,
+                  pressEnabled: false,
+                  textStyle:
+                      TextStyle(fontWeight: FontWeight.w400, fontSize: 12.0),
+                );
+              },
+              heightHorizontalScroll: 40,
+              alignment: WrapAlignment.end,
+              runAlignment: WrapAlignment.start,
+            ),
+          ),
+        ]);
+  }
+
+  Column buildKah(BuildContext context) {
+    Profile currentUser = Provider.of<Auth>(context).myProfile;
+    if (widget.profile.isOrganisation) {
+      return Column(children: [
+        Row(
+          children: [
+            Expanded(child: Text("Key Appointment Holders")),
+            if (currentUser.accountId == widget.profile.accountId) ...[
+              FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => ManageKahsScreen(
+                                user: widget.profile,
+                              )));
+                },
+                child: Text(
+                  "Manage",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              )
+            ]
+          ],
+        ),
+        (kahs.isNotEmpty)
+            ? Container(
+                color: Colors.transparent,
+                height: 80.0,
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: kahs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(
+                      child: Container(
+                          color: Colors.transparent,
+                          margin: EdgeInsets.symmetric(
+                             horizontal: 10.0),
+                          width: 100.0,
+                          height: 50.0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              buildAvatar(kahs[index], radius: 60),
+                              SizedBox(
+                                height: 5.0,
+                              ),
+                              Text(kahs[index].name,
+                                  style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: 10))
+                            ],
+                          ),),
+                    );
+                  },
+                ),
+              )
+            : Container(
+                color: Colors.transparent,
+                height: 18.0,
+                child: Text(
+                  "No Key appointment holders yet",
+                  style:
+                      TextStyle(color: Colors.blueGrey.shade200, fontSize: 10),
+                ))
+      ]);
+    } else {
+      return Column();
+    }
+  }
+
+  buildOrganisationMembers(BuildContext context, List<Profile> members) {
+    Profile currentUser = Provider.of<Auth>(context, listen: false).myProfile;
+    List<Widget> organisationMembers = [
+      SizedBox(height: 20),
+    ];
+    print(currentUser.name);
+    if (widget.profile.isOrganisation) {
+      organisationMembers.add(Row(
+        children: [
+          Expanded(child: Text("Organisation members")),
+          if (currentUser.accountId == widget.profile.accountId) ...[
+            FlatButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => ManageOrganisationMembersScreen(
+                              user: widget.profile,
+                            )));
+              },
+              child: Text(
+                "Manage",
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+            SizedBox(height: 20),
+          ]
+        ],
+      ));
+      if (members.isNotEmpty) {
+        organisationMembers.add(Container(
+            height: 60,
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Stack(
+                  children: [
+                    ...members
+                        .asMap()
+                        .map(
+                          (i, e) => MapEntry(
+                            i,
+                            Transform.translate(
+                              offset: Offset(i * 30.0, 0),
+                              child: SizedBox(
+                                  height: 60,
+                                  width: 60,
+                                  child: buildAvatar(e, radius: 30)),
+                            ),
+                          ),
+                        )
+                        .values
+                        .toList(),
+                  ],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => ViewOrganisationMembersScreen(
+                                user: widget.profile)));
+                  },
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    margin: EdgeInsets.only(right: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(width: 1, color: Colors.black),
+                      image: DecorationImage(
+                          image: AssetImage(
+                              './././assets/images/view-more-icon.jpg'),
+                          fit: BoxFit.fill),
+                    ),
+                  ),
+                ),
+              ],
+            )));
+      } else {
+        organisationMembers.add(Container(
+            height: 18,
+            color: Colors.transparent,
+            child: Text(
+              "No Members yet",
+              style: TextStyle(color: Colors.blueGrey.shade200, fontSize: 10),
+            )));
+      }
+    }
+    return organisationMembers;
+  }
+
+  buildBadges() {
+    return widget.profile.badges.isNotEmpty
+        ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              "Badges Earned",
+            ),
+            SizedBox(height: 10),
+            Container(
+              height: 100,
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.profile.badges.length,
+                itemBuilder: (_, index) {
+                  return ClipOval(
+                    child: Container(
+                      height: 100,
+                      child: Tooltip(
+                        message: widget.profile.badges[index].badgeTitle,
+                        child:
+                            AttachmentImage(widget.profile.badges[index].icon),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ])
+        : Container();
   }
 }

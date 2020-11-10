@@ -3,8 +3,9 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/project.dart';
 import 'package:matchub_mobile/screens/home/components/featuredProjects.dart';
-import 'package:matchub_mobile/screens/home/components/profile_card.dart';
+
 import 'package:matchub_mobile/screens/home/leaderboard&achievement/ranking.dart';
+import 'package:matchub_mobile/unused/profile_card.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/widgets/project_vertical_card.dart';

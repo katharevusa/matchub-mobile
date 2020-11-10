@@ -30,9 +30,11 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..projectBadge = json['projectBadge'] != null
         ? Badge.fromJson(json['projectBadge'])
         : null
-    ..fundsCampaign = json['fundsCampaign'] as List
     ..meetings = json['meetings'] as List
     ..listOfRequests = json['listOfRequests'] as List
+    ..fundsCampaign = json['fundsCampaign'] != null
+        ? (json['fundsCampaign'] as List).map((i) => Campaign.fromJson(i)).toList()
+        : []
     ..sdgs = json['sdgs'] != null
         ? (json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList()
         : []

@@ -14,7 +14,7 @@ import 'package:matchub_mobile/screens/project/projectDetail/project_detail_over
 import 'package:matchub_mobile/unused/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
-import 'package:matchub_mobile/screens/project_management/pManagementComponent/project_management.dart';
+import 'package:matchub_mobile/screens/project_management/project_management.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_donationHistory_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_incoming/resource_incoming_screen.dart';

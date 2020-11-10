@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => Profile()),
             ChangeNotifierProvider(create: (_) => ManageProject()),
             ChangeNotifierProvider(create: (_) => ManageOrganisationMembers()),
-            ChangeNotifierProvider(create: (_) => ManageListOfKah()),
+            // ChangeNotifierProvider(create: (_) => ManageListOfKah()),
             ChangeNotifierProvider(create: (_) => ManageResource()),
             ChangeNotifierProvider(create: (_) => ManageOutgoingRequest()),
             ChangeNotifierProvider(create: (_) => ManageNotification()),

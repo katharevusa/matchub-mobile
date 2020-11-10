@@ -25,6 +25,8 @@ import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_countdown_clock/slide_countdown_clock.dart';
 
+import 'pManagementComponent/pFundCampaign.dart';
+
 class ProjectManagementOverview extends StatefulWidget {
   static const routeName = "/project-management";
   Project project;
@@ -338,189 +340,145 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
         body: isLoaded
             ? SingleChildScrollView(
                 child: Column(children: <Widget>[
-                  Stack(children: [
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: Container(
-                            margin: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                ),
-                              ],
-                            ),
-                            width: 100 * SizeConfig.widthMultiplier,
-                            height: 70 * SizeConfig.widthMultiplier,
-                            child: AttachmentImage(
-                                widget.project.projectProfilePic))),
-                    Positioned(
-                      bottom: 0.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: Container(
-                        margin: const EdgeInsets.all(10),
-                        alignment: Alignment.topLeft,
-                        padding:
-                            EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
-                        height: 70 * SizeConfig.widthMultiplier,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              const Color(0xCC000000),
-                              const Color(0x70000000),
-                              const Color(0x70000000),
-                              const Color(0x70000000),
-                              const Color(0xCC000000),
-                            ],
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 30),
-                            Text(
-                              widget.project.projectTitle,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 40),
-                            Text(
-                              widget.project.projectDescription,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              maxLines: 4,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Row(
-                        children: [
-                          (myProfile.projectsOwned.indexWhere((e) =>
-                                      e.projectId ==
-                                      widget.project.projectId) >=
-                                  0)
-                              ? IconButton(
-                                  visualDensity: VisualDensity.compact,
-                                  iconSize: 22,
-                                  icon: Icon(Icons.create),
-                                  color: Colors.white,
-                                  onPressed: () => Navigator.of(context,
-                                          rootNavigator: true)
-                                      .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProjectCreationScreen(
-                                                  newProject: widget.project))))
-                              : Container(),
-                          IconButton(
-                              iconSize: 24,
-                              icon: Icon(Icons.more_vert_rounded),
-                              color: Colors.white,
-                              onPressed: () =>
-                                  projectEndingAction(widget.project, context))
-                        ],
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 20,
-                      right: 20,
-                      child: Text(
-                          DateFormat.yMMMd().format(widget.project.startDate) +
-                              " - " +
-                              DateFormat.yMMMd().format(widget.project.endDate),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400)),
-                    ),
-                    Positioned(
-                      bottom: 20,
-                      left: 20,
-                      child: !widget.project.spotlight &&
-                              widget.project.projStatus != "COMPLETED" &&
-                              widget.project.projStatus != "TERMINATED" &&
-                              (myProfile.projectsOwned.indexWhere((e) =>
-                                      e.projectId ==
-                                      widget.project.projectId) >=
-                                  0)
-                          ? InkWell(
-                              onTap: () {
-                                spotlightAction(widget.project, context);
-                              },
-                              child: Container(
-                                height: 30,
-                                width: 90,
-                                decoration: BoxDecoration(
-                                  color: AppTheme.project3,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.star_border,
-                                      color: Colors.black,
-                                    ),
-                                    Text("Spotlight"),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : widget.project.projStatus != "COMPLETED" &&
-                                  widget.project.projStatus != "TERMINATED"
-                              ? InkWell(
-                                  onTap: () {
-                                    spotlightDuration(widget.project, context);
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    width: 150,
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.project3,
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.black,
-                                        ),
-                                        Text("Under Spotlight"),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : Container(),
-                    ),
-                  ]),
+                  PManagementHeader(
+                      myProfile: myProfile,
+                      project: widget.project,
+                      projectEndingAction: projectEndingAction),
                   PManagementSwiperCard(widget.project),
+                  PFundCampaignCard(),
                   PAnnouncementCard(
                     publicAnnouncements: publicAnnouncements,
                     internalAnnouncements: internalAnnouncements,
                     widget: widget,
                   ),
+                  PManagementChannels(widget.project),
+                  PManagementMatchedResources(widget.project),
                 ]),
               )
             : Container(),
       ),
     );
+  }
+}
+
+class PManagementHeader extends StatelessWidget {
+  PManagementHeader({
+    Key key,
+    @required this.project,
+    @required this.myProfile,
+    @required this.projectEndingAction,
+  }) : super(key: key);
+  final Project project;
+  final Profile myProfile;
+  Function projectEndingAction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: [
+      ClipRRect(
+          borderRadius: BorderRadius.circular(10.0),
+          child: Container(
+              margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                  ),
+                ],
+              ),
+              width: 100 * SizeConfig.widthMultiplier,
+              height: 70 * SizeConfig.widthMultiplier,
+              child: AttachmentImage(project.projectProfilePic))),
+      Positioned(
+        bottom: 0.0,
+        left: 0.0,
+        right: 0.0,
+        child: Container(
+          margin: const EdgeInsets.all(10),
+          alignment: Alignment.topLeft,
+          padding: EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
+          height: 70 * SizeConfig.widthMultiplier,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                const Color(0xCC000000),
+                const Color(0x70000000),
+                const Color(0x70000000),
+                const Color(0x70000000),
+                const Color(0xCC000000),
+              ],
+            ),
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: 30),
+              Text(
+                project.projectTitle,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 40),
+              Text(
+                project.projectDescription,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400,
+                ),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+      Positioned(
+        top: 8,
+        right: 8,
+        child: Row(
+          children: [
+            (myProfile.projectsOwned
+                        .indexWhere((e) => e.projectId == project.projectId) >=
+                    0)
+                ? IconButton(
+                    visualDensity: VisualDensity.compact,
+                    iconSize: 22,
+                    icon: Icon(Icons.create),
+                    color: Colors.white,
+                    onPressed: () => Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                            builder: (context) =>
+                                ProjectCreationScreen(newProject: project))))
+                : Container(),
+            IconButton(
+                iconSize: 24,
+                icon: Icon(Icons.more_vert_rounded),
+                color: Colors.white,
+                onPressed: () => projectEndingAction(project, context))
+          ],
+        ),
+      ),
+      Positioned(
+        bottom: 20,
+        right: 20,
+        child: Text(
+            DateFormat.yMMMd().format(project.startDate) +
+                " - " +
+                DateFormat.yMMMd().format(project.endDate),
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w400)),
+      )
+    ]);
   }
 }

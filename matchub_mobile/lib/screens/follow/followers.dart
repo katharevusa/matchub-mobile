@@ -7,6 +7,7 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
+import 'package:matchub_mobile/screens/profile/view_profile.dart';
 
 class FollowersScreen extends StatefulWidget {
   Profile user;
@@ -80,52 +81,70 @@ class _FollowersScreenState extends State<FollowersScreen> {
           ListView.separated(
             shrinkWrap: true,
             separatorBuilder: (context, index) => SizedBox(height: 5),
-            itemBuilder: (context, index) => ListTile(
-              onTap: () => Navigator.of(context).pushNamed(
-                  ProfileScreen.routeName,
-                  arguments: filteredFollowers[index].accountId),
-              leading: 
-                    ClipOval(
-                    child: Container(
-                        height: 50,
-                        width: 50,
-                        child: AttachmentImage(filteredFollowers[index].profilePhoto),)),
-              
-              title: Text(filteredFollowers[index].name),
-              trailing: FlatButton(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6)),
-                child: Text(
-                    (filteredFollowers[index].accountId == myProfile.accountId)
-                        ? "Myself"
-                        : (myProfile.following.indexOf(
-                                    filteredFollowers[index].accountId) !=
-                                -1)
-                            ? "Following"
-                            : "Follow",
-                    style: TextStyle(color: Colors.white)),
-                onPressed: () async {
-                  if (filteredFollowers[index].accountId == myProfile.accountId)
-                    return null;
- 
-                  int followId = filteredFollowers[index].accountId;
-                  await widget.toggleFollowing(followId);
+            itemBuilder: (context, index) {
+              bool isFollowing = (myProfile.following
+                      .indexOf(filteredFollowers[index].accountId) >
+                  -1);
 
-                  setState(() {
-                    myProfile.toggleFollow(followId);
-                  });
-                },
-                color: (filteredFollowers[index].accountId ==
-                        myProfile.accountId)
-                    ? kSecondaryColor
-                    : (myProfile.following
-                                .indexOf(filteredFollowers[index].accountId) >
-                            -1)
-                        ? Colors.grey
-                        : kAccentColor,
-              ),
-            ),
+              return ListTile(
+                onTap: () => Navigator.of(context).pushNamed(
+                    ViewProfile.routeName,
+                    arguments: filteredFollowers[index].accountId),
+                leading: ClipOval(
+                    child: Container(
+                  height: 50,
+                  width: 50,
+                  child: AttachmentImage(filteredFollowers[index].profilePhoto),
+                )),
+                title: Text(filteredFollowers[index].name,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Colors.grey[700])),
+                trailing: FlatButton(
+                  minWidth: 100,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                          width: 1,
+                          color: isFollowing
+                              ? Colors.blueGrey[100]
+                              : kPrimaryColor),
+                      borderRadius: BorderRadius.circular(6)),
+                  child: Text(
+                      (filteredFollowers[index].accountId ==
+                              myProfile.accountId)
+                          ? "Myself"
+                          : isFollowing
+                              ? "Following"
+                              : "+ Follow",
+                      style: TextStyle(
+                        color: (myProfile.following.indexOf(
+                                    filteredFollowers[index].accountId) >
+                                -1)
+                            ? Colors.white
+                            : kPrimaryColor,
+                      )),
+                  onPressed: () async {
+                    if (filteredFollowers[index].accountId ==
+                        myProfile.accountId) return null;
+
+                    int followId = filteredFollowers[index].accountId;
+                    await widget.toggleFollowing(followId);
+
+                    setState(() {
+                      myProfile.toggleFollow(followId);
+                    });
+                  },
+                  color: (filteredFollowers[index].accountId ==
+                          myProfile.accountId)
+                      ? kSecondaryColor
+                      : isFollowing
+                          ? Colors.blueGrey[100]
+                          : kScaffoldColor,
+                ),
+              );
+            },
             itemCount: filteredFollowers.length,
           ),
         ],

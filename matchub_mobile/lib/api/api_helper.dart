@@ -178,15 +178,16 @@ class ApiBaseHelper {
       case 200:
         return responseJson;
       case 400:
-        var errors;
+        String errors;
         responseJson['errors'] != null
             ? errors = responseJson['errors'].join(", ").toString().capitalize
             : errors = "";
-        var errorMsg;
-        responseJson['errorMessage'] != null
-            ? errorMsg = responseJson['errorMessage']
-            : errorMsg = responseJson['error_description'];
-        throw BadRequestException(errors + " " + errorMsg);
+        if (errors.isEmpty) {
+          responseJson['errorMessage'] != null
+              ? errors += responseJson['errorMessage']
+              : errors += responseJson['error_description'];
+        }
+        throw BadRequestException(errors);
       case 404:
         throw BadRequestException(responseJson['errorMessage'].toString());
       case 409:

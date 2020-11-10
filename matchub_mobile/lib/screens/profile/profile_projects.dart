@@ -9,28 +9,21 @@ import 'package:matchub_mobile/widgets/project_vertical_card.dart';
 class ProfileProjects extends StatelessWidget {
   List<Project> projects;
   bool isOwner;
-  ProfileProjects({@required this.projects, this.isOwner = false});
+  bool scrollable;
+  ProfileProjects({@required this.projects, this.isOwner = false, this.scrollable = true});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: (projects.isEmpty)
+    return (projects.isEmpty)
           ? Center(
               child: Text("No Projects Available", style: AppTheme.titleLight))
           : ListView.builder(
-              physics: BouncingScrollPhysics(),
+              physics: scrollable ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) => ProjectGridCard(
                 project: projects[index],
               ),
               itemCount: projects.length,
-            ),
-    );
+            );
   }
-
-  final coverPhoto = [
-    "assets/images/projectdefault1.png",
-    "assets/images/projectdefault2.png",
-    "assets/images/projectdefault3.png"
-  ];
 }

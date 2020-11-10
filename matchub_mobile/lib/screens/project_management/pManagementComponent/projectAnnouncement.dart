@@ -4,7 +4,7 @@ import 'package:matchub_mobile/screens/project_management/notification/viewAllNo
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectChannels.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectFollowers.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectMatchedResources.dart';
-import 'package:matchub_mobile/screens/project_management/pManagementComponent/project_management.dart';
+import 'package:matchub_mobile/screens/project_management/project_management.dart';
 import 'package:matchub_mobile/unused/teamMember.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 
@@ -25,11 +25,7 @@ class PAnnouncementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          // borderRadius:
-          //     BorderRadius.only(topRight: Radius.circular(60.0)),
-        ),
+        color: Colors.transparent,
         child: SingleChildScrollView(
           child: Column(children: <Widget>[
             Stack(
@@ -131,8 +127,6 @@ class PAnnouncementCard extends StatelessWidget {
             //     PManagementProjectFollower(widget.project),
             //   ],
             // ),
-            PManagementChannels(widget.project),
-            PManagementMatchedResources(widget.project),
             // PManagementRecommendedResources(widget.project),
           ]),
         ));

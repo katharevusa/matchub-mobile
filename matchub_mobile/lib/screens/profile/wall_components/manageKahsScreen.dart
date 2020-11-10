@@ -66,22 +66,20 @@ class _ManageKahsScreenState extends State<ManageKahsScreen> {
 
   loadMembers() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageOrganisationMembers>(context, listen: false)
-        .getMembers(profile, accessToken);
+        .getMembers(profile);
     // await getList();
   }
 
   loadKah() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
-    await Provider.of<ManageListOfKah>(context, listen: false)
-        .getKahs(profile, accessToken);
+    await Provider.of<ManageOrganisationMembers>(context, listen: false)
+        .getKahs(profile);
     //  await getList();
   }
 
   getList() {
-    kahs = Provider.of<ManageListOfKah>(context).listOfKah;
+    kahs = Provider.of<ManageOrganisationMembers>(context).listOfKah;
     members = Provider.of<ManageOrganisationMembers>(context).members;
     newMembersList = List.from(members);
   }

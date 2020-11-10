@@ -22,30 +22,30 @@ class ProjectSearchCard extends StatelessWidget {
         ).pushNamed(ProjectDetailScreen.routeName, arguments: project);
       },
       child: Container(
-          padding: EdgeInsets.symmetric(
-              vertical: 10, horizontal: 4 * SizeConfig.widthMultiplier),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: Container(
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                        ),
-                      ]),
-                      width: 24 * SizeConfig.widthMultiplier,
-                      height: 24 * SizeConfig.widthMultiplier,
-                      child: AttachmentImage(project.projectProfilePic))),
-              Expanded(
-                  child: Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: 10, horizontal: 4 * SizeConfig.widthMultiplier),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
+                child: Container(
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                      ),
+                    ]),
+                    width: 24 * SizeConfig.widthMultiplier,
+                    height: 24 * SizeConfig.widthMultiplier,
+                    child: AttachmentImage(project.projectProfilePic))),
+            Expanded(
+              child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: 2 * SizeConfig.widthMultiplier,
                     vertical: 1 * SizeConfig.heightMultiplier),
@@ -124,9 +124,11 @@ class ProjectSearchCard extends StatelessWidget {
                     // )
                   ],
                 ),
-              ))
-            ],
-          )),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
