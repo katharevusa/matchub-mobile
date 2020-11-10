@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:matchub_mobile/models/campaign.dart';
 
 import 'index.dart';
 
@@ -27,7 +28,7 @@ class Project {
   List joinRequests;
   List reviews;
   Badge projectBadge;
-  List fundsCampaign;
+  List<Campaign> fundsCampaign;
   List meetings;
   List listOfRequests;
   num reputationPoints;

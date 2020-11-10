@@ -35,7 +35,7 @@ class _PProgressBarState extends State<PProgressBar> {
                 .toDouble()) *
             100)
         .toInt();
-    print(progress);
+    print("progress: " +progress.toString());
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
         child: Column(

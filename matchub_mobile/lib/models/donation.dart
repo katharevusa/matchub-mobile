@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:matchub_mobile/models/campaignOption.dart';
 import 'package:matchub_mobile/models/index.dart';
 
 part 'donation.g.dart';

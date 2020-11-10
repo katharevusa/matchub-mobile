@@ -263,6 +263,7 @@ class CampaignCreationScreenState extends State<CampaignCreationScreen> {
                         await ApiBaseHelper.instance.postProtected(
                             'authenticated/createFundCampaign',
                             body: json.encode(newCampaign));
+                            Navigator.pop(context);
                       } catch (error) {
                         print(error.toString());
                         print("Reached");

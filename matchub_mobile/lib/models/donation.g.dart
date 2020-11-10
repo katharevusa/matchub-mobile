@@ -12,5 +12,5 @@ Donation _$DonationFromJson(Map<String, dynamic> json) {
     ..donatedAmount = json['donatedAmount'] as num
     ..donator = Profile.fromJson(json['donator'])
         ..donationTime = DateTime.parse(json['donationTime'])
-    ..donationOption =  CampaignOption.fromJson(json['donationOption']);
+    ..donationOption = json['donationOption'] != null ? CampaignOption.fromJson(json['donationOption']) : null;
 }

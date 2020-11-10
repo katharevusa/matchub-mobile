@@ -9,7 +9,7 @@ import 'package:matchub_mobile/screens/campaign/campaign_creation.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
 import 'package:matchub_mobile/unused/drawerMenu.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
-import 'package:matchub_mobile/screens/project_management/pManagementComponent/project_management.dart';
+import 'package:matchub_mobile/screens/project_management/project_management.dart';
 import 'package:matchub_mobile/unused/teamMember.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_project.dart';

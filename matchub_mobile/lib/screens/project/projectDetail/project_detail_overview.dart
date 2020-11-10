@@ -97,32 +97,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                   constraints: BoxConstraints(
                                       minHeight:
                                           20 * SizeConfig.heightMultiplier),
-                                  child: Stack(
-                                      overflow: Overflow.visible,
-                                      children: <Widget>[
-                                        PCarousel(project.managedProject),
-                                        AppBar(
-                                          leading: Padding(
-                                            padding: const EdgeInsets.all(15.0),
-                                            child: InkWell(
-                                              child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.grey.withOpacity(0.4),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                  height: 84,
-                                                  width: 84,
-                                                  child: Center(child: Icon(Icons.close, color: Colors.grey[200]))),
-                                              onTap: () =>
-                                                  Navigator.of(context).pop(),
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.transparent,
-                                          elevation: 0,
-                                        ),
-                                        Positioned(bottom: 0, child: PSdgTags())
-                                      ]),
+                                  child: PDetailHeader(),
                                 ),
                                 Container(
                                   width: 100 * SizeConfig.widthMultiplier,
@@ -144,14 +119,6 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                                 fontWeight: FontWeight.w600),
                                           ),
                                           subtitle: Text("Project creator"),
-                                          // trailing: IconButton(
-                                          //   icon: Icon(
-                                          //       FlutterIcons.share_google_evi),
-                                          //   onPressed: () {
-                                          //     Share.share(
-                                          //         'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this project on: ${project.managedProject.projectTitle}\nhttp://localhost:3000/project/${project.managedProject.projectId}');
-                                          //   },
-                                          // ),
                                         ),
                                         Padding(
                                           padding: EdgeInsets.symmetric(
@@ -203,6 +170,43 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
             )
           : Scaffold(body: Center(child: CircularProgressIndicator())),
     );
+  }
+}
+
+class PDetailHeader extends StatelessWidget {
+  const PDetailHeader({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Project project = Provider.of<ManageProject>(context).managedProject;
+    return Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          PCarousel(project),
+          AppBar(
+            leading: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: InkWell(
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.4),
+                        borderRadius:
+                            BorderRadius.circular(
+                                10)),
+                    height: 84,
+                    width: 84,
+                    child: Center(child: Icon(Icons.close, color: Colors.grey[200]))),
+                onTap: () =>
+                    Navigator.of(context).pop(),
+              ),
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+          Positioned(bottom: 0, child: PSdgTags())
+        ]);
   }
 }
 
@@ -259,3 +263,12 @@ final List<String> iconList = [
                       }),
                     ),
                   ],*/
+
+                                          // trailing: IconButton(
+                                          //   icon: Icon(
+                                          //       FlutterIcons.share_google_evi),
+                                          //   onPressed: () {
+                                          //     Share.share(
+                                          //         'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this project on: ${project.managedProject.projectTitle}\nhttp://localhost:3000/project/${project.managedProject.projectId}');
+                                          //   },
+                                          // ),
