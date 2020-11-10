@@ -310,7 +310,8 @@ class _TabsScreenState extends State<TabsScreen> {
             settings: settings);
       case ResourceDetailScreen.routeName:
         return MaterialPageRoute(
-            builder: (context) => ResourceDetailScreen(),
+            builder: (context) =>
+                ResourceDetailScreen(settings.arguments as Resources),
             // fullscreenDialog: true,
             settings: settings);
 
@@ -337,7 +338,12 @@ class _TabsScreenState extends State<TabsScreen> {
             settings: settings);
       case ViewTask.routeName:
         return MaterialPageRoute(
-            builder: (context, ) => ViewTask(task: settings.arguments as TaskEntity), settings: settings,fullscreenDialog: true);
+            builder: (
+              context,
+            ) =>
+                ViewTask(task: settings.arguments as TaskEntity),
+            settings: settings,
+            fullscreenDialog: true);
       case SearchResults.routeName:
         return MaterialPageRoute(
             builder: (context) => SearchResults(), settings: settings);

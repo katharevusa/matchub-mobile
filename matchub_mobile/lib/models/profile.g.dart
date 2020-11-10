@@ -40,11 +40,16 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..hostedResources = json['hostedResources'] as List
     ..sdgs = json['sdgs'] !=null ? (json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList() : []
     ..meetings = json['meetings'] as List
-    ..projectsJoined = json['projectsJoined'] !=null ? (json['projectsJoined'] as List)
-        .map((i) => Project.fromJson(i))
-        .toList() : []
-    ..projectsOwned = json['projectsOwned'] !=null ? 
-        (json['projectsOwned'] as List).map((i) => Project.fromJson(i)).toList() : []
+    ..projectsJoined = json['projectsJoined'] != null
+        ? (json['projectsJoined'] as List)
+            .map((i) => Project.fromJson(i))
+            .toList()
+        : []
+    ..projectsOwned = json['projectsOwned'] != null
+        ? (json['projectsOwned'] as List)
+            .map((i) => Project.fromJson(i))
+            .toList()
+        : []
     ..joinRequests = json['joinRequests'] as List
     ..reviewsReceived = json['reviewsReceived'] as List
     ..badges = (json['badges'] as List).map((i) => Badge.fromJson(i)).toList()
@@ -52,14 +57,15 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..tasks = json['tasks'] as List
     ..managedChannel = json['managedChannel'] as List
     ..joinedChannel = json['joinedChannel'] as List
-    ..likedPosts = json['likedPosts'] != null ? json['likedPosts'] as List: []
+    ..likedPosts = json['likedPosts'] != null ? json['likedPosts'] as List : []
     ..firstName = json['firstName'] as String ?? ""
     ..lastName = json['lastName'] as String ?? ""
     ..genderEnum = json['genderEnum'] as String
     ..profileDescription =
         json['profileDescription'] ?? json['organizationDescription'] as String
     ..projectFollowing = json['projectFollowing'] as List
-    ..skillSet = json['skillSet'] as List ?? json['areasOfExpertise'] as List;
+    ..skillSet = json['skillSet'] as List ?? json['areasOfExpertise'] as List
+    ..downvotedProjectIds = json['downvotedProjectIds'] as List;
 }
 
 Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
@@ -81,6 +87,7 @@ Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
       'following': instance.following,
       'savedResourceIds': instance.savedResourceIds,
       'upvotedProjectIds': instance.upvotedProjectIds,
+      'downvotedProjectIds': instance.downvotedProjectIds,
       'spotlightChances': instance.spotlightChances,
       'posts': instance.posts,
       'notifications': instance.notifications,

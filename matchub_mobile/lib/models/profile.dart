@@ -33,6 +33,7 @@ class Profile with ChangeNotifier {
   List following;
   List savedResourceIds;
   List upvotedProjectIds;
+  List downvotedProjectIds;
   num spotlightChances;
   List posts;
   List notifications;

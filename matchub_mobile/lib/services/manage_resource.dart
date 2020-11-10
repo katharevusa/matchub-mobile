@@ -2,11 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 
+import 'auth.dart';
+
 class ManageResource with ChangeNotifier {
   ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
 
   List<Resources> resources = [];
   List<Resources> savedResources = [];
+  Resources resource;
+
+  getResourceById(num id) async {
+    final url = 'authenticated/getResourceById?resourceId=${id}';
+    final responseData = await _apiHelper.getProtected(url);
+    resource = Resources.fromJson(responseData);
+    notifyListeners();
+    return resource;
+  }
 
   getAllSavedResources(Profile profile) async {
     final url =
