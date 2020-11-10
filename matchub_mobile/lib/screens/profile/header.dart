@@ -62,7 +62,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     setState(() {
       _isLoading = false;
     });
-    Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
     await Provider.of<ManageOrganisationMembers>(context, listen: false)
         .getMembers(widget.profile);
 

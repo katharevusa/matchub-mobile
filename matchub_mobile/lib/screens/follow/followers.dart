@@ -121,7 +121,8 @@ class _FollowersScreenState extends State<FollowersScreen> {
                       style: TextStyle(
                         color: (myProfile.following.indexOf(
                                     filteredFollowers[index].accountId) >
-                                -1)
+                                -1) || (filteredFollowers[index].accountId ==
+                              myProfile.accountId)
                             ? Colors.white
                             : kPrimaryColor,
                       )),

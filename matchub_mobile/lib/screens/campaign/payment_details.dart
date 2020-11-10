@@ -36,7 +36,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   final CreditCard testCard = CreditCard(
-      number: '4242424242424242', expMonth: 12, expYear: 21, name: "");
+      number: '4242424242424242', expMonth: 12, expYear: 21, name: "Mark Tan");
   Token _paymentToken;
   PaymentMethod _paymentMethod;
   String _error;
@@ -66,8 +66,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
         card: testCard,
       ),
     ).then((paymentMethod) {
-      // _scaffoldKey.currentState.showSnackBar(
-      //     SnackBar(content: Text('Received ${paymentMethod.id}')));
       setState(() {
         _paymentMethod = paymentMethod;
       });
@@ -84,8 +82,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
         paymentMethodId: _paymentMethod.id,
       ),
     ).then((paymentIntent) {
-      _scaffoldKey.currentState.showSnackBar(
-          SnackBar(content: Text('Received ${paymentIntent.paymentIntentId}')));
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text('Thank you for your kind donation!'),
+        duration: Duration(seconds: 2),
+      ));
+      Future.delayed(Duration(milliseconds: 2500), () => Navigator.pop(context));
       setState(() {
         _paymentIntent = paymentIntent;
         _isPaying = false;
@@ -105,116 +106,127 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(),
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: LoadingOverlay(
           isLoading: _isPaying,
-          color: kSecondaryColor.withOpacity(0.2),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Pledge",
-                    style: TextStyle(
-                        color: Colors.grey[850],
-                        fontWeight: FontWeight.w600,
-                        fontSize: 3 * SizeConfig.textMultiplier),
-                  ),
-                  FlatButton(
-                    visualDensity: VisualDensity.compact,
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(
-                      "Cancel",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.red[400],
-                          decoration: TextDecoration.underline),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: 10),
-              Container(
-                width: 100 * SizeConfig.widthMultiplier,
-                padding: const EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.grey[400]),
-                    borderRadius: BorderRadius.circular(5)),
-                child: Column(
+          color: Colors.blueGrey[200].withOpacity(0.3),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Donation Selection",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[850],
-                            fontSize: 2 * SizeConfig.textMultiplier)),
-                    SizedBox(height: 10),
-                    Text(
-                      widget.donationOption.optionDescription,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey[850],
-                          fontSize: 1.7 * SizeConfig.textMultiplier),
-                    ),
-                    Divider(color: Colors.grey[400], height: 24, thickness: 1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Total",
+                          "Pledge",
                           style: TextStyle(
-                              fontWeight: FontWeight.w600,
                               color: Colors.grey[850],
-                              fontSize: 2.5 * SizeConfig.textMultiplier),
-                        ),
-                        Text(
-                          "S\$ " + widget.selectedAmount + ".00",
-                          style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: kKanbanColor,
-                              fontSize: 2.5 * SizeConfig.textMultiplier),
+                              fontSize: 3 * SizeConfig.textMultiplier),
                         ),
+                        FlatButton(
+                          visualDensity: VisualDensity.compact,
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.red[400],
+                                decoration: TextDecoration.underline),
+                          ),
+                        )
                       ],
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height:8),
-              CreditCardForm(
-                themeColor: kPrimaryColor,
-                onCreditCardModelChange: (data) =>
-                    onCreditCardModelChange(data),
-              ),
-              CreditCardWidget(
-                cardNumber: testCard.number,
-                expiryDate: "12/12",
-                cardHolderName: testCard.name,
-                cvvCode: '250',
-                showBackView: false,
-                cardbgColor: Color(0xFF153F73),
-                height: 175,
-                textStyle: TextStyle(color: Colors.white),
-                width: MediaQuery.of(context).size.width,
-                animationDuration: Duration(milliseconds: 1000),
-              ),
-              Divider(),
-              FlatButton(
-                  padding: EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  color: kKanbanColor,
-                  minWidth: 100 * SizeConfig.widthMultiplier,
-                  child: Text("Pay",
-                      style: TextStyle(color: Colors.white, fontSize: 22)),
-                  onPressed: _paymentMethod == null || _currentSecret == null
-                      ? null
-                      : confirmPayment),
-            ]),
+                    SizedBox(height: 10),
+                    Container(
+                      width: 100 * SizeConfig.widthMultiplier,
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(color: Colors.grey[400]),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Donation Selection",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[850],
+                                  fontSize: 2 * SizeConfig.textMultiplier)),
+                          SizedBox(height: 10),
+                          Text(
+                            widget.donationOption.optionDescription,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey[850],
+                                fontSize: 1.7 * SizeConfig.textMultiplier),
+                          ),
+                          Divider(
+                              color: Colors.grey[400],
+                              height: 24,
+                              thickness: 1),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Total",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[850],
+                                    fontSize: 2.5 * SizeConfig.textMultiplier),
+                              ),
+                              Text(
+                                "S\$ " + widget.selectedAmount + ".00",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: kKanbanColor,
+                                    fontSize: 2.5 * SizeConfig.textMultiplier),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    CreditCardForm(
+                      themeColor: kPrimaryColor,
+                      cardHolderName: testCard.name,
+                      cardNumber: testCard.number,
+                      cvvCode: testCard.cvc,
+                      expiryDate: "12/12",
+                      onCreditCardModelChange: (data) =>
+                          onCreditCardModelChange(data),
+                    ),
+                    CreditCardWidget(
+                      cardNumber: testCard.number,
+                      expiryDate: "12/12",
+                      cardHolderName: testCard.name,
+                      cvvCode: '250',
+                      showBackView: false,
+                      cardbgColor: Color(0xFF153F73),
+                      height: 175,
+                      textStyle: TextStyle(color: Colors.white),
+                      width: MediaQuery.of(context).size.width,
+                      animationDuration: Duration(milliseconds: 1000),
+                    ),
+                    Divider(),
+                    FlatButton(
+                        padding: EdgeInsets.all(10),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        color: kKanbanColor,
+                        minWidth: 100 * SizeConfig.widthMultiplier,
+                        child: Text("Pay",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 22)),
+                        onPressed:
+                            _paymentMethod == null || _currentSecret == null
+                                ? null
+                                : confirmPayment),
+                  ]),
+            ),
           ),
         ),
       ),

@@ -49,7 +49,7 @@ class _FundCampaignCardState extends State<FundCampaignCard> {
         : GestureDetector(
             onTap: () {
               Navigator.of(
-                context,
+                context, rootNavigator: true
               ).push(MaterialPageRoute(builder: (_)=>ViewCampaign(project: project,campaign: widget.campaign)));
             },
             child: Container(

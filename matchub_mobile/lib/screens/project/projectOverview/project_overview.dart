@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/campaign/campaign_creation.dart';
+import 'package:matchub_mobile/screens/home/components/create_post.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
 import 'package:matchub_mobile/unused/drawerMenu.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
@@ -124,8 +125,8 @@ class _ProjectOverviewState extends State<ProjectOverview> {
           backgroundColor: kKanbanColor,
           onTap: () => Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
-                    builder: (context) =>
-                        CampaignCreationScreen()),
+                    builder: (context,) =>
+                        CreatePostScreen()),
               ),
           label: 'Write a Post',
           labelStyle: TextStyle(fontWeight: FontWeight.w500),
