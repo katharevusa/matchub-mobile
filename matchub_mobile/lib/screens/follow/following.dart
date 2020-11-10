@@ -36,8 +36,8 @@ class _FollowingScreenState extends State<FollowingScreen> {
   getFollowers() async {
     Map<String, dynamic> responseData;
     responseData = await ApiBaseHelper.instance.getProtected(
-        "authenticated/getFollowing/${widget.user.accountId}", accessToken: 
-        Provider.of<Auth>(context, listen: false).accessToken);
+        "authenticated/getFollowing/${widget.user.accountId}",
+        accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     following = (responseData['content'] as List)
         .map((e) => Profile.fromJson(e))
         .toList();
@@ -86,92 +86,108 @@ class _FollowingScreenState extends State<FollowingScreen> {
                         shrinkWrap: true,
                         separatorBuilder: (context, index) =>
                             SizedBox(height: 5),
-                        itemBuilder: (context, index) => ListTile(
-                          onTap: () => Navigator.of(context).pushNamed(
-                              ProfileScreen.routeName,
-                              arguments: filteredFollowing[index].accountId),
-                          leading: ClipOval(
-                    child: Container(
-                        height: 50,
-                        width: 50,
-                        child: AttachmentImage(filteredFollowing[index].profilePhoto),)),
-                          title: Text(filteredFollowing[index].name),
-                          trailing: FlatButton(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6)),
-                            child: Text(
-                                (filteredFollowing[index].accountId ==
-                                        myProfile.accountId)
-                                    ? "Myself"
-                                    : (myProfile.following.indexOf(
-                                                filteredFollowing[index]
-                                                    .accountId) !=
-                                            -1)
-                                        ? "Following"
-                                        : "Follow",
-                                style: TextStyle(color: Colors.white)),
-                            onPressed: () async {
-                              if (filteredFollowing[index].accountId ==
-                                  myProfile.accountId) return null;
-                              _scaffoldKey.currentState.removeCurrentSnackBar();
-                              // int followId = filteredFollowing[index].accountId;
-                              // await widget.toggleFollowing(followId);
+                        itemBuilder: (context, index) {
+                          bool isFollowing = (myProfile.following
+                                  .indexOf(filteredFollowing[index].accountId) >
+                              -1);
+                          return ListTile(
+                            onTap: () => Navigator.of(context).pushNamed(
+                                ProfileScreen.routeName,
+                                arguments: filteredFollowing[index].accountId),
+                            leading: ClipOval(
+                                child: Container(
+                              height: 50,
+                              width: 50,
+                              child: AttachmentImage(
+                                  filteredFollowing[index].profilePhoto),
+                            )),
+                            title: Text(filteredFollowing[index].name,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: Colors.grey[700])),
+                            trailing: FlatButton(
+                              minWidth: 100,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      width: 1,
+                                      color: isFollowing
+                                          ? Colors.blueGrey[100]
+                                          : kPrimaryColor),
+                                  borderRadius: BorderRadius.circular(6)),
+                              child: Text(
+                                  (filteredFollowing[index].accountId ==
+                                          myProfile.accountId)
+                                      ? "Myself"
+                                      : (myProfile.following.indexOf(
+                                                  filteredFollowing[index]
+                                                      .accountId) !=
+                                              -1)
+                                          ? "Following"
+                                          : "Follow",
+                                  style: TextStyle(color: Colors.white)),
+                              onPressed: () async {
+                                if (filteredFollowing[index].accountId ==
+                                    myProfile.accountId) return null;
+                                _scaffoldKey.currentState
+                                    .removeCurrentSnackBar();
+                                // int followId = filteredFollowing[index].accountId;
+                                // await widget.toggleFollowing(followId);
 
-                              // setState(() {
-                              //   myProfile.toggleFollow(followId);
-                              // });
+                                // setState(() {
+                                //   myProfile.toggleFollow(followId);
+                                // });
 
-                              // for person specific
-                              int followId = filteredFollowing[index].accountId;
-                              widget
-                                  .toggleFollowing(followId); //backend api call
-                              int followerIndex = following
-                                  .indexWhere((p) => p.accountId == followId);
-                              Profile removeFollower =
-                                  following.removeAt(followerIndex);
+                                // for person specific
+                                int followId =
+                                    filteredFollowing[index].accountId;
+                                widget.toggleFollowing(
+                                    followId); //backend api call
+                                int followerIndex = following
+                                    .indexWhere((p) => p.accountId == followId);
+                                Profile removeFollower =
+                                    following.removeAt(followerIndex);
 
-                              myProfile.toggleFollow(followId);
-                              setState(() {
-                                filteredFollowing = following
-                                    .where((element) => element.name
-                                        .toUpperCase()
-                                        .contains(searchQuery.toUpperCase()))
-                                    .toList();
-                              });
-                              Scaffold.of(context).showSnackBar(new SnackBar(
-                                content: Text(
-                                    "You've stopped following: ${removeFollower.name}"),
-                                duration: Duration(seconds: 3),
-                                action: SnackBarAction(
-                                    label: "Undo",
-                                    onPressed: () {
-                                      following.insert(
-                                          followerIndex, removeFollower);
-                                      widget.toggleFollowing(followId);
-                                      myProfile.toggleFollow(followId);
-                                      setState(() {
-                                        filteredFollowing = following
-                                            .where((element) => element.name
-                                                .toUpperCase()
-                                                .contains(
-                                                    searchQuery.toUpperCase()))
-                                            .toList();
-                                      });
-                                    }),
-                              ));
-                            },
-                            color: (filteredFollowing[index].accountId ==
-                                    myProfile.accountId)
-                                ? kSecondaryColor
-                                : (myProfile.following.indexOf(
-                                            filteredFollowing[index]
-                                                .accountId) >
-                                        -1)
-                                    ? Colors.grey
-                                    : kAccentColor,
-                          ),
-                        ),
+                                myProfile.toggleFollow(followId);
+                                setState(() {
+                                  filteredFollowing = following
+                                      .where((element) => element.name
+                                          .toUpperCase()
+                                          .contains(searchQuery.toUpperCase()))
+                                      .toList();
+                                });
+                                Scaffold.of(context).showSnackBar(new SnackBar(
+                                  content: Text(
+                                      "You've stopped following: ${removeFollower.name}"),
+                                  duration: Duration(seconds: 3),
+                                  action: SnackBarAction(
+                                      label: "Undo",
+                                      onPressed: () {
+                                        following.insert(
+                                            followerIndex, removeFollower);
+                                        widget.toggleFollowing(followId);
+                                        myProfile.toggleFollow(followId);
+                                        setState(() {
+                                          filteredFollowing = following
+                                              .where((element) => element.name
+                                                  .toUpperCase()
+                                                  .contains(searchQuery
+                                                      .toUpperCase()))
+                                              .toList();
+                                        });
+                                      }),
+                                ));
+                              },
+                              color: (filteredFollowing[index].accountId ==
+                                      myProfile.accountId)
+                                  ? kSecondaryColor
+                                  : isFollowing
+                                      ? Colors.blueGrey[100]
+                                      : kScaffoldColor,
+                            ),
+                          );
+                        },
                         itemCount: filteredFollowing.length,
                       ),
                     ],

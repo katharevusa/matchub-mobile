@@ -38,7 +38,7 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..posts = json['posts'] as List
     ..notifications = json['notifications'] as List
     ..hostedResources = json['hostedResources'] as List
-    ..sdgs = (json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList()
+    ..sdgs = json['sdgs'] !=null ? (json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList() : []
     ..meetings = json['meetings'] as List
     ..projectsJoined = json['projectsJoined'] !=null ? (json['projectsJoined'] as List)
         .map((i) => Project.fromJson(i))

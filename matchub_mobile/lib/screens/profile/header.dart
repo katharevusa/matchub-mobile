@@ -212,6 +212,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
           Row(
             children: [
               if (widget.profile.accountId != myProfile.accountId) ...[
+                SizedBox(width: 10),
                 Expanded(
                     child: OutlineButton(
                   borderSide: BorderSide(color: kPrimaryColor, width: 1.5),
@@ -349,7 +350,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
   Row buildSkillset() {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Flexible(
               flex: 1,
@@ -389,7 +390,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
   Row buildSDGTags() {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Flexible(
             flex: 1,

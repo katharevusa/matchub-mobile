@@ -58,7 +58,6 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
         children: <Widget>[
           Container(color: Colors.white, child: buildCircularProgress()),
           const SizedBox(height: 10.0),
-          const SizedBox(height: 10.0),
           Row(
             children: <Widget>[
               Expanded(

@@ -25,6 +25,7 @@ import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share/share.dart';
@@ -120,30 +121,20 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                           ),
                                           subtitle: Text("Project creator"),
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 30),
-                                          child: Text(
-                                            project.managedProject.projectTitle,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 2.6 *
-                                                    SizeConfig.textMultiplier),
-                                          ),
-                                        ),
+                                        PDetailTitle(project.managedProject),
                                         PProgressBar(project.managedProject),
                                         PDescription(project.managedProject),
                                         PAnnouncement(project.managedProject),
                                         PFounderTeamAttachBadgeSDG(
                                             project.managedProject),
                                         SizedBox(height: 100),
-                                project.managedProject.projCreatorId ==
-                                        Provider.of<Auth>(context,
-                                                listen: false)
-                                            .myProfile
-                                            .accountId
-                                    ? Container()
-                                    : PActions(project.managedProject)
+                                        project.managedProject.projCreatorId ==
+                                                Provider.of<Auth>(context,
+                                                        listen: false)
+                                                    .myProfile
+                                                    .accountId
+                                            ? Container()
+                                            : PActions(project.managedProject)
                                       ]),
                                 ),
                               ],
@@ -173,6 +164,86 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 }
 
+class PDetailTitle extends StatelessWidget {
+  PDetailTitle(@required this.project);
+
+  Project project;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: Row(
+        children: [
+          Flexible(
+            flex: 5,
+            child: Text(
+              project.projectTitle,
+              style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 2.6 * SizeConfig.textMultiplier),
+            ),
+          ),
+          Flexible(
+            flex: 1,
+            child: FittedBox(
+              child: CircularPercentIndicator(
+                center: project.startDate.isAfter(DateTime.now())
+                    ? Text("0 %",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: AppTheme.project6,
+                        ))
+                    : DateTime.now().isAfter(project.endDate)
+                        ? Text("100 %",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: AppTheme.project6,
+                            ))
+                        : Text(
+                            ((DateTime.now()
+                                            .difference(project.startDate)
+                                            .inDays /
+                                        (project.endDate
+                                            .difference(project.startDate)
+                                            .inDays
+                                            .toDouble()) *
+                                        100)
+                                    .toStringAsFixed(1) +
+                                " %"),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: AppTheme.project6,
+                            )),
+                radius: 100.0,
+                animation: true,
+                animationDuration: 1200,
+                lineWidth: 15.0,
+                percent: project.startDate.isAfter(DateTime.now())
+                    ? 0.0
+                    : DateTime.now().isAfter(project.endDate)
+                        ? 1.0
+                        : (DateTime.now().difference(project.startDate).inDays /
+                                (project.endDate
+                                    .difference(project.startDate)
+                                    .inDays
+                                    .toDouble()) *
+                                100) /
+                            100,
+                circularStrokeCap: CircularStrokeCap.butt,
+                backgroundColor: Colors.blueGrey[200].withOpacity(0.5),
+                progressColor: AppTheme.project6,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class PDetailHeader extends StatelessWidget {
   const PDetailHeader({
     Key key,
@@ -181,32 +252,28 @@ class PDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Project project = Provider.of<ManageProject>(context).managedProject;
-    return Stack(
-        overflow: Overflow.visible,
-        children: <Widget>[
-          PCarousel(project),
-          AppBar(
-            leading: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: InkWell(
-                child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.4),
-                        borderRadius:
-                            BorderRadius.circular(
-                                10)),
-                    height: 84,
-                    width: 84,
-                    child: Center(child: Icon(Icons.close, color: Colors.grey[200]))),
-                onTap: () =>
-                    Navigator.of(context).pop(),
-              ),
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
+    return Stack(overflow: Overflow.visible, children: <Widget>[
+      PCarousel(project),
+      AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: InkWell(
+            child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(10)),
+                height: 84,
+                width: 84,
+                child:
+                    Center(child: Icon(Icons.close, color: Colors.grey[200]))),
+            onTap: () => Navigator.of(context).pop(),
           ),
-          Positioned(bottom: 0, child: PSdgTags())
-        ]);
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      Positioned(bottom: 0, child: PSdgTags())
+    ]);
   }
 }
 
@@ -264,11 +331,11 @@ final List<String> iconList = [
                     ),
                   ],*/
 
-                                          // trailing: IconButton(
-                                          //   icon: Icon(
-                                          //       FlutterIcons.share_google_evi),
-                                          //   onPressed: () {
-                                          //     Share.share(
-                                          //         'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this project on: ${project.managedProject.projectTitle}\nhttp://localhost:3000/project/${project.managedProject.projectId}');
-                                          //   },
-                                          // ),
+// trailing: IconButton(
+//   icon: Icon(
+//       FlutterIcons.share_google_evi),
+//   onPressed: () {
+//     Share.share(
+//         'Hey there! Ever heard of the United Nation\'s Sustainable Development Goals?\nCheck out this project on: ${project.managedProject.projectTitle}\nhttp://localhost:3000/project/${project.managedProject.projectId}');
+//   },
+// ),

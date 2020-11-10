@@ -40,16 +40,16 @@ class _PProgressBarState extends State<PProgressBar> {
         padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: FAProgressBar(
-                progressColor: kKanbanColor,
-                backgroundColor: Colors.grey[200],
-                size: 6,
-                animatedDuration: const Duration(milliseconds: 2500),
-                currentValue: progress,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 10),
+            //   child: FAProgressBar(
+            //     progressColor: kKanbanColor,
+            //     backgroundColor: Colors.grey[200],
+            //     size: 6,
+            //     animatedDuration: const Duration(milliseconds: 2500),
+            //     currentValue: progress,
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.only(
                 top: 10.0,

@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/campaign/view_campaign.dart';
 import 'package:matchub_mobile/screens/search/project_search_card.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -45,9 +48,9 @@ class _FundCampaignCardState extends State<FundCampaignCard> {
           )
         : GestureDetector(
             onTap: () {
-              // Navigator.of(
-              //   context,
-              // ).pushNamed(Campa.routeName, arguments: project);
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_)=>ViewCampaign(project: project,campaign: widget.campaign)));
             },
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -70,7 +73,7 @@ class _FundCampaignCardState extends State<FundCampaignCard> {
                           ]),
                           width: 24 * SizeConfig.widthMultiplier,
                           height: 30 * SizeConfig.widthMultiplier,
-                          child: AttachmentImage(project.projectProfilePic))),
+                          child: AttachmentImage(project.photos[Random().nextInt(project.photos.length)]))),
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -106,8 +109,8 @@ class _FundCampaignCardState extends State<FundCampaignCard> {
                               Icon(Icons.monetization_on_rounded,
                                   color: Colors.grey[800], size: 28),
                               SizedBox(width: 5),
-                              Text((widget.campaign.currentAmountRaised ~/
-                                          widget.campaign.campaignTarget)
+                              Text((widget.campaign.currentAmountRaised * 100 ~/
+                                          widget.campaign.campaignTarget )
                                       .toString() +
                                   "%"),
                               SizedBox(width: 10),

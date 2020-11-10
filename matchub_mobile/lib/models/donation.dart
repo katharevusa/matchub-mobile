@@ -9,7 +9,7 @@ class Donation {
 
   num donationId;
   num donatedAmount;
-  Profile donator;
+  TruncatedProfile donator;
   DateTime donationTime;
   CampaignOption donationOption;
 
