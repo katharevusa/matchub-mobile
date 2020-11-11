@@ -132,73 +132,77 @@ class _OngoingResourceState extends State<OngoingResource> {
                         return ListTile(
                           onTap: () =>
                               selecteResource(ctx, filteredResources[index]),
-                          title: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              RotatedBox(
-                                quarterTurns: -1,
-                                child:
-                                    filteredResources[index].available == true
-                                        ? Text("Available",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black))
-                                        : Text("Busy",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.blueGrey)),
-                              ),
-                              Container(
-                                color: Colors.green.shade500,
-                                height: 50,
-                                width: 2,
-                              ),
-                              SizedBox(width: 5),
-                              Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    " " + filteredResources[index].resourceName,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1,
-                                  ),
-                                  Text(
-                                    "  By: " +
-                                        Provider.of<Auth>(context,
-                                                listen: false)
-                                            .myProfile
-                                            .name,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle2,
-                                  ),
-                                ],
-                              ),
-
-                              // Container(
-                              //   height: 20,
-                              //   width: 60,
-                              //   decoration: BoxDecoration(
-                              //     color:
-                              //         filteredResources[index].available == true
-                              //             ? Colors.green.shade300
-                              //             : Colors.red.shade200,
-                              //     borderRadius: BorderRadius.circular(15),
-                              //   ),
-                              //   child: Center(
-                              //     child:
-                              //         filteredResources[index].available == true
-                              //             ? Text(
-                              //                 "Available",
-                              //                 style: TextStyle(fontSize: 11),
-                              //               )
-                              //             : Text("Busy",
-                              //                 style: TextStyle(fontSize: 11)),
-                              //   ),
-                              // )
-                            ],
+                          title: Text(
+                            filteredResources[index].resourceName,
+                            style: Theme.of(context).textTheme.subtitle1,
                           ),
+                          // Row(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          // RotatedBox(
+                          //   quarterTurns: -1,
+                          //   child:
+                          //       filteredResources[index].available == true
+                          //           ? Text("Available",
+                          //               style: TextStyle(
+                          //                   fontSize: 12,
+                          //                   color: Colors.black))
+                          //           : Text("Busy",
+                          //               style: TextStyle(
+                          //                   fontSize: 12,
+                          //                   color: Colors.blueGrey)),
+                          // ),
+                          // Container(
+                          //   color: Colors.green.shade500,
+                          //   height: 50,
+                          //   width: 2,
+                          // ),
+                          // SizedBox(width: 5),
+                          // Column(
+                          //   mainAxisAlignment:
+                          //       MainAxisAlignment.spaceEvenly,
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     Text(
+                          //       filteredResources[index].resourceName,
+                          //       style:
+                          //           Theme.of(context).textTheme.subtitle1,
+                          //     ),
+                          //     Text(
+                          //       "  By: " +
+                          //           Provider.of<Auth>(context,
+                          //                   listen: false)
+                          //               .myProfile
+                          //               .name,
+                          //       style:
+                          //           Theme.of(context).textTheme.subtitle2,
+                          //     ),
+                          //   ],
+                          // ),
+
+                          // Container(
+                          //   height: 20,
+                          //   width: 60,
+                          //   decoration: BoxDecoration(
+                          //     color:
+                          //         filteredResources[index].available == true
+                          //             ? Colors.green.shade300
+                          //             : Colors.red.shade200,
+                          //     borderRadius: BorderRadius.circular(15),
+                          //   ),
+                          //   child: Center(
+                          //     child:
+                          //         filteredResources[index].available == true
+                          //             ? Text(
+                          //                 "Available",
+                          //                 style: TextStyle(fontSize: 11),
+                          //               )
+                          //             : Text("Busy",
+                          //                 style: TextStyle(fontSize: 11)),
+                          //   ),
+                          // )
+                          //   ],
+                          // ),
                           // subtitle: filteredResources[index].available == true
                           //     ? Text("Available")
                           //     : Text("Busy"),

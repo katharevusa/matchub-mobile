@@ -42,6 +42,7 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
                 children: <Widget>[
                   Container(
                     width: double.infinity,
+                    height: double.infinity,
                     child: Image.asset(
                       "assets/images/leaderboard.JPG",
                       fit: BoxFit.cover,

@@ -24,6 +24,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   @override
   void initState() {
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     myProfile = Provider.of<Auth>(context, listen: false).myProfile;
     if (myProfile.stripeAccountUid != null) {
       loadDashboard = getStripeExpressDashboard();
@@ -76,7 +77,6 @@ class _WalletScreenState extends State<WalletScreen> {
                                   WebView(
                                     initialUrl: stripeExpressDashboard,
                                     javascriptMode: JavascriptMode.unrestricted,
-
                                     navigationDelegate:
                                         (NavigationRequest request) {
                                       if (request.url.startsWith(
@@ -108,7 +108,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                           color: Colors.transparent,
                                         ),
                                 ],
-                              ) : Container();
+                              )
+                            : Container();
                       },
                     ),
                   ),
@@ -129,8 +130,8 @@ class _WalletScreenState extends State<WalletScreen> {
     Navigator.of(context)
         .push(MaterialPageRoute(
             builder: (_) => StripeWebpage(url: stripeSetupUrl['url'])))
-        .then((value) => refreshState()).then((value) => 
-        Navigator.pop(context));
+        .then((value) => refreshState())
+        .then((value) => Navigator.pop(context));
   }
 
   getStripeExpressDashboard() async {

@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   flutter_icons: ^1.1.0
   country_provider: ^0.0.1
+
   # json_model: ^0.0.2
   build_runner: ^1.0.0
   # json_serializable: ^2.0.0
