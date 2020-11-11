@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -238,7 +240,7 @@ class _PostCardState extends State<PostCard> {
                                         size: 20, color: Colors.grey[600]),
                                 SizedBox(width: 4),
                                 Text(
-                                  widget.post.likedUsersId.length.toString(),
+                                  widget.post.likes.toString(),
                                   style: TextStyle(
                                     color: Colors.grey[700],
                                   ),

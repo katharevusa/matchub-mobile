@@ -10,6 +10,7 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/search.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
+import 'package:matchub_mobile/widgets/campaignCard.dart';
 import 'package:matchub_mobile/widgets/countrylistpicker.dart';
 import 'package:matchub_mobile/widgets/resourceCategoryPicker.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
@@ -27,7 +28,7 @@ class SearchResults extends StatefulWidget {
   _SearchResultsState createState() => _SearchResultsState();
 }
 
-enum SearchType { PROJECTS, RESOURCES, PROFILES }
+enum SearchType { PROJECTS, RESOURCES, PROFILES, CAMPAIGNS }
 
 String searchTypeToString(SearchType val) {
   if (val == SearchType.PROJECTS) {
@@ -38,6 +39,9 @@ String searchTypeToString(SearchType val) {
   }
   if (val == SearchType.PROFILES) {
     return "Profiles";
+  }
+  if (val == SearchType.CAMPAIGNS) {
+    return "Fund Campaigns";
   }
 }
 
@@ -63,7 +67,7 @@ class _SearchResultsState extends State<SearchResults>
     searchQuery = "";
     searchComplete = true;
     searchType = SearchType.PROJECTS;
-    controller = new TabController(length: 3, vsync: this);
+    controller = new TabController(length: 4, vsync: this);
     controller.addListener(() {
       int ind = controller.index;
       if (ind == 0) {
@@ -74,6 +78,9 @@ class _SearchResultsState extends State<SearchResults>
       }
       if (ind == 2) {
         searchType = SearchType.RESOURCES;
+      }
+      if (ind == 3) {
+        searchType = SearchType.CAMPAIGNS;
       }
       filterOptions = {
         "country": null,
@@ -100,8 +107,11 @@ class _SearchResultsState extends State<SearchResults>
     } else if (searchType == SearchType.PROFILES) {
       await search.globalSearchForUsers(searchQuery,
           filterOptions: filterOptions);
-    } else {
+    } else if (searchType == SearchType.RESOURCES) {
       await search.globalSearchForResources(searchQuery,
+          filterOptions: filterOptions);
+    } else {
+      await search.globalSearchForCampaigns(searchQuery,
           filterOptions: filterOptions);
     }
     setState(() {
@@ -164,7 +174,7 @@ class _SearchResultsState extends State<SearchResults>
                       top: SizeConfig.heightMultiplier * 0.5,
                       start: SizeConfig.widthMultiplier * 0.5),
                   child: IconButton(
-                      icon: Icon(FlutterIcons.sliders_fea),
+                      icon: Icon(Icons.tune_rounded),
                       onPressed: () {
                         showModalBottomSheet(
                                 context: context,
@@ -203,7 +213,8 @@ class _SearchResultsState extends State<SearchResults>
                     tabs: [
                       Tab(text: "Projects"),
                       Tab(text: "Profiles"),
-                      Tab(text: "Resources")
+                      Tab(text: "Resources"),
+                      Tab(text: "Campaigns")
                     ],
                     controller: controller,
                   ),
@@ -223,7 +234,11 @@ class _SearchResultsState extends State<SearchResults>
                     SearchResources(
                         search: search,
                         searchQuery: searchQuery,
-                        filterOptions: filterOptions)
+                        filterOptions: filterOptions),
+                    SearchCampaigns(
+                      search: search,
+                      searchQuery: searchQuery,
+                    )
                   ],
                   controller: controller,
                 )
@@ -791,6 +806,84 @@ class _SearchResourcesState extends State<SearchResources> {
         }
       },
       itemCount: widget.search.searchResourcesResults.length + 1,
+      controller: scrollController,
+    );
+  }
+}
+
+class SearchCampaigns extends StatefulWidget {
+  Search search;
+  String searchQuery;
+  Map filterOptions;
+
+  SearchCampaigns({
+    this.search,
+    this.searchQuery,
+    this.filterOptions,
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _SearchCampaignsState createState() => _SearchCampaignsState();
+}
+
+class _SearchCampaignsState extends State<SearchCampaigns> {
+  final scrollController = ScrollController();
+  int pageNo;
+  @override
+  void initState() {
+    pageNo = 0;
+    scrollController.addListener(() async {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        await Future.delayed(Duration(seconds: 1));
+        if (widget.search.hasMoreResources) {
+          pageNo++;
+          await widget.search.globalSearchForResources(widget.searchQuery,
+              pageNo: pageNo, filterOptions: widget.filterOptions);
+        }
+        setState(() {});
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      shrinkWrap: true,
+      separatorBuilder: (ctx, idx) => Divider(height: 4, thickness: 0),
+      itemBuilder: (context, index) {
+        if (widget.searchQuery.isEmpty &&
+            widget.search.searchCampaignsResults.isEmpty) return Container();
+        if (widget.search.searchCampaignsResults.isEmpty)
+          return SearchNotFound();
+        if (index < widget.search.searchCampaignsResults.length) {
+          return FundCampaignCard(widget.search.searchCampaignsResults[index]);
+        }
+        if (index == widget.search.searchCampaignsResults.length &&
+            widget.search.hasMoreCampaigns) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 32.0),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        } else {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 32.0),
+            child: Center(
+                child: Text(
+                    'Didn\'t find what you\'re looking for? \nTry searching for something else!')),
+          );
+        }
+      },
+      itemCount: widget.search.searchCampaignsResults.length + 1,
       controller: scrollController,
     );
   }

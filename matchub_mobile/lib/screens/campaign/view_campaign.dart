@@ -46,8 +46,8 @@ class ViewCampaign extends StatelessWidget {
               textAlign: TextAlign.justify,
               colorClickableText: kSecondaryColor,
               trimMode: TrimMode.Line,
-              trimCollapsedText: '...Show more',
-              trimExpandedText: 'show less',
+              trimCollapsedText: '    show more',
+              trimExpandedText: '\nshow less',
             ),
           ),
           Padding(
@@ -241,7 +241,7 @@ class DonationOptionCard extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              "${donationOption.donations.length} backers",
+              "133 backers",
               style: TextStyle(
                 color: Colors.grey[400],
                 fontWeight: FontWeight.w400,

@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/helpers/profile_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/helpers/extensions.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pActions.dart';
@@ -124,6 +125,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                         PDetailTitle(project.managedProject),
                                         PProgressBar(project.managedProject),
                                         PDescription(project.managedProject),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 12.0, top: 10),
+                                          child: PSdgTags(),
+                                        ),
                                         PAnnouncement(project.managedProject),
                                         PFounderTeamAttachBadgeSDG(
                                             project.managedProject),
@@ -134,7 +140,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                                                     .myProfile
                                                     .accountId
                                             ? Container()
-                                            : PActions(project.managedProject)
+                                            : PActions(project.managedProject),
                                       ]),
                                 ),
                               ],
@@ -272,7 +278,27 @@ class PDetailHeader extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      Positioned(bottom: 0, child: PSdgTags())
+      Positioned(
+        bottom: 20,
+        left: 30,
+        child: Tags(
+            itemCount: 1, // required
+            itemBuilder: (int index) {
+              return ItemTags(
+                index: 1, // required
+                title: project.projStatus.capitalize,
+                color: kAccentColor,
+                textColor: Colors.white,
+                elevation: 0,
+                active: false,borderRadius: BorderRadius.circular(5),
+                pressEnabled: true,
+                onPressed: (_) {
+                },
+                textStyle:
+                    TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
+              );
+            }),
+      )
     ]);
   }
 }

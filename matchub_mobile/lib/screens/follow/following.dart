@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/profile/view_profile.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
@@ -92,7 +93,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
                               -1);
                           return ListTile(
                             onTap: () => Navigator.of(context).pushNamed(
-                                ProfileScreen.routeName,
+                                ViewProfile.routeName,
                                 arguments: filteredFollowing[index].accountId),
                             leading: ClipOval(
                                 child: Container(

@@ -340,17 +340,10 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
         body: isLoaded
             ? SingleChildScrollView(
                 child: Column(children: <Widget>[
-                  PManagementHeader(
-                      myProfile: myProfile,
-                      project: widget.project,
-                      projectEndingAction: projectEndingAction),
+                  PManagementHeader(myProfile : myProfile, project: widget.project, projectEndingAction: projectEndingAction),
                   PManagementSwiperCard(widget.project),
                   PFundCampaignCard(),
-                  PAnnouncementCard(
-                    publicAnnouncements: publicAnnouncements,
-                    internalAnnouncements: internalAnnouncements,
-                    widget: widget,
-                  ),
+                  PAnnouncementCard(publicAnnouncements: publicAnnouncements, internalAnnouncements: internalAnnouncements, widget: widget,),
                   PManagementChannels(widget.project),
                   PManagementMatchedResources(widget.project),
                 ]),

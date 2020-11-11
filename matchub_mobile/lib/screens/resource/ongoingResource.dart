@@ -231,31 +231,31 @@ class _OngoingResourceState extends State<OngoingResource> {
                 ],
               ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            floatingActionButton: FlatButton.icon(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6)),
-                onPressed: () => Navigator.of(context, rootNavigator: true)
-                        .push(MaterialPageRoute(
-                            builder: (
-                      context,
-                    ) =>
-                                ResourceCreationScreen(
-                                    newResource: newResource)))
-                        .then((value) async {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      await loadResources();
-                      setState(() {
-                        _isLoading = false;
-                      });
-                    }),
-                color: kAccentColor,
-                icon: Icon(Icons.add),
-                label: Text(
-                  "Create resource",
-                )),
+            // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            // floatingActionButton: FlatButton.icon(
+            //     shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(6)),
+            //     onPressed: () => Navigator.of(context, rootNavigator: true)
+            //             .push(MaterialPageRoute(
+            //                 builder: (
+            //           context,
+            //         ) =>
+            //                     ResourceCreationScreen(
+            //                         newResource: newResource)))
+            //             .then((value) async {
+            //           setState(() {
+            //             _isLoading = true;
+            //           },);
+            //           await loadResources();
+            //           setState(() {
+            //             _isLoading = false;
+            //           },);
+            //         }),
+            //     color: kAccentColor,
+            //     icon: Icon(Icons.add),
+            //     label: Text(
+            //       "Create resource",
+            //     ),),
           );
   }
 }
