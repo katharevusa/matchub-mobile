@@ -35,10 +35,10 @@ class _HomeListState extends State<HomeList> {
 
   retrievePosts() async {
     myProfile = Provider.of<Auth>(context, listen: false).myProfile;
-    await Provider.of<Feed>(context, listen: false).retrievePosts(
-      myProfile.accountId);
-    await Provider.of<Feed>(context, listen: false).retrieveSuggestedProfiles(
-      myProfile.accountId);
+    await Provider.of<Feed>(context, listen: false)
+        .retrievePosts(myProfile.accountId);
+    await Provider.of<Feed>(context, listen: false)
+        .retrieveSuggestedProfiles(myProfile.accountId);
     await Future.delayed(Duration(seconds: 1));
 
     setState(() {
@@ -50,7 +50,7 @@ class _HomeListState extends State<HomeList> {
   Widget build(BuildContext context) {
     followingPosts = Provider.of<Feed>(context).followingPosts;
     recommendedProfiles = Provider.of<Feed>(context).recommendedProfiles;
-    
+
     return SingleChildScrollView(
       physics: NeverScrollableScrollPhysics(),
       child: Column(
@@ -65,9 +65,7 @@ class _HomeListState extends State<HomeList> {
   }
 
   buildRecommendedProfiles() {
-    return recommendedProfiles.isNotEmpty
-        ? SuggestedProfile()
-        : Container();
+    return recommendedProfiles.isNotEmpty ? SuggestedProfile() : Container();
   }
 
   Widget buildPosts() {
@@ -76,11 +74,11 @@ class _HomeListState extends State<HomeList> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: 10,
+              itemCount: 3,
               itemBuilder: (context, index) => Shimmer.fromColors(
                 highlightColor: Colors.white,
                 baseColor: Colors.grey[300],
-                child: ChatListLoader(),
+                child: PostListLoader(),
                 period: Duration(milliseconds: 800),
               ),
             ),
@@ -137,6 +135,61 @@ class _HomeListState extends State<HomeList> {
             ],
           )),
         ),
+      ),
+    );
+  }
+}
+
+class PostListLoader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    double containerWidth = 200;
+    double containerHeight = 15;
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 7.5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: [
+              ClipOval(
+                child: Container(
+                  height: 50,
+                  width: 50,
+                  color: Colors.grey,
+                ),
+              ),
+              SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 5),
+                  Container(
+                    height: containerHeight,
+                    width: containerWidth,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    height: containerHeight,
+                    width: containerWidth - 50,
+                    color: Colors.grey,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Container(
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.grey,
+            ),
+            width: 90 * SizeConfig.widthMultiplier,
+          ),
+          SizedBox(height: 10),
+        ],
       ),
     );
   }

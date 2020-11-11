@@ -383,8 +383,7 @@ class PManagementHeader extends StatelessWidget {
               ),
               width: 100 * SizeConfig.widthMultiplier,
               height: 70 * SizeConfig.widthMultiplier,
-              child: AttachmentImage(
-                  project.projectProfilePic))),
+              child: AttachmentImage(project.projectProfilePic))),
       Positioned(
         bottom: 0.0,
         left: 0.0,
@@ -392,8 +391,7 @@ class PManagementHeader extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.all(10),
           alignment: Alignment.topLeft,
-          padding:
-              EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
+          padding: EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
           height: 70 * SizeConfig.widthMultiplier,
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -437,44 +435,43 @@ class PManagementHeader extends StatelessWidget {
         ),
       ),
       Positioned(
-          top: 8,
-          right: 8,
-          child: Row(
-            children: [
-              (myProfile.projectsOwned.indexWhere((e) =>
-                          e.projectId ==
-                          project.projectId) >=
-                      0)
-                  ? IconButton(visualDensity: VisualDensity.compact,
-                      iconSize: 22,
-                      icon: Icon(Icons.create),
-                      color: Colors.white,
-                      onPressed: () => Navigator.of(context,
-                              rootNavigator: true)
-                          .push(MaterialPageRoute(
-                              builder: (context) =>
-                                  ProjectCreationScreen(
-                                      newProject: 
-                                          project))))
-                  : Container(),
-              IconButton(
-                  iconSize: 24,
-                  icon: Icon(Icons.more_vert_rounded),
-                  color: Colors.white,
-                  onPressed: () => projectEndingAction(
-                      project, context))
-            ],
-          ),),
+        top: 8,
+        right: 8,
+        child: Row(
+          children: [
+            (myProfile.projectsOwned
+                        .indexWhere((e) => e.projectId == project.projectId) >=
+                    0)
+                ? IconButton(
+                    visualDensity: VisualDensity.compact,
+                    iconSize: 22,
+                    icon: Icon(Icons.create),
+                    color: Colors.white,
+                    onPressed: () => Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                            builder: (context) =>
+                                ProjectCreationScreen(newProject: project))))
+                : Container(),
+            IconButton(
+                iconSize: 24,
+                icon: Icon(Icons.more_vert_rounded),
+                color: Colors.white,
+                onPressed: () => projectEndingAction(project, context))
+          ],
+        ),
+      ),
       Positioned(
-          bottom: 20,
-          right: 20,
-          child: Text(
-            DateFormat.yMMMd().format(project.startDate) + " - " +
-            DateFormat.yMMMd().format(project.endDate),
-             style: TextStyle(color:Colors.white, fontSize: 12, fontWeight: FontWeight.w400)
-          ),
-         )
+        bottom: 20,
+        right: 20,
+        child: Text(
+            DateFormat.yMMMd().format(project.startDate) +
+                " - " +
+                DateFormat.yMMMd().format(project.endDate),
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w400)),
+      )
     ]);
   }
 }
-

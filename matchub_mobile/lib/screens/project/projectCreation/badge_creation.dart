@@ -77,7 +77,8 @@ class _BadgeCreationState extends State<BadgeCreation> {
                       widget.project['badgeIcon'] !=
                           null) //to Display existing badge for edit usecase
                     Container(
-                        height: 100, width: 100, 
+                        height: 100,
+                        width: 100,
                         decoration: BoxDecoration(
                             border:
                                 Border.all(color: Colors.grey[700], width: 0.5),
@@ -88,13 +89,15 @@ class _BadgeCreationState extends State<BadgeCreation> {
                   if (selectedBadgeIndex !=
                       null) //to Display existing badge for create usecase
                     Container(
-                        height: 100, width: 100, 
+                        height: 100,
+                        width: 100,
                         decoration: BoxDecoration(
                             border:
                                 Border.all(color: Colors.grey[700], width: 0.5),
                             shape: BoxShape.circle),
                         child: ClipOval(
-                        child: AttachmentImage(badgesIcon[selectedBadgeIndex]))),
+                            child: AttachmentImage(
+                                badgesIcon[selectedBadgeIndex]))),
                   if (widget.project['uploadedBadge'] != null)
                     Container(
                       decoration: BoxDecoration(

@@ -8,6 +8,7 @@ import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/campaign/campaign_creation.dart';
 import 'package:matchub_mobile/screens/home/components/create_post.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
+import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 import 'package:matchub_mobile/unused/drawerMenu.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 import 'package:matchub_mobile/screens/project_management/project_management.dart';
@@ -75,7 +76,8 @@ class _ProjectOverviewState extends State<ProjectOverview> {
   }
 
   SpeedDial buildSpeedDial() {
-    return SpeedDial(backgroundColor: Colors.black87,
+    return SpeedDial(
+      backgroundColor: Colors.black87,
       animatedIcon: AnimatedIcons.menu_close,
       animatedIconTheme: IconThemeData(size: 22.0, color: Colors.white),
       // child: Icon(Icons.add),
@@ -88,10 +90,10 @@ class _ProjectOverviewState extends State<ProjectOverview> {
           child: Icon(FlutterIcons.rocket_faw5s, color: Colors.white, size: 16),
           backgroundColor: kKanbanColor,
           onTap: () => Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ProjectCreationScreen(newProject: newProject)),
-              ),
+            MaterialPageRoute(
+                builder: (context) =>
+                    ProjectCreationScreen(newProject: newProject)),
+          ),
           label: 'Create a project',
           labelStyle: TextStyle(fontWeight: FontWeight.w500),
           labelBackgroundColor: Colors.grey[300],
@@ -100,22 +102,21 @@ class _ProjectOverviewState extends State<ProjectOverview> {
           child: Icon(Icons.campaign_rounded, color: Colors.white),
           backgroundColor: kKanbanColor,
           onTap: () => Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(
-                    builder: (context) =>
-                        CampaignCreationScreen()),
-              ),
+            MaterialPageRoute(builder: (context) => CampaignCreationScreen()),
+          ),
           label: 'Launch a fundraiser',
           labelStyle: TextStyle(fontWeight: FontWeight.w500),
           labelBackgroundColor: Colors.grey[300],
         ),
         SpeedDialChild(
-          child: Icon(FlutterIcons.briefcase_fea, size: 20, color: Colors.white),
+          child:
+              Icon(FlutterIcons.briefcase_fea, size: 20, color: Colors.white),
           backgroundColor: kKanbanColor,
-          onTap: () => Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(
-                    builder: (context) =>
-                        CampaignCreationScreen()),
-              ),
+          onTap: () =>
+              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                  builder: (
+            context,
+          ) => ResourceCreationScreen(newResource: Resources()))),
           label: 'List a resource',
           labelStyle: TextStyle(fontWeight: FontWeight.w500),
           labelBackgroundColor: Colors.grey[300],
@@ -124,10 +125,12 @@ class _ProjectOverviewState extends State<ProjectOverview> {
           child: Icon(Icons.edit, color: Colors.white),
           backgroundColor: kKanbanColor,
           onTap: () => Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(
-                    builder: (context,) =>
-                        CreatePostScreen()),
-              ),
+            MaterialPageRoute(
+                builder: (
+              context,
+            ) =>
+                    CreatePostScreen()),
+          ),
           label: 'Write a Post',
           labelStyle: TextStyle(fontWeight: FontWeight.w500),
           labelBackgroundColor: Colors.grey[300],

@@ -78,18 +78,18 @@ class Ranking extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          top: 20,
-          right: 30,
-          child: Container(
-            height: 136,
-            alignment: Alignment.centerRight,
-            child: Image.asset(
-              "assets/images/medal.png",
-              fit: BoxFit.scaleDown,
-            ),
-          ),
-        ),
+        // Positioned(
+        //   top: 20,
+        //   right: 30,
+        //   child: Container(
+        //     height: 136,
+        //     alignment: Alignment.centerRight,
+        //     child: Image.asset(
+        //       "assets/images/medal.png",
+        //       fit: BoxFit.scaleDown,
+        //     ),
+        //   ),
+        // ),
         Positioned(
           top: 40,
           right: 57,

@@ -6,6 +6,7 @@ import 'package:readmore/readmore.dart';
 
 import '../../../sizeconfig.dart';
 import '../../../style.dart';
+import 'pSDGs.dart';
 
 class PDescription extends StatelessWidget {
   Project project;
@@ -43,7 +44,7 @@ class PDescription extends StatelessWidget {
             child: Center(
               child: Text(
                   "End Date: ${DateFormat('dd-MMM-yyyy ').format(project.endDate)}",
-                  style: TextStyle(fontSize: 15, color: Colors.white)),
+                  style: TextStyle(fontSize: 15, color: Colors.black54)),
             ),
           ),
         ),

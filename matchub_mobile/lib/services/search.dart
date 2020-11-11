@@ -6,11 +6,13 @@ class Search with ChangeNotifier {
   List<Profile> searchProfileResults = [];
   List<Project> searchProjectResults = [];
   List<Resources> searchResourcesResults = [];
+  List<Campaign> searchCampaignsResults = [];
   String accessToken;
   ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   bool hasMoreProjects;
   bool hasMoreProfiles;
   bool hasMoreResources;
+  bool hasMoreCampaigns;
 
   Search({this.accessToken});
 
@@ -96,5 +98,16 @@ class Search with ChangeNotifier {
         .map((e) => Resources.fromJson(e))
         .toList());
     hasMoreResources = !responseData['last'];
+  }
+  globalSearchForCampaigns(String searchQuery,
+      {pageNo = 0, Map<String, dynamic> filterOptions}) async {
+    if (pageNo == 0) searchCampaignsResults.clear();
+    var responseData = await _apiHelper.getProtected(
+        "authenticated/searchCampaignByKeyWord?keyword=$searchQuery&size=10&page=$pageNo",
+        accessToken: accessToken);
+    searchCampaignsResults.addAll((responseData['content'] as List)
+        .map((e) => Campaign.fromJson(e))
+        .toList());
+    hasMoreCampaigns = !responseData['last'];
   }
 }
