@@ -211,6 +211,7 @@ class _ChatRoomsTileState extends State<ChatRoomsTile> {
                   bottom: SizeConfig.heightMultiplier * 2,
                   end: SizeConfig.widthMultiplier * 4),
               shape: BadgeShape.circle,
+              borderRadius: BorderRadius.circular(20),
               badgeColor: kSecondaryColor,
               child: ListTile(
                   leading: CircleAvatar(

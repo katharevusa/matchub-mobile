@@ -86,7 +86,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
         content: Text('Thank you for your kind donation!'),
         duration: Duration(seconds: 2),
       ));
-      Future.delayed(Duration(milliseconds: 2500), () => Navigator.pop(context));
+      Future.delayed(
+          Duration(milliseconds: 2500), () => Navigator.pop(context));
       setState(() {
         _paymentIntent = paymentIntent;
         _isPaying = false;

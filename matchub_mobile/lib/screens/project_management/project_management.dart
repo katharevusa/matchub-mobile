@@ -6,6 +6,7 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectAnnouncement.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/reputationPointAllocation/repAllocation.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/unused/drawerMenu.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
@@ -319,7 +320,6 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
       );
       print("Success");
       await loadProject();
-      // Navigator.of(this.context).pop("Completed-Project");
     } catch (error) {
       showErrorDialog(error.toString(), this.context);
       print("Failure");
@@ -340,10 +340,20 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
         body: isLoaded
             ? SingleChildScrollView(
                 child: Column(children: <Widget>[
-                  PManagementHeader(myProfile : myProfile, project: widget.project, projectEndingAction: projectEndingAction),
+                  PManagementHeader(
+                      myProfile: myProfile,
+                      project: widget.project,
+                      projectEndingAction: projectEndingAction),
+                  widget.project.projStatus != "ACTIVE"
+                      ? RepAllocation(widget.project)
+                      : Container(),
                   PManagementSwiperCard(widget.project),
                   PFundCampaignCard(),
-                  PAnnouncementCard(publicAnnouncements: publicAnnouncements, internalAnnouncements: internalAnnouncements, widget: widget,),
+                  PAnnouncementCard(
+                    publicAnnouncements: publicAnnouncements,
+                    internalAnnouncements: internalAnnouncements,
+                    widget: widget,
+                  ),
                   PManagementChannels(widget.project),
                   PManagementMatchedResources(widget.project),
                 ]),

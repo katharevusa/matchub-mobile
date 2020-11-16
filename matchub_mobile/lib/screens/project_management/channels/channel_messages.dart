@@ -62,7 +62,7 @@ class _ChannelMessagesState extends State<ChannelMessages> {
   retrieveAllContributors() async {
     final response = await ApiBaseHelper.instance.getProtected(
         "authenticated/getWholeProjectGroup?projectId=${widget.project.projectId}",
-         accessToken:Provider.of<Auth>(context, listen: false).accessToken);
+        accessToken: Provider.of<Auth>(context, listen: false).accessToken);
     allContributors =
         (response as List).map((e) => Profile.fromJson(e)).toList();
   }
@@ -113,11 +113,14 @@ class _ChannelMessagesState extends State<ChannelMessages> {
   addMessage() {
     if (messageEditingController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
-        "sentBy": Provider.of<Auth>(context,listen: false).myProfile.uuid,
+        "sentBy": Provider.of<Auth>(context, listen: false).myProfile.uuid,
         "messageText": messageEditingController.text.trim(),
         'sentAt': DateTime.now()
       };
-      print("Send Message By: "+widget.channelData['id']+", contents: " + messageEditingController.text.trim());
+      print("Send Message By: " +
+          widget.channelData['id'] +
+          ", contents: " +
+          messageEditingController.text.trim());
       DatabaseMethods()
           .sendMessage(widget.channelData['id'], chatMessageMap, true);
 

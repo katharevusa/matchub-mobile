@@ -32,7 +32,8 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
   @override
   void initState() {
     Provider.of<ManageProject>(context, listen: false).getProject(
-        widget.project.projectId,);
+      widget.project.projectId,
+    );
     getProjectChannels();
     super.initState();
   }
@@ -99,7 +100,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
         ]),
       ),
       floatingActionButton: widget.project.projCreatorId ==
-              Provider.of<Auth>(context,listen: false).myProfile.accountId
+              Provider.of<Auth>(context, listen: false).myProfile.accountId
           ? FloatingActionButton(
               heroTag: "channelCreateBtn",
               child: Icon(Icons.add),
@@ -137,13 +138,16 @@ class _ChannelTileState extends State<ChannelTile> {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () async {
-        Navigator.of(context,)
+        Navigator.of(
+          context,
+        )
             .push(MaterialPageRoute(
                 builder: (context) => KanbanView(
                     channelData: widget.channelData, project: widget.project)))
             .then((value) {
           Provider.of<ManageProject>(context, listen: false).getProject(
-              widget.project.projectId,);
+            widget.project.projectId,
+          );
         });
       },
       dense: true,

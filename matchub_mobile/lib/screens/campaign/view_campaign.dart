@@ -188,9 +188,8 @@ class ViewCampaign extends StatelessWidget {
               shrinkWrap: true,
               itemBuilder: (_, idx) {
                 return DonationOptionCard(
-                  donationOption: campaign.donationOptions[idx],
-                  project: project
-                );
+                    donationOption: campaign.donationOptions[idx],
+                    project: project);
               },
               itemCount: campaign.donationOptions.length),
         ]),
@@ -268,7 +267,7 @@ class DonationOptionCard extends StatelessWidget {
                   ),
                 ),
               ),
-              onEditingComplete: ()=>FocusScope.of(context).unfocus(),
+              onEditingComplete: () => FocusScope.of(context).unfocus(),
               keyboardType: TextInputType.number,
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly,
@@ -308,7 +307,10 @@ class DonationOptionCard extends StatelessWidget {
                       pageBuilder: (BuildContext context,
                           Animation<double> animation,
                           Animation<double> secondaryAnimation) {
-                        return PaymentScreen(donationOption: donationOption, selectedAmount: pledgeController.text, project: project);
+                        return PaymentScreen(
+                            donationOption: donationOption,
+                            selectedAmount: pledgeController.text,
+                            project: project);
                       },
                       transitionsBuilder: (BuildContext context,
                           Animation<double> animation,
