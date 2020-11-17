@@ -67,57 +67,58 @@ class _ExploreListState extends State<ExploreList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FeaturedProjects(),
           Ranking(),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.widthMultiplier * 4.0, vertical: 4),
-            child: Text(
-              "Featured Projects",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 2.2 * SizeConfig.textMultiplier,
-              ),
-            ),
-          ),
-          Stack(
-            children: <Widget>[
-              CardScrollWidget(currentPage),
-              Positioned.fill(
-                child: PageView.builder(
-                  // physics: BouncingScrollPhysics(),
-                  itemCount: images.length,
-                  controller: controller,
-                  reverse: true,
-                  itemBuilder: (context, index) {
-                    return Container();
-                  },
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.widthMultiplier * 4.0, vertical: 4),
-            child: Text(
-              "Because You Liked",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 2.2 * SizeConfig.textMultiplier,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.widthMultiplier * 4.0, vertical: 4),
-            child: Text(
-              "Recommended Profiles For You",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 2.2 * SizeConfig.textMultiplier,
-              ),
-            ),
-          ),
+          FeaturedProjects(),
+
+          // Padding(
+          //   padding: EdgeInsets.symmetric(
+          //       horizontal: SizeConfig.widthMultiplier * 4.0, vertical: 4),
+          //   child: Text(
+          //     "Featured Projects",
+          //     style: TextStyle(
+          //       fontWeight: FontWeight.w500,
+          //       fontSize: 2.2 * SizeConfig.textMultiplier,
+          //     ),
+          //   ),
+          // ),
+          // Stack(
+          //   children: <Widget>[
+          //     CardScrollWidget(currentPage),
+          //     Positioned.fill(
+          //       child: PageView.builder(
+          //         // physics: BouncingScrollPhysics(),
+          //         itemCount: images.length,
+          //         controller: controller,
+          //         reverse: true,
+          //         itemBuilder: (context, index) {
+          //           return Container();
+          //         },
+          //       ),
+          //     )
+          //   ],
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(
+          //       horizontal: SizeConfig.widthMultiplier * 4.0, vertical: 4),
+          //   child: Text(
+          //     "Because You Liked",
+          //     style: TextStyle(
+          //       fontWeight: FontWeight.w500,
+          //       fontSize: 2.2 * SizeConfig.textMultiplier,
+          //     ),
+          //   ),
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(
+          //       horizontal: SizeConfig.widthMultiplier * 4.0, vertical: 4),
+          //   child: Text(
+          //     "Recommended Profiles For You",
+          //     style: TextStyle(
+          //       fontWeight: FontWeight.w500,
+          //       fontSize: 2.2 * SizeConfig.textMultiplier,
+          //     ),
+          //   ),
+          // ),
           // buildProfileScoller(),
         ],
       ),
