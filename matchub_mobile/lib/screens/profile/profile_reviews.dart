@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/models/review.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 
 import 'package:provider/provider.dart';
 
 class ProfileReviews extends StatefulWidget {
+  Profile profile;
+  bool scrollable;
+  ProfileReviews(this.profile, {this.scrollable = true});
   @override
   _ProfileReviewsState createState() => _ProfileReviewsState();
 }
@@ -25,15 +30,15 @@ class _ProfileReviewsState extends State<ProfileReviews> {
   }
 
   retrieveAllReviews() async {
-    Profile profile = Provider.of<Auth>(this.context, listen: false).myProfile;
+    // Profile profile = Provider.of<Auth>(this.context, listen: false).myProfile;
     final url =
-        'authenticated/profilewall/reviewsReceived/${profile.accountId}';
-    final responseData = await _apiHelper.getProtected(
-        url,  accessToken:Provider.of<Auth>(this.context, listen: false).accessToken);
+        'authenticated/profilewall/reviewsReceived/${widget.profile.accountId}';
+    final responseData = await _apiHelper.getProtected(url,
+        accessToken:
+            Provider.of<Auth>(this.context, listen: false).accessToken);
     reviews = (responseData['content'] as List)
         .map((e) => Review.fromJson(e))
         .toList();
-    print(reviews.length);
   }
 
   @override
@@ -91,80 +96,65 @@ class _ReviewState extends State<OneReview> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Text(
+                  "Reviewer: ",
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                ),
+                Text(
+                  widget.review.reviewer.name,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                ),
+                Spacer(),
                 CircleAvatar(
                     backgroundColor: Colors.white,
-                    radius: 25,
+                    radius: 20,
                     child: ClipOval(
-                      child: AttachmentImage(
-                          widget.review.reviewer['profilePhoto']),
+                      child:
+                          AttachmentImage(widget.review.reviewer.profilePhoto),
                     )),
-                Text(
-                  widget.review.reviewer['firstName'] +
-                      widget.review.reviewer['lastName'],
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
               ],
             ),
             SizedBox(height: 10),
             Text(
-              "Project involved: " + widget.review.project['projectTitle'],
+              "Project involved: " + widget.review.project.projectTitle,
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                  color: AppTheme.project2),
             ),
-            SizedBox(height: 10),
-            Text(
-              widget.review.content,
+            Row(
+              children: [
+                Text("Rating: ",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                    )),
+                RatingBarIndicator(
+                  rating: widget.review.rating,
+                  itemBuilder: (context, index) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  itemCount: 5,
+                  itemSize: 15.0,
+                  direction: Axis.horizontal,
+                ),
+              ],
             ),
-            widget.review.rating == 5
-                ? Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.star,
-                        color: Colors.red.shade200,
-                        size: 18,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.red.shade200,
-                        size: 18,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.red.shade200,
-                        size: 18,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.red.shade200,
-                        size: 18,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.red.shade200,
-                        size: 18,
-                      ),
-                    ],
-                  )
-                : widget.review.rating == 1
-                    ? Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.star,
-                            color: Colors.red.shade200,
-                            size: 18,
-                          ),
-                        ],
-                      )
-                    : Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.star,
-                            color: Colors.red.shade200,
-                            size: 18,
-                          ),
-                        ],
-                      )
+            SizedBox(
+              height: 5,
+            ),
+            Text(widget.review.content,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                )),
           ],
         ),
       ),

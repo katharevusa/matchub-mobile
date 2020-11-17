@@ -11,6 +11,7 @@ import 'package:matchub_mobile/screens/home/components/create_post.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
 import 'package:matchub_mobile/screens/profile/view_profile.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/writeReview.dart';
 import 'package:matchub_mobile/unused/project_screen.dart';
 import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';

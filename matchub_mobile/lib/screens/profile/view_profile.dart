@@ -138,7 +138,7 @@ class _ViewProfileState extends State<ViewProfile>
                       ProfileProjects(
                           projects: profile.projectsOwned, scrollable: false),
                       ProfileResource(profile, scrollable: false),
-                      ProfileReviews(),
+                      ProfileReviews(profile, scrollable: false),
                     ],
                     controller: controller,
                   ),

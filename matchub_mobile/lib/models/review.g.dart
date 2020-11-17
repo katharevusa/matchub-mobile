@@ -12,9 +12,16 @@ Review _$ReviewFromJson(Map<String, dynamic> json) {
     ..timeCreated = json['timeCreated'] as String
     ..content = json['content'] as String
     ..rating = json['rating'] as num
-    ..reviewer = json['reviewer'] as Map<String, dynamic>
-    ..project = json['project'] as Map<String, dynamic>
-    ..reviewReceiver = json['reviewReceiver'] as Map<String, dynamic>;
+    ..reviewer =
+        json['reviewer'] != null ? Profile.fromJson(json['reviewer']) : null
+    ..project =
+        json['project'] != null ? Project.fromJson(json['project']) : null
+    ..reviewReceiver = json['reviewReceiver'] != null
+        ? Profile.fromJson(json['reviewReceiver'])
+        : null;
+  // ..reviewer = json['reviewer'] as Map<String, dynamic>
+  // ..project = json['project'] as Map<String, dynamic>
+  // ..reviewReceiver = json['reviewReceiver'] as Map<String, dynamic>;
 }
 
 Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{

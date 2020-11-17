@@ -5,6 +5,7 @@ import 'package:matchub_mobile/screens/project/projectDetail/project_detail_over
 import 'package:matchub_mobile/screens/project/projectOverview/project_overview.dart';
 import 'package:matchub_mobile/screens/project_management/channels/channel_screen.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/writeReview.dart';
 import 'package:matchub_mobile/screens/project_management/project_management.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
@@ -49,6 +50,13 @@ class _ProjectNavigatorState extends State<ProjectNavigator> {
                       as Map<String, dynamic>,
                   project: (settings.arguments
                       as Map<String, dynamic>)['project'] as Project);
+            case WriteReview.routeName:
+              return WriteReview(
+                receiver: (settings.arguments as Map<String, dynamic>)['member']
+                    as TruncatedProfile,
+                project: (settings.arguments as Map<String, dynamic>)['project']
+                    as Project,
+              );
 
             case '/':
               return ProjectOverview();
