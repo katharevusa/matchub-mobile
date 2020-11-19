@@ -314,14 +314,14 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
-                    color: Colors.white),
+                    color: Colors.grey[700]),
               ),
               Text(
                 "Points",
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white),
+                    color: Colors.grey[700]),
               ),
             ],
           ),

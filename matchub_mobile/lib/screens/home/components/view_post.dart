@@ -454,11 +454,13 @@ class _PostCommentState extends State<PostComment> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(commenter.name,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12)),
+                                Expanded(
+                                  child: Text(commenter.name,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12)),
+                                ),
                                 if (commenter.accountId ==
                                     Provider.of<Auth>(context, listen: false)
                                         .myProfile

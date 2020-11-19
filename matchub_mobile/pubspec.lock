@@ -50,13 +50,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.4"
-  boardview:
-    dependency: "direct main"
-    description:
-      name: boardview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -414,13 +407,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.11"
-  flushbar:
-    dependency: "direct main"
-    description:
-      name: flushbar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.10.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -616,13 +602,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.18"
-  image_cropper:
-    dependency: "direct main"
-    description:
-      name: image_cropper
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   image_picker:
     dependency: "direct main"
     description:
@@ -728,13 +707,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.7"
-  mvc_pattern:
-    dependency: "direct main"
-    description:
-      name: mvc_pattern
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.6.0"
   node_interop:
     dependency: transitive
     description:
@@ -918,7 +890,7 @@ packages:
     source: hosted
     version: "1.0.0"
   rxdart:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: rxdart
       url: "https://pub.dartlang.org"
@@ -1202,34 +1174,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0-nullsafety.3"
-  video_player:
-    dependency: "direct main"
-    description:
-      name: video_player
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.11.1+5"
-  video_player_platform_interface:
-    dependency: transitive
-    description:
-      name: video_player_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.0"
-  video_player_web:
-    dependency: transitive
-    description:
-      name: video_player_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4+1"
-  video_thumbnail:
-    dependency: "direct main"
-    description:
-      name: video_thumbnail
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.4"
   watcher:
     dependency: transitive
     description:
