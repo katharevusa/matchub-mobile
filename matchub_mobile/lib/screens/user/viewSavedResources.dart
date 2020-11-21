@@ -41,7 +41,7 @@ class _ViewSavedResourcesState extends State<ViewSavedResources> {
   @override
   Widget build(BuildContext context) {
     listOfSavedResources =
-        Provider.of<ManageResource>(this.context).savedResources;
+        Provider.of<ManageResource>(context).savedResources;
     return
         // FutureBuilder(
         //   future: loadFuture,

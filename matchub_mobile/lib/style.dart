@@ -38,10 +38,10 @@ class AppTheme {
   static const Color project3 = Color(0xFFFBDC83);
   static const Color project4 = Color(0xFF6BCDA5);
   static const Color project5 = Color(0xFFE3F2F2);
-  // static const Color project5 = Color(0xFFE0A5BE);
   static const Color project6 = Color(0xFF69528E);
   static const Color project7 = Color(0xFF1E1E1E);
   static const Color project8 = Color(0xFFA7796F);
+  static const Color projectPink = Color(0xFFE0A5BE);
 
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: AppTheme.appBackgroundColor,

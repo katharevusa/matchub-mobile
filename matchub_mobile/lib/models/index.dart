@@ -1,4 +1,5 @@
 export 'sdg.dart' ; 
+export 'sdgTarget.dart' ; 
 export 'resourceCategory.dart' ; 
 export 'stakeholder.dart' ; 
 export 'project.dart' ; 
@@ -14,7 +15,7 @@ export 'announcement.dart' ;
 export 'badge.dart' ; 
 export 'profile.dart' ; 
 export 'post.dart' ; 
-export 'taskEntity.dart' ; 
-export 'taskColumnEntity.dart' ; 
-export 'kanbanEntity.dart' ; 
+export 'task.dart' ; 
+export 'taskColumn.dart' ; 
+export 'kanban.dart' ; 
 export 'comment.dart' ; 

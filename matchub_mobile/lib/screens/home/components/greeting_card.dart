@@ -96,8 +96,10 @@ class _GreetingCardState extends State<GreetingCard> {
                       begin: Alignment.bottomLeft,
                       end: Alignment.topRight,
                       colors: [
-                        AppTheme.project4,
-                        AppTheme.project4,
+                        Color(0xFF086564),
+                        Color(0xFF179996),
+                        Color(0xFF87D6C1),
+                        Color(0xFFABF4E1)
                       ])),
               alignment: Alignment.bottomLeft,
               child: Padding(

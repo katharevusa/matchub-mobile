@@ -8,7 +8,6 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/helpers/attachment_helper.dart';
 import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/models/taskEntity.dart';
 import 'package:matchub_mobile/models/truncatedProfile.dart';
 import 'package:matchub_mobile/screens/kanban/board/boardList.dart';
 import 'package:matchub_mobile/screens/kanban/task/selectStatus.dart';

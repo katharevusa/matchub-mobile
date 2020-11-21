@@ -76,7 +76,6 @@ class _WalletScreenState extends State<WalletScreen> {
                                   WebView(
                                     initialUrl: stripeExpressDashboard,
                                     javascriptMode: JavascriptMode.unrestricted,
-
                                     navigationDelegate:
                                         (NavigationRequest request) {
                                       if (request.url.startsWith(
@@ -108,7 +107,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                           color: Colors.transparent,
                                         ),
                                 ],
-                              ) : Container();
+                              )
+                            : Container();
                       },
                     ),
                   ),
@@ -129,8 +129,8 @@ class _WalletScreenState extends State<WalletScreen> {
     Navigator.of(context)
         .push(MaterialPageRoute(
             builder: (_) => StripeWebpage(url: stripeSetupUrl['url'])))
-        .then((value) => refreshState()).then((value) => 
-        Navigator.pop(context));
+        .then((value) => refreshState())
+        .then((value) => Navigator.pop(context));
   }
 
   getStripeExpressDashboard() async {
@@ -188,9 +188,9 @@ class _StripeWebpageState extends State<StripeWebpage> {
             print('allowing navigation to $request');
             return NavigationDecision.navigate;
           },
+          onPageFinished: (_) => setState(() => _isLoading = false),
           onWebViewCreated: (WebViewController webViewController) async {
             _controller.complete(webViewController);
-            setState(() => _isLoading = false);
           },
         ),
       ),

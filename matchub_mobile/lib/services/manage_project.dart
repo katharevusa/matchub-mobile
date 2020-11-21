@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
@@ -5,14 +7,41 @@ import 'package:matchub_mobile/models/index.dart';
 class ManageProject with ChangeNotifier {
   ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   Project managedProject;
+  List<Campaign> fundCampaigns = [];
+  Campaign managedCampaign;
+
+  updateCampaign(editedCampaign) async {
+    final response = await _apiHelper.putProtected(
+        "authenticated/updateFundCampaign",
+        body: json.encode(editedCampaign));
+    managedCampaign = Campaign.fromJson(response);
+    notifyListeners();
+  }
+
+  retrieveCampaign() async {
+    final response = await _apiHelper.getWODecode(
+        "authenticated/getFundCampaignByFundCampaignId?fundCampaignId=${managedCampaign.fundsCampaignId}");
+    managedCampaign = Campaign.fromJson(response);
+    notifyListeners();
+  }
+
+  retrieveCampaigns() async {
+    fundCampaigns.clear();
+    final response = await _apiHelper.getWODecode(
+        "authenticated/getFundCampaignsByProjectId?projectId=${managedProject.projectId}");
+    (response as List).forEach((e) => fundCampaigns.add(Campaign.fromJson(e)));
+    notifyListeners();
+  }
 
   getProject(int projectId) async {
     final response = await _apiHelper.getProtected(
-        "authenticated/getProject?projectId=$projectId",);
+      "authenticated/getProject?projectId=$projectId",
+    );
     managedProject = Project.fromJson(response);
     notifyListeners();
     return managedProject;
   }
+
   List<Announcement> allAnnouncementForUsers = [];
   List<Announcement> projectInternalAnnouncement = [];
   List<Announcement> projectPublicAnnouncement = [];
@@ -50,14 +79,12 @@ class ManageProject with ChangeNotifier {
     notifyListeners();
     return projectPublicAnnouncement;
   }
-  
 
   getAllFollowingProjects(Profile profile) async {
     followingProjects = [];
     final url =
         'authenticated/getListOfFollowingProjectsByUserId?userId=${profile.accountId}';
-    final responseData =
-        await _apiHelper.getWODecode(url);
+    final responseData = await _apiHelper.getWODecode(url);
     (responseData as List)
         .forEach((e) => followingProjects.add(Project.fromJson(e)));
     notifyListeners();

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/campaign/campaign_edit.dart';
 import 'package:matchub_mobile/screens/campaign/payment_details.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pCarousel.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
+import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
 import '../../style.dart';
@@ -13,14 +18,42 @@ import '../../style.dart';
 class ViewCampaign extends StatelessWidget {
   Project project;
   Campaign campaign;
+  bool isPublic;
 
-  ViewCampaign({this.project, this.campaign});
+  ViewCampaign({this.project, this.campaign, this.isPublic = true});
   @override
   Widget build(BuildContext context) {
+    if (!isPublic)
+      campaign = Provider.of<ManageProject>(context).managedCampaign;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          PCarousel(project),
+          Stack(
+            children: [
+              PCarousel(project),
+              if (project.projCreatorId ==
+                  Provider.of<Auth>(context, listen: false).myProfile.accountId)
+                Positioned(
+                  right: 10,
+                  child: SafeArea(
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => CampaignEdit(
+                                        campaign: campaign,
+                                        project: project,
+                                      )));
+                        }),
+                  ),
+                ),
+            ],
+          ),
           SizedBox(height: 20),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
@@ -188,9 +221,8 @@ class ViewCampaign extends StatelessWidget {
               shrinkWrap: true,
               itemBuilder: (_, idx) {
                 return DonationOptionCard(
-                  donationOption: campaign.donationOptions[idx],
-                  project: project
-                );
+                    donationOption: campaign.donationOptions[idx],
+                    project: project);
               },
               itemCount: campaign.donationOptions.length),
         ]),
@@ -200,13 +232,14 @@ class ViewCampaign extends StatelessWidget {
 }
 
 class DonationOptionCard extends StatelessWidget {
-  DonationOptionCard({
-    Key key,
-    @required this.donationOption,
-    @required this.project,
-    this.backgroundColor,
-  }) : super(key: key);
-
+  DonationOptionCard(
+      {Key key,
+      @required this.donationOption,
+      @required this.project,
+      this.backgroundColor,
+      this.isPublic = true})
+      : super(key: key);
+  final bool isPublic;
   final Project project;
   final CampaignOption donationOption;
   final TextEditingController pledgeController = TextEditingController();
@@ -216,76 +249,91 @@ class DonationOptionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     pledgeController.text = donationOption.amount.toStringAsFixed(0);
     return Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-            color: backgroundColor ?? Colors.transparent,
-            border: Border.all(color: Colors.grey[400]),
-            borderRadius: BorderRadius.circular(5)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Pledge S\$ ${donationOption.amount.toStringAsFixed(0)} or more",
-              style: TextStyle(
-                  color: Colors.grey[850],
-                  fontWeight: FontWeight.w400,
-                  fontSize: 2 * SizeConfig.textMultiplier),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+          color: backgroundColor ?? Colors.transparent,
+          border: Border.all(color: Colors.grey[400]),
+          borderRadius: BorderRadius.circular(5)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Pledge S\$ ${donationOption.amount.toStringAsFixed(0)} or more",
+                style: TextStyle(
+                    color: Colors.grey[850],
+                    fontWeight: FontWeight.w400,
+                    fontSize: 2 * SizeConfig.textMultiplier),
+              ),
+              if(!isPublic && !donationOption.optionDescription.contains("Default")) IconButton(
+                visualDensity: VisualDensity.compact,padding: EdgeInsets.zero,
+                onPressed: () async {
+                  await ApiBaseHelper.instance.deleteProtected("authenticated/deleteDonationOption?donationOptionId=${donationOption.donationOptionId}");
+                  await Provider.of<ManageProject>(context,listen:false).retrieveCampaign();
+                },
+                icon: Icon(Icons.delete, color:Colors.grey[400],))
+            ],
+          ),
+          SizedBox(height: 10),
+          Text(
+            donationOption.optionDescription,
+            style: TextStyle(
+                color: Colors.grey[850],
+                fontSize: 1.7 * SizeConfig.textMultiplier),
+          ),
+          SizedBox(height: 10),
+          Text(
+            "133 backers",
+            style: TextStyle(
+              color: Colors.grey[400],
+              fontWeight: FontWeight.w400,
+              fontSize: 1.5 * SizeConfig.textMultiplier,
             ),
-            SizedBox(height: 10),
-            Text(
-              donationOption.optionDescription,
-              style: TextStyle(
-                  color: Colors.grey[850],
-                  fontSize: 1.7 * SizeConfig.textMultiplier),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "133 backers",
-              style: TextStyle(
-                color: Colors.grey[400],
-                fontWeight: FontWeight.w400,
-                fontSize: 1.5 * SizeConfig.textMultiplier,
+          ),
+          SizedBox(height: 10),
+          TextFormField(
+            autovalidate: true,
+            controller: pledgeController,
+            decoration: InputDecoration(
+              labelText: 'Pledge Amount (\$)',
+              labelStyle: TextStyle(color: Colors.grey[850], fontSize: 12),
+              fillColor: Colors.grey[100],
+              hoverColor: Colors.grey[100],
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: kSecondaryColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: kSecondaryColor),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey[600],
+                ),
               ),
             ),
-            SizedBox(height: 10),
-            TextFormField(
-              controller: pledgeController,
-              decoration: InputDecoration(
-                labelText: 'Pledge Amount (\$)',
-                labelStyle: TextStyle(color: Colors.grey[850], fontSize: 12),
-                fillColor: Colors.grey[100],
-                hoverColor: Colors.grey[100],
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: kSecondaryColor),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: kSecondaryColor),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ),
-              onEditingComplete: ()=>FocusScope.of(context).unfocus(),
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly,
-                CustomRangeTextInputFormatter(
-                    minValue: donationOption.amount.toInt())
-              ],
-              onChanged: (value) {
-                // newCampaign['campaignTarget'] = value;
-                pledgeController.selection = TextSelection.fromPosition(
-                    TextPosition(offset: pledgeController.text.length));
-              },
-              validator: (val) {
-                if (val.isEmpty) {
-                  return "Please input a campaign target";
-                }
-              },
-            ),
+            readOnly: !isPublic,
+            onEditingComplete: () => FocusManager.instance.primaryFocus.unfocus(),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly,
+              // CustomRangeTextInputFormatter(
+              //     minValue: donationOption.amount.toInt())
+            ],
+            onChanged: (value) {
+              // newCampaign['campaignTarget'] = value;
+              pledgeController.selection = TextSelection.fromPosition(
+                  TextPosition(offset: pledgeController.text.length));
+            },
+            validator: (val) {
+              if (val.isEmpty || int.parse(val) < donationOption.amount) {
+                return "Please input a valid amount";
+              }
+            },
+          ),
+          if (isPublic) ...[
             SizedBox(height: 10),
             Align(
               alignment: Alignment.center,
@@ -300,41 +348,50 @@ class DonationOptionCard extends StatelessWidget {
                     "Select",
                     style: TextStyle(fontSize: 16),
                   ),
-                  color: AppTheme.project5,
+                  color: AppTheme.projectPink,
                   textColor: Colors.white,
                   onPressed: () {
-                    Navigator.of(context, rootNavigator: true)
-                        .push(PageRouteBuilder(
-                      pageBuilder: (BuildContext context,
-                          Animation<double> animation,
-                          Animation<double> secondaryAnimation) {
-                        return PaymentScreen(donationOption: donationOption, selectedAmount: pledgeController.text, project: project);
-                      },
-                      transitionsBuilder: (BuildContext context,
-                          Animation<double> animation,
-                          Animation<double> secondaryAnimation,
-                          Widget child) {
-                        final Widget transition = SlideTransition(
-                          position: Tween<Offset>(
-                            begin: Offset(0.0, 1.0),
-                            end: Offset.zero,
-                          ).animate(animation),
-                          child: SlideTransition(
+                    if(int.parse(pledgeController.text) >= donationOption.amount){
+                    Navigator.of(context, rootNavigator: true).push(
+                      PageRouteBuilder(
+                        pageBuilder: (BuildContext context,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation) {
+                          return PaymentScreen(
+                              donationOption: donationOption,
+                              selectedAmount: pledgeController.text,
+                              project: project);
+                        },
+                        transitionsBuilder: (BuildContext context,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation,
+                            Widget child) {
+                          final Widget transition = SlideTransition(
                             position: Tween<Offset>(
-                              begin: Offset.zero,
-                              end: Offset(0.0, -0.7),
-                            ).animate(secondaryAnimation),
-                            child: child,
-                          ),
-                        );
-                        return transition;
-                      },
-                      transitionDuration: Duration(milliseconds: 300),
-                    ));
+                              begin: Offset(0.0, 1.0),
+                              end: Offset.zero,
+                            ).animate(animation),
+                            child: SlideTransition(
+                              position: Tween<Offset>(
+                                begin: Offset.zero,
+                                end: Offset(0.0, -0.7),
+                              ).animate(secondaryAnimation),
+                              child: child,
+                            ),
+                          );
+                          return transition;
+                        },
+                        transitionDuration: Duration(milliseconds: 300),
+                      ),
+                    );
+
+                    }
                   }),
-            ),
+            )
           ],
-        ));
+        ],
+      ),
+    );
   }
 }
 
