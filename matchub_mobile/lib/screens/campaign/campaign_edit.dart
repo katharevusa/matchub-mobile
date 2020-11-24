@@ -29,7 +29,7 @@ class _CampaignEditState extends State<CampaignEdit>
   @override
   void initState() {
     editedCampaign = {
-      "campaignId": 1,
+      "campaignId": widget.campaign.fundsCampaignId,
       "campaignTitle": widget.campaign.campaignTitle,
       "campaignDescription": widget.campaign.campaignDescription,
       "endDate": widget.campaign.endDate.toIso8601String(),
@@ -37,8 +37,6 @@ class _CampaignEditState extends State<CampaignEdit>
     };
     _controller = TabController(vsync: this, length: 2);
   }
-
-  updateCampaignDetails() async {}
 
   @override
   Widget build(BuildContext context) {

@@ -12,6 +12,8 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..isOrganisation = json['organizationName'] != null ? true : false
     ..verificationDocuments =
         json['verificationDocuments'] as Map<String, dynamic>
+    ..announcementsSetting =
+        json['announcementsSetting'] as Map<String, dynamic>
     ..employees = json['employees'] as List
     ..stripeAccountUid = json['stripeAccountUid'] as String
     ..stripeAccountChargesEnabled = json['stripeAccountChargesEnabled'] as bool

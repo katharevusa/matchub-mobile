@@ -56,6 +56,7 @@ class Profile with ChangeNotifier {
   String profileDescription;
   List projectFollowing;
   List skillSet;
+  Map<String, dynamic> announcementsSetting;
   Map<String, dynamic> verificationDocuments;
 
   factory Profile.fromJson(Map<String, dynamic> json) =>

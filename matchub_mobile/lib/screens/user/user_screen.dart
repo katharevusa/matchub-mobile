@@ -23,6 +23,8 @@ import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import 'package:provider/provider.dart';
 
+import 'account-settings/notification_settings.dart';
+
 class UserScreen extends StatefulWidget {
   static const routeName = "/user-screen";
 
@@ -160,13 +162,13 @@ class _UserScreenState extends State<UserScreen> {
                       builder: (context) => WalletScreen(),
                     ));
                   }),
-                  buildSettingCard(
-                      "Announcements",
-                      Icon(
-                        Icons.notifications,
-                        color: Color(0xFFf1d1b5),
-                      ),
-                      () {}),
+                  // buildSettingCard(
+                  //     "Announcements",
+                  //     Icon(
+                  //       Icons.notification_important,
+                  //       color: Color(0xFFf1d1b5),
+                  //     ),
+                  //     () {}),
                   buildSettingCard(
                       "Following Projects",
                       Icon(
@@ -192,7 +194,7 @@ class _UserScreenState extends State<UserScreen> {
                     ));
                   }),
                   buildSettingCard(
-                      "Comments",
+                      "Survey",
                       Icon(
                         FlutterIcons.comment_dots_faw5s,
                         color: Color(0xFFf18c8e),
@@ -200,39 +202,45 @@ class _UserScreenState extends State<UserScreen> {
                       () {})
                 ],
               ),
-              Theme(
-                data: ThemeData(accentColor: Colors.grey),
-                child: ExpansionTile(
-                  title: Container(
-                      child: Text(
-                    "Notifications",
-                  )),
-                  children: [
-                    ListTile(
-                      onTap: () {},
-                      leading: Icon(Icons.notification_important),
-                      title: Text("Notification Settings"),
-                      subtitle: Text(
-                        "Choose which notifications you want to receive",
-                        style: AppTheme.subTitleLight,
-                      ),
-                    ),
-                    ListTile(
-                        onTap: () {},
-                        leading: Icon(Icons.chat),
-                        title: Text("Messaging Settings"),
-                        subtitle: Text(
-                          "Choose which messages you want to receive",
-                          style: AppTheme.subTitleLight,
-                        ))
-                  ],
-                ),
-              ),
+              // Theme(
+              //   data: ThemeData(accentColor: Colors.grey),
+              //   child: ExpansionTile(
+              //     title: Container(
+              //         child: Text(
+              //       "Notifications",
+              //     )),
+              //     children: [
+
+              //       ListTile(
+              //           onTap: () {},
+              //           leading: Icon(Icons.chat),
+              //           title: Text("Messaging Settings"),
+              //           subtitle: Text(
+              //             "Choose which messages you want to receive",
+              //             style: AppTheme.subTitleLight,
+              //           ))
+              //     ],
+              //   ),
+              // ),
               Theme(
                   data: ThemeData(accentColor: Colors.grey),
                   child: ExpansionTile(
+                    initiallyExpanded: true,
                     title: Text("Account Settings"),
                     children: [
+                      ListTile(
+                        onTap: () {
+                          Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (_) => NotificationSetting()));
+                        },
+                        leading: Icon(Icons.notification_important),
+                        title: Text("Notification Settings"),
+                        subtitle: Text(
+                          "Choose which notifications you want to receive",
+                          style: AppTheme.subTitleLight,
+                        ),
+                      ),
                       ListTile(
                         onTap: () {
                           dismissSnackBar();
@@ -251,7 +259,7 @@ class _UserScreenState extends State<UserScreen> {
                             }
                           });
                         },
-                        leading: Icon(FlutterIcons.key_faw5s),
+                        leading: Icon(FlutterIcons.key_faw5s, size: 20),
                         title: Text("Change Password"),
                         subtitle: Text(
                           "Change your password here",

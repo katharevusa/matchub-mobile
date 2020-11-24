@@ -6,7 +6,6 @@ extension CapExtension on String {
   String get capitalizeWords {
     List<String> list = this.split(" ");
     var temp = list.map((word) => word.capitalize).toList();
-    print(temp);
     return temp.join(" ");
   }
 

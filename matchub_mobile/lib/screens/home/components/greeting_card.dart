@@ -47,12 +47,10 @@ class _GreetingCardState extends State<GreetingCard> {
                 children: [
                   Text("Welcome,",
                       style: TextStyle(
-                          fontFamily: 'Quicksand',
                           fontSize: 2 * SizeConfig.textMultiplier,
                           color: Colors.grey[650])),
                   Text(myProfile.name,
                       style: TextStyle(
-                          fontFamily: 'Quicksand',
                           fontSize: 3 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w800)),
                 ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/user/select_targets.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -24,6 +25,10 @@ class _InterestEditPageState extends State<InterestEditPage> {
       GlobalKey<TagsState>(debugLabel: '_tagStateKey');
   @override
   Widget build(BuildContext context) {
+    List targets = [];
+    widget.profile['hashmapSDG'].forEach((k, v) => targets.addAll(v));
+    print(widget.profile['hashmapSDG']);
+    print(targets.length);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
@@ -40,16 +45,24 @@ class _InterestEditPageState extends State<InterestEditPage> {
                             Navigator.of(context)
                                 .pushNamed(SDGPicker.routeName)
                                 .then((value) {
-                                  print(value);
-                                if (value != null) {
-                                   var list = [];
-                                  widget.profile['sdgIds'] = value;
-                                  widget.profile['sdgIds'].forEach((e) => list.add(e + 1));
-                                  print(list);
-                                  widget.profile['sdgIds'] = list;
-                                  // widget.profile['sdgIds'] = (value);
-                                }
+                              print(value);
+                              if (value != null) {
+                                var list = [];
+                                widget.profile['sdgIds'] = value;
+                                widget.profile['sdgIds']
+                                    .forEach((e) => list.add(e + 1));
+                                print(list);
+                                widget.profile['sdgIds'] = list;
+                                widget.profile['hashmapSDG'].clear();
+                                widget.profile['sdgIds'].forEach((e) => widget
+                                    .profile['hashmapSDG']
+                                    .putIfAbsent(e, () => []));
+                                // widget.profile['sdgIds'] = (value);
+                              }
                               setState(() {
+                                print(widget.profile['hashmapSDG']);
+                                print(
+                                    "=========================================");
                                 print(widget.profile['sdgIds']);
                               });
                             });
@@ -72,8 +85,8 @@ class _InterestEditPageState extends State<InterestEditPage> {
                                   Text(
                                     "${widget.profile['sdgIds'].length} SDG(s) chosen",
                                   ),
-                                  SizedBox(height:5),
-                                   GridView.builder(
+                                  SizedBox(height: 5),
+                                  GridView.builder(
                                       shrinkWrap: true,
                                       gridDelegate:
                                           new SliverGridDelegateWithFixedCrossAxisCount(
@@ -81,11 +94,13 @@ class _InterestEditPageState extends State<InterestEditPage> {
                                               // crossAxisSpacing: 10,
                                               childAspectRatio: 1,
                                               crossAxisCount: 3),
-                                              itemCount: widget.profile['sdgIds'].length,
+                                      itemCount:
+                                          widget.profile['sdgIds'].length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
-                                            int i =(widget.profile['sdgIds'][index]);
-                                            // i++;
+                                        int i =
+                                            (widget.profile['sdgIds'][index]);
+                                        // i++;
                                         return Container(
                                           // height:50,
                                           child: Image.asset(
@@ -97,7 +112,35 @@ class _InterestEditPageState extends State<InterestEditPage> {
                             )),
                           ),
                         ),
-                                 
+                        SizedBox(height: 20),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (_) => SdgTargetSelectScreen(
+                                        widget.profile['sdgIds'],
+                                        widget.profile['hashmapSDG'])))
+                                .then((value) {
+                              if (value != null) {
+                                setState(
+                                    () {
+                                      widget.profile['sdgIds'] = widget.profile['hashmapSDG'].keys.toList();
+                                      widget.profile['hashmapSDG'] = value;});
+                              }
+                            });
+                          },
+                          child: Container(
+                              constraints: BoxConstraints(
+                                  minHeight: 7.5 * SizeConfig.heightMultiplier),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.fromBorderSide(
+                                    BorderSide(color: Colors.grey[850]),
+                                  )),
+                              child: Center(
+                                  child: Text(
+                                      "You've selected ${targets.length} targets"))),
+                        ),
                         SizedBox(height: 20),
                         Tags(
                             textField: TagsTextField(
