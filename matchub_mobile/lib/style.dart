@@ -89,7 +89,7 @@ class AppTheme {
   static final TextStyle selectedTabLight = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.bold,
-    fontSize: 1.5 * SizeConfig.textMultiplier,
+    fontSize: 1.6 * SizeConfig.textMultiplier,
     fontFamily: "Lato",
   );
 

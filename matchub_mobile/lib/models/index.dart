@@ -19,3 +19,6 @@ export 'task.dart' ;
 export 'taskColumn.dart' ; 
 export 'kanban.dart' ; 
 export 'comment.dart' ; 
+export 'survey.dart' ; 
+export 'surveyQuestion.dart' ; 
+export 'surveyOption.dart' ; 

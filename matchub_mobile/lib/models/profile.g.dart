@@ -52,6 +52,11 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
             .map((i) => Project.fromJson(i))
             .toList()
         : []
+    ..surveys = json['surveys'] != null
+        ? (json['surveys'] as List)
+            .map((i) => Survey.fromJson(i))
+            .toList()
+        : []
     ..joinRequests = json['joinRequests'] as List
     ..reviewsReceived = json['reviewsReceived'] as List
     ..badges = (json['badges'] as List).map((i) => Badge.fromJson(i)).toList()

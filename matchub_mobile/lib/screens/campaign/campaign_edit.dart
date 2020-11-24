@@ -293,27 +293,28 @@ class _DonationOptionCreatePopupState extends State<DonationOptionCreatePopup> {
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 FlatButton(
-                    color: kKanbanColor,
-                    onPressed: () async {
-                      await ApiBaseHelper.instance.postProtected(
-                          "authenticated/createDonationOption",
-                          body: json.encode(newDonationOption));
-                      await Provider.of<ManageProject>(context, listen: false)
-                          .retrieveCampaign();
-                      await Provider.of<ManageProject>(context, listen: false)
-                          .retrieveCampaigns();
-                      Navigator.pop(context);
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      "Create",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 2 * SizeConfig.textMultiplier),
-                    )),
+                  color: kKanbanColor,
+                  onPressed: () async {
+                    await ApiBaseHelper.instance.postProtected(
+                        "authenticated/createDonationOption",
+                        body: json.encode(newDonationOption));
+                    await Provider.of<ManageProject>(context, listen: false)
+                        .retrieveCampaign();
+                    await Provider.of<ManageProject>(context, listen: false)
+                        .retrieveCampaigns();
+                    Navigator.pop(context);
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    "Create",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 2 * SizeConfig.textMultiplier),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 10),

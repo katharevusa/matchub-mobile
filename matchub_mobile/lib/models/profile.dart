@@ -58,6 +58,7 @@ class Profile with ChangeNotifier {
   List skillSet;
   Map<String, dynamic> announcementsSetting;
   Map<String, dynamic> verificationDocuments;
+  List<Survey> surveys;
 
   factory Profile.fromJson(Map<String, dynamic> json) =>
       _$ProfileFromJson(json);

@@ -12,6 +12,7 @@ import 'dart:convert';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/profile/view_profile.dart';
 import 'package:matchub_mobile/screens/user/account-settings/change_password.dart';
+import 'package:matchub_mobile/screens/survey/all_surveys.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
 import 'package:matchub_mobile/screens/user/viewFollowingProjects.dart';
@@ -194,12 +195,17 @@ class _UserScreenState extends State<UserScreen> {
                     ));
                   }),
                   buildSettingCard(
-                      "Survey",
+                      "MatcHub Surveys",
                       Icon(
                         FlutterIcons.comment_dots_faw5s,
                         color: Color(0xFFf18c8e),
-                      ),
-                      () {})
+                      ), () {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                      builder: (context) =>
+                          SurveyScreen(),
+                    ));
+                  })
                 ],
               ),
               // Theme(
