@@ -5,6 +5,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:matchub_mobile/helpers/sdgs.dart';
 import 'package:matchub_mobile/screens/search/resources_search.dart';
+import 'package:matchub_mobile/screens/search/sdg_target_filter.dart';
+import 'package:matchub_mobile/screens/user/select_targets.dart';
 // import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/search.dart';
@@ -57,6 +59,7 @@ class _SearchResultsState extends State<SearchResults>
     "country": null,
     "status": null,
     "sdgs": [],
+    "sdgTargetIds": [],
     "categoryIds": [],
     "startDate": null,
     "endDate": null
@@ -86,6 +89,7 @@ class _SearchResultsState extends State<SearchResults>
         "country": null,
         "status": null,
         "sdgs": [],
+        "sdgTargetIds": [],
         "categoryIds": [],
         "startDate": null,
         "endDate": null
@@ -123,7 +127,8 @@ class _SearchResultsState extends State<SearchResults>
   Widget build(BuildContext context) {
     var noOfFilters = 0;
     for (var i in filterOptions.keys) {
-      if (filterOptions[i] != null && (i != 'sdgs' && i != 'categoryIds')) {
+      if (filterOptions[i] != null &&
+          (i != 'sdgs' && i != 'categoryIds' && i != 'sdgTargetIds')) {
         noOfFilters++;
       }
       if (i == 'sdgs' && filterOptions[i].isNotEmpty) {
@@ -449,12 +454,17 @@ class _FilterSheetState extends State<FilterSheet> {
                 leading: Icon(FlutterIcons.tags_faw5s),
                 title: Text("SDGs"),
                 onTap: () => Navigator.of(context)
-                    .pushNamed(SDGPicker.routeName)
+                    .push(MaterialPageRoute(
+                        builder: (_) => SdgTargetFilterScreen(
+                            widget.filterOptions['sdgs'],
+                            widget.filterOptions['sdgTargetIds'])))
                     .then((value) {
-                  setState(() {
-                    if (value != null) widget.filterOptions['sdgs'] = value;
-                    print(value);
-                  });
+                  if (value != null) {
+                    widget.filterOptions['sdgs'] = value['sdgs'];
+                    widget.filterOptions['sdgTargetIds'] =
+                        value['sdgTargetIds'];
+                    setState(() {});
+                  }
                 }),
               ),
             if (widget.filterOptions['sdgs'].isNotEmpty) buildSDGTags(),
@@ -498,7 +508,7 @@ class _FilterSheetState extends State<FilterSheet> {
                   return ItemTags(
                     key: Key(index.toString()),
                     index: index, // required
-                    title: sdgTitles[widget.filterOptions['sdgs'][index]],
+                    title: sdgTitles[widget.filterOptions['sdgs'][index]-1],
                     color: kScaffoldColor,
                     border: Border.all(color: Colors.grey[400]),
                     textColor: Colors.grey[600],

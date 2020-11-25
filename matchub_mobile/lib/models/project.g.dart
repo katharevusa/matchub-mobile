@@ -35,6 +35,7 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..fundsCampaign = json['fundsCampaign'] != null
         ? (json['fundsCampaign'] as List).map((i) => Campaign.fromJson(i)).toList()
         : []
+    ..selectedTargets = (json['selectedTargets'] as List).map((i) => SelectedTarget.fromJson(i)).toList()
     ..sdgs = json['sdgs'] != null
         ? (json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList()
         : []

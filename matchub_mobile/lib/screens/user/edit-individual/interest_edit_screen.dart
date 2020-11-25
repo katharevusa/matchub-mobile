@@ -118,7 +118,7 @@ class _InterestEditPageState extends State<InterestEditPage> {
                                     builder: (_) => SdgTargetSelectScreen(
                                         widget.profile['sdgIds'],
                                         widget.profile['hashmapSDG'])))
-                                .then((value) {
+                                .then((value) { 
                               if (value != null) {
                                 setState(() {
                                   // widget.profile['sdgIds'] = widget.profile['hashmapSDG'].keys.toList();

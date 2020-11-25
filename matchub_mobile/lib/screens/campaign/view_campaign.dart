@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/campaign/campaign_donors.dart';
 import 'package:matchub_mobile/screens/campaign/campaign_edit.dart';
 import 'package:matchub_mobile/screens/campaign/payment_details.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pCarousel.dart';
@@ -15,41 +16,111 @@ import 'package:readmore/readmore.dart';
 
 import '../../style.dart';
 
-class ViewCampaign extends StatelessWidget {
+class ViewCampaign extends StatefulWidget {
   Project project;
   Campaign campaign;
   bool isPublic;
 
   ViewCampaign({this.project, this.campaign, this.isPublic = true});
+
+  @override
+  _ViewCampaignState createState() => _ViewCampaignState();
+}
+
+class _ViewCampaignState extends State<ViewCampaign> {
+  List<Donation> allBackers = [];
+  bool isLoading;
+  @override
+  void initState() {
+    retrieveDonations();
+    super.initState();
+  }
+
+  retrieveDonations() async {
+    setState(() => isLoading = true);
+    final url =
+        'authenticated/getAllDonationsByCampaignId?fundCampaignId=${widget.campaign.fundsCampaignId}';
+    final responseData = await ApiBaseHelper.instance.getWODecode(url);
+    (responseData as List).forEach((e) => allBackers.indexWhere((element) =>
+                element.donator.accountId ==
+                Donation.fromJson(e).donator.accountId) ==
+            -1
+        ? allBackers.add(Donation.fromJson(e))
+        : null);
+    setState(() => isLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (!isPublic)
-      campaign = Provider.of<ManageProject>(context).managedCampaign;
+    if (!widget.isPublic)
+      widget.campaign = Provider.of<ManageProject>(context).managedCampaign;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Stack(
             children: [
-              PCarousel(project),
-              if (project.projCreatorId ==
+              PCarousel(widget.project),
+              if (widget.project.projCreatorId ==
                   Provider.of<Auth>(context, listen: false).myProfile.accountId)
                 Positioned(
                   right: 10,
                   child: SafeArea(
-                    child: IconButton(
+                    child: PopupMenuButton(
+                        padding: EdgeInsets.zero,
                         icon: Icon(
-                          Icons.edit,
+                          Icons.more_vert_rounded,
+                          size: 24,
                           color: Colors.white,
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => CampaignEdit(
-                                        campaign: campaign,
-                                        project: project,
-                                      )));
-                        }),
+                        itemBuilder: (BuildContext context) => [
+                              PopupMenuItem(
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => CampaignEdit(
+                                        campaign: widget.campaign,
+                                        project: widget.project,
+                                      ),
+                                    ),
+                                  ).then((value) => Navigator.pop(context)),
+                                  dense: true,
+                                  leading: Icon(
+                                    Icons.edit,
+                                  ),
+                                  title: Text(
+                                    "Edit Campaign",
+                                    style: TextStyle(
+                                        fontSize:
+                                            SizeConfig.textMultiplier * 1.8),
+                                  ),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ViewCampaignDonors(
+                                        campaign: widget.campaign,
+                                      ),
+                                    ),
+                                  ).then((value) => Navigator.pop(context)),
+                                  dense: true,
+                                  leading: Icon(
+                                    Icons.people_alt_rounded,
+                                  ),
+                                  title: Text(
+                                    "View Campaign Donors",
+                                    style: TextStyle(
+                                        fontSize:
+                                            SizeConfig.textMultiplier * 1.8),
+                                  ),
+                                ),
+                              ),
+                            ]),
                   ),
                 ),
             ],
@@ -58,7 +129,7 @@ class ViewCampaign extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Text(
-              campaign.campaignTitle,
+              widget.campaign.campaignTitle,
               style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 3 * SizeConfig.textMultiplier),
@@ -68,7 +139,7 @@ class ViewCampaign extends StatelessWidget {
             padding: EdgeInsets.symmetric(
                 vertical: 0.5 * SizeConfig.heightMultiplier, horizontal: 30),
             child: ReadMoreText(
-              campaign.campaignDescription,
+              widget.campaign.campaignDescription,
               trimLines: 3,
               style: TextStyle(
                 height: 1.5,
@@ -90,8 +161,8 @@ class ViewCampaign extends StatelessWidget {
               backgroundColor: Colors.grey[200],
               size: 6,
               animatedDuration: const Duration(milliseconds: 800),
-              maxValue: campaign.campaignTarget.toInt(),
-              currentValue: campaign.currentAmountRaised.toInt(),
+              maxValue: widget.campaign.campaignTarget.toInt(),
+              currentValue: widget.campaign.currentAmountRaised.toInt(),
             ),
           ),
           Padding(
@@ -109,7 +180,7 @@ class ViewCampaign extends StatelessWidget {
                             fit: BoxFit.contain,
                             child: Text(
                                 "S\$ " +
-                                    campaign.currentAmountRaised
+                                    widget.campaign.currentAmountRaised
                                         .toStringAsFixed(0),
                                 style: TextStyle(
                                   color: kKanbanColor,
@@ -119,7 +190,7 @@ class ViewCampaign extends StatelessWidget {
                           ),
                         ),
                         Text("pledged of S\$ " +
-                            campaign.campaignTarget.toStringAsFixed(0))
+                            widget.campaign.campaignTarget.toStringAsFixed(0))
                       ]),
                 ),
                 SizedBox(width: 10),
@@ -130,9 +201,9 @@ class ViewCampaign extends StatelessWidget {
                       Icon(Icons.monetization_on_rounded,
                           color: Colors.grey[800], size: 28),
                       SizedBox(width: 5),
-                      Text((campaign.currentAmountRaised *
+                      Text((widget.campaign.currentAmountRaised *
                                   100 ~/
-                                  campaign.campaignTarget)
+                                  widget.campaign.campaignTarget)
                               .toString() +
                           "%"),
                     ],
@@ -147,7 +218,7 @@ class ViewCampaign extends StatelessWidget {
                           color: Colors.grey[800], size: 28),
                       SizedBox(width: 5),
                       Expanded(
-                        child: Text(campaign.endDate
+                        child: Text(widget.campaign.endDate
                                 .difference(DateTime.now())
                                 .inDays
                                 .toString() +
@@ -181,7 +252,7 @@ class ViewCampaign extends StatelessWidget {
                               // fontFamily: "Lato",
                             )),
                         TextSpan(
-                          text: project.projectTitle,
+                          text: widget.project.projectTitle,
                           style: TextStyle(
                               color: Colors.grey[850],
                               fontWeight: FontWeight.w500,
@@ -195,7 +266,8 @@ class ViewCampaign extends StatelessWidget {
                   child: Text("View"),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => ProjectDetailScreen(project: project)));
+                        builder: (_) =>
+                            ProjectDetailScreen(project: widget.project)));
                   },
                 )
               ],
@@ -208,11 +280,23 @@ class ViewCampaign extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text(
-              "Support",
-              style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 2 * SizeConfig.textMultiplier),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Support",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 2 * SizeConfig.textMultiplier),
+                ),
+                Text(
+                  "${allBackers.length} backers",
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 1.8 * SizeConfig.textMultiplier,
+                  ),
+                ),
+              ],
             ),
           ),
           ListView.builder(
@@ -221,10 +305,10 @@ class ViewCampaign extends StatelessWidget {
               shrinkWrap: true,
               itemBuilder: (_, idx) {
                 return DonationOptionCard(
-                    donationOption: campaign.donationOptions[idx],
-                    project: project);
+                    donationOption: widget.campaign.donationOptions[idx],
+                    project: widget.project);
               },
-              itemCount: campaign.donationOptions.length),
+              itemCount: widget.campaign.donationOptions.length),
         ]),
       ),
     );

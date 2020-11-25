@@ -126,7 +126,7 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
   void _updateProfile(accessToken, context) async {
     if (!_formKey.currentState.validate()) {
       return;
-    }
+    } 
     _formKey.currentState.save();
     Map<String, dynamic> newMap = {};
     editedProfile['hashmapSDG'].forEach((key, value) {
