@@ -22,3 +22,4 @@ export 'comment.dart' ;
 export 'survey.dart' ; 
 export 'surveyQuestion.dart' ; 
 export 'surveyOption.dart' ; 
+export 'selectedTarget.dart' ; 

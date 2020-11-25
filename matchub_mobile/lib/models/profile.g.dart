@@ -60,6 +60,7 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..joinRequests = json['joinRequests'] as List
     ..reviewsReceived = json['reviewsReceived'] as List
     ..badges = (json['badges'] as List).map((i) => Badge.fromJson(i)).toList()
+    ..selectedTargets = (json['selectedTargets'] as List).map((i) => SelectedTarget.fromJson(i)).toList()
     ..fundPladges = json['fundPladges'] as List
     ..tasks = json['tasks'] as List
     ..managedChannel = json['managedChannel'] as List

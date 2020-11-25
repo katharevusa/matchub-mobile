@@ -48,7 +48,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
-                      "It seems like you have yet to set up Stripe. \n\nMatcHub partners with Stripe to handle the payments on the platform to enable payments and ensure a seamless experience.",
+                      "It seems like you have yet to set up Stripe. \n\nMatcHub partners with Stripe to enable payments and ensure a seamless experience.",
                       style: TextStyle(
                           fontSize: 14,
                           height: 1.3,

@@ -89,7 +89,7 @@ class ViewCampaign extends StatelessWidget {
               progressColor: kKanbanColor,
               backgroundColor: Colors.grey[200],
               size: 6,
-              animatedDuration: const Duration(milliseconds: 2500),
+              animatedDuration: const Duration(milliseconds: 800),
               maxValue: campaign.campaignTarget.toInt(),
               currentValue: campaign.currentAmountRaised.toInt(),
             ),
@@ -268,13 +268,21 @@ class DonationOptionCard extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                     fontSize: 2 * SizeConfig.textMultiplier),
               ),
-              if(!isPublic && !donationOption.optionDescription.contains("Default")) IconButton(
-                visualDensity: VisualDensity.compact,padding: EdgeInsets.zero,
-                onPressed: () async {
-                  await ApiBaseHelper.instance.deleteProtected("authenticated/deleteDonationOption?donationOptionId=${donationOption.donationOptionId}");
-                  await Provider.of<ManageProject>(context,listen:false).retrieveCampaign();
-                },
-                icon: Icon(Icons.delete, color:Colors.grey[400],))
+              if (!isPublic &&
+                  !donationOption.optionDescription.contains("Default"))
+                IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    onPressed: () async {
+                      await ApiBaseHelper.instance.deleteProtected(
+                          "authenticated/deleteDonationOption?donationOptionId=${donationOption.donationOptionId}");
+                      await Provider.of<ManageProject>(context, listen: false)
+                          .retrieveCampaign();
+                    },
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.grey[400],
+                    ))
             ],
           ),
           SizedBox(height: 10),
@@ -315,7 +323,8 @@ class DonationOptionCard extends StatelessWidget {
               ),
             ),
             readOnly: !isPublic,
-            onEditingComplete: () => FocusManager.instance.primaryFocus.unfocus(),
+            onEditingComplete: () =>
+                FocusManager.instance.primaryFocus.unfocus(),
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly,
@@ -351,40 +360,47 @@ class DonationOptionCard extends StatelessWidget {
                   color: AppTheme.projectPink,
                   textColor: Colors.white,
                   onPressed: () {
-                    if(int.parse(pledgeController.text) >= donationOption.amount){
-                    Navigator.of(context, rootNavigator: true).push(
-                      PageRouteBuilder(
-                        pageBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secondaryAnimation) {
-                          return PaymentScreen(
-                              donationOption: donationOption,
-                              selectedAmount: pledgeController.text,
-                              project: project);
-                        },
-                        transitionsBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secondaryAnimation,
-                            Widget child) {
-                          final Widget transition = SlideTransition(
-                            position: Tween<Offset>(
-                              begin: Offset(0.0, 1.0),
-                              end: Offset.zero,
-                            ).animate(animation),
-                            child: SlideTransition(
+                    if (int.parse(pledgeController.text) >=
+                        donationOption.amount) {
+                      Navigator.of(context, rootNavigator: true)
+                          .push(
+                        PageRouteBuilder(
+                          pageBuilder: (BuildContext context,
+                              Animation<double> animation,
+                              Animation<double> secondaryAnimation) {
+                            return PaymentScreen(
+                                donationOption: donationOption,
+                                selectedAmount: pledgeController.text,
+                                project: project);
+                          },
+                          transitionsBuilder: (BuildContext context,
+                              Animation<double> animation,
+                              Animation<double> secondaryAnimation,
+                              Widget child) {
+                            final Widget transition = SlideTransition(
                               position: Tween<Offset>(
-                                begin: Offset.zero,
-                                end: Offset(0.0, -0.7),
-                              ).animate(secondaryAnimation),
-                              child: child,
-                            ),
-                          );
-                          return transition;
-                        },
-                        transitionDuration: Duration(milliseconds: 300),
-                      ),
-                    );
-
+                                begin: Offset(0.0, 1.0),
+                                end: Offset.zero,
+                              ).animate(animation),
+                              child: SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: Offset.zero,
+                                  end: Offset(0.0, -0.7),
+                                ).animate(secondaryAnimation),
+                                child: child,
+                              ),
+                            );
+                            return transition;
+                          },
+                          transitionDuration: Duration(milliseconds: 300),
+                        ),
+                      )
+                          .then((value) {
+                        Provider.of<ManageProject>(context, listen: false)
+                            .retrieveCampaign();
+                        Provider.of<ManageProject>(context, listen: false)
+                            .retrieveCampaigns();
+                      });
                     }
                   }),
             )

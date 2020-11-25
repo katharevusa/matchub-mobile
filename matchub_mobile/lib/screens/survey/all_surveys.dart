@@ -20,8 +20,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
     surveys = Provider.of<Auth>(context, listen: false).myProfile.surveys;
     print(surveys.length);
     return Scaffold(
-      appBar: AppBar(title: Text("All Questionnaires")),
-      body: GridView.builder(
+      appBar: AppBar(title: Text("All MatcHub Surveys")),
+      body: surveys.isEmpty ? Center(child:Text("No Active Surveys", style: AppTheme.titleLight)): GridView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(

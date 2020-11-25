@@ -39,6 +39,12 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
       "sdgIds": widget.profile.sdgs.map((e) => e.sdgId).toList() ?? [],
       "address": widget.profile.address ?? ""
     };
+    Map<num, dynamic> newMap = {};
+    widget.profile.selectedTargets
+        .forEach((e) => newMap.putIfAbsent(e.sdg.sdgId, () {
+              return e.sdgTargets.map((e) => e.sdgTargetId).toList();
+            }));
+    editedProfile["hashmapSDG"] = newMap;
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -123,9 +129,17 @@ class _EditOrganisationScreenState extends State<EditOrganisationScreen> {
       return;
     }
     _formKey.currentState.save();
-    final url = "authenticated/updateOrganisation";
+      Map<String, dynamic> newMap = {};
+    editedProfile['hashmapSDG'].forEach((key, value) {
+      //converting all key value pairs to string
+      newMap.putIfAbsent(key.toString(), () {
+        value.forEach((e) => e.toString());
+        return value;
+      });
+    });
+    editedProfile['hashmapSDG'] = newMap;
     try {
-      final response = await ApiBaseHelper.instance.postProtected(url,
+      final response = await ApiBaseHelper.instance.postProtected("authenticated/updateOrganisation",
           accessToken: accessToken, body: json.encode(editedProfile));
       Provider.of<Auth>(context,listen: false).myProfile = Profile.fromJson(response);
       print("Success");

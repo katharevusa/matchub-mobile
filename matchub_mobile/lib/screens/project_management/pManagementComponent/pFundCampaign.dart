@@ -39,14 +39,16 @@ class _PFundCampaignListState extends State<PFundCampaignList> {
   }
 
   retrieveCampaigns() async {
-    final response = await Provider.of<ManageProject>(context, listen: false).retrieveCampaigns();
+    setState(() => _isLoading = true);
+    final response = await Provider.of<ManageProject>(context, listen: false)
+        .retrieveCampaigns();
     setState(() => _isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    project = Provider.of<ManageProject>(context,).managedProject;
-    fundCampaigns = Provider.of<ManageProject>(context,).fundCampaigns;
+    project = Provider.of<ManageProject>(context).managedProject;
+    fundCampaigns = Provider.of<ManageProject>(context).fundCampaigns;
     return Scaffold(
       appBar: AppBar(
         title: Text(project.projectTitle,
@@ -82,9 +84,12 @@ class _PFundCampaignListState extends State<PFundCampaignList> {
               heroTag: "campaignCreateBtn",
               child: Icon(Icons.add),
               onPressed: () {
-                Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(
-                        builder: (context) => CampaignCreationScreen()));
+                Navigator.of(context, rootNavigator: true)
+                    .push(MaterialPageRoute(
+                        builder: (context) => CampaignCreationScreen()))
+                    .then((value) =>
+                        Provider.of<ManageProject>(context, listen: false)
+                            .retrieveCampaigns());
               })
           : SizedBox.shrink(),
     );

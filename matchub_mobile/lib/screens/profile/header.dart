@@ -16,6 +16,7 @@ import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
+import 'package:matchub_mobile/widgets/viewSdgTargets.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share/share.dart';
@@ -330,7 +331,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
                   ),
-                  textAlign: TextAlign.justify,
                   colorClickableText: kSecondaryColor,
                   trimMode: TrimMode.Line,
                   trimCollapsedText: '...Show more',
@@ -386,43 +386,48 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         ]);
   }
 
-  Row buildSDGTags() {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Flexible(
-            flex: 1,
-            child: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Text("SDG Interests")),
-          ),
-          Flexible(
-            flex: 3,
-            child: Tags(
-              horizontalScroll: true,
-              itemCount: widget.profile.sdgs.length, // required
-              itemBuilder: (int index) {
-                return ItemTags(
-                  key: Key(index.toString()),
-                  index: index, // required
-                  title: widget.profile.sdgs[index].sdgName,
-                  color: kScaffoldColor,
-                  border: Border.all(color: Colors.grey[400]),
-                  textColor: Colors.grey[600],
-                  elevation: 0,
-                  active: false,
-                  pressEnabled: false,
-                  textStyle:
-                      TextStyle(fontWeight: FontWeight.w400, fontSize: 12.0),
-                );
-              },
-              heightHorizontalScroll: 40,
-              alignment: WrapAlignment.end,
-              runAlignment: WrapAlignment.start,
+  Widget buildSDGTags() {
+    return InkWell(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) =>
+              ViewSDGTargets(selectedTargets: widget.profile.selectedTargets))),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Flexible(
+              flex: 1,
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Text("SDG Interests")),
             ),
-          ),
-        ]);
+            Flexible(
+              flex: 3,
+              child: Tags(
+                horizontalScroll: true,
+                itemCount: widget.profile.sdgs.length, // required
+                itemBuilder: (int index) {
+                  return ItemTags(
+                    key: Key(index.toString()),
+                    index: index, // required
+                    title: widget.profile.sdgs[index].sdgName,
+                    color: kScaffoldColor,
+                    border: Border.all(color: Colors.grey[400]),
+                    textColor: Colors.grey[600],
+                    elevation: 0,
+                    active: false,
+                    pressEnabled: false,
+                    textStyle:
+                        TextStyle(fontWeight: FontWeight.w400, fontSize: 12.0),
+                  );
+                },
+                heightHorizontalScroll: 40,
+                alignment: WrapAlignment.end,
+                runAlignment: WrapAlignment.start,
+              ),
+            ),
+          ]),
+    );
   }
 
   Column buildKah(BuildContext context) {
@@ -461,24 +466,23 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       child: Container(
-                          color: Colors.transparent,
-                          margin: EdgeInsets.symmetric(
-                             horizontal: 10.0),
-                          width: 100.0,
-                          height: 50.0,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              buildAvatar(kahs[index], radius: 60),
-                              SizedBox(
-                                height: 5.0,
-                              ),
-                              Text(kahs[index].name,
-                                  style: TextStyle(
-                                      color: Colors.grey.shade600,
-                                      fontSize: 10))
-                            ],
-                          ),),
+                        color: Colors.transparent,
+                        margin: EdgeInsets.symmetric(horizontal: 10.0),
+                        width: 100.0,
+                        height: 50.0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            buildAvatar(kahs[index], radius: 60),
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                            Text(kahs[index].name,
+                                style: TextStyle(
+                                    color: Colors.grey.shade600, fontSize: 10))
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),

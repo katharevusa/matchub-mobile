@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -74,10 +75,22 @@ class _CampaignEditState extends State<CampaignEdit>
                                   child: Text('No'),
                                 ),
                                 FlatButton(
-                                  onPressed: () {
-                                    ApiBaseHelper.instance.deleteProtected(
-                                        "authenticated/deleteFundCampaign?fundCampaignId=${widget.campaign.fundsCampaignId}");
-                                    Navigator.of(context).pop(true);
+                                  onPressed: () async {
+                                    try {
+                                      await ApiBaseHelper.instance.deleteProtected(
+                                          "authenticated/deleteFundCampaign?fundCampaignId=${widget.campaign.fundsCampaignId}");
+                                      var service = Provider.of<ManageProject>(
+                                          context,
+                                          listen: false);
+                                      service.getProject(widget.project.projectId);
+                                      service.retrieveCampaigns();
+                                      Navigator.of(context)
+                                          .popUntil(ModalRoute.withName("/"));
+                                    } catch (e) {
+                                      showErrorDialog(
+                                          "Campaign has already received donations. Unable to delete.",
+                                          context);
+                                    }
                                   },
                                   child: Text('Yes'),
                                 ),

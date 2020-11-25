@@ -62,7 +62,7 @@ class AppTheme {
 
   static final TextStyle titleLight = TextStyle(
     color: Colors.black,
-    fontSize: 2.5 * SizeConfig.textMultiplier,
+    fontSize: 2.2 * SizeConfig.textMultiplier,
     fontFamily: "Lato",
   );
 

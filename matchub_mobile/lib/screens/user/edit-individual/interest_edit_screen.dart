@@ -27,8 +27,6 @@ class _InterestEditPageState extends State<InterestEditPage> {
   Widget build(BuildContext context) {
     List targets = [];
     widget.profile['hashmapSDG'].forEach((k, v) => targets.addAll(v));
-    print(widget.profile['hashmapSDG']);
-    print(targets.length);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
@@ -45,7 +43,7 @@ class _InterestEditPageState extends State<InterestEditPage> {
                             Navigator.of(context)
                                 .pushNamed(SDGPicker.routeName)
                                 .then((value) {
-                              print(value);
+                              // print(value);
                               if (value != null) {
                                 var list = [];
                                 widget.profile['sdgIds'] = value;
@@ -122,10 +120,15 @@ class _InterestEditPageState extends State<InterestEditPage> {
                                         widget.profile['hashmapSDG'])))
                                 .then((value) {
                               if (value != null) {
-                                setState(
-                                    () {
-                                      widget.profile['sdgIds'] = widget.profile['hashmapSDG'].keys.toList();
-                                      widget.profile['hashmapSDG'] = value;});
+                                setState(() {
+                                  // widget.profile['sdgIds'] = widget.profile['hashmapSDG'].keys.toList();
+                                  widget.profile['hashmapSDG'] = value;
+                                  (widget.profile['sdgIds'] as List)
+                                      .forEach((element) {
+                                    widget.profile['hashmapSDG']
+                                        .putIfAbsent(element, () => []);
+                                  });
+                                });
                               }
                             });
                           },

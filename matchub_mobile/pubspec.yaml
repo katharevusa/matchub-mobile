@@ -83,7 +83,7 @@ dependencies:
   avatar_glow: ^1.2.0
   loading_overlay: ^0.2.1
   flutter_chat_bubble: ^1.0.2
-  sticky_and_expandable_list: ^0.2.3
+  timeline_tile: ^1.0.0
 
   #Stripe
   flutter_credit_card: 0.1.1

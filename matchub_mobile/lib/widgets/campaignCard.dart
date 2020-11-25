@@ -106,7 +106,7 @@ class _FundCampaignCardState extends State<FundCampaignCard> {
                               backgroundColor: Colors.grey[200],
                               size: 6,
                               animatedDuration:
-                                  const Duration(milliseconds: 2500),
+                                  const Duration(milliseconds: 800),
                               maxValue: widget.campaign.campaignTarget.toInt(),
                               currentValue:
                                   widget.campaign.currentAmountRaised.toInt(),

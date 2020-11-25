@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/style.dart';
-import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
 class SdgTargetSelectScreen extends StatefulWidget {
   static const routeName = "/select-targets";
@@ -68,9 +67,7 @@ class _SdgTargetSelectScreenState extends State<SdgTargetSelectScreen> {
             shrinkWrap: true,
             itemCount: chosenSdg.length,
             itemBuilder: (ctx, index) => Theme(
-              data: ThemeData(
-                accentColor: Colors.blueGrey[400]
-              ),
+              data: ThemeData(accentColor: Colors.blueGrey[400]),
               child: ExpansionTile(
                 leading: Checkbox(
                     value: selectedTargets.containsKey(chosenSdg[index].sdgId),
@@ -85,7 +82,6 @@ class _SdgTargetSelectScreenState extends State<SdgTargetSelectScreen> {
                       } else {
                         selectedTargets.remove(chosenSdg[index].sdgId);
                       }
-                      print(selectedTargets);
                       setState(() {});
                     }),
                 title: Text(
@@ -99,7 +95,6 @@ class _SdgTargetSelectScreenState extends State<SdgTargetSelectScreen> {
                       itemCount: chosenSdg[index].targets.length,
                       itemBuilder: (_, idx) {
                         bool value = true;
-                        print(selectedTargets);
                         if (!selectedTargets
                                 .containsKey(chosenSdg[index].sdgId) ||
                             !selectedTargets[chosenSdg[index].sdgId].contains(
@@ -107,7 +102,7 @@ class _SdgTargetSelectScreenState extends State<SdgTargetSelectScreen> {
                           value = false;
                         }
                         return CheckboxListTile(
-                          activeColor:AppTheme.projectPink,
+                          activeColor: AppTheme.projectPink,
                           value: value,
                           onChanged: (select) {
                             if (select) {
@@ -142,9 +137,7 @@ class _SdgTargetSelectScreenState extends State<SdgTargetSelectScreen> {
                             setState(() {});
                           },
                           title: Text(
-                              chosenSdg[index]
-                                  .targets[idx]
-                                  .sdgTargetDescription,
+                              "${chosenSdg[index].targets[idx].sdgTargetNumbering}  ${chosenSdg[index].targets[idx].sdgTargetDescription}",
                               style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey[850],
