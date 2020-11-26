@@ -82,7 +82,7 @@ class Ranking extends StatelessWidget {
           top: 20,
           right: 30,
           child: Container(
-            height: 136,
+            height: 133,
             alignment: Alignment.centerRight,
             child: Image.asset(
               "assets/images/medal.png",

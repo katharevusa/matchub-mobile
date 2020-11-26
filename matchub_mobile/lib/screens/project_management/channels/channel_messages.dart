@@ -315,7 +315,7 @@ class _MessageTileState extends State<MessageTile> {
           children: [
             if (!widget.sendByMe)
               CircleAvatar(
-                radius: 25,
+                radius: 20,
                 backgroundImage: messageSender.profilePhoto.isEmpty
                     ? AssetImage("assets/images/avatar2.jpg")
                     : NetworkImage(

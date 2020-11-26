@@ -131,7 +131,7 @@ class _KanbanViewState extends State<KanbanView> {
                                   visualDensity: VisualDensity.compact,
                                   color: filterOptions['filteredAssignees']
                                           .isNotEmpty
-                                      ? Color(0xFF52459D)
+                                      ? Colors.purple.shade200
                                       : Colors.blueGrey[100],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -241,7 +241,7 @@ class _KanbanViewState extends State<KanbanView> {
                                   visualDensity: VisualDensity.compact,
                                   color:
                                       filterOptions['filteredLabels'].isNotEmpty
-                                          ? Color(0xFF52459D)
+                                          ? Colors.purple.shade200
                                           : Colors.blueGrey[100],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -308,7 +308,7 @@ class _KanbanViewState extends State<KanbanView> {
                                 child: RaisedButton(
                                   visualDensity: VisualDensity.compact,
                                   color: !filterOptions['none']
-                                      ? Color(0xFF52459D)
+                                      ? Colors.purple.shade100
                                       : Colors.blueGrey[100],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -398,7 +398,8 @@ class _KanbanViewState extends State<KanbanView> {
       onStartDragItem: (int listIndex, int itemIndex, BoardItemState state) {
         int loggedInUserId =
             Provider.of<Auth>(context, listen: false).myProfile.accountId;
-        bool isChannelAdmin = Provider.of<KanbanController>(context, listen:false)
+        bool isChannelAdmin = Provider.of<KanbanController>(context,
+                    listen: false)
                 .channelAdmins
                 .indexWhere((element) => loggedInUserId == element.accountId) >=
             0;
@@ -410,7 +411,8 @@ class _KanbanViewState extends State<KanbanView> {
         //must be this task leader or channel admin
         int loggedInUserId =
             Provider.of<Auth>(context, listen: false).myProfile.accountId;
-        bool isChannelAdmin = Provider.of<KanbanController>(context, listen:false)
+        bool isChannelAdmin = Provider.of<KanbanController>(context,
+                    listen: false)
                 .channelAdmins
                 .indexWhere((element) => loggedInUserId == element.accountId) >=
             0;

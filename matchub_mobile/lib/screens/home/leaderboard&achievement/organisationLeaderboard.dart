@@ -50,7 +50,7 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                     ),
                   ),
                   Positioned(
-                    top: 100,
+                    top: 130,
                     left: 110,
                     child: Container(
                         // height: 100,
@@ -58,7 +58,7 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                         child: Text(
                       "Best Organisations",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: 25),
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     )),
                   ),
                   // Positioned(
@@ -296,7 +296,7 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                                                                         .toString(),
                                                                     style: TextStyle(
                                                                         color: AppTheme
-                                                                            .project5,
+                                                                            .project2,
                                                                         fontSize:
                                                                             15)),
                                                               ],

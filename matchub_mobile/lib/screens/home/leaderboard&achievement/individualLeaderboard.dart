@@ -292,7 +292,7 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
                                                                         .toString(),
                                                                     style: TextStyle(
                                                                         color: AppTheme
-                                                                            .project5,
+                                                                            .project2,
                                                                         fontSize:
                                                                             15)),
                                                               ],
