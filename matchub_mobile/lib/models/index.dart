@@ -23,3 +23,4 @@ export 'survey.dart' ;
 export 'surveyQuestion.dart' ; 
 export 'surveyOption.dart' ; 
 export 'selectedTarget.dart' ; 
+export 'gamificationPointTiers.dart' ; 

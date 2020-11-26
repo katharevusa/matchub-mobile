@@ -7,6 +7,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/chat/messages.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/writeReview.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
@@ -240,43 +241,70 @@ class _TeamMembersManagementState extends State<TeamMembersManagement> {
                           color: Colors.grey[850],
                         ))),
                 secondaryActions: (Provider.of<Auth>(context, listen: false)
-                                .myProfile
-                                .accountId ==
-                            allMembers[index].accountId) ||
-                        (widget.project.projectOwners.indexWhere((element) =>
+                            .myProfile
+                            .accountId ==
+                        allMembers[index].accountId)
+                    ? <Widget>[]
+                    : (widget.project.projectOwners.indexWhere((element) =>
                                 element.accountId ==
                                 Provider.of<Auth>(context, listen: false)
                                     .myProfile
                                     .accountId) ==
                             -1)
-                    ? <Widget>[]
-                    : <Widget>[
-                        widget.project.projectOwners.indexWhere((element) =>
-                                    element.accountId ==
-                                    allMembers[index].accountId) ==
-                                -1
-                            ? IconSlideAction(
-                                caption: 'Promote',
-                                color: AppTheme.project4,
-                                icon: Icons.star,
-                                onTap: () => _addProjectOwner(
-                                    allMembers[index].accountId),
-                              )
-                            : IconSlideAction(
-                                caption: 'Demote',
-                                color: AppTheme.project4,
-                                icon: Icons.star,
-                                onTap: () => _removeProjectOwner(
-                                    allMembers[index].accountId),
+                        //我不是owner的时候
+                        ? <Widget>[
+                            if (widget.project.projStatus == "COMPLETED")
+                              IconSlideAction(
+                                  caption: 'Review',
+                                  color: AppTheme.project2,
+                                  icon: Icons.rate_review,
+                                  onTap: () =>
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pushNamed(WriteReview.routeName,
+                                              arguments: {
+                                            'receiver': allMembers[index],
+                                            'project': widget.project
+                                          })),
+                          ]
+                        : <Widget>[
+                            widget.project.projectOwners.indexWhere((element) =>
+                                        element.accountId ==
+                                        allMembers[index].accountId) ==
+                                    -1
+                                ? IconSlideAction(
+                                    caption: 'Promote',
+                                    color: AppTheme.project4,
+                                    icon: Icons.star,
+                                    onTap: () => _addProjectOwner(
+                                        allMembers[index].accountId),
+                                  )
+                                : IconSlideAction(
+                                    caption: 'Demote',
+                                    color: AppTheme.project4,
+                                    icon: Icons.star,
+                                    onTap: () => _removeProjectOwner(
+                                        allMembers[index].accountId),
+                                  ),
+                            if (widget.project.projStatus == "COMPLETED")
+                              IconSlideAction(
+                                caption: 'Review',
+                                color: AppTheme.project2,
+                                icon: Icons.rate_review,
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => WriteReview(
+                                            project: widget.project,
+                                            receiver: allMembers[index]))),
                               ),
-                        IconSlideAction(
-                          caption: 'Remove',
-                          color: Colors.red[300],
-                          icon: Icons.delete,
-                          onTap: () =>
-                              _removeTeamMember(allMembers[index].accountId),
-                        ),
-                      ],
+                            IconSlideAction(
+                              caption: 'Remove',
+                              color: Colors.red[300],
+                              icon: Icons.delete,
+                              onTap: () => _removeTeamMember(
+                                  allMembers[index].accountId),
+                            ),
+                          ],
               );
             },
             itemCount: allMembers.length),

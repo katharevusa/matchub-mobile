@@ -92,13 +92,15 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                     Container(
                       height: 120,
                       color: AppTheme.project4,
-                      child: PManagementTeamMembers(widget.project),   // previous pManagementTeamMember
+                      child: PManagementTeamMembers(
+                          widget.project), // previous pManagementTeamMember
                     ),
                     const SizedBox(height: 10.0),
                     Container(
                       height: 190,
                       color: AppTheme.project5,
-                      child: PManagementProjectFollowers(widget.project), // previous PManagementProjectFollower
+                      child: PManagementProjectFollowers(widget
+                          .project), // previous PManagementProjectFollower
                     ),
                   ],
                 ),
@@ -121,102 +123,6 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
       ..cubicTo(65, 0, 55, 12, 55, 15)
       ..close();
   }
-
-  // projectEndingAction(Project project, BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Center(
-  //         child: Dialog(
-  //           elevation: 0,
-  //           backgroundColor: Colors.transparent,
-  //           child: Container(
-  //             padding: EdgeInsets.all(10),
-  //             height: 150,
-  //             decoration: BoxDecoration(
-  //                 color: Colors.white,
-  //                 borderRadius: BorderRadius.all(
-  //                   Radius.circular(10),
-  //                 )),
-  //             child: Expanded(
-  //                 child: project.projStatus == "ACTIVE"
-  //                     ? Column(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         children: <Widget>[
-  //                           Column(
-  //                             children: <Widget>[
-  //                               FlatButton(
-  //                                 padding: const EdgeInsets.all(5.0),
-  //                                 child: Text("Terminate Project Early"),
-  //                                 onPressed: () async {
-  //                                   await terminateProject();
-  //                                   Navigator.pop(context, true);
-  //                                 },
-  //                               ),
-  //                               Divider(),
-  //                               FlatButton(
-  //                                 padding: const EdgeInsets.all(5.0),
-  //                                 child: Text("Mark Project as Complete"),
-  //                                 onPressed: () async {
-  //                                   await markProjectAsComplete();
-  //                                   Navigator.pop(context, true);
-  //                                 },
-  //                               ),
-  //                             ],
-  //                           )
-  //                         ],
-  //                       )
-  //                     : Center(
-  //                         child: Padding(
-  //                           padding: const EdgeInsets.all(10.0),
-  //                           child: Text(
-  //                             "This project has already been " +
-  //                                 project.projStatus,
-  //                             style: TextStyle(fontSize: 15),
-  //                             textAlign: TextAlign.center,
-  //                           ),
-  //                         ),
-  //                       )),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // terminateProject() async {
-  //   final url =
-  //       "authenticated/terminateProject?projectId=${widget.project.projectId}&profileId=${myProfile.accountId}";
-  //   try {
-  //     final response = await ApiBaseHelper.instance.putProtected(
-  //       url,
-  //     );
-
-  //     print("Success");
-  //     Navigator.of(this.context).pop(true);
-  //   } catch (error) {
-  //     print("Failure");
-  //     showErrorDialog(error.toString(), this.context);
-  //   }
-  // }
-
-  // markProjectAsComplete() async {
-  //   final url =
-  //       "authenticated/completeProject?projectId=${widget.project.projectId}&profileId=${myProfile.accountId}";
-  //   try {
-  //     // var accessToken = Provider.of<Auth>(this.context,listen: false).accessToken;
-  //     final response = await ApiBaseHelper.instance.putProtected(
-  //       url,
-  //     );
-  //     await Provider.of<ManageProject>(context, listen: false)
-  //         .getProject(widget.project.projectId);
-  //     print("Success");
-  //     Navigator.of(this.context).pop("Completed-Project");
-  //   } catch (error) {
-  //     showErrorDialog(error.toString(), this.context);
-  //     print("Failure");
-  //   }
-  // }
 
   Widget buildCircularProgress() {
     return Row(
@@ -368,7 +274,8 @@ class _PManagementSwiperCardState extends State<PManagementSwiperCard>
                     color: Colors.white),
               ),
             ],
-          ),SizedBox(width:10),
+          ),
+          SizedBox(width: 10),
           Container(
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey[700], width: 0.5),

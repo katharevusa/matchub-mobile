@@ -41,72 +41,110 @@ class _PManagementTeamMembersState extends State<PManagementTeamMembers> {
           );
         },
         child: Container(
-          height: 150,
-          width: 250,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Stack(children: <Widget>[
-                    Icon(
-                      Icons.notifications,
-                      size: 30,
-                      color: Colors.white,
-                    ),
-                    buildJoinRequest(widget.project) != 0
-                        ? Positioned(
-                            top: -1.0,
-                            right: -1.0,
-                            child: new Stack(children: <Widget>[
-                              new Icon(
-                                Icons.brightness_1,
-                                size: 12.0,
-                                color: AppTheme.project5,
-                              ),
-                            ]))
-                        : Container(),
-                  ]),
-                  Text(' You have ',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white)),
-                  Text(
-                    buildJoinRequest(widget.project).toString(),
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-              Text("New Join Requests",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white)),
-              SizedBox(
-                height: 10,
-              ),
-              // widget.project.teamMembers.isNotEmpty
-              //     ? Stack(
-              //         children: [
-              //           ...buildProjectMembers(
-              //               context, widget.project.teamMembers),
-              //         ],
-              //       )
-              //     : Text(
-              //         "No Team Members",
-              //         style: TextStyle(fontSize: 12, color: Colors.black),
-              //       )
-            ],
-          ),
-        ),
+            height: 150,
+            width: 250,
+            child: (widget.project.projectOwners.indexWhere((element) =>
+                        element.accountId ==
+                        Provider.of<Auth>(context, listen: false)
+                            .myProfile
+                            .accountId) !=
+                    -1)
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Stack(children: <Widget>[
+                            Icon(
+                              Icons.notifications,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            buildJoinRequest(widget.project) != 0
+                                ? Positioned(
+                                    top: -1.0,
+                                    right: -1.0,
+                                    child: new Stack(children: <Widget>[
+                                      new Icon(
+                                        Icons.brightness_1,
+                                        size: 12.0,
+                                        color: AppTheme.project5,
+                                      ),
+                                    ]))
+                                : Container(),
+                          ]),
+                          Text(' You have ',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white)),
+                          Text(
+                            buildJoinRequest(widget.project).toString(),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                      Text("New Join Requests",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      // widget.project.teamMembers.isNotEmpty
+                      //     ? Stack(
+                      //         children: [
+                      //           ...buildProjectMembers(
+                      //               context, widget.project.teamMembers),
+                      //         ],
+                      //       )
+                      //     : Text(
+                      //         "No Team Members",
+                      //         style: TextStyle(fontSize: 12, color: Colors.black),
+                      //       )
+                    ],
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(' Team members: ',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white)),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      widget.project.teamMembers.isNotEmpty
+                          ? Stack(
+                              children: [
+                                ...buildProjectMembers(
+                                    context, widget.project.teamMembers),
+                              ],
+                            )
+                          : Text(
+                              "No Team Members",
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.black),
+                            )
+                    ],
+                  )),
       ),
     );
   }

@@ -43,6 +43,7 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                 children: <Widget>[
                   Container(
                     width: double.infinity,
+                    height: double.infinity,
                     child: Image.asset(
                       "assets/images/leaderboard.JPG",
                       fit: BoxFit.cover,
@@ -52,13 +53,13 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                     top: 100,
                     left: 110,
                     child: Container(
-                        height: 100,
-                        width: 150,
+                        // height: 100,
+                        // width: 150,
                         child: Text(
-                          "Best Organisations",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white, fontSize: 27),
-                        )),
+                      "Best Organisations",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    )),
                   ),
                   // Positioned(
                   //   top: 220,

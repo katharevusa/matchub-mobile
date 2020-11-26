@@ -70,7 +70,9 @@ dependencies:
   # video_player: ^0.11.1+2
   flutter_speed_dial: ^1.2.5
 
-  
+  flutter_chat_bubble: ^1.0.2
+  stripe_payment: ^1.0.8
+  spinner_input: ^0.1.2
   flutter_animation_progress_bar: ^1.0.5
   toast: ^0.1.5
   ticket_pass_package: ^0.1.0
@@ -82,12 +84,12 @@ dependencies:
   flutter_keyboard_visibility: ^3.2.2
   avatar_glow: ^1.2.0
   loading_overlay: ^0.2.1
-  flutter_chat_bubble: ^1.0.2
   timeline_tile: ^1.0.0
 
+  flutter_rating_bar: ^3.2.0
+  
   #Stripe
   flutter_credit_card: 0.1.1
-  stripe_payment: ^1.0.8
 
   flutter_slidable: ^0.5.7
   flutter_swiper: ^1.1.6

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/unused/projectFollowerList.dart';
+import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectFollowerList.dart';
+
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -29,65 +29,65 @@ class _PManagementProjectFollowerState
   Widget build(BuildContext context) {
     widget.project = Provider.of<ManageProject>(context).managedProject;
     return InkWell(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              settings: RouteSettings(name: "/project-followers"),
-              builder: (_) => ProjectFollowerList(
-                    project: widget.project,
-                  )));
-        },
-        child: Container(
-          height: 150,
-          width: 180,
-          child: Column(
-            children: [
-              ListTile(
-                title: Text("Project Followers",
-                    style: TextStyle(color: Colors.black)),
-              ),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            settings: RouteSettings(name: "/project-followers"),
+            builder: (_) => ProjectFollowerList(
+                  project: widget.project,
+                )));
+      },
+      child: Container(
+        height: 150,
+        width: 180,
+        child: Column(
+          children: [
+            ListTile(
+              title: Text("Project Followers",
+                  style: TextStyle(color: Colors.black)),
+            ),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.supervisor_account,
+                        size: 30, color: Colors.black),
+                    SizedBox(width: 10),
+                    Text(widget.project.projectFollowers.length.toString(),
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: AppTheme.project5,
+                        )),
+                  ],
+                ),
+                Text("Followers",
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black)),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            widget.project.projectFollowers.isNotEmpty
+                ? Stack(
                     children: [
-                      Icon(Icons.supervisor_account,
-                          size: 30, color: Colors.black),
-                      SizedBox(width: 10),
-                      Text(widget.project.projectFollowers.length.toString(),
-                          style: TextStyle(
-                            fontSize: 25,
-                            color: AppTheme.project5,
-                          )),
+                      ...buildProjectFollowers(
+                          context, widget.project.projectFollowers),
                     ],
-                  ),
-                  Text("Followers",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black)),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              widget.project.projectFollowers.isNotEmpty
-                  ? Stack(
-                      children: [
-                        ...buildProjectFollowers(
-                            context, widget.project.projectFollowers),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        Text(
-                          "0 Followers...",
-                          style: TextStyle(fontSize: 10, color: Colors.black),
-                        ),
-                      ],
-                    )
-            ],
-          ),
+                  )
+                : Column(
+                    children: [
+                      Text(
+                        "0 Followers...",
+                        style: TextStyle(fontSize: 10, color: Colors.black),
+                      ),
+                    ],
+                  )
+          ],
         ),
+      ),
     );
   }
 

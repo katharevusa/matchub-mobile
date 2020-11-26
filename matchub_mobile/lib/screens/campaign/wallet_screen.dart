@@ -24,6 +24,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   @override
   void initState() {
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     myProfile = Provider.of<Auth>(context, listen: false).myProfile;
     if (myProfile.stripeAccountUid != null) {
       loadDashboard = getStripeExpressDashboard();
