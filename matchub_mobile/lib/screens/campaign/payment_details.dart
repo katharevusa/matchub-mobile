@@ -9,8 +9,10 @@ import 'package:matchub_mobile/models/campaignOption.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/campaign/payments/creditcardform.dart';
 import 'package:matchub_mobile/screens/campaign/view_campaign.dart';
+import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:provider/provider.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -57,7 +59,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               "amountInCents": double.parse(widget.selectedAmount) * 100,
               "payeeStripeUid": payTo.stripeAccountUid,
               "donationOptionId": widget.donationOption.donationOptionId,
-              "paymentScenario": "FundCampaignDonation"
+              "paymentScenario": "FundCampaignDonation",
+              "receiptEmail": "ikjun@gmail.com"
             }));
     print(response);
     _currentSecret = response['client_secret'];
@@ -78,9 +81,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     print(_paymentMethod.id);
     StripePayment.confirmPaymentIntent(
       PaymentIntent(
-        clientSecret: _currentSecret,
-        paymentMethodId: _paymentMethod.id,
-      ),
+          clientSecret: _currentSecret,
+          paymentMethodId: _paymentMethod.id,),
     ).then((paymentIntent) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text('Thank you for your kind donation!'),

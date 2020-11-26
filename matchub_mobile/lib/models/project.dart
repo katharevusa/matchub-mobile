@@ -39,6 +39,7 @@ class Project {
   List<TruncatedProfile> projectFollowers;
   List channels;
   List<TruncatedProfile> projectOwners;
+  List<SelectedTarget> selectedTargets;
 
   factory Project.fromJson(Map<String, dynamic> json) =>
       _$ProjectFromJson(json);

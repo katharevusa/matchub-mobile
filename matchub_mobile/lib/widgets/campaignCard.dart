@@ -6,8 +6,10 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/campaign/view_campaign.dart';
 import 'package:matchub_mobile/screens/search/project_search_card.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'attachment_image.dart';
@@ -25,7 +27,6 @@ class _FundCampaignCardState extends State<FundCampaignCard> {
   @override
   void initState() {
     getProject();
-    // TODO: implement initState
     super.initState();
   }
 
@@ -48,9 +49,15 @@ class _FundCampaignCardState extends State<FundCampaignCard> {
           )
         : GestureDetector(
             onTap: () {
-              Navigator.of(
-                context, rootNavigator: true
-              ).push(MaterialPageRoute(builder: (_)=>ViewCampaign(project: project,campaign: widget.campaign)));
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(
+                  builder: (_) {
+                    Provider.of<ManageProject>(context, listen: false)
+                        .managedCampaign = widget.campaign;
+                    return ViewCampaign(project: project, campaign: widget.campaign, isPublic: false);
+                  },
+                ),
+              );
             },
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -73,7 +80,8 @@ class _FundCampaignCardState extends State<FundCampaignCard> {
                           ]),
                           width: 24 * SizeConfig.widthMultiplier,
                           height: 30 * SizeConfig.widthMultiplier,
-                          child: AttachmentImage(project.photos[Random().nextInt(project.photos.length)]))),
+                          child: AttachmentImage(project.photos[
+                              Random().nextInt(project.photos.length)]))),
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -98,7 +106,7 @@ class _FundCampaignCardState extends State<FundCampaignCard> {
                               backgroundColor: Colors.grey[200],
                               size: 6,
                               animatedDuration:
-                                  const Duration(milliseconds: 2500),
+                                  const Duration(milliseconds: 800),
                               maxValue: widget.campaign.campaignTarget.toInt(),
                               currentValue:
                                   widget.campaign.currentAmountRaised.toInt(),
@@ -109,8 +117,9 @@ class _FundCampaignCardState extends State<FundCampaignCard> {
                               Icon(Icons.monetization_on_rounded,
                                   color: Colors.grey[800], size: 28),
                               SizedBox(width: 5),
-                              Text((widget.campaign.currentAmountRaised * 100 ~/
-                                          widget.campaign.campaignTarget )
+                              Text((widget.campaign.currentAmountRaised *
+                                          100 ~/
+                                          widget.campaign.campaignTarget)
                                       .toString() +
                                   "%"),
                               SizedBox(width: 10),

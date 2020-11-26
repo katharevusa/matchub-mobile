@@ -6,7 +6,6 @@ import 'package:readmore/readmore.dart';
 
 import '../../../sizeconfig.dart';
 import '../../../style.dart';
-import 'pSDGs.dart';
 
 class PDescription extends StatelessWidget {
   Project project;
@@ -61,7 +60,7 @@ class PDescription extends StatelessWidget {
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
-            textAlign: TextAlign.justify,
+            // textAlign: TextAlign.justify,
             colorClickableText: kSecondaryColor,
             trimMode: TrimMode.Line,
             trimCollapsedText: '...Show more',

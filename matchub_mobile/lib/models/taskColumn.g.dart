@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'taskColumnEntity.dart';
+part of 'taskColumn.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

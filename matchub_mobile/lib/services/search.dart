@@ -26,7 +26,10 @@ class Search with ChangeNotifier {
         filter += countryQuery;
       }
       for (num i in filterOptions['sdgs']) {
-        filter += "&sdgIds=${i + 1}";
+        filter += "&sdgIds=$i";
+      }
+      for (num i in filterOptions['sdgTargetIds']) {
+        filter += "&sdgTargetIds=$i";
       }
     }
     var responseData = await _apiHelper.getProtected(
@@ -60,6 +63,9 @@ class Search with ChangeNotifier {
       }
       for (num i in filterOptions['sdgs']) {
         filter += "&sdgIds=${i + 1}";
+      }
+      for (num i in filterOptions['sdgTargetIds']) {
+        filter += "&sdgTargetIds=$i";
       }
     }
     var responseData = await _apiHelper.getProtected(

@@ -73,8 +73,8 @@ class _HomeScreenState extends State<HomeScreen>
                       right: 20,
                     ),
                     tabs: [
-                      Text("Explore"),
                       Text("Feed"),
+                      Text("Explore"),
                     ],
                     controller: controller,
                     unselectedLabelStyle: TextStyle(
@@ -104,8 +104,8 @@ class _HomeScreenState extends State<HomeScreen>
           },
           body: TabBarView(
             children: <Widget>[
-              ExploreList(),
               HomeList(),
+              ExploreList(),
             ],
             controller: controller,
           ),

@@ -12,6 +12,8 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     ..isOrganisation = json['organizationName'] != null ? true : false
     ..verificationDocuments =
         json['verificationDocuments'] as Map<String, dynamic>
+    ..announcementsSetting =
+        json['announcementsSetting'] as Map<String, dynamic>
     ..employees = json['employees'] as List
     ..stripeAccountUid = json['stripeAccountUid'] as String
     ..stripeAccountChargesEnabled = json['stripeAccountChargesEnabled'] as bool
@@ -50,9 +52,15 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
             .map((i) => Project.fromJson(i))
             .toList()
         : []
+    ..surveys = json['surveys'] != null
+        ? (json['surveys'] as List)
+            .map((i) => Survey.fromJson(i))
+            .toList()
+        : []
     ..joinRequests = json['joinRequests'] as List
     ..reviewsReceived = json['reviewsReceived'] as List
     ..badges = (json['badges'] as List).map((i) => Badge.fromJson(i)).toList()
+    ..selectedTargets = (json['selectedTargets'] as List).map((i) => SelectedTarget.fromJson(i)).toList()
     ..fundPladges = json['fundPladges'] as List
     ..tasks = json['tasks'] as List
     ..managedChannel = json['managedChannel'] as List

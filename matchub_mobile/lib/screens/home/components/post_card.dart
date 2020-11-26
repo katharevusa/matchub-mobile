@@ -110,13 +110,15 @@ class _PostCardState extends State<PostCard> {
                     ),
                     title: Row(
                       children: [
-                        Text(
-                          "${widget.post.postCreator.name}",
-                          overflow: TextOverflow.fade,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.grey[850]),
+                        Expanded(
+                          child: Text(
+                            "${widget.post.postCreator.name}",
+                            overflow: TextOverflow.fade,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.grey[850]),
+                          ),
                         ),
                         if (originalPost != null && !widget.isRepost)
                           Text(

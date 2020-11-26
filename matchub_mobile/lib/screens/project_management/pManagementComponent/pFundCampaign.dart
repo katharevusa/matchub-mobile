@@ -12,9 +12,6 @@ import 'package:provider/provider.dart';
 class PFundCampaignCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List campaigns = Provider.of<ManageProject>(context, listen: false)
-        .managedProject
-        .fundsCampaign;
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
@@ -37,20 +34,21 @@ class _PFundCampaignListState extends State<PFundCampaignList> {
   List<Campaign> fundCampaigns = [];
   @override
   void initState() {
-    project = Provider.of<ManageProject>(context, listen: false).managedProject;
     retrieveCampaigns();
     super.initState();
   }
 
   retrieveCampaigns() async {
-    final response = await ApiBaseHelper.instance.getWODecode(
-        "authenticated/getFundCampaignsByProjectId?projectId=${project.projectId}");
-    (response as List).forEach((e) => fundCampaigns.add(Campaign.fromJson(e)));
+    setState(() => _isLoading = true);
+    final response = await Provider.of<ManageProject>(context, listen: false)
+        .retrieveCampaigns();
     setState(() => _isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
+    project = Provider.of<ManageProject>(context).managedProject;
+    fundCampaigns = Provider.of<ManageProject>(context).fundCampaigns;
     return Scaffold(
       appBar: AppBar(
         title: Text(project.projectTitle,
@@ -86,9 +84,12 @@ class _PFundCampaignListState extends State<PFundCampaignList> {
               heroTag: "campaignCreateBtn",
               child: Icon(Icons.add),
               onPressed: () {
-                Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(
-                        builder: (context) => CampaignCreationScreen()));
+                Navigator.of(context, rootNavigator: true)
+                    .push(MaterialPageRoute(
+                        builder: (context) => CampaignCreationScreen()))
+                    .then((value) =>
+                        Provider.of<ManageProject>(context, listen: false)
+                            .retrieveCampaigns());
               })
           : SizedBox.shrink(),
     );

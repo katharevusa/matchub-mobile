@@ -8,7 +8,6 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/helpers/attachment_helper.dart';
 import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/models/taskEntity.dart';
 import 'package:matchub_mobile/models/truncatedProfile.dart';
 import 'package:matchub_mobile/screens/kanban/board/boardList.dart';
 import 'package:matchub_mobile/screens/kanban/task/selectStatus.dart';
@@ -23,8 +22,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:video_player/video_player.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../kanban.dart';
 import 'selectTaskMembers.dart';
@@ -65,7 +62,7 @@ class _ViewTaskState extends State<ViewTask> {
   void initState() {
     isLoading = true;
     retrieveTaskReporter();
-    generateVideoThumbnails();
+    // generateVideoThumbnails();
     super.initState();
   }
 
@@ -101,40 +98,40 @@ class _ViewTaskState extends State<ViewTask> {
     });
   }
 
-  generateVideoThumbnails() async {
-    print("sdfsdf");
-    for (var doc in widget.task.documents.entries) {
-      print("sdfsdf");
-      if (path.extension(doc.key) == '.mp4') {
-        // print("sdfsdff");
-        // _controller = VideoPlayerController.network(
-        //   "http://clips.vorwaerts-gmbh.de/VfE_html5.mp4")
-        //     // ApiBaseHelper.instance.baseUrl + doc.value.substring(30))
-        //   ..initialize().then((_) {
-        //     // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        //     setState(() {
-        //       print("sdfsdff");
-        //     });
-        //   });
-        print(ApiBaseHelper.instance.baseUrl + doc.value.substring(30));
-        vidThumnails[doc.key] = await VideoThumbnail.thumbnailData(
-          video: ApiBaseHelper.instance.baseUrl + doc.value.substring(30),
-          // video: "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
-          // thumbnailPath: (await getTemporaryDirectory()).path,
-          imageFormat: ImageFormat.WEBP,
-          maxWidth: 140,
-          quality: 30,
-        );
-        // File file = new File(vidThumnails[doc.key]);
-        // print('exists ${file.existsSync()}');
-        // print("sdfsdf");
-        setState(() {
-          print(doc.value);
-          print("sdfsd");
-        });
-      }
-    }
-  }
+  // generateVideoThumbnails() async {
+  //   print("sdfsdf");
+  //   for (var doc in widget.task.documents.entries) {
+  //     print("sdfsdf");
+  //     if (path.extension(doc.key) == '.mp4') {
+  //       // print("sdfsdff");
+  //       // _controller = VideoPlayerController.network(
+  //       //   "http://clips.vorwaerts-gmbh.de/VfE_html5.mp4")
+  //       //     // ApiBaseHelper.instance.baseUrl + doc.value.substring(30))
+  //       //   ..initialize().then((_) {
+  //       //     // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+  //       //     setState(() {
+  //       //       print("sdfsdff");
+  //       //     });
+  //       //   });
+  //       print(ApiBaseHelper.instance.baseUrl + doc.value.substring(30));
+  //       vidThumnails[doc.key] = await VideoThumbnail.thumbnailData(
+  //         video: ApiBaseHelper.instance.baseUrl + doc.value.substring(30),
+  //         // video: "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
+  //         // thumbnailPath: (await getTemporaryDirectory()).path,
+  //         imageFormat: ImageFormat.WEBP,
+  //         maxWidth: 140,
+  //         quality: 30,
+  //       );
+  //       // File file = new File(vidThumnails[doc.key]);
+  //       // print('exists ${file.existsSync()}');
+  //       // print("sdfsdf");
+  //       setState(() {
+  //         print(doc.value);
+  //         print("sdfsd");
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

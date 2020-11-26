@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/home/leaderboard&achievement/award.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -47,12 +48,10 @@ class _GreetingCardState extends State<GreetingCard> {
                 children: [
                   Text("Welcome,",
                       style: TextStyle(
-                          fontFamily: 'Quicksand',
                           fontSize: 2 * SizeConfig.textMultiplier,
                           color: Colors.grey[650])),
                   Text(myProfile.name,
                       style: TextStyle(
-                          fontFamily: 'Quicksand',
                           fontSize: 3 * SizeConfig.textMultiplier,
                           fontWeight: FontWeight.w800)),
                 ],
@@ -73,52 +72,83 @@ class _GreetingCardState extends State<GreetingCard> {
           overflow: Overflow.visible,
           fit: StackFit.passthrough,
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(
-                  vertical: 10, horizontal: 4 * SizeConfig.widthMultiplier),
-              height: 17 * SizeConfig.heightMultiplier,
-              width: 100 * SizeConfig.widthMultiplier,
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                    ),
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(20),
-                  gradient: LinearGradient(
-                      begin: Alignment.bottomLeft,
-                      end: Alignment.topRight,
-                      colors: [
-                        AppTheme.project4,
-                        AppTheme.project4,
-                      ])),
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: EdgeInsets.only(
-                    top: 4 * SizeConfig.heightMultiplier,
-                    left: 8 * SizeConfig.widthMultiplier),
-                child: Column(
-                  children: [
-                    Text("NEW PROJECTS",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            fontSize: SizeConfig.heightMultiplier * 1.6,
-                            letterSpacing: 1.5)),
-                    SizedBox(height: 4),
-                    Container(
-                        child: AnimatedCount(
-                      count: noTasks,
-                      duration: Duration(seconds: 2),
-                    )),
-                  ],
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    settings: RouteSettings(name: "/notifications"),
+                    builder: (_) => Award()));
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(
+                    vertical: 10, horizontal: 4 * SizeConfig.widthMultiplier),
+                height: 17 * SizeConfig.heightMultiplier,
+                width: 100 * SizeConfig.widthMultiplier,
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                      ),
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight,
+                        colors: [
+                          Color(0xFF086564),
+                          Color(0xFF179996),
+                          Color(0xFF87D6C1),
+                          Color(0xFFABF4E1)
+                        ])),
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: 2 * SizeConfig.heightMultiplier,
+                      left: 8 * SizeConfig.widthMultiplier),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("You're ranked",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: SizeConfig.heightMultiplier * 1.6,
+                              letterSpacing: 1.5)),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [ 
+                          Text("#",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: SizeConfig.heightMultiplier * 3,
+                              letterSpacing: 1.5)),
+                          Container(
+                              child: AnimatedCount(
+                            count: 5,
+                            duration: Duration(seconds: 2),
+                          )),
+                        ],
+                      ),
+                      Text("In our Leaderboard",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: SizeConfig.heightMultiplier * 1.6,
+                              letterSpacing: 1.5)),
+                      Text("View Achievement >>",
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.8),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                          )),
+                    ],
+                  ),
                 ),
               ),
             ),

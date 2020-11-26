@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/profile/view_profile.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -21,7 +22,7 @@ class ProfileVerticalCard extends StatelessWidget {
         Navigator.of(
           context,
           rootNavigator: true,
-        ).pushNamed(ProfileScreen.routeName, arguments: profile.accountId);
+        ).pushNamed(ViewProfile.routeName, arguments: profile.accountId);
       },
       child: Container(
           padding: EdgeInsets.symmetric(

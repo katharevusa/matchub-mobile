@@ -38,10 +38,10 @@ class AppTheme {
   static const Color project3 = Color(0xFFFBDC83);
   static const Color project4 = Color(0xFF6BCDA5);
   static const Color project5 = Color(0xFFE3F2F2);
-  // static const Color project5 = Color(0xFFE0A5BE);
   static const Color project6 = Color(0xFF69528E);
   static const Color project7 = Color(0xFF1E1E1E);
   static const Color project8 = Color(0xFFA7796F);
+  static const Color projectPink = Color(0xFFE0A5BE);
 
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: AppTheme.appBackgroundColor,
@@ -62,7 +62,7 @@ class AppTheme {
 
   static final TextStyle titleLight = TextStyle(
     color: Colors.black,
-    fontSize: 2.5 * SizeConfig.textMultiplier,
+    fontSize: 2.2 * SizeConfig.textMultiplier,
     fontFamily: "Lato",
   );
 
@@ -89,7 +89,7 @@ class AppTheme {
   static final TextStyle selectedTabLight = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.bold,
-    fontSize: 1.5 * SizeConfig.textMultiplier,
+    fontSize: 1.6 * SizeConfig.textMultiplier,
     fontFamily: "Lato",
   );
 

@@ -12,16 +12,23 @@ import 'dart:convert';
 import 'package:matchub_mobile/screens/profile/profile_screen.dart';
 import 'package:matchub_mobile/screens/profile/view_profile.dart';
 import 'package:matchub_mobile/screens/user/account-settings/change_password.dart';
+import 'package:matchub_mobile/screens/survey/all_surveys.dart';
 import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
 import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
+import 'package:matchub_mobile/screens/user/viewDonationHistory.dart';
 import 'package:matchub_mobile/screens/user/viewFollowingProjects.dart';
 import 'package:matchub_mobile/screens/user/viewSavedResources.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
+
+import 'account-settings/notification_settings.dart';
 
 class UserScreen extends StatefulWidget {
   static const routeName = "/user-screen";
@@ -161,12 +168,17 @@ class _UserScreenState extends State<UserScreen> {
                     ));
                   }),
                   buildSettingCard(
-                      "Announcements",
+                      "Donation History",
                       Icon(
-                        Icons.notifications,
+                        Icons.monetization_on_rounded,
                         color: Color(0xFFf1d1b5),
                       ),
-                      () {}),
+                      () {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                      builder: (context) =>
+                          ViewDonationHistory(),
+                    ));}),
                   buildSettingCard(
                       "Following Projects",
                       Icon(
@@ -192,47 +204,62 @@ class _UserScreenState extends State<UserScreen> {
                     ));
                   }),
                   buildSettingCard(
-                      "Comments",
+                      "MatcHub Surveys",
                       Icon(
                         FlutterIcons.comment_dots_faw5s,
                         color: Color(0xFFf18c8e),
-                      ),
-                      () {})
+                      ), () {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(MaterialPageRoute(
+                      builder: (context) =>
+                          SurveyScreen(),
+                    ));
+                  })
                 ],
               ),
+              // Theme(
+              //   data: ThemeData(accentColor: Colors.grey),
+              //   child: ExpansionTile(
+              //     title: Container(
+              //         child: Text(
+              //       "Notifications",
+              //     )),
+              //     children: [
+
+              //       ListTile(
+              //           onTap: () {},
+              //           leading: Icon(Icons.chat),
+              //           title: Text("Messaging Settings"),
+              //           subtitle: Text(
+              //             "Choose which messages you want to receive",
+              //             style: AppTheme.subTitleLight,
+              //           ))
+              //     ],
+              //   ),
+              // ),
               Theme(
-                data: ThemeData(accentColor: Colors.grey),
-                child: ExpansionTile(
-                  title: Container(
-                      child: Text(
-                    "Notifications",
-                  )),
-                  children: [
-                    ListTile(
-                      onTap: () {},
-                      leading: Icon(Icons.notification_important),
-                      title: Text("Notification Settings"),
-                      subtitle: Text(
-                        "Choose which notifications you want to receive",
-                        style: AppTheme.subTitleLight,
-                      ),
-                    ),
-                    ListTile(
-                        onTap: () {},
-                        leading: Icon(Icons.chat),
-                        title: Text("Messaging Settings"),
-                        subtitle: Text(
-                          "Choose which messages you want to receive",
-                          style: AppTheme.subTitleLight,
-                        ))
-                  ],
-                ),
-              ),
-              Theme(
-                  data: ThemeData(accentColor: Colors.grey),
+                  data: ThemeData(accentColor: Colors.grey, ),
                   child: ExpansionTile(
-                    title: Text("Account Settings"),
+                    initiallyExpanded: true,
+                    title: Text("Account Settings", style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[850],
+                            fontFamily: "Lato",
+                            fontWeight: FontWeight.bold),),
                     children: [
+                      ListTile(
+                        onTap: () {
+                          Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (_) => NotificationSetting()));
+                        },
+                        leading: Icon(Icons.notification_important),
+                        title: Text("Notification Settings", style: AppTheme.selectedTabLight.copyWith(color:Colors.grey[800]),),
+                        subtitle: Text(
+                          "Choose which notifications you want to receive",
+                          style: AppTheme.subTitleLight,
+                        ),
+                      ),
                       ListTile(
                         onTap: () {
                           dismissSnackBar();
@@ -251,8 +278,8 @@ class _UserScreenState extends State<UserScreen> {
                             }
                           });
                         },
-                        leading: Icon(FlutterIcons.key_faw5s),
-                        title: Text("Change Password"),
+                        leading: Icon(FlutterIcons.key_faw5s, size: 20),
+                        title: Text("Change Password", style: AppTheme.selectedTabLight.copyWith(color:Colors.grey[800])),
                         subtitle: Text(
                           "Change your password here",
                           style: AppTheme.subTitleLight,
@@ -293,7 +320,7 @@ class _UserScreenState extends State<UserScreen> {
                             activeColor: kSecondaryColor,
                           ),
                           leading: Icon(FlutterIcons.security_mdi),
-                          title: Text("Biometric Login"),
+                          title: Text("Biometric Login", style: AppTheme.selectedTabLight.copyWith(color:Colors.grey[800])),
                           subtitle: Text(
                             "Use your fingerprint to login",
                             style: AppTheme.subTitleLight,
@@ -303,7 +330,7 @@ class _UserScreenState extends State<UserScreen> {
                           Provider.of<Auth>(context).logout();
                         },
                         leading: Icon(FlutterIcons.log_out_fea),
-                        title: Text("Logout"),
+                        title: Text("Logout", style: AppTheme.selectedTabLight.copyWith(color:Colors.grey[800])),
                       ),
                     ],
                   ))

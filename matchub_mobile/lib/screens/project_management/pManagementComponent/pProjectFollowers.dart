@@ -50,27 +50,24 @@ class _PManagementProjectFollowersState
                 SizedBox(
                   height: 26,
                 ),
-                Text("Project",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 20,
-                    )),
+                Text("Project", style: TextStyle(color: Colors.grey[700],
+                        fontWeight: FontWeight.w400,
+                    fontSize: 20,)),
                 Text("Followers",
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white)),
+                        color: Colors.grey[700])),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.supervisor_account,
-                        size: 30, color: Colors.white),
+                        size: 30, color: Colors.grey[700]),
                     SizedBox(width: 10),
                     Text(widget.project.projectFollowers.length.toString(),
                         style: TextStyle(
                           fontSize: 25,
-                          color: Colors.white,
+                          color: Colors.grey[700],
                         )),
                   ],
                 ),

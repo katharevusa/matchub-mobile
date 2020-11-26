@@ -92,9 +92,9 @@ class ProjectSearchCard extends StatelessWidget {
                             key: Key(index.toString()),
                             index: index, // required
                             title: project.sdgs[index].sdgName,
-                            color: Colors.blueGrey[300],
-                            border: Border.all(color: Colors.grey[400]),
-                            textColor: Colors.white,
+                            color: AppTheme.project5,
+                            // border: Border.all(color: Colors.grey[400]),
+                            textColor: Colors.grey[850],
                             borderRadius: BorderRadius.circular(5),
                             elevation: 0,
                             active: false,
