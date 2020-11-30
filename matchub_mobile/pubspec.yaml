@@ -43,7 +43,7 @@ dependencies:
   path: ^1.6.2
   flutter_datetime_picker: ^1.4.0
   date_time_picker: ^1.0.2
-  flutter_tags: "^0.4.8+2"  
+  flutter_tags: "^0.4.8+2"
   flutter_launcher_icons: ^0.8.0
   international_phone_input: ^1.0.4
   country_list_pick: 1.0.0+9
@@ -59,7 +59,7 @@ dependencies:
   shimmer: ^1.1.1
 
   share: ^0.6.4+3
-  open_file: ^3.0.1
+  # open_file: ^3.0.1
   url_launcher: ^5.6.0
   readmore: ^1.0.0
   date_format: ^1.0.9
@@ -87,7 +87,7 @@ dependencies:
   timeline_tile: ^1.0.0
 
   flutter_rating_bar: ^3.2.0
-  
+
   #Stripe
   flutter_credit_card: 0.1.1
 
@@ -95,7 +95,7 @@ dependencies:
   flutter_swiper: ^1.1.6
   dotted_border: ^1.0.6
   slide_countdown_clock: ^1.0.3
-  step_progress_indicator: ^0.2.4+7
+  # step_progress_indicator: ^0.2.4+7
 
   #Firebase
   firebase_core: "0.5.0"

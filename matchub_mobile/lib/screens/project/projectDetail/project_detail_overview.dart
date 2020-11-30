@@ -24,7 +24,7 @@ import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
-import 'package:open_file/open_file.dart';
+// import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -290,10 +290,9 @@ class PDetailHeader extends StatelessWidget {
                 color: kAccentColor,
                 textColor: Colors.white,
                 elevation: 0,
-                active: false,borderRadius: BorderRadius.circular(5),
+                active: false, borderRadius: BorderRadius.circular(5),
                 pressEnabled: true,
-                onPressed: (_) {
-                },
+                onPressed: (_) {},
                 textStyle:
                     TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
               );
