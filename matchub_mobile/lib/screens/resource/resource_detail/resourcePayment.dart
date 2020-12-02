@@ -1,30 +1,28 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
-import 'package:matchub_mobile/models/campaignOption.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/campaign/payments/creditcardform.dart';
-import 'package:matchub_mobile/screens/campaign/view_campaign.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
+import 'package:matchub_mobile/widgets/appExpansionTile.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
-class PaymentScreen extends StatefulWidget {
-  CampaignOption donationOption;
-  Project project;
-  String selectedAmount;
-  PaymentScreen({this.donationOption, this.selectedAmount, this.project});
+class ResourcePayment extends StatefulWidget {
+  static const routeName = "/payment-form";
+  Resources resource;
+  ResourcePayment({this.resource});
+
   @override
-  _PaymentScreenState createState() => _PaymentScreenState();
+  _ResourcePaymentState createState() => _ResourcePaymentState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _ResourcePaymentState extends State<ResourcePayment> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   void initState() {
@@ -33,34 +31,38 @@ class _PaymentScreenState extends State<PaymentScreen> {
             "pk_test_51Hic4XKd47pTgnBudVK0lNYhoNfdHiXOFiI8OQeI4W98p2tVePbMdUb19c6Y37pc7ZaM8zF3pmiq33IkwRjtuWH500C0LfO6I0",
         merchantId: "Test",
         androidPayMode: 'test'));
-    initialisePaymentIntent();
+
     super.initState();
   }
 
   final CreditCard testCard = CreditCard(
-      number: '4242424242424242', expMonth: 12, expYear: 21, name: "Mark Tan");
-  Token _paymentToken;
+      number: '4242424242424242', expMonth: 11, expYear: 23, name: "KAIKAI");
   PaymentMethod _paymentMethod;
-  String _error;
-  String _currentSecret = null; //set this yourself, e.g using curl
-  PaymentIntentResult _paymentIntent;
-
   Profile payTo;
+  Profile payer;
   bool _isPaying = false;
-
+  String _error;
+  String _currentSecret = null;
+  Token _paymentToken;
+  PaymentIntentResult _paymentIntent;
+  num selectedProjectId;
+  final GlobalKey<AppExpansionTileState> expansionTile = new GlobalKey();
+  String foos = 'Select project';
+  List<Project> projects;
   initialisePaymentIntent() async {
     var responseData = await ApiBaseHelper.instance.getProtected(
-        "authenticated/getAccount/${widget.project.projCreatorId}");
+        "authenticated/getAccount/${widget.resource.resourceOwnerId}");
     payTo = Profile.fromJson(responseData);
-
+    payer = Provider.of<Auth>(context, listen: false).myProfile;
     final response = await ApiBaseHelper.instance
         .postProtected("authenticated/createPaymentIntent",
             body: json.encode({
-              "amountInCents": double.parse(widget.selectedAmount) * 100,
+              "amountInCents": widget.resource.price * 100,
               "payeeStripeUid": payTo.stripeAccountUid,
-              "donationOptionId": widget.donationOption.donationOptionId,
-              "paymentScenario": "FundCampaignDonation",
-              "receiptEmail": "ikjun@gmail.com"
+              "resourceId": widget.resource.resourceId,
+              "projectId": selectedProjectId,
+              "paymentScenario": "ResourcePurchase",
+              "receiptEmail": payer.email,
             }));
     print(response);
     _currentSecret = response['client_secret'];
@@ -76,6 +78,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   confirmPayment() async {
+    // print(widget.resource.price * 100);
+    // print(payTo.stripeAccountUid);
+    // print(payer.stripeAccountUid);
+    // print(widget.resource.resourceId);
+    // print(selectedProjectId);
+    // print(payer.email);
     setState(() => _isPaying = true);
     print(_currentSecret);
     print(_paymentMethod.id);
@@ -86,7 +94,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     ).then((paymentIntent) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text('Thank you for your kind donation!'),
+        content: Text('Payment successful!'),
         duration: Duration(seconds: 2),
       ));
       Future.delayed(
@@ -98,16 +106,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
     });
   }
 
-  // void setError(dynamic error) {
-  //   _scaffoldKey.currentState
-  //       .showSnackBar(SnackBar(content: Text(error.toString())));
-  //   setState(() {
-  //     _error = error.toString();
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
+    projects = Provider.of<Auth>(context).myProfile.projectsOwned;
     return Scaffold(
       key: _scaffoldKey,
       body: SafeArea(
@@ -124,7 +125,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Pledge",
+                          "Payment for resource",
                           style: TextStyle(
                               color: Colors.grey[850],
                               fontWeight: FontWeight.w600,
@@ -154,19 +155,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Donation Selection",
+                          Text(widget.resource.resourceName,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[850],
+                                  fontSize: 3 * SizeConfig.textMultiplier)),
+                          Text(widget.resource.resourceDescription,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.grey[850],
                                   fontSize: 2 * SizeConfig.textMultiplier)),
                           SizedBox(height: 10),
-                          Text(
-                            widget.donationOption.optionDescription,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey[850],
-                                fontSize: 1.7 * SizeConfig.textMultiplier),
-                          ),
                           Divider(
                               color: Colors.grey[400],
                               height: 24,
@@ -182,7 +181,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     fontSize: 2.5 * SizeConfig.textMultiplier),
                               ),
                               Text(
-                                "S\$ " + widget.selectedAmount + ".00",
+                                "S\$ " + widget.resource.price.toString() + "0",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: kKanbanColor,
@@ -194,6 +193,33 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ),
                     SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Text(
+                          "MATCH RESOURCE TO:",
+                        ),
+                      ],
+                    ),
+                    AppExpansionTile(
+                        key: expansionTile,
+                        title: new Text(this.foos),
+                        backgroundColor:
+                            Theme.of(context).accentColor.withOpacity(0.025),
+                        children: <Widget>[
+                          for (Project p in projects) ...{
+                            new ListTile(
+                              title: Text(p.projectTitle),
+                              onTap: () {
+                                setState(() {
+                                  this.foos = p.projectTitle;
+                                  selectedProjectId = p.projectId;
+                                  expansionTile.currentState.collapse();
+                                });
+                                initialisePaymentIntent();
+                              },
+                            ),
+                          },
+                        ]),
                     CreditCardForm(
                       themeColor: kPrimaryColor,
                       cardHolderName: testCard.name,

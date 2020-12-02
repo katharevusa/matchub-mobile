@@ -1,6 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
-import 'dart:io'; 
+import 'dart:io';
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +15,7 @@ import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_resource.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -54,7 +55,9 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
       "spotlight": widget.newResource.spotlight,
       "spotlightEndTime": widget.newResource.spotlightEndTime,
       "matchedProjectId": widget.newResource.matchedProjectId,
-      "country": widget.newResource.country
+      "country": widget.newResource.country,
+      "price": widget.newResource.price,
+      'resourceType': widget.newResource.resourceType
     };
   }
 
@@ -68,7 +71,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     "Create New Resource",
     "Create New Resource",
     "Create New Resource",
-    // "Create New Resource",
+    "Create New Resource",
   ];
 
   final List<String> titles_edit = [
@@ -77,13 +80,14 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     "Edit Resource",
     "Edit Resource",
     "Edit Resource",
-    // "Edit Resource",
+    "Edit Resource",
     "Edit Resource",
   ];
   final List<String> subtitles = [
     "Title & Description",
     "Select Category",
     "Select No. of units",
+    "Select payment",
     "Start Date",
     "End Date",
     "Upload Photo",
@@ -97,6 +101,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
     Colors.pinkAccent.shade100,
     Colors.lime.shade300,
     Colors.brown.shade400,
+    Colors.green.shade300,
   ];
   List<File> photos = [];
 
@@ -141,11 +146,11 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
       print("Success");
       if (photos.isNotEmpty) {
         await uploadMultiFile(
-            photos,
-            "${ApiBaseHelper.instance.baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
-            Provider.of<Auth>(context, listen: false).accessToken,
-            "photos",
-            );
+          photos,
+          "${ApiBaseHelper.instance.baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
+          Provider.of<Auth>(context, listen: false).accessToken,
+          "photos",
+        );
       }
       // Provider.of<Auth>(context).retrieveUser();
       loadResources();
@@ -154,26 +159,6 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
       resource['startTime'] = startResourceTime;
       resource['endTime'] = endResourceTime;
       showErrorDialog(error.toString(), context);
-
-      // final responseData = error.body as Map<String, dynamic>;
-      // print("Failure");
-      // showDialog(
-      //     context: context,
-      //     builder: (ctx) => AlertDialog(
-      //           title: Text(responseData['error']),
-      //           content: Text(responseData['message']),
-      //           actions: <Widget>[
-      //             FlatButton(
-      //               child: Text('Okay'),
-      //               onPressed: () {
-      //                 Navigator.push(
-      //                     context,
-      //                     new MaterialPageRoute(
-      //                         builder: (context) => ResourceScreen()));
-      //               },
-      //             )
-      //           ],
-      //         ));
     }
   }
 
@@ -221,11 +206,11 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
       print("Success");
       if (photos.isNotEmpty) {
         await uploadMultiFile(
-            photos,
-            "${ApiBaseHelper.instance.baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
-            Provider.of<Auth>(context, listen: false).accessToken,
-            "photos",
-            );
+          photos,
+          "${ApiBaseHelper.instance.baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
+          Provider.of<Auth>(context, listen: false).accessToken,
+          "photos",
+        );
       }
       Provider.of<Auth>(context).retrieveUser();
       Navigator.of(context).pop(true);
@@ -274,7 +259,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                   activeSize: 20.0,
                 ),
               ),
-              itemCount: (resource["resourceId"] == null) ? 6 : 5,
+              itemCount: (resource["resourceId"] == null) ? 7 : 6,
               itemBuilder: (context, index) {
                 if (index == 0 && resource["resourceId"] == null) {
                   return IntroItem(
@@ -297,7 +282,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     bg: colors[index],
                     widget: Category(resource),
                   );
-                } else if (index == 3 && resource["resourceId"] != null) {
+                } else if (index == 1 && resource["resourceId"] != null) {
                   return IntroItem(
                     title: titles_edit[index],
                     subtitle: subtitles[index],
@@ -311,7 +296,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     bg: colors[index],
                     widget: Unit(resource),
                   );
-                } else if (index == 4 && resource["resourceId"] != null) {
+                } else if (index == 2 && resource["resourceId"] != null) {
                   return IntroItem(
                     title: titles_edit[index],
                     subtitle: subtitles[index],
@@ -323,30 +308,44 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
-                    widget: Start(resource),
+                    widget: ResourceType(resource),
                   );
-                } else if (index == 1 && resource["resourceId"] != null) {
+                } else if (index == 3 && resource["resourceId"] == null) {
                   return IntroItem(
-                    title: titles_edit[index],
+                    title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
-                    widget: Start(resource),
+                    widget: ResourceType(resource),
                   );
                 } else if (index == 4 && resource["resourceId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
+                    widget: Start(resource),
+                  );
+                } else if (index == 4 && resource["resourceId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Start(resource),
+                  );
+                } else if (index == 5 && resource["resourceId"] == null) {
+                  return IntroItem(
+                    title: titles[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
                     widget: End(resource),
                   );
-                } else if (index == 2 && resource["resourceId"] != null) {
+                } else if (index == 5 && resource["resourceId"] != null) {
                   return IntroItem(
                     title: titles_edit[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: End(resource),
                   );
-                } else if (index == 5 && resource["resourceId"] == null) {
+                } else if (index == 6 && resource["resourceId"] == null) {
                   return IntroItem(
                     title: titles[index],
                     subtitle: subtitles[index],
@@ -388,21 +387,21 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
           Align(
             alignment: Alignment.bottomRight,
             child: IconButton(
-              icon: Icon(((_currentIndex == 5 &&
+              icon: Icon(((_currentIndex == 6 &&
                           resource["resourceId"] == null) ||
-                      (_currentIndex == 4 && resource["resourceId"] != null))
+                      (_currentIndex == 5 && resource["resourceId"] != null))
                   ? Icons.check
                   : Icons.arrow_forward),
               onPressed: () {
                 FocusScope.of(context).unfocus();
                 if (resource["resourceId"] == null) {
-                  if (_currentIndex != 5) {
+                  if (_currentIndex != 6) {
                     _controller.next();
                   } else {
                     createNewResource(context);
                   }
                 } else {
-                  if (_currentIndex != 4) {
+                  if (_currentIndex != 5) {
                     _controller.next();
                   } else {
                     updateResource(context);
@@ -420,6 +419,77 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
           )
         ],
       ),
+    );
+  }
+}
+
+class ResourceType extends StatefulWidget {
+  Map<String, dynamic> resource;
+  // Map<int, bool> swiperControl;
+  ResourceType(this.resource);
+
+  @override
+  _ResourceTypeState createState() => _ResourceTypeState();
+}
+
+class _ResourceTypeState extends State<ResourceType> {
+  String _character = "free";
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: const Text('Free'),
+          leading: Radio(
+            value: "FREE",
+            groupValue: _character,
+            onChanged: (value) {
+              setState(() {
+                _character = value;
+                widget.resource['resourceType'] = value;
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('Paid'),
+          leading: Radio(
+            value: "PAID",
+            groupValue: _character,
+            onChanged: (value) {
+              setState(() {
+                _character = value;
+                widget.resource['resourceType'] = value;
+              });
+            },
+          ),
+        ),
+        if (widget.resource['resourceType'] == "PAID") ...{
+          ListTile(
+            title: TextFormField(
+              decoration: InputDecoration(
+                labelText: 'ENTER PRICE \$ ',
+                labelStyle: TextStyle(color: Colors.grey[850], fontSize: 14),
+                fillColor: Colors.grey[100],
+                hoverColor: Colors.grey[100],
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: kSecondaryColor),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey[850],
+                  ),
+                ),
+              ),
+              initialValue: '0',
+              keyboardType: TextInputType.name,
+              onChanged: (value) {
+                widget.resource['price'] = double.parse(value);
+              },
+            ),
+          )
+        },
+      ],
     );
   }
 }
@@ -520,8 +590,9 @@ class _CategoryState extends State<Category> {
 //retrieve all categories
   retrieveAllCategories() async {
     final url = 'authenticated/getAllResourceCategories';
-    final responseData = await _helper.getProtected(
-        url,  accessToken:Provider.of<Auth>(this.context, listen: false).accessToken);
+    final responseData = await _helper.getProtected(url,
+        accessToken:
+            Provider.of<Auth>(this.context, listen: false).accessToken);
     listOfCategories = (responseData['content'] as List)
         .map((e) => ResourceCategory.fromJson(e))
         .toList();
@@ -609,8 +680,9 @@ class _UnitState extends State<Unit> {
   retrieveCategoryById() async {
     int id = widget.resource["resourceCategoryId"];
     final url = 'authenticated/getResourceCategoryById?resourceCategoryId=$id';
-    final responseData = await _helper.getProtected(
-        url, accessToken: Provider.of<Auth>(this.context, listen: false).accessToken);
+    final responseData = await _helper.getProtected(url,
+        accessToken:
+            Provider.of<Auth>(this.context, listen: false).accessToken);
     category = ResourceCategory.fromJson(responseData);
     perUnit = category.perUnit;
     print(category.toJson());

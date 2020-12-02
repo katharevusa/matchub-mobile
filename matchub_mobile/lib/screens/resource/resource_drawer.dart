@@ -41,7 +41,7 @@ class ResourceDrawer extends StatelessWidget {
                   _buildDivider(),
                   _buildRow(
                     Icons.track_changes,
-                    "Donation",
+                    "Resource payment history",
                     ResourceDonationHistoryScreen(),
                     context,
                   ),

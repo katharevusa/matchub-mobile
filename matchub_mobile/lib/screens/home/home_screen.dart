@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/screens/home/components/greeting_card.dart';
+import 'package:matchub_mobile/screens/home/components/viewCompetition.dart';
 import 'package:matchub_mobile/screens/home/newsfeed.dart';
 import 'package:matchub_mobile/screens/search/search_page.dart';
 import 'package:matchub_mobile/services/auth.dart';
@@ -35,7 +36,12 @@ class _HomeScreenState extends State<HomeScreen>
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverToBoxAdapter(
-                child: Container(child: GreetingCard()),
+                child: Column(
+                  children: [
+                    Container(child: GreetingCard()),
+                    ViewCompetition(),
+                  ],
+                ),
               ),
               SliverAppBar(
                 actions: [

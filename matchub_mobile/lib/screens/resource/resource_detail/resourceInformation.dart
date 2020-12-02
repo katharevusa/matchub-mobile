@@ -242,6 +242,19 @@ class _ResourceInformationState extends State<ResourceInformation> {
                                         fontSize: 15,
                                         fontWeight: FontWeight.w400,
                                         color: Colors.grey)),
+                            widget.resource.resourceType == "FREE"
+                                ? Text("This is a free resource",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey))
+                                : Text(
+                                    "Price: \$" +
+                                        widget.resource.price.toString(),
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey)),
                             widget.resource.available
                                 ? Text("Available",
                                     style: TextStyle(
