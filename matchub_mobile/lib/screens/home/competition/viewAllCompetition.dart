@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/home/competition/competitionDetail.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manageCompetition.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
@@ -18,68 +20,108 @@ class ViewAllCompetition extends StatefulWidget {
 class _ViewAllCompetitionState extends State<ViewAllCompetition> {
   Profile myProfile;
   List<Competition> activeCompetitions = [];
+  List<Competition> allCompetitions = [];
   ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   Future loader;
   @override
   void initState() {
+    loadActiveCompetitions();
+    print('=======');
     super.initState();
   }
 
-  getAllActiveCompetition() async {
-    activeCompetitions = [];
-    myProfile = Provider.of<Auth>(context).myProfile;
-    final url = 'authenticated/getAllActiveCompetitions';
-    final responseData = await _apiHelper.getWODecode(url);
-    (responseData as List)
-        .forEach((e) => activeCompetitions.add(Competition.fromJson(e)));
+  // getAllActiveCompetition() async {
+  //   activeCompetitions = [];
+  //   myProfile = Provider.of<Auth>(context).myProfile;
+  //   final url = 'authenticated/getAllActiveCompetitions';
+  //   final responseData = await _apiHelper.getWODecode(url);
+  //   (responseData as List)
+  //       .forEach((e) => activeCompetitions.add(Competition.fromJson(e)));
+  // }
+  loadActiveCompetitions() async {
+    await Provider.of<ManageCompetition>(context, listen: false)
+        .getAllActiveCompetition();
+    await Provider.of<ManageCompetition>(context, listen: false)
+        .getAllCompetition();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getAllActiveCompetition(),
-      builder: (context, snapshot) =>
-          (snapshot.connectionState == ConnectionState.done)
-              ? Scaffold(
-                  body: Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          size: 50.0,
-                        ),
-                        onPressed: () => Navigator.pop(context),
+    activeCompetitions =
+        Provider.of<ManageCompetition>(context).activeCompetitions;
+    allCompetitions = Provider.of<ManageCompetition>(context).allCompetitions;
+    myProfile = Provider.of<Auth>(context).myProfile;
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              size: 50.0,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: Image.asset(
+              "assets/images/competition.jpg",
+              fit: BoxFit.cover,
+            ),
+          ),
+          BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // _buildAvatar(),
+                    _buildInfo(),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 16.0, left: 16.0, right: 16.0),
+                      child: Text(
+                        "Ongoing Competitions",
+                        style: TextStyle(
+                            // color: Colors.white.withOpacity(0.85),
+                            height: 1.4,
+                            fontSize: 18,
+                            color: AppTheme.project3),
                       ),
-                      Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Image.asset(
-                          "assets/images/competition.jpg",
-                          fit: BoxFit.cover,
-                        ),
+                    ),
+                    _buildCompetition(activeCompetitions),
+                    Container(
+                      color: Colors.white.withOpacity(0.85),
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      width: double.infinity,
+                      height: 1.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 16.0, left: 16.0, right: 16.0),
+                      child: Text(
+                        "Past Competitions",
+                        style: TextStyle(
+                            // color: Colors.white.withOpacity(0.85),
+                            height: 1.4,
+                            fontSize: 18,
+                            color: AppTheme.project3),
                       ),
-                      BackdropFilter(
-                        filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                        child: Container(
-                          color: Colors.black.withOpacity(0.5),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                // _buildAvatar(),
-                                _buildInfo(),
-                                _buildCompetition(activeCompetitions),
-                                _buildbuton(context),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : Center(child: CircularProgressIndicator()),
+                    ),
+                    allCompetitions.isNotEmpty
+                        ? _buildCompetition(allCompetitions)
+                        : SizedBox.shrink(),
+                    _buildbuton(context),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -118,60 +160,54 @@ class _ViewAllCompetitionState extends State<ViewAllCompetition> {
             width: 225.0,
             height: 1.0,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              color: Colors.white.withOpacity(0.8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Your participation..",
-                    style: TextStyle(
-                        // color: Colors.white.withOpacity(0.85),
-                        height: 1.4,
-                        fontSize: 18,
-                        color: AppTheme.project3),
-                  ),
-                  for (Project p in myProfile.projectsOwned) ...{
-                    if (p.competition != null)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Your participation..",
+                style: TextStyle(
+                    // color: Colors.white.withOpacity(0.85),
+                    height: 1.4,
+                    fontSize: 18,
+                    color: AppTheme.project3),
+              ),
+              for (Project p in myProfile.projectsOwned) ...{
+                if (p.competition != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        p.projectTitle + ':',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.85),
+                          height: 1.4,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            p.projectTitle + ':',
+                            p.competitionVotes.toString() + ' VOTES',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.85),
+                              color: Colors.black,
+                              fontSize: 20,
                               height: 1.4,
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                p.competitionVotes.toString() + ' VOTES',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  height: 1.4,
-                                ),
-                              ),
-                              Text(
-                                p.competition.competitionTitle,
-                                style: TextStyle(
-                                  color: AppTheme.project3,
-                                  fontSize: 15,
-                                  height: 1.4,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            p.competition.competitionTitle,
+                            style: TextStyle(
+                              color: AppTheme.project3,
+                              fontSize: 15,
+                              height: 1.4,
+                            ),
                           ),
                         ],
                       ),
-                  }
-                ],
-              ),
-            ),
+                    ],
+                  ),
+              }
+            ],
           ),
         ],
       ),
@@ -278,26 +314,37 @@ class CompetitionCard extends StatelessWidget {
           SizedBox(
             height: 5,
           ),
-          Row(
-            children: [
-              Text(
-                "Ending in ",
-                style: TextStyle(color: AppTheme.project3, fontSize: 15),
-              ),
-              SlideCountdownClock(
-                duration: Duration(
-                  days: competition.endDate.difference(DateTime.now()).inDays,
+          competition.endDate.isAfter(DateTime.now())
+              ? Row(
+                  children: [
+                    Text(
+                      "Ending in ",
+                      style: TextStyle(color: AppTheme.project3, fontSize: 15),
+                    ),
+                    SlideCountdownClock(
+                      duration: Duration(
+                        days: competition.endDate
+                            .difference(DateTime.now())
+                            .inDays,
+                      ),
+                      slideDirection: SlideDirection.Up,
+                      separator: ":",
+                      textStyle: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.project3),
+                      shouldShowDays: true,
+                    ),
+                  ],
+                )
+              : Row(
+                  children: [
+                    Text(
+                      "Ended on ${DateFormat('dd MMM yyyy ').format(competition.endDate)}",
+                      style: TextStyle(color: AppTheme.project3, fontSize: 15),
+                    ),
+                  ],
                 ),
-                slideDirection: SlideDirection.Up,
-                separator: ":",
-                textStyle: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.project3),
-                shouldShowDays: true,
-              ),
-            ],
-          ),
           Text('Prize:'),
           Text(
             '\$' + competition.prizeMoney.toString() + '0',

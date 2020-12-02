@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manageCompetition.dart';
 import 'package:matchub_mobile/widgets/appExpansionTile.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
@@ -95,7 +96,12 @@ class _JoinCompetitionState extends State<JoinCompetition> {
       final response = await ApiBaseHelper.instance.postProtected(
         url,
       );
+      await Provider.of<ManageCompetition>(context, listen: false)
+          .getAllActiveCompetition();
+      await Provider.of<ManageCompetition>(context, listen: false)
+          .getAllCompetition();
       print("Success");
+      Navigator.of(context).pop(true);
       Navigator.of(context).pop(true);
     } catch (error) {
       showErrorDialog(error.toString(), context);

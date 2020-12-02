@@ -8,6 +8,7 @@ import 'package:matchub_mobile/screens/home/home_screen.dart';
 import 'package:matchub_mobile/screens/login/login_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/feed.dart';
+import 'package:matchub_mobile/services/manageCompetition.dart';
 import 'package:matchub_mobile/services/manage_organisationmembers.dart';
 import 'package:matchub_mobile/services/manage_listOfKah.dart';
 import 'package:matchub_mobile/services/manage_notification.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => ManageOutgoingRequest()),
             ChangeNotifierProvider(create: (_) => ManageNotification()),
             ChangeNotifierProvider(create: (_) => KanbanController()),
+            ChangeNotifierProvider(create: (_) => ManageCompetition()),
           ],
           child: Consumer<Auth>(
             builder: (context, auth, widget) => MaterialApp(
