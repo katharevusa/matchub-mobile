@@ -3,7 +3,7 @@ import 'package:matchub_mobile/screens/home/leaderboard&achievement/achievement.
 import 'package:matchub_mobile/screens/home/leaderboard&achievement/individualLeaderboard.dart';
 import 'package:matchub_mobile/screens/home/leaderboard&achievement/organisationLeaderboard.dart';
 
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 
 class Award extends StatefulWidget {

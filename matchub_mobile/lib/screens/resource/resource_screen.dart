@@ -8,7 +8,7 @@ import 'package:matchub_mobile/screens/resource/ongoingResource.dart';
 import 'package:matchub_mobile/screens/resource/resource_drawer.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_resource.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:provider/provider.dart';
 
 import '../../style.dart';

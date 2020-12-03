@@ -4,7 +4,7 @@ import 'package:matchub_mobile/navigation/navigation.dart';
 import 'package:matchub_mobile/screens/login/reset_password.dart';
 import 'package:matchub_mobile/screens/login/register_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/rounded_button.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';

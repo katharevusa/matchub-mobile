@@ -6,7 +6,7 @@ import 'package:matchub_mobile/screens/project_management/pManagementComponent/p
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectMatchedResources.dart';
 import 'package:matchub_mobile/screens/project_management/project_management.dart';
 import 'package:matchub_mobile/unused/teamMember.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 
 import 'pProjectFollowers.dart';
 

@@ -11,7 +11,7 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
 
-import '../../sizeconfig.dart';
+import '../../sizeConfig.dart';
 import '../../style.dart';
 
 class CampaignCreationScreen extends StatefulWidget {
@@ -128,7 +128,7 @@ class CampaignCreationScreenState extends State<CampaignCreationScreen> {
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 2,
-                maxLength: 30,
+                maxLength: 50,
                 maxLengthEnforced: true,
                 initialValue: newCampaign['campaignTitle'],
                 onChanged: (value) {

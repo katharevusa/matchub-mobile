@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:password_strength/password_strength.dart';

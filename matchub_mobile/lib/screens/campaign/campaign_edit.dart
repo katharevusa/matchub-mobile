@@ -13,7 +13,7 @@ import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
-import '../../sizeconfig.dart';
+import '../../sizeConfig.dart';
 
 class CampaignEdit extends StatefulWidget {
   Campaign campaign;
@@ -152,7 +152,7 @@ class _CampaignEditState extends State<CampaignEdit>
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 2,
-                maxLength: 30,
+                maxLength: 50,
                 maxLengthEnforced: true,
                 initialValue: widget.campaign.campaignTitle,
                 onChanged: (value) {

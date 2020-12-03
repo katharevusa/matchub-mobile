@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import 'package:matchub_mobile/screens/user/select_targets.dart';

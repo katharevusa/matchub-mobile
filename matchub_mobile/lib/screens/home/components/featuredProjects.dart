@@ -6,7 +6,7 @@ import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/rounded_bordered_container.dart';
 
-import '../../../sizeconfig.dart';
+import '../../../sizeConfig.dart';
 
 class FeaturedProjects extends StatefulWidget {
   @override

@@ -20,7 +20,7 @@ import 'package:matchub_mobile/unused/teamMember.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_notification.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';

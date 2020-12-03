@@ -5,7 +5,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/project_management/project_management.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';

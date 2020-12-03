@@ -4,7 +4,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 import 'package:readmore/readmore.dart';
 
-import '../../../sizeconfig.dart';
+import '../../../sizeConfig.dart';
 import '../../../style.dart';
 
 class PDescription extends StatelessWidget {

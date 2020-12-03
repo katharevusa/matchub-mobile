@@ -18,7 +18,7 @@ import 'package:matchub_mobile/screens/project/projectCreation/keyword.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/sdg.dart';
 import 'package:matchub_mobile/screens/resource/resource_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
 import 'package:path/path.dart';

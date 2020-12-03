@@ -7,7 +7,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/widgets/popupmenubutton.dart' as popupmenu;
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';

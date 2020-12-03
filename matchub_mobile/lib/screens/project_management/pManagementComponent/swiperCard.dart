@@ -15,7 +15,7 @@ import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-import '../../../sizeconfig.dart';
+import '../../../sizeConfig.dart';
 import 'pTeamMembers.dart';
 
 class PManagementSwiperCard extends StatefulWidget {

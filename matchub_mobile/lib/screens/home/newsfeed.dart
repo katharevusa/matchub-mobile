@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/chat/chat_screen.dart';
+import 'package:matchub_mobile/screens/chat/chatScreen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/feed.dart';
 import 'package:matchub_mobile/style.dart';
@@ -10,7 +10,7 @@ import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../sizeconfig.dart';
+import '../../sizeConfig.dart';
 import 'components/create_post.dart';
 import 'components/post_card.dart';
 import 'components/suggested_profile.dart';

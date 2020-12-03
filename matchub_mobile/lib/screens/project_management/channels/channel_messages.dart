@@ -10,7 +10,7 @@ import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
 import 'package:provider/provider.dart';
 import 'package:string_to_hex/string_to_hex.dart';

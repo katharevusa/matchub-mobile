@@ -20,7 +20,7 @@ import 'package:matchub_mobile/screens/resource/resource_detail/resourceInformat
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceSuggestProject.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_resource.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';

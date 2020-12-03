@@ -8,7 +8,7 @@ import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 
-import '../../../sizeconfig.dart';
+import '../../../sizeConfig.dart';
 
 class PManagementMatchedResources extends StatefulWidget {
   Project project;

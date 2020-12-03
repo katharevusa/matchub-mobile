@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 
-import '../../../sizeconfig.dart';
+import '../../../sizeConfig.dart';
 
 class PCarousel extends StatelessWidget {
   Project project;

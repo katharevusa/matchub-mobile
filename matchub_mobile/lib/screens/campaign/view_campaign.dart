@@ -5,12 +5,12 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/campaign/campaign_donors.dart';
 import 'package:matchub_mobile/screens/campaign/campaign_edit.dart';
-import 'package:matchub_mobile/screens/campaign/payment_details.dart';
+import 'package:matchub_mobile/screens/campaign/paymentScreen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pCarousel.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 

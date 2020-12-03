@@ -7,7 +7,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/campaign/view_campaign.dart';
 import 'package:matchub_mobile/screens/search/project_search_card.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';

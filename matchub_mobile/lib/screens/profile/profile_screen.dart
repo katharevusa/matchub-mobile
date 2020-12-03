@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
-import 'package:matchub_mobile/model/individual.dart';
+import 'package:matchub_mobile/unused/individual.dart';
 import 'package:matchub_mobile/models/profile.dart';
 
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';

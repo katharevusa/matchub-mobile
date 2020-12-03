@@ -10,7 +10,7 @@ import 'package:matchub_mobile/screens/user/select_targets.dart';
 // import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/search.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/campaignCard.dart';
 import 'package:matchub_mobile/widgets/countrylistpicker.dart';

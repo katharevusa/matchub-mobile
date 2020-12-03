@@ -5,7 +5,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/navigation/explore_navigator.dart';
 import 'package:matchub_mobile/navigation/profile_navigator.dart';
 import 'package:matchub_mobile/navigation/resource_navigator.dart';
-import 'package:matchub_mobile/screens/chat/chat_screen.dart';
+import 'package:matchub_mobile/screens/chat/chatScreen.dart';
 import 'package:matchub_mobile/screens/follow/follow_overview.dart';
 import 'package:matchub_mobile/screens/home/components/create_post.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';

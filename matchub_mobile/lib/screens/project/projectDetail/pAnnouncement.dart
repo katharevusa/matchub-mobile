@@ -5,7 +5,7 @@ import 'package:matchub_mobile/screens/project/projectDetail/pPublicAnnouncement
 import 'package:matchub_mobile/screens/project_management/notification/viewAllNotification.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_notification.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 

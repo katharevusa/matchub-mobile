@@ -4,7 +4,7 @@ import 'package:matchub_mobile/screens/home/components/greeting_card.dart';
 import 'package:matchub_mobile/screens/home/newsfeed.dart';
 import 'package:matchub_mobile/screens/search/search_page.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 

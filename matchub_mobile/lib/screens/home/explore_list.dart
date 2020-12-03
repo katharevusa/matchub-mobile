@@ -12,7 +12,7 @@ import 'package:matchub_mobile/widgets/project_vertical_card.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 
-import '../../sizeconfig.dart';
+import '../../sizeConfig.dart';
 
 class ExploreList extends StatefulWidget {
   @override

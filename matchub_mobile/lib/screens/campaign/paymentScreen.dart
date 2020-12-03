@@ -10,7 +10,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/campaign/payments/creditcardform.dart';
 import 'package:matchub_mobile/screens/campaign/view_campaign.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_payment/stripe_payment.dart';

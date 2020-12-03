@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 
 const kPrimaryColor = Color(0xFF28A29C);
 // const kPrimaryColor = Color(0xFF40858C);

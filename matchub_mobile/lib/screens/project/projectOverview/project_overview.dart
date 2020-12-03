@@ -15,7 +15,7 @@ import 'package:matchub_mobile/screens/project_management/project_management.dar
 import 'package:matchub_mobile/unused/teamMember.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';

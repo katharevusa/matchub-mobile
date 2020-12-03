@@ -5,7 +5,7 @@ import 'package:matchub_mobile/screens/campaign/campaign_creation.dart';
 import 'package:matchub_mobile/screens/campaign/view_all_campaigns.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/widgets/campaignCard.dart';
 import 'package:provider/provider.dart';
 

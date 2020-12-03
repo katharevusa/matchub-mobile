@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/kanban_controller.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 

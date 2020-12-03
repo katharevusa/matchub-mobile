@@ -8,7 +8,7 @@ import 'package:matchub_mobile/unused/resource_incoming_tabview.dart';
 import 'package:matchub_mobile/screens/resource/resource_outgoing/OutgoingRequestTabview.dart';
 import 'package:matchub_mobile/unused/resource_outgoing_tabview.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 

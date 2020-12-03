@@ -7,7 +7,7 @@ import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../sizeconfig.dart';
+import '../../../sizeConfig.dart';
 import '../../../style.dart';
 
 class PFounderTeamAttachBadgeSDG extends StatelessWidget {

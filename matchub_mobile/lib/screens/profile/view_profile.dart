@@ -9,7 +9,7 @@ import 'package:matchub_mobile/screens/profile/profile_comments.dart';
 import 'package:matchub_mobile/screens/profile/profile_projects.dart';
 import 'package:matchub_mobile/screens/profile/profile_resource.dart';
 import 'package:matchub_mobile/screens/profile/profile_reviews.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:share/share.dart';
 

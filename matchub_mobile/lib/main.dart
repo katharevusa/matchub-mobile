@@ -15,7 +15,7 @@ import 'package:matchub_mobile/services/manage_outgoingRequest.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/services/manage_resource.dart';
 import 'package:matchub_mobile/services/notification_service.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:provider/provider.dart';

@@ -8,7 +8,7 @@ import 'package:matchub_mobile/services/manage_notification.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
-import '../../sizeconfig.dart';
+import '../../sizeConfig.dart';
 
 class InboxNotification extends StatefulWidget {
   @override

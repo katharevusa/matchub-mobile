@@ -12,7 +12,7 @@ import 'package:matchub_mobile/helpers/attachment_helper.dart';
 import 'package:matchub_mobile/helpers/upload_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
