@@ -454,22 +454,35 @@ class _CompetitionDetailState extends State<CompetitionDetail> {
                                             fit: BoxFit.fill),
                                       ),
                                     )
-                                  :
-                                  //  result.indexOf(p) == 1?
-                                  Container(
-                                      width: 100,
-                                      height: 100,
-                                      margin: EdgeInsets.only(right: 15),
-                                      decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        image: DecorationImage(
-                                            image: AssetImage(
-                                                './././assets/images/silverMedal.png'),
-                                            fit: BoxFit.fill),
-                                      ),
-                                    ),
+                                  : result.indexOf(p) == 1
+                                      ? Container(
+                                          width: 100,
+                                          height: 100,
+                                          margin: EdgeInsets.only(right: 15),
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            image: DecorationImage(
+                                                image: AssetImage(
+                                                    './././assets/images/silverMedal.png'),
+                                                fit: BoxFit.fill),
+                                          ),
+                                        )
+                                      : Container(
+                                          width: 100,
+                                          height: 100,
+                                          margin: EdgeInsets.only(right: 15),
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            image: DecorationImage(
+                                                image: AssetImage(
+                                                    './././assets/images/bronzeMedal.png'),
+                                                fit: BoxFit.fill),
+                                          ),
+                                        ),
                               Container(
                                 width: 110.0,
                                 height: 110.0,

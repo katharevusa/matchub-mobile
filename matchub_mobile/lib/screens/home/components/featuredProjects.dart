@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
+import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/unused/rounded_bordered_container.dart';
@@ -50,6 +53,11 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
     print(spotLightResources.length);
   }
 
+  var titleTextStyle = TextStyle(
+    color: Colors.black87,
+    fontSize: 20.0,
+    fontWeight: FontWeight.bold,
+  );
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -68,11 +76,14 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Featured Projects",
+                        "Projects Under Spotlight",
                         style: TextStyle(
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           fontSize: 2.2 * SizeConfig.textMultiplier,
                         ),
+                      ),
+                      SizedBox(
+                        height: 5,
                       ),
                       Expanded(
                         child: Swiper(
@@ -82,55 +93,86 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                           itemCount: spotLightProjects.length,
                           loop: false,
                           itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 20),
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(ProjectDetailScreen.routeName,
+                                    arguments: spotLightProjects[index]);
+                              },
+                              child: Card(
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
                                 child: Stack(
-                                  fit: StackFit.expand,
                                   children: <Widget>[
-                                    AttachmentImage(
-                                      spotLightProjects[index]
-                                          .projectProfilePic,
+                                    Column(
+                                      children: <Widget>[
+                                        Container(
+                                          height: 150.0,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10.0),
+                                                topRight: Radius.circular(10.0),
+                                              ),
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                    "${ApiBaseHelper.instance.baseUrl}${spotLightProjects[index].projectProfilePic.substring(30)}"),
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                            spotLightProjects[index]
+                                                .projectTitle,
+                                            style: titleTextStyle,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                "End Date: ${DateFormat('dd-MMM-yyyy ').format(spotLightProjects[index].endDate)}",
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14.0,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Text(
+                                                spotLightProjects[index]
+                                                        .upvotes
+                                                        .toString() +
+                                                    " Upvotes",
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     Positioned(
-                                      left: 0,
-                                      bottom: 0,
-                                      width: 400,
-                                      height: 60,
+                                      top: 140,
+                                      left: 20.0,
                                       child: Container(
-                                        decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                                begin: Alignment.bottomCenter,
-                                                end: Alignment.topCenter,
-                                                colors: [
-                                              Colors.black,
-                                              Colors.black26
-                                            ])),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Text(
-                                              spotLightProjects[index]
-                                                  .projectTitle,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w500,
-                                                  letterSpacing: 1),
-                                            ),
+                                        color: Colors.green,
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          "SPOTLIGHT",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.0,
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -154,12 +196,13 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Featured Resources",
+                        "Resources Under Spotlight",
                         style: TextStyle(
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           fontSize: 2.2 * SizeConfig.textMultiplier,
                         ),
                       ),
+                      SizedBox(height: 5),
                       Expanded(
                         child: Swiper(
                           // itemWidth: 200.0,
@@ -171,58 +214,88 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                           itemCount: spotLightResources.length,
                           loop: false,
                           itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 20),
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pushNamed(ResourceDetailScreen.routeName,
+                                        arguments: spotLightResources[index]);
+                              },
+                              child: Card(
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
                                 child: Stack(
-                                  fit: StackFit.expand,
                                   children: <Widget>[
-                                    AttachmentImage(
-                                      spotLightResources[index]
-                                          .resourceProfilePic,
+                                    Column(
+                                      children: <Widget>[
+                                        Container(
+                                          height: 150.0,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10.0),
+                                                topRight: Radius.circular(10.0),
+                                              ),
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                    "${ApiBaseHelper.instance.baseUrl}${spotLightResources[index].resourceProfilePic.substring(30)}"),
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                            spotLightResources[index]
+                                                .resourceName,
+                                            style: titleTextStyle,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'Quantity: ' +
+                                                    spotLightResources[index]
+                                                        .units
+                                                        .toString() +
+                                                    " Units",
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14.0,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Text(
+                                                spotLightResources[index]
+                                                    .resourceType
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     Positioned(
-                                      left: 0,
-                                      bottom: 0,
-                                      width: 400,
-                                      height: 60,
+                                      top: 140,
+                                      left: 20.0,
                                       child: Container(
-                                        decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                                begin: Alignment.bottomCenter,
-                                                end: Alignment.topCenter,
-                                                colors: [
-                                              Colors.black,
-                                              Colors.black26
-                                            ])),
-                                      ),
-                                    ),
-                                    // Positioned(
-                                    //   left: 10,
-                                    //   bottom: 10,
-                                    Flexible(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Text(
-                                              spotLightResources[index]
-                                                  .resourceName,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w500,
-                                                  letterSpacing: 1),
-                                            ),
+                                        color: Colors.green,
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          "SPOTLIGHT",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.0,
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),

@@ -3,6 +3,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/reputationPointAllocation/allocateToResourceDonors.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/reputationPointAllocation/allocateToTeamMembers.dart';
 import 'package:matchub_mobile/services/manageProject.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 
@@ -19,10 +20,25 @@ class RepAllocation extends StatelessWidget {
             builder: (_) => Allocation(project)));
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Text(
-            "~Congratulations on project completion! Start reviewing your team members here~"),
-      ),
+          margin:
+              EdgeInsets.symmetric(horizontal: 4 * SizeConfig.widthMultiplier),
+          height: 5 * SizeConfig.heightMultiplier,
+          width: 100 * SizeConfig.widthMultiplier,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(0),
+              gradient: LinearGradient(
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.topRight,
+                  colors: [
+                    AppTheme.project4,
+                    AppTheme.topBarBackgroundColor,
+                    // AppTheme.project2,
+                  ])),
+          child: Center(
+              child: Text(
+            "Project has completed!\n" + "Review team members>>",
+            style: TextStyle(color: Colors.white),
+          ))),
     );
   }
 }

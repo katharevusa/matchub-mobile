@@ -29,7 +29,7 @@ class ViewCompetition extends StatelessWidget {
                   ])),
           child: Center(
               child: Text(
-            "View all Competition>>",
+            "Join Competition>>",
             style: TextStyle(color: Colors.white),
           ))),
     );

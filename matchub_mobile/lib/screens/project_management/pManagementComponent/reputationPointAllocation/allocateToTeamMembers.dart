@@ -103,19 +103,26 @@ class _AllocateToTeamMembersState extends State<AllocateToTeamMembers> {
       final url = "authenticated/issuePointsToResourceDonors";
       final response = await ApiBaseHelper.instance.putProtected(url,
           body: json.encode({
-            ...widget.additionalPoints,
+            "hashmap": widget.additionalPoints,
             "projectId": widget.project.projectId
           }));
       final url1 = "authenticated/issuePointsToTeamMembers";
       final response1 = await ApiBaseHelper.instance.putProtected(url1,
           body: json.encode({
-            ...widget.pointsToMembers,
+            "hashmap": widget.pointsToMembers,
             "projectId": widget.project.projectId
           }));
       print("Success");
+      await loadProject();
     } catch (error) {
       showErrorDialog(error.toString(), context);
     }
+  }
+
+  loadProject() async {
+    await Provider.of<ManageProject>(context, listen: false).getProject(
+      widget.project.projectId,
+    );
   }
 }
 

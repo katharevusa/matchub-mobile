@@ -67,7 +67,7 @@ class _ExploreListState extends State<ExploreList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Ranking(),
+          // Ranking(),
           FeaturedProjects(),
 
           // Padding(

@@ -40,14 +40,6 @@ class _AchievementState extends State<Achievement> {
           ? Scaffold(
               body: Stack(
                 children: <Widget>[
-                  Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: Image.asset(
-                      "assets/images/leaderboard.JPG",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
                   SafeArea(
                       child: Column(
                     children: <Widget>[
@@ -65,19 +57,20 @@ class _AchievementState extends State<Achievement> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
+                                      Stack(
+                                        overflow: Overflow.visible,
+                                        fit: StackFit.passthrough,
+                                        children: [
+                                          InkWell(
                                             child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 5,
-                                                  horizontal: 20.0),
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                                 child: Container(
                                                   height: 100,
-                                                  color: AppTheme.project3
+                                                  color: AppTheme.project2
                                                       .withOpacity(0.8),
                                                   child: Row(
                                                     children: <Widget>[
@@ -93,17 +86,27 @@ class _AchievementState extends State<Achievement> {
                                                                       size: 40,
                                                                       color: Colors
                                                                           .black)))
-                                                          : Container(),
+                                                          : Container(
+                                                              width: 50,
+                                                              height: 70,
+                                                              child: Center(
+                                                                  child: Icon(
+                                                                      Icons
+                                                                          .lock_open,
+                                                                      size: 40,
+                                                                      color: Colors
+                                                                          .black))),
                                                       Container(
                                                           width: 50,
                                                           height: 70,
                                                           child: Center(
                                                             child: Text(
                                                               gamification
-                                                                  .pointsToComment
-                                                                  .toString(),
+                                                                      .pointsToComment
+                                                                      .toString() +
+                                                                  'Pt',
                                                               style: TextStyle(
-                                                                  fontSize: 30,
+                                                                  fontSize: 20,
                                                                   color: AppTheme
                                                                       .project2),
                                                             ),
@@ -116,7 +119,7 @@ class _AchievementState extends State<Achievement> {
                                                           height: 70,
                                                           child: Center(
                                                             child: Text(
-                                                              'points to comment',
+                                                              'Comment',
                                                               style: TextStyle(
                                                                   fontSize: 20),
                                                             ),
@@ -126,14 +129,29 @@ class _AchievementState extends State<Achievement> {
                                                 ),
                                               ),
                                             ),
-                                          )),
-                                      Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
+                                          ),
+                                          Positioned(
+                                            right: 0,
+                                            bottom: 0,
+                                            child: Container(
+                                              height: 150,
+                                              alignment: Alignment.bottomRight,
+                                              child: Image.asset(
+                                                "assets/images/comment.png",
+                                                fit: BoxFit.scaleDown,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Stack(
+                                        overflow: Overflow.visible,
+                                        fit: StackFit.passthrough,
+                                        children: [
+                                          InkWell(
                                             child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 5,
-                                                  horizontal: 20.0),
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
@@ -155,79 +173,27 @@ class _AchievementState extends State<Achievement> {
                                                                       size: 40,
                                                                       color: Colors
                                                                           .black)))
-                                                          : Container(),
-                                                      Container(
-                                                          width: 50,
-                                                          height: 70,
-                                                          child: Center(
-                                                            child: Text(
-                                                              gamification
-                                                                  .pointsToDownvote
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  fontSize: 30,
-                                                                  color: AppTheme
-                                                                      .project2),
-                                                            ),
-                                                          )),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Container(
-                                                          width: 100,
-                                                          height: 70,
-                                                          child: Center(
-                                                            child: Text(
-                                                              'points to downvote',
-                                                              style: TextStyle(
-                                                                  fontSize: 20),
-                                                            ),
-                                                          )),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )),
-                                      Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 5,
-                                                  horizontal: 20.0),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                child: Container(
-                                                  height: 100,
-                                                  color: AppTheme.project3
-                                                      .withOpacity(0.8),
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      myProfile.reputationPoints <
-                                                              100
-                                                          ? Container(
+                                                          : Container(
                                                               width: 50,
                                                               height: 70,
                                                               child: Center(
                                                                   child: Icon(
                                                                       Icons
-                                                                          .lock_outline,
+                                                                          .lock_open,
                                                                       size: 40,
                                                                       color: Colors
-                                                                          .black)))
-                                                          : Container(),
+                                                                          .black))),
                                                       Container(
                                                           width: 50,
                                                           height: 70,
                                                           child: Center(
                                                             child: Text(
                                                               gamification
-                                                                  .pointsToAnonymousReview
-                                                                  .toString(),
+                                                                      .pointsToDownvote
+                                                                      .toString() +
+                                                                  'Pt',
                                                               style: TextStyle(
-                                                                  fontSize: 30,
+                                                                  fontSize: 20,
                                                                   color: AppTheme
                                                                       .project2),
                                                             ),
@@ -240,7 +206,7 @@ class _AchievementState extends State<Achievement> {
                                                           height: 70,
                                                           child: Center(
                                                             child: Text(
-                                                              'points to review',
+                                                              'Downvote',
                                                               style: TextStyle(
                                                                   fontSize: 20),
                                                             ),
@@ -250,20 +216,35 @@ class _AchievementState extends State<Achievement> {
                                                 ),
                                               ),
                                             ),
-                                          )),
-                                      Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
+                                          ),
+                                          Positioned(
+                                            right: 0,
+                                            bottom: 0,
+                                            child: Container(
+                                              height: 130,
+                                              alignment: Alignment.bottomRight,
+                                              child: Image.asset(
+                                                "assets/images/downvote.png",
+                                                fit: BoxFit.scaleDown,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Stack(
+                                        overflow: Overflow.visible,
+                                        fit: StackFit.passthrough,
+                                        children: [
+                                          InkWell(
                                             child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 5,
-                                                  horizontal: 20.0),
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                                 child: Container(
                                                   height: 100,
-                                                  color: AppTheme.project3
+                                                  color: AppTheme.project5
                                                       .withOpacity(0.8),
                                                   child: Row(
                                                     children: <Widget>[
@@ -279,17 +260,27 @@ class _AchievementState extends State<Achievement> {
                                                                       size: 40,
                                                                       color: Colors
                                                                           .black)))
-                                                          : Container(),
+                                                          : Container(
+                                                              width: 50,
+                                                              height: 70,
+                                                              child: Center(
+                                                                  child: Icon(
+                                                                      Icons
+                                                                          .lock_open,
+                                                                      size: 40,
+                                                                      color: Colors
+                                                                          .black))),
                                                       Container(
                                                           width: 50,
                                                           height: 70,
                                                           child: Center(
                                                             child: Text(
                                                               gamification
-                                                                  .pointsToSpotlight
-                                                                  .toString(),
+                                                                      .pointsToSpotlight
+                                                                      .toString() +
+                                                                  'Pt',
                                                               style: TextStyle(
-                                                                  fontSize: 30,
+                                                                  fontSize: 20,
                                                                   color: AppTheme
                                                                       .project2),
                                                             ),
@@ -302,7 +293,7 @@ class _AchievementState extends State<Achievement> {
                                                           height: 70,
                                                           child: Center(
                                                             child: Text(
-                                                              'points to spotlight',
+                                                              'Spotlight',
                                                               style: TextStyle(
                                                                   fontSize: 20),
                                                             ),
@@ -312,7 +303,21 @@ class _AchievementState extends State<Achievement> {
                                                 ),
                                               ),
                                             ),
-                                          )),
+                                          ),
+                                          Positioned(
+                                            right: 0,
+                                            bottom: 0,
+                                            child: Container(
+                                              height: 130,
+                                              alignment: Alignment.bottomRight,
+                                              child: Image.asset(
+                                                "assets/images/spotlighting.png",
+                                                fit: BoxFit.scaleDown,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),

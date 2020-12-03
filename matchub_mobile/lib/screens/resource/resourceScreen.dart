@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
-import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/models/resources.dart';
-import 'package:matchub_mobile/screens/resource/expiredResource.dart';
+// import 'package:matchub_mobile/screens/resource/navDrawer.dart';
 import 'package:matchub_mobile/screens/resource/ongoingResource.dart';
 import 'package:matchub_mobile/screens/resource/resourceDrawer.dart';
-import 'package:matchub_mobile/sizeConfig.dart';
+import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:provider/provider.dart';
 
 import '../../style.dart';
 
@@ -47,43 +48,8 @@ class _ResourceScreenState extends State<ResourceScreen>
                     fontWeight: FontWeight.w700)),
             backgroundColor: kScaffoldColor,
             elevation: 0,
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(40),
-              child: Container(
-                padding: EdgeInsets.only(left: 20),
-                alignment: Alignment.centerLeft,
-                child: TabBar(
-                    labelColor: Colors.grey[600],
-                    unselectedLabelColor: Colors.grey[400],
-                    indicator: UnderlineTabIndicator(
-                        borderSide: BorderSide(
-                          width: 4,
-                          color: kSecondaryColor,
-                        ),
-                        insets: EdgeInsets.only(left: 8, right: 8, bottom: 4)),
-                    isScrollable: true,
-                    tabs: [
-                      Tab(
-                        text: ("My Resources"),
-                      ),
-                      Tab(
-                        text: ("Saved Resources"),
-                      ),
-                    ]),
-              ),
-            ),
           ),
-          body: TabBarView(children: [
-            Container(
-              child: OngoingResource(),
-            ),
-            // Container(
-            //   child: ExpiredResource(listOfResources),
-            // ),
-            Container(
-              child: OngoingResource(),
-            ),
-          ]),
+          body: OngoingResource(),
         ),
       ),
       //   )

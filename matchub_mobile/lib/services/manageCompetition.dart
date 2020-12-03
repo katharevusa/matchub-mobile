@@ -22,17 +22,10 @@ class ManageCompetition with ChangeNotifier {
 
   getAllCompetition() async {
     allCompetitions = [];
-    final url = 'authenticated/getAllCompetitions';
+    final url = 'authenticated/getAllPastCompetitions';
     final responseData = await _apiHelper.getWODecode(url);
     (responseData as List)
         .forEach((e) => allCompetitions.add(Competition.fromJson(e)));
-    // for (Competition c in activeCompetitions) {
-    //   for (Competition c1 in allCompetitions) {
-    //     if (c.competitionId == c1.competitionId) {
-    //       allCompetitions.remove(c1);
-    //     }
-    //   }
-    // }
     notifyListeners();
     return allCompetitions;
   }
