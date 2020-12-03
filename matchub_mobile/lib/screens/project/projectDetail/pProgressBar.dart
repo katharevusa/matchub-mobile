@@ -5,7 +5,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectFollowerList.dart';
 
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/services/manageProject.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 

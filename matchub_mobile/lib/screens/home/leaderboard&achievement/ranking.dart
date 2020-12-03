@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 
-import 'package:matchub_mobile/screens/home/components/greeting_card.dart';
+import 'package:matchub_mobile/screens/home/components/greetingCard.dart';
 import 'package:matchub_mobile/screens/home/leaderboard&achievement/award.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeConfig.dart';
@@ -78,18 +78,18 @@ class Ranking extends StatelessWidget {
             ),
           ),
         ),
-        // Positioned(
-        //   top: 20,
-        //   right: 30,
-        //   child: Container(
-        //     height: 136,
-        //     alignment: Alignment.centerRight,
-        //     child: Image.asset(
-        //       "assets/images/medal.png",
-        //       fit: BoxFit.scaleDown,
-        //     ),
-        //   ),
-        // ),
+        Positioned(
+          top: 20,
+          right: 30,
+          child: Container(
+            height: 133,
+            alignment: Alignment.centerRight,
+            child: Image.asset(
+              "assets/images/medal.png",
+              fit: BoxFit.scaleDown,
+            ),
+          ),
+        ),
         Positioned(
           top: 40,
           right: 57,

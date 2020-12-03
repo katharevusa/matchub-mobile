@@ -4,7 +4,7 @@ import 'package:matchub_mobile/unused/project_screen.dart';
 import 'package:matchub_mobile/screens/project_management/notification/viewAllNotification.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/teamMemberManagement.dart';
 
-import '../screens/project_management/channels/channel_screen.dart';
+import '../screens/project_management/channels/channelScreen.dart';
 
 class ProjectManagementDrawer extends StatelessWidget {
   final Project project;

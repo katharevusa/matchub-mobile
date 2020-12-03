@@ -4,10 +4,9 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/resourceDonate.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/services/manageProject.dart';
 import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
-import 'package:path/path.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 

@@ -23,6 +23,8 @@ class Resources {
   bool spotlight;
   String spotlightEndTime;
   String country;
+  double price;
+  String resourceType;
 
   factory Resources.fromJson(Map<String, dynamic> json) =>
       _$ResourcesFromJson(json);

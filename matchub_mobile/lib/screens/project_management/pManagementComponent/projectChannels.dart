@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/kanban/kanban.dart';
-import 'package:matchub_mobile/screens/project_management/channels/channel_screen.dart';
+import 'package:matchub_mobile/screens/project_management/channels/channelScreen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/services/manageProject.dart';
 import 'package:matchub_mobile/style.dart';
-import 'package:matchub_mobile/widgets/CircularStepProgressIndicator.dart';
 import 'package:provider/provider.dart';
 
 class PManagementChannels extends StatefulWidget {

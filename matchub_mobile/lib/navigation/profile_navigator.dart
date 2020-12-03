@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/follow/follow_overview.dart';
-import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/follow/followOverview.dart';
+import 'package:matchub_mobile/screens/profile/profileScreen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
-import 'package:matchub_mobile/screens/user/account-settings/change_password.dart';
-import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
-import 'package:matchub_mobile/screens/user/edit-organisation/edit_profile_organisation.dart';
-import 'package:matchub_mobile/screens/user/user_screen.dart';
+import 'package:matchub_mobile/screens/user/account_settings/change_password.dart';
+import 'package:matchub_mobile/screens/user/edit_individual/editProfileIndividual.dart';
+import 'package:matchub_mobile/screens/user/edit_organisation/editProfileOrganisation.dart';
+import 'package:matchub_mobile/screens/user/userScreen.dart';
 
 class ProfileNavigator extends StatefulWidget {
   @override

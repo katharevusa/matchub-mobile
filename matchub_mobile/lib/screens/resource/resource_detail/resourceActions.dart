@@ -3,10 +3,9 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/resourceDonate.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceRequest.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/resourcePayment.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/firebase.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
-import 'package:matchub_mobile/services/manage_resource.dart';
+import 'package:matchub_mobile/services/manageResource.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:path/path.dart';
 import 'package:path/path.dart';
@@ -117,22 +116,38 @@ class _ResourceActionsState extends State<ResourceActions> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
                             onPressed: () {
-                              Navigator.of(context, rootNavigator: true).push(
-                                  MaterialPageRoute(
-                                      builder: (context) => RequestFormScreen(
-                                          resource: widget.resource)));
+                              if (widget.resource.resourceType == "FREE") {
+                                Navigator.of(context, rootNavigator: true).push(
+                                    MaterialPageRoute(
+                                        builder: (context) => RequestFormScreen(
+                                            resource: widget.resource)));
+                              } else {
+                                Navigator.of(context, rootNavigator: true).push(
+                                    MaterialPageRoute(
+                                        builder: (context) => ResourcePayment(
+                                            resource: widget.resource)));
+                              }
                             },
                             color: AppTheme.project4,
                             textColor: Colors.white,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                Text(
-                                  "Request",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15.0),
-                                ),
+                                if (widget.resource.resourceType == "FREE") ...{
+                                  Text(
+                                    "Request",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0),
+                                  ),
+                                } else ...{
+                                  Text(
+                                    "Pay",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0),
+                                  ),
+                                }
                               ],
                             ),
                           ),

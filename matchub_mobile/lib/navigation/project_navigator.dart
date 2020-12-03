@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/kanban/kanban.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
-import 'package:matchub_mobile/screens/project/projectOverview/project_overview.dart';
-import 'package:matchub_mobile/screens/project_management/channels/channel_screen.dart';
+import 'package:matchub_mobile/screens/project/projectOverview/projectOverview.dart';
+import 'package:matchub_mobile/screens/project_management/channels/channelScreen.dart';
 import 'package:matchub_mobile/screens/project_management/notification/announcementDetail.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/writeReview.dart';
-import 'package:matchub_mobile/screens/project_management/project_management.dart';
-import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
-import 'package:matchub_mobile/screens/user/edit-individual/edit_profile_individual.dart';
+import 'package:matchub_mobile/screens/project_management/projectManagement.dart';
+import 'package:matchub_mobile/screens/user/edit_individual/editProfileIndividual.dart';
 
 class ProjectNavigator extends StatefulWidget {
   @override

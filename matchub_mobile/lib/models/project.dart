@@ -40,6 +40,8 @@ class Project {
   List channels;
   List<TruncatedProfile> projectOwners;
   List<SelectedTarget> selectedTargets;
+  num competitionVotes;
+  Competition competition;
 
   factory Project.fromJson(Map<String, dynamic> json) =>
       _$ProjectFromJson(json);

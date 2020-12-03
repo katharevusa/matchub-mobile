@@ -3,25 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/navigation/navigation.dart';
-import 'package:matchub_mobile/screens/home/home_screen.dart';
+import 'package:matchub_mobile/screens/home/homeScreen.dart';
 // import 'package:matchub_mobile/screens/login/auth_screen.dart';
-import 'package:matchub_mobile/screens/login/login_screen.dart';
+import 'package:matchub_mobile/screens/login/loginScreen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/feed.dart';
-import 'package:matchub_mobile/services/manage_organisationmembers.dart';
-import 'package:matchub_mobile/services/manage_listOfKah.dart';
-import 'package:matchub_mobile/services/manage_notification.dart';
-import 'package:matchub_mobile/services/manage_outgoingRequest.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
-import 'package:matchub_mobile/services/manage_resource.dart';
-import 'package:matchub_mobile/services/notification_service.dart';
+import 'package:matchub_mobile/services/kanbanController.dart';
+import 'package:matchub_mobile/services/managOutgoingRequest.dart';
+import 'package:matchub_mobile/services/manageCompetition.dart';
+import 'package:matchub_mobile/services/manageNotification.dart';
+import 'package:matchub_mobile/services/manageOrganisationmembers.dart';
+import 'package:matchub_mobile/services/manageProject.dart';
+import 'package:matchub_mobile/services/manageResource.dart';
+import 'package:matchub_mobile/services/notificationService.dart';
 import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 
-import 'services/kanban_controller.dart';
 
 void main() async {
   HttpOverrides.global = new MyHttpOverrides();
@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => ManageOutgoingRequest()),
             ChangeNotifierProvider(create: (_) => ManageNotification()),
             ChangeNotifierProvider(create: (_) => KanbanController()),
+            ChangeNotifierProvider(create: (_) => ManageCompetition()),
           ],
           child: Consumer<Auth>(
             builder: (context, auth, widget) => MaterialApp(

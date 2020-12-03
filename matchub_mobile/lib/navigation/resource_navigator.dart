@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceRequest.dart';
-import 'package:matchub_mobile/screens/resource/resource_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_detail/resourcePayment.dart';
+import 'package:matchub_mobile/screens/resource/resourceScreen.dart';
 
 class ResourceNavigator extends StatefulWidget {
   @override
@@ -31,6 +32,8 @@ class _ResourceNavigatorState extends State<ResourceNavigator> {
             case RequestFormScreen.routeName:
               return RequestFormScreen(
                   resource: settings.arguments as Resources);
+            case ResourcePayment.routeName:
+              return ResourcePayment(resource: settings.arguments as Resources);
           }
         });
   }

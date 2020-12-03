@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:matchub_mobile/unused/individual.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/screens/chat/messages.dart';
-import 'package:matchub_mobile/screens/follow/follow_overview.dart';
+import 'package:matchub_mobile/screens/follow/followOverview.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
 import 'package:matchub_mobile/sizeConfig.dart';

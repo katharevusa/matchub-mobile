@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/profile/profileScreen.dart';
 import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -40,14 +40,14 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
           ? Scaffold(
               body: Stack(
                 children: <Widget>[
-                  Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: Image.asset(
-                      "assets/images/leaderboard.JPG",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   height: double.infinity,
+                  //   child: Image.asset(
+                  //     "assets/images/leaderboard.JPG",
+                  //     fit: BoxFit.cover,
+                  //   ),
+                  // ),
                   Positioned(
                     top: 100,
                     left: 110,
@@ -57,7 +57,7 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
                         child: Text(
                           "Best Champions",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white, fontSize: 27),
+                          style: TextStyle(color: Colors.black, fontSize: 27),
                         )),
                   ),
                   // Positioned(
@@ -96,7 +96,7 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
                             maxLines: 2,
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
+                            style: TextStyle(fontSize: 15, color: Colors.black),
                           ),
                         ),
                       ],
@@ -138,7 +138,7 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
                             maxLines: 2,
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
+                            style: TextStyle(fontSize: 15, color: Colors.black),
                           ),
                         ),
                       ],
@@ -180,7 +180,7 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
                             maxLines: 2,
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
+                            style: TextStyle(fontSize: 15, color: Colors.black),
                           ),
                         ),
                       ],
@@ -196,7 +196,7 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
-                              color: Colors.white),
+                              color: AppTheme.project4.withOpacity(0.2)),
                           child: Column(
                             children: <Widget>[
                               const SizedBox(height: 30.0),
@@ -226,8 +226,8 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
                                                               30),
                                                       child: Container(
                                                         height: 70,
-                                                        color: AppTheme.project3
-                                                            .withOpacity(0.3),
+                                                        color: AppTheme.project4
+                                                            .withOpacity(0.6),
                                                         child: Row(
                                                           children: <Widget>[
                                                             Container(
@@ -292,7 +292,7 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
                                                                         .toString(),
                                                                     style: TextStyle(
                                                                         color: AppTheme
-                                                                            .project5,
+                                                                            .project2,
                                                                         fontSize:
                                                                             15)),
                                                               ],

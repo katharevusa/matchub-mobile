@@ -33,9 +33,20 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
     ..meetings = json['meetings'] as List
     ..listOfRequests = json['listOfRequests'] as List
     ..fundsCampaign = json['fundsCampaign'] != null
-        ? (json['fundsCampaign'] as List).map((i) => Campaign.fromJson(i)).toList()
+        ? (json['fundsCampaign'] as List)
+            .map((i) => Campaign.fromJson(i))
+            .toList()
         : []
-    ..selectedTargets = (json['selectedTargets'] as List).map((i) => SelectedTarget.fromJson(i)).toList()
+
+    // ..selectedTargets = (json['selectedTargets'] as List)
+    //     .map((i) => SelectedTarget.fromJson(i))
+    //     .toList()
+
+    ..selectedTargets = json['selectedTargets'] != null
+        ? (json['selectedTargets'] as List)
+            .map((i) => SelectedTarget.fromJson(i))
+            .toList()
+        : []
     ..sdgs = json['sdgs'] != null
         ? (json['sdgs'] as List).map((i) => Sdg.fromJson(i)).toList()
         : []
@@ -58,7 +69,11 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
         ? (json['projectOwners'] as List)
             .map((i) => TruncatedProfile.fromJson(i))
             .toList()
-        : [];
+        : []
+    ..competitionVotes = json['competitionVotes'] as num
+    ..competition = json['competition'] != null
+        ? Competition.fromJson(json['competition'])
+        : null;
 }
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
@@ -86,5 +101,7 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'kpis': instance.kpis,
       'teamMembers': instance.teamMembers,
       'channels': instance.channels,
-      'projectOwners': instance.projectOwners
+      'projectOwners': instance.projectOwners,
+      'competitionVotes': instance.competitionVotes,
+      'competition': instance.competition,
     };

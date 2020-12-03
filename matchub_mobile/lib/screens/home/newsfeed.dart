@@ -11,9 +11,9 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../sizeConfig.dart';
-import 'components/create_post.dart';
-import 'components/post_card.dart';
-import 'components/suggested_profile.dart';
+import 'components/createPost.dart';
+import 'components/postCard.dart';
+import 'components/suggestedProfile.dart';
 
 class HomeList extends StatefulWidget {
   @override

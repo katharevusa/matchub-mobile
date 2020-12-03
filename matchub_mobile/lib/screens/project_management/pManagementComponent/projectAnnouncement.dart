@@ -4,7 +4,7 @@ import 'package:matchub_mobile/screens/project_management/notification/viewAllNo
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectChannels.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectFollowers.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectMatchedResources.dart';
-import 'package:matchub_mobile/screens/project_management/project_management.dart';
+import 'package:matchub_mobile/screens/project_management/projectManagement.dart';
 import 'package:matchub_mobile/unused/teamMember.dart';
 import 'package:matchub_mobile/sizeConfig.dart';
 

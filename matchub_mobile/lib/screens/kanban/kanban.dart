@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:intl/intl.dart';
-import 'package:matchub_mobile/helpers/profile_helper.dart';
+import 'package:matchub_mobile/helpers/profileHelper.dart';
 
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/kanban/task/selectTags.dart';
 import 'package:matchub_mobile/screens/kanban/task/selectTaskMembers.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
-import 'package:matchub_mobile/screens/project_management/channels/channel_messages.dart';
-import 'package:matchub_mobile/screens/project_management/channels/channel_settings.dart';
-import 'package:matchub_mobile/screens/search/search_page.dart';
+import 'package:matchub_mobile/screens/project_management/channels/channelMessages.dart';
+import 'package:matchub_mobile/screens/project_management/channels/channelSettings.dart';
+import 'package:matchub_mobile/screens/search/searchPage.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/kanban_controller.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/services/kanbanController.dart';
 import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -131,7 +130,7 @@ class _KanbanViewState extends State<KanbanView> {
                                   visualDensity: VisualDensity.compact,
                                   color: filterOptions['filteredAssignees']
                                           .isNotEmpty
-                                      ? Color(0xFF52459D)
+                                      ? Colors.purple.shade200
                                       : Colors.blueGrey[100],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -241,7 +240,7 @@ class _KanbanViewState extends State<KanbanView> {
                                   visualDensity: VisualDensity.compact,
                                   color:
                                       filterOptions['filteredLabels'].isNotEmpty
-                                          ? Color(0xFF52459D)
+                                          ? Colors.purple.shade200
                                           : Colors.blueGrey[100],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -308,7 +307,7 @@ class _KanbanViewState extends State<KanbanView> {
                                 child: RaisedButton(
                                   visualDensity: VisualDensity.compact,
                                   color: !filterOptions['none']
-                                      ? Color(0xFF52459D)
+                                      ? Colors.purple.shade100
                                       : Colors.blueGrey[100],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -398,7 +397,8 @@ class _KanbanViewState extends State<KanbanView> {
       onStartDragItem: (int listIndex, int itemIndex, BoardItemState state) {
         int loggedInUserId =
             Provider.of<Auth>(context, listen: false).myProfile.accountId;
-        bool isChannelAdmin = Provider.of<KanbanController>(context, listen:false)
+        bool isChannelAdmin = Provider.of<KanbanController>(context,
+                    listen: false)
                 .channelAdmins
                 .indexWhere((element) => loggedInUserId == element.accountId) >=
             0;
@@ -410,7 +410,8 @@ class _KanbanViewState extends State<KanbanView> {
         //must be this task leader or channel admin
         int loggedInUserId =
             Provider.of<Auth>(context, listen: false).myProfile.accountId;
-        bool isChannelAdmin = Provider.of<KanbanController>(context, listen:false)
+        bool isChannelAdmin = Provider.of<KanbanController>(context,
+                    listen: false)
                 .channelAdmins
                 .indexWhere((element) => loggedInUserId == element.accountId) >=
             0;

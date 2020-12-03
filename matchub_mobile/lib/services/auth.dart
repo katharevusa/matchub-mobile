@@ -8,12 +8,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/services/notificationService.dart';
 import 'package:matchub_mobile/unused/individual.dart';
 import 'package:matchub_mobile/models/post.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'notification_service.dart';
 
 class Auth with ChangeNotifier {
   String _userRole;

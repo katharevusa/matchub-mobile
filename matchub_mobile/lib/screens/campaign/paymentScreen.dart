@@ -8,7 +8,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/campaignOption.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/campaign/payments/creditcardform.dart';
-import 'package:matchub_mobile/screens/campaign/view_campaign.dart';
+import 'package:matchub_mobile/screens/campaign/viewCampaign.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
@@ -81,8 +81,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
     print(_paymentMethod.id);
     StripePayment.confirmPaymentIntent(
       PaymentIntent(
-          clientSecret: _currentSecret,
-          paymentMethodId: _paymentMethod.id,),
+        clientSecret: _currentSecret,
+        paymentMethodId: _paymentMethod.id,
+      ),
     ).then((paymentIntent) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text('Thank you for your kind donation!'),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
-import 'package:matchub_mobile/widgets/project_vertical_card.dart';
+import 'package:matchub_mobile/services/manageProject.dart';
+import 'package:matchub_mobile/widgets/projectVerticalCard.dart';
 import 'package:provider/provider.dart';
 
 import '../../style.dart';

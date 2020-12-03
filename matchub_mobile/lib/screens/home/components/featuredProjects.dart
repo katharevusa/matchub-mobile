@@ -4,7 +4,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
-import 'package:matchub_mobile/widgets/rounded_bordered_container.dart';
+import 'package:matchub_mobile/unused/rounded_bordered_container.dart';
 
 import '../../../sizeConfig.dart';
 
@@ -58,10 +58,12 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
               ConnectionState.done)
           ? Column(
               children: [
-                RoundedContainer(
+                Container(
                   height: 270,
-                  borderRadius: BorderRadius.circular(0),
-                  color: Colors.transparent,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(0),
+                    color: Colors.transparent,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -142,10 +144,12 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                     ],
                   ),
                 ),
-                RoundedContainer(
+                Container(
                   height: 270,
-                  borderRadius: BorderRadius.circular(0),
-                  color: Colors.transparent,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(0),
+                    color: Colors.transparent,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[

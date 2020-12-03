@@ -5,11 +5,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
-import 'package:matchub_mobile/helpers/profile_helper.dart';
+import 'package:matchub_mobile/helpers/profileHelper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
-import 'package:matchub_mobile/screens/profile/profile_screen.dart';
-import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
+import 'package:matchub_mobile/screens/profile/profileScreen.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/projectCreationScreen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pActions.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pAnnouncement.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/pCarousel.dart';
@@ -19,12 +19,12 @@ import 'package:matchub_mobile/screens/project/projectDetail/pProgressBar.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/resourceDonate.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
+import 'package:matchub_mobile/services/manageProject.dart';
 import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
-import 'package:open_file/open_file.dart';
+// import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -290,10 +290,9 @@ class PDetailHeader extends StatelessWidget {
                 color: kAccentColor,
                 textColor: Colors.white,
                 elevation: 0,
-                active: false,borderRadius: BorderRadius.circular(5),
+                active: false, borderRadius: BorderRadius.circular(5),
                 pressEnabled: true,
-                onPressed: (_) {
-                },
+                onPressed: (_) {},
                 textStyle:
                     TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
               );

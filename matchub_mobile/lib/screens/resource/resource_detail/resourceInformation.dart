@@ -3,9 +3,9 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/profile/profileScreen.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manage_resource.dart';
+import 'package:matchub_mobile/services/manageResource.dart';
 import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
@@ -238,6 +238,19 @@ class _ResourceInformationState extends State<ResourceInformation> {
                                         fontWeight: FontWeight.w400,
                                         color: Colors.grey))
                                 : Text("Not listed",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey)),
+                            widget.resource.resourceType == "FREE"
+                                ? Text("This is a free resource",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey))
+                                : Text(
+                                    "Price: \$" +
+                                        widget.resource.price.toString(),
                                     style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w400,
