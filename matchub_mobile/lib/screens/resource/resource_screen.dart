@@ -51,43 +51,8 @@ class _ResourceScreenState extends State<ResourceScreen>
                     fontWeight: FontWeight.w700)),
             backgroundColor: kScaffoldColor,
             elevation: 0,
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(40),
-              child: Container(
-                padding: EdgeInsets.only(left: 20),
-                alignment: Alignment.centerLeft,
-                child: TabBar(
-                    labelColor: Colors.grey[600],
-                    unselectedLabelColor: Colors.grey[400],
-                    indicator: UnderlineTabIndicator(
-                        borderSide: BorderSide(
-                          width: 4,
-                          color: kSecondaryColor,
-                        ),
-                        insets: EdgeInsets.only(left: 8, right: 8, bottom: 4)),
-                    isScrollable: true,
-                    tabs: [
-                      Tab(
-                        text: ("My Resources"),
-                      ),
-                      Tab(
-                        text: ("Saved Resources"),
-                      ),
-                    ]),
-              ),
-            ),
           ),
-          body: TabBarView(children: [
-            Container(
-              child: OngoingResource(),
-            ),
-            // Container(
-            //   child: ExpiredResource(listOfResources),
-            // ),
-            Container(
-              child: OngoingResource(),
-            ),
-          ]),
+          body: OngoingResource(),
         ),
       ),
       //   )

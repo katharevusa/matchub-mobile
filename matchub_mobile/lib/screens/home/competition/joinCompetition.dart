@@ -21,11 +21,18 @@ class _JoinCompetitionState extends State<JoinCompetition> {
   String foos = 'Select project';
   Profile myProfile;
   Project selectedProject;
+  List<Project> projectsCreated = [];
 //get a list of projects by the user
 
   @override
   Widget build(BuildContext context) {
     myProfile = Provider.of<Auth>(context).myProfile;
+    projectsCreated = [];
+    for (Project p in myProfile.projectsOwned) {
+      if (p.projCreatorId == myProfile.accountId) {
+        projectsCreated.add(p);
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text("Join Competition Form"),
@@ -56,13 +63,14 @@ class _JoinCompetitionState extends State<JoinCompetition> {
                   backgroundColor:
                       Theme.of(context).accentColor.withOpacity(0.025),
                   children: <Widget>[
-                    for (Project p in myProfile.projectsOwned) ...{
+                    for (Project p in projectsCreated) ...{
                       new ListTile(
                         title: Text(p.projectTitle),
                         onTap: () {
                           setState(() {
                             this.foos = p.projectTitle;
                             selectedProject = p;
+                            print(p.projectTitle);
                             expansionTile.currentState.collapse();
                           });
                         },
@@ -90,7 +98,7 @@ class _JoinCompetitionState extends State<JoinCompetition> {
 
   submit() async {
     final url =
-        "authenticated/joinCompetition?competitionId=${widget.competition.competitionId}&projectId=${selectedProject.projectId}";
+        "authenticated/joinCompetition?competitionId=${widget.competition.competitionId}&projectId=${selectedProject.projectId}&accountId=${myProfile.accountId}";
     var accessToken = Provider.of<Auth>(context).accessToken;
     try {
       final response = await ApiBaseHelper.instance.postProtected(

@@ -7,6 +7,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/campaign/payments/creditcardform.dart';
 import 'package:matchub_mobile/services/auth.dart';
+import 'package:matchub_mobile/services/manage_resource.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/appExpansionTile.dart';
@@ -78,12 +79,9 @@ class _ResourcePaymentState extends State<ResourcePayment> {
   }
 
   confirmPayment() async {
-    // print(widget.resource.price * 100);
-    // print(payTo.stripeAccountUid);
-    // print(payer.stripeAccountUid);
-    // print(widget.resource.resourceId);
-    // print(selectedProjectId);
-    // print(payer.email);
+    Navigator.pop(context);
+    getResources();
+    await Provider.of<Auth>(context, listen: false).retrieveUser();
     setState(() => _isPaying = true);
     print(_currentSecret);
     print(_paymentMethod.id);
@@ -104,6 +102,11 @@ class _ResourcePaymentState extends State<ResourcePayment> {
         _isPaying = false;
       });
     });
+  }
+
+  getResources() async {
+    await Provider.of<ManageResource>(this.context, listen: false)
+        .getResourceById(widget.resource.resourceId);
   }
 
   @override
@@ -243,18 +246,18 @@ class _ResourcePaymentState extends State<ResourcePayment> {
                     ),
                     Divider(),
                     FlatButton(
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        color: kKanbanColor,
-                        minWidth: 100 * SizeConfig.widthMultiplier,
-                        child: Text("Pay",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 22)),
-                        onPressed:
-                            _paymentMethod == null || _currentSecret == null
-                                ? null
-                                : confirmPayment),
+                      padding: EdgeInsets.all(10),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      color: kKanbanColor,
+                      minWidth: 100 * SizeConfig.widthMultiplier,
+                      child: Text("Pay",
+                          style: TextStyle(color: Colors.white, fontSize: 22)),
+                      onPressed:
+                          _paymentMethod == null || _currentSecret == null
+                              ? null
+                              : confirmPayment,
+                    ),
                   ]),
             ),
           ),

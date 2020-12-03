@@ -30,7 +30,10 @@ class _HomeNavigatorState extends State<HomeNavigator> {
               return HomeScreen();
             case SearchResults.routeName:
               return SearchResults();
-
+            case ProjectDetailScreen.routeName:
+              return ProjectDetailScreen(
+                project: settings.arguments as Project,
+              );
             case CompetitionDetail.routeName:
               return CompetitionDetail(
                 competition: settings.arguments as Competition,
