@@ -203,15 +203,15 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
           accessToken: accessToken, body: json.encode(resource));
       print("Success");
       int newResourceId = response['resourceId'];
-      print("Success");
       if (photos.isNotEmpty) {
         await uploadMultiFile(
           photos,
-          "${ApiBaseHelper.instance.baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${newResourceId}",
+          "${ApiBaseHelper.instance.baseUrl}authenticated/updateResource/uploadPhotos?resourceId=${resourceId}",
           Provider.of<Auth>(context, listen: false).accessToken,
           "photos",
         );
       }
+      loadResources();
       Provider.of<Auth>(context).retrieveUser();
       Navigator.of(context).pop(true);
     } catch (error) {
@@ -259,7 +259,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                   activeSize: 20.0,
                 ),
               ),
-              itemCount: (resource["resourceId"] == null) ? 7 : 6,
+              itemCount: (resource["resourceId"] == null) ? 7 : 7,
               itemBuilder: (context, index) {
                 if (index == 0 && resource["resourceId"] == null) {
                   return IntroItem(
@@ -310,9 +310,9 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     bg: colors[index],
                     widget: ResourceType(resource),
                   );
-                } else if (index == 3 && resource["resourceId"] == null) {
+                } else if (index == 3 && resource["resourceId"] != null) {
                   return IntroItem(
-                    title: titles[index],
+                    title: titles_edit[index],
                     subtitle: subtitles[index],
                     bg: colors[index],
                     widget: ResourceType(resource),
@@ -352,28 +352,35 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     bg: colors[index],
                     widget: Document(resource, true, false, photos),
                   );
-                  // } else if (index == 5 && resource["resourceId"] != null) {
-                  //   return IntroItem(
-                  //     title: titles_edit[index],
-                  //     subtitle: subtitles[index],
-                  //     bg: colors[index],
-                  //     widget: Document(resource, true, false, photos),
-                  //   );
-                  // } else if (index == 6 && resource["resourceId"] == null) {
-                  //   return IntroItem(
-                  //     title: titles[index],
-                  //     subtitle: subtitles[index],
-                  //     bg: colors[index],
-                  //     widget: Document(resource),
-                  //   );
-                  // } else if (index == 6 && resource["resourceId"] != null) {
-                  //   return IntroItem(
-                  //     title: titles_edit[index],
-                  //     subtitle: subtitles[index],
-                  //     bg: colors[index],
-                  //     widget: Document(resource),
-                  //   );
+                } else if (index == 6 && resource["resourceId"] != null) {
+                  return IntroItem(
+                    title: titles_edit[index],
+                    subtitle: subtitles[index],
+                    bg: colors[index],
+                    widget: Document(resource, true, false, photos),
+                  );
                 }
+                // } else if (index == 5 && resource["resourceId"] != null) {
+                //   return IntroItem(
+                //     title: titles_edit[index],
+                //     subtitle: subtitles[index],
+                //     bg: colors[index],
+                //     widget: Document(resource, true, false, photos),
+                //   );
+                // } else if (index == 6 && resource["resourceId"] == null) {
+                //   return IntroItem(
+                //     title: titles[index],
+                //     subtitle: subtitles[index],
+                //     bg: colors[index],
+                //     widget: Document(resource),
+                //   );
+                // } else if (index == 6 && resource["resourceId"] != null) {
+                //   return IntroItem(
+                //     title: titles_edit[index],
+                //     subtitle: subtitles[index],
+                //     bg: colors[index],
+                //     widget: Document(resource),
+                //   );
               }),
           // Align(
           //   alignment: Alignment.bottomLeft,
@@ -389,7 +396,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
             child: IconButton(
               icon: Icon(((_currentIndex == 6 &&
                           resource["resourceId"] == null) ||
-                      (_currentIndex == 5 && resource["resourceId"] != null))
+                      (_currentIndex == 6 && resource["resourceId"] != null))
                   ? Icons.check
                   : Icons.arrow_forward),
               onPressed: () {
@@ -401,7 +408,7 @@ class _ResourceCreationScreenState extends State<ResourceCreationScreen> {
                     createNewResource(context);
                   }
                 } else {
-                  if (_currentIndex != 5) {
+                  if (_currentIndex != 6) {
                     _controller.next();
                   } else {
                     updateResource(context);
@@ -439,18 +446,17 @@ class _ResourceTypeState extends State<ResourceType> {
     return Column(
       children: <Widget>[
         ListTile(
-          title: const Text('Free'),
-          leading: Radio(
-            value: "FREE",
-            groupValue: _character,
-            onChanged: (value) {
-              setState(() {
-                _character = value;
-                widget.resource['resourceType'] = value;
-              });
-            },
-          ),
-        ),
+            title: const Text('Free'),
+            leading: Radio(
+              value: "FREE",
+              groupValue: _character,
+              onChanged: (value) {
+                setState(() {
+                  _character = value;
+                  widget.resource['resourceType'] = value;
+                });
+              },
+            )),
         ListTile(
           title: const Text('Paid'),
           leading: Radio(
@@ -814,7 +820,7 @@ class _StartState extends State<Start> {
             height: 300,
             child: CupertinoDatePicker(
               mode: CupertinoDatePickerMode.dateAndTime,
-              minimumDate: DateTime.now().subtract(Duration(minutes: 30)),
+              // minimumDate: DateTime.now().subtract(Duration(minutes: 30)),
               initialDateTime: widget.resource['startTime'],
               onDateTimeChanged: (newDateTime) {
                 setState(() {

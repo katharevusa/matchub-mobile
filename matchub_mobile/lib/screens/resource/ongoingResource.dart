@@ -2,10 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/profile.dart';
 
 import 'package:matchub_mobile/models/resources.dart';
+import 'package:matchub_mobile/screens/campaign/campaign_creation.dart';
+import 'package:matchub_mobile/screens/home/components/create_post.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
 
 import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceDetail_screen.dart';
@@ -47,6 +52,7 @@ class _OngoingResourceState extends State<OngoingResource> {
     filteredResources = listOfResources;
   }
 
+  final newProject = new Project();
   List _resourceStatus = [
     "All",
     "Available",
@@ -61,6 +67,7 @@ class _OngoingResourceState extends State<OngoingResource> {
         arguments: individualResource);
   }
 
+  bool dialVisible = true;
   @override
   Widget build(BuildContext context) {
     //new empty resource
@@ -231,6 +238,7 @@ class _OngoingResourceState extends State<OngoingResource> {
                 ],
               ),
             ),
+            floatingActionButton: buildSpeedDial(),
             // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             // floatingActionButton: FlatButton.icon(
             //     shape: RoundedRectangleBorder(
@@ -257,5 +265,76 @@ class _OngoingResourceState extends State<OngoingResource> {
             //       "Create resource",
             //     ),),
           );
+  }
+
+  void setDialVisible(bool value) {
+    setState(() {
+      dialVisible = value;
+    });
+  }
+
+  SpeedDial buildSpeedDial() {
+    return SpeedDial(
+      backgroundColor: Colors.black87,
+      animatedIcon: AnimatedIcons.menu_close,
+      animatedIconTheme: IconThemeData(size: 22.0, color: Colors.white),
+      // child: Icon(Icons.add),
+      onOpen: () => print('OPENING DIAL'),
+      onClose: () => print('DIAL CLOSED'),
+      visible: dialVisible,
+      curve: Curves.bounceIn,
+      children: [
+        SpeedDialChild(
+          child: Icon(FlutterIcons.rocket_faw5s, color: Colors.white, size: 16),
+          backgroundColor: kKanbanColor,
+          onTap: () => Navigator.of(context, rootNavigator: true).push(
+            MaterialPageRoute(
+                builder: (context) =>
+                    ProjectCreationScreen(newProject: newProject)),
+          ),
+          label: 'Create a project',
+          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelBackgroundColor: Colors.grey[300],
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.campaign_rounded, color: Colors.white),
+          backgroundColor: kKanbanColor,
+          onTap: () => Navigator.of(context, rootNavigator: true).push(
+            MaterialPageRoute(builder: (context) => CampaignCreationScreen()),
+          ),
+          label: 'Launch a fundraiser',
+          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelBackgroundColor: Colors.grey[300],
+        ),
+        SpeedDialChild(
+          child:
+              Icon(FlutterIcons.briefcase_fea, size: 20, color: Colors.white),
+          backgroundColor: kKanbanColor,
+          onTap: () =>
+              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                  builder: (
+            context,
+          ) =>
+                      ResourceCreationScreen(newResource: Resources()))),
+          label: 'List a resource',
+          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelBackgroundColor: Colors.grey[300],
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.edit, color: Colors.white),
+          backgroundColor: kKanbanColor,
+          onTap: () => Navigator.of(context, rootNavigator: true).push(
+            MaterialPageRoute(
+                builder: (
+              context,
+            ) =>
+                    CreatePostScreen()),
+          ),
+          label: 'Write a Post',
+          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelBackgroundColor: Colors.grey[300],
+        ),
+      ],
+    );
   }
 }

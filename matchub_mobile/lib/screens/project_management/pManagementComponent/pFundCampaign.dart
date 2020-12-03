@@ -6,19 +6,89 @@ import 'package:matchub_mobile/screens/campaign/view_all_campaigns.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manage_project.dart';
 import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/campaignCard.dart';
 import 'package:provider/provider.dart';
 
 class PFundCampaignCard extends StatelessWidget {
+  Project project;
+  num totalFund = 0;
+  num totalTarget = 0;
   @override
   Widget build(BuildContext context) {
+    project = Provider.of<ManageProject>(context).managedProject;
+    for (Campaign c in project.fundsCampaign) {
+      totalFund += c.currentAmountRaised;
+      totalTarget += c.campaignTarget;
+    }
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => PFundCampaignList()));
       },
-      child:
-          Container(height: 200, child: Center(child: Text("fund campaigns"))),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          color: AppTheme.project6.withOpacity(0.4),
+          // shadowColor: AppTheme.project4,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Column(
+                children: [
+                  Container(
+                      // padding: EdgeInsets.only(top: 15, bottom: 5),
+                      child: Text("Fund Campaign",
+                          style: TextStyle(color: Colors.white, fontSize: 15))),
+                  Container(
+                      // padding: EdgeInsets.only(top: 15, bottom: 5),
+                      child: Text("Management",
+                          style: TextStyle(color: Colors.white, fontSize: 15))),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.only(top: 15, bottom: 5),
+                      child: Text("Campaigns",
+                          style: TextStyle(
+                            color: Colors.black54,
+                          ))),
+                  Container(
+                      padding: EdgeInsets.only(bottom: 15),
+                      child: Text(project.fundsCampaign.length.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: 16))),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.only(top: 15, bottom: 5),
+                      child: Text("Received",
+                          style: TextStyle(color: Colors.black54))),
+                  Container(
+                      padding: EdgeInsets.only(bottom: 15),
+                      child: Text('\$' + totalFund.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: 16))),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.only(top: 10, bottom: 5),
+                      child: Text("Target",
+                          style: TextStyle(color: Colors.black54))),
+                  Container(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Text('\$' + totalTarget.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: 16))),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      // Container(height: 200, child: Center(child: Text("fund campaigns"))),
     );
   }
 }
