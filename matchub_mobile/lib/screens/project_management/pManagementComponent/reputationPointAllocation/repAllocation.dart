@@ -19,8 +19,9 @@ class RepAllocation extends StatelessWidget {
             builder: (_) => Allocation(project)));
       },
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
         child: Text(
-            "Congratualation on project completion! Start reviewing your team members~"),
+            "~Congratulations on project completion! Start reviewing your team members here~"),
       ),
     );
   }

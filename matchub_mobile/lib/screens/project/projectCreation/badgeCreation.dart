@@ -238,6 +238,7 @@ class _BadgeSelectionScreenState extends State<BadgeSelectionScreen> {
                 badgeContent: Icon(Icons.check, color: Colors.white),
                 position: BadgePosition.topEnd(top: 12, end: 12),
                 shape: BadgeShape.square,
+                borderRadius: BorderRadius.circular(50),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(5.0),
                     child: Container(

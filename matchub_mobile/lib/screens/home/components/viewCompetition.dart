@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/screens/home/competition/viewAllCompetition.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 
 class ViewCompetition extends StatelessWidget {
@@ -8,7 +8,7 @@ class ViewCompetition extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
             settings: RouteSettings(name: "/view-all-competition"),
             builder: (_) => ViewAllCompetition()));
       },

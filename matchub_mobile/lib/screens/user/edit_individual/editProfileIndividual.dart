@@ -38,7 +38,6 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
       "profileDescription": widget.profile.profileDescription ?? "",
       "skillSet": widget.profile.skillSet ?? [],
       "sdgIds": widget.profile.sdgs.map((e) => e.sdgId).toList() ?? [],
-      // "hashmapSDG": widget.profile.selectedTargets.map((e) => e.sdg.)
     };
     Map<num, dynamic> newMap = {};
     widget.profile.selectedTargets

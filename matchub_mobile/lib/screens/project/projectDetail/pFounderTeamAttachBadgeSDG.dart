@@ -29,6 +29,7 @@ class PFounderTeamAttachBadgeSDG extends StatelessWidget {
   }
 
   List<Widget> buildAttachments() {
+    documentKeys = project.documents.keys.toList();
     return (project.documents.isNotEmpty)
         ? [
             Padding(
@@ -43,7 +44,7 @@ class PFounderTeamAttachBadgeSDG extends StatelessWidget {
               ),
             ),
             Container(
-              color: AppTheme.appBackgroundColor,
+              // color: AppTheme.appBackgroundColor,
               height: 28 * SizeConfig.widthMultiplier,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -183,12 +184,13 @@ class PFounderTeamAttachBadgeSDG extends StatelessWidget {
           ),
         ),
         Container(
-            margin: EdgeInsets.only(left: 8.0 * SizeConfig.widthMultiplier),
+            margin: EdgeInsets.only(
+              left: 8.0 * SizeConfig.widthMultiplier,
+              top: 1.5 * SizeConfig.heightMultiplier,
+            ),
             height: 60,
             width: 60,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[700], width: 0.5),
-                shape: BoxShape.circle),
+            decoration: BoxDecoration(shape: BoxShape.circle),
             child: ClipOval(
                 child: Tooltip(
                     message: project.projectBadge.badgeTitle,

@@ -150,7 +150,7 @@ class _InfoEditPageState extends State<InfoEditPage> {
                           Container(
                             constraints: BoxConstraints(
                                 minHeight: 7.5 * SizeConfig.heightMultiplier),
-                            padding: EdgeInsets.symmetric(
+                            padding: EdgeInsets.symmetric( 
                                 horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),

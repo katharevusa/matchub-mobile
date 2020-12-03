@@ -7,7 +7,7 @@ part 'project.g.dart';
 
 @JsonSerializable()
 class Project {
-  Project();
+  Project({selectedTargets: const []});
 
   num projectId;
   String projectTitle;

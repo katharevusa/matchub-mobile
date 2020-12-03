@@ -20,9 +20,8 @@ class Ranking extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                settings: RouteSettings(name: "/notifications"),
-                builder: (_) => Award()));
+            Navigator.of(context, rootNavigator: true)
+                .push(MaterialPageRoute(builder: (_) => Award()));
           },
           child: Container(
             margin: EdgeInsets.symmetric(

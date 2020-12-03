@@ -249,8 +249,9 @@ class _ViewAllCompetitionState extends State<ViewAllCompetition> {
                 onTap: () {
                   Navigator.of(
                     context,
-                  ).pushNamed(CompetitionDetail.routeName,
-                      arguments: activeCompetitions[index]);
+                  ).push(MaterialPageRoute(
+                      builder: (_) => CompetitionDetail(
+                          competition: activeCompetitions[index])));
                 },
                 child: CompetitionCard(activeCompetitions[index]));
           },

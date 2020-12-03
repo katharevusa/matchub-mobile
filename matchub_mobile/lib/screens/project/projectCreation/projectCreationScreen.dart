@@ -82,6 +82,18 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
           ? widget.newProject.projectBadge.badgeId
           : null,
     };
+    Map<num, dynamic> newMap = {};
+    if (widget.newProject.selectedTargets != null) {
+      widget.newProject.selectedTargets.forEach(
+        (e) => newMap.putIfAbsent(
+          e.sdg.sdgId,
+          () {
+            return e.sdgTargets.map((e) => e.sdgTargetId).toList();
+          },
+        ),
+      );
+    }
+    project["hashmapSDG"] = newMap;
   }
 
   SwiperController _controller = SwiperController();
@@ -160,6 +172,16 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
 
     File uploadedBadge = project['uploadedBadge'];
     project['uploadedBadge'] = null;
+    Map<String, dynamic> newMap = {};
+    project['hashmapSDG'].forEach((key, value) {
+      //converting all key value pairs to string
+      newMap.putIfAbsent(key.toString(), () {
+        value.forEach((e) => e.toString());
+        return value;
+      });
+    });
+    project['hashmapSDG'] = newMap;
+
 
     try {
       final response = await ApiBaseHelper.instance.postProtected(url,
@@ -269,6 +291,15 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
 
     File uploadedBadge = project['uploadedBadge'];
     project['uploadedBadge'] = null;
+    Map<String, dynamic> newMap = {};
+    project['hashmapSDG'].forEach((key, value) {
+      //converting all key value pairs to string
+      newMap.putIfAbsent(key.toString(), () {
+        value.forEach((e) => e.toString());
+        return value;
+      });
+    });
+    project['hashmapSDG'] = newMap;
 
     try {
       var accessToken = Provider.of<Auth>(context).accessToken;

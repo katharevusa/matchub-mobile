@@ -19,8 +19,6 @@ class _AwardState extends State<Award> with SingleTickerProviderStateMixin {
       length: 3,
       child: SafeArea(
         child: Scaffold(
-          extendBodyBehindAppBar: true,
-          // backgroundColor: Colors.transparent,
           key: _key,
           appBar: AppBar(
             leadingWidth: 35,

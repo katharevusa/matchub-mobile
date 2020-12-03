@@ -344,7 +344,7 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
                       myProfile: myProfile,
                       project: widget.project,
                       projectEndingAction: projectEndingAction),
-                  widget.project.projStatus != "ACTIVE"
+                  widget.project.projStatus == "COMPLETED" 
                       ? RepAllocation(widget.project)
                       : Container(),
                   PManagementSwiperCard(widget.project),

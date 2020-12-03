@@ -30,6 +30,7 @@ class ResourceDetailScreen extends StatefulWidget {
 }
 
 class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
+  bool isLoading = true; 
   @override
   void initState() {
     loadResource();
@@ -39,6 +40,9 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
   loadResource() async {
     await Provider.of<ManageResource>(context, listen: false)
         .getResourceById(widget.resource.resourceId);
+        setState(() {
+          isLoading = false;
+        });
   }
 
   @override
@@ -57,7 +61,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        actions: [
+        actions: isLoading ? [] : [
           widget.resource.resourceOwnerId ==
                   Provider.of<Auth>(context, listen: false).myProfile.accountId
               ? IconButton(
@@ -77,7 +81,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
         backgroundColor: AppTheme.appBackgroundColor,
         elevation: 0,
       ),
-      body: Stack(children: [
+      body: isLoading ? Container(): Stack(children: [
         Container(
           child: SingleChildScrollView(
             child: Column(

@@ -29,10 +29,11 @@ class _CompetitionDetailState extends State<CompetitionDetail> {
   Profile myProfile;
   List<String> documentKeys;
   List<Project> result = [];
+  Future initialiseCompetition;
   ApiBaseHelper _apiHelper = ApiBaseHelper.instance;
   @override
   void initState() {
-    getResults();
+    initialiseCompetition = getResults();
     super.initState();
   }
 
@@ -48,7 +49,7 @@ class _CompetitionDetailState extends State<CompetitionDetail> {
   Widget build(BuildContext context) {
     myProfile = Provider.of<Auth>(context).myProfile;
     return FutureBuilder(
-      future: getResults(),
+      future: initialiseCompetition,
       builder: (context, snapshot) => (snapshot.connectionState ==
               ConnectionState.done)
           ? Scaffold(

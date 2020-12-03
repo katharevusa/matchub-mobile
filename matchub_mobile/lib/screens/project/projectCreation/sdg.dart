@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchub_mobile/screens/user/selectTargets.dart';
 import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/sdgPicker.dart';
@@ -14,6 +15,8 @@ class SDG extends StatefulWidget {
 class _SDGState extends State<SDG> {
   @override
   Widget build(BuildContext context) {
+    List targets = [];
+    widget.project['hashmapSDG'].forEach((k, v) => targets.addAll(v));
     print(widget.project['sdgs']);
     return SingleChildScrollView(
       physics: NeverScrollableScrollPhysics(),
@@ -32,7 +35,7 @@ class _SDGState extends State<SDG> {
                       widget.project['sdgs'].forEach((e) => list.add(e + 1));
                       print(list);
                       widget.project['sdgs'] = list;
-                      // (widget.profile['sdgIds'] as List)..addAll(value)..toSet();
+                      // (widget.project['sdgIds'] as List)..addAll(value)..toSet();
 
                       // widget.project['sdgs'] = (value);
                     }
@@ -75,7 +78,41 @@ class _SDGState extends State<SDG> {
                               child: Image.asset("assets/icons/goal$i.png"),
                             );
                           }),
-                    ]
+                    ],
+                    SizedBox(height: 20),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                                builder: (_) => SdgTargetSelectScreen(
+                                    widget.project['sdgs'],
+                                    widget.project['hashmapSDG'])))
+                            .then((value) {
+                          if (value != null) {
+                            setState(() {
+                              // widget.project['sdgIds'] = widget.project['hashmapSDG'].keys.toList();
+                              widget.project['hashmapSDG'] = value;
+                              (widget.project['sdgs'] as List)
+                                  .forEach((element) {
+                                widget.project['hashmapSDG']
+                                    .putIfAbsent(element, () => []);
+                              });
+                            });
+                          }
+                        });
+                      },
+                      child: Container(
+                          constraints: BoxConstraints(
+                              minHeight: 7.5 * SizeConfig.heightMultiplier),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.fromBorderSide(
+                                BorderSide(color: Colors.grey[850].withOpacity(0.1)),
+                              )),
+                          child: Center(
+                              child: Text(
+                                  "You've selected ${targets.length} targets"))),
+                    ),
                   ],
                 )),
               ),
