@@ -81,7 +81,7 @@ class CampaignCreationScreenState extends State<CampaignCreationScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               SizedBox(height: 10),
               Text(
-                  "Pick a project that you want to raise funds for. You cannot change this later.",
+                  "Pick a project that you want to raise funds for and enter a target amount. You may not change this later.",
                   style: TextStyle(
                       fontWeight: FontWeight.w400, fontSize: 14, height: 1.4)),
               SizedBox(height: 20),

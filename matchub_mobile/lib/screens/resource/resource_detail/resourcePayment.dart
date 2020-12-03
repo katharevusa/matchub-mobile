@@ -8,11 +8,12 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/campaign/payments/creditcardform.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/manageResource.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/appExpansionTile.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_payment/stripe_payment.dart';
+
+import '../../../sizeConfig.dart';
 
 class ResourcePayment extends StatefulWidget {
   static const routeName = "/payment-form";
@@ -79,7 +80,6 @@ class _ResourcePaymentState extends State<ResourcePayment> {
   }
 
   confirmPayment() async {
-    Navigator.pop(context);
     getResources();
     await Provider.of<Auth>(context, listen: false).retrieveUser();
     setState(() => _isPaying = true);
@@ -95,12 +95,12 @@ class _ResourcePaymentState extends State<ResourcePayment> {
         content: Text('Payment successful!'),
         duration: Duration(seconds: 2),
       ));
-      Future.delayed(
-          Duration(milliseconds: 2500), () => Navigator.pop(context));
       setState(() {
         _paymentIntent = paymentIntent;
         _isPaying = false;
       });
+      Future.delayed(
+          Duration(milliseconds: 2500), () => Navigator.pop(context));
     });
   }
 

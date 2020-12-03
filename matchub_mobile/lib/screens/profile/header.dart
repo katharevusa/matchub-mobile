@@ -304,8 +304,12 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                     size: 18,
                   ),
                   SizedBox(width: 2),
+                  if(widget.profile.city.isNotEmpty)  Text(
+                    "${widget.profile.city}, ",
+                    style: AppTheme.searchLight.copyWith(fontSize: 14),
+                  ),
                   Text(
-                    "${widget.profile.city}, ${widget.profile.country}",
+                    "${widget.profile.country}",
                     style: AppTheme.searchLight.copyWith(fontSize: 14),
                   )
                 ]),
@@ -339,7 +343,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
               ],
             ),
           ),
-          buildSkillset(),
+          if(widget.profile.skillSet.isNotEmpty) buildSkillset(),
           buildSDGTags(),
         ],
       ),

@@ -26,7 +26,7 @@ class _WalletScreenState extends State<WalletScreen> {
   void initState() {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     myProfile = Provider.of<Auth>(context, listen: false).myProfile;
-    if (myProfile.stripeAccountUid != null) {
+    if (myProfile.stripeAccountChargesEnabled) {
       loadDashboard = getStripeExpressDashboard();
     }
     _isLoadingPage = true;
@@ -45,7 +45,7 @@ class _WalletScreenState extends State<WalletScreen> {
         child: Container(
           child: Column(
             children: [
-              if (myProfile.stripeAccountUid == null) ...[
+              if (!myProfile.stripeAccountChargesEnabled) ...[
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
@@ -64,7 +64,7 @@ class _WalletScreenState extends State<WalletScreen> {
                         )),
                     onPressed: () => createStripeAccount())
               ],
-              if (myProfile.stripeAccountUid != null) ...[
+              if (myProfile.stripeAccountChargesEnabled) ...[
                 Expanded(
                   child: Container(
                     child: FutureBuilder(
@@ -138,7 +138,7 @@ class _WalletScreenState extends State<WalletScreen> {
     final stripeSetupUrl = await ApiBaseHelper.instance.getProtected(
         "authenticated/getStripeExpressDashboard?stripeAccountUid=${myProfile.stripeAccountUid}");
     stripeExpressDashboard = stripeSetupUrl['url'];
-    print(stripeExpressDashboard);
+    print("+++++++++++++++++"+stripeExpressDashboard);
   }
 
   refreshState() async {

@@ -140,12 +140,12 @@ class _ResourceActionsState extends State<ResourceActions> {
                                     fontSize: 15.0),
                               ),
                             } else ...{
-                              Text(
-                                "Pay",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15.0),
-                              ),
+                               Text(
+                                      "Pay",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15.0),
+                                    )
                             }
                           ],
                         ),

@@ -6,9 +6,10 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/resource/resourceDrawer.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
+
+import '../../sizeConfig.dart';
 
 class ResourceDonationHistoryScreen extends StatefulWidget {
   static const routeName = "/resource-request-screen";

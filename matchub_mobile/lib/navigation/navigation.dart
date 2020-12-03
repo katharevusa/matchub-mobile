@@ -11,6 +11,7 @@ import 'package:matchub_mobile/screens/home/components/createPost.dart';
 import 'package:matchub_mobile/screens/kanban/task/viewTask.dart';
 import 'package:matchub_mobile/screens/profile/viewProfile.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
+import 'package:matchub_mobile/screens/project_management/channels/channelScreen.dart';
 import 'package:matchub_mobile/screens/user/selectTargets.dart';
 import 'package:matchub_mobile/unused/project_screen.dart';
 import 'package:matchub_mobile/screens/home/homeScreen.dart';
@@ -236,6 +237,9 @@ class _TabsScreenState extends State<TabsScreen> {
         return MaterialPageRoute(
             builder: (context) => ResourceDonationHistoryScreen(),
             settings: settings);
+      case ChannelsScreen.routeName:
+        return MaterialPageRoute(
+            builder: (context) => ChannelsScreen(project: settings.arguments as Project));
       case SDGPicker.routeName:
         return MaterialPageRoute(
             builder: (context) => SDGPicker(), settings: settings);

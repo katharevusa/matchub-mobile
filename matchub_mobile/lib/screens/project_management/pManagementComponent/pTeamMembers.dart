@@ -86,7 +86,7 @@ class _PManagementTeamMembersState extends State<PManagementTeamMembers> {
                             buildJoinRequest(widget.project).toString(),
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 25,
+                                fontSize: 25, 
                                 fontWeight: FontWeight.w600),
                           ),
                         ],

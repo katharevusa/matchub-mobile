@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/project.dart';
-import 'package:matchub_mobile/unused/profile_card.dart';
 import 'package:matchub_mobile/screens/home/components/featuredProjects.dart';
-import 'package:matchub_mobile/screens/home/leaderboard&achievement/ranking.dart';
-import 'package:matchub_mobile/unused/profile_card.dart';
-import 'package:matchub_mobile/screens/profile/profileProjects.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/widgets/projectVerticalCard.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 

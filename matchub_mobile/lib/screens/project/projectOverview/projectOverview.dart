@@ -495,7 +495,7 @@ class ProjectDashboard extends StatelessWidget {
                     )),
                 onTap: () {
                   Navigator.of(
-                    context,
+                    context, rootNavigator: true
                   ).pushNamed(ProjectManagementOverview.routeName,
                       arguments: projects[index]);
                 },

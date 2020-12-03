@@ -9,6 +9,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
+import 'package:matchub_mobile/helpers/profileHelper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/chat/chatScreen.dart';
 import 'package:matchub_mobile/screens/home/components/sharePost.dart';
@@ -546,5 +547,4 @@ class _PostCommentState extends State<PostComment> {
           );
   }
 
-  buildAvatar(Profile commenter, {int radius}) {}
 }

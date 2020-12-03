@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen>
                   title: TabBar(
                     onTap: (_) {
                       _scrollController.animateTo(
-                          28 * SizeConfig.heightMultiplier,
+                          33 * SizeConfig.heightMultiplier,
                           duration: Duration(milliseconds: 400),
                           curve: Curves.ease);
                     },

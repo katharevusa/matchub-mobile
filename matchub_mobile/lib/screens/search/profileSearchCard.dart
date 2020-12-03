@@ -90,8 +90,13 @@ class ProfileVerticalCard extends StatelessWidget {
                       size: 12,
                     ),
                     SizedBox(width: 2),
+                    if (profile.city.isNotEmpty)
+                      Text(
+                        "${profile.city}, ",
+                        style: AppTheme.searchLight,
+                      ),
                     Text(
-                      "${profile.city}, ${profile.country}",
+                      "${profile.country}",
                       style: AppTheme.searchLight,
                     )
                   ]),

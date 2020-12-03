@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/notification/viewAllNotification.dart';
-import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectChannels.dart';
-import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectFollowers.dart';
+import 'package:matchub_mobile/screens/project_management/about/projectChannels.dart';
+import 'package:matchub_mobile/screens/project_management/about/projectFollowers.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/projectMatchedResources.dart';
 import 'package:matchub_mobile/screens/project_management/projectManagement.dart';
 import 'package:matchub_mobile/unused/teamMember.dart';
@@ -15,12 +15,12 @@ class PAnnouncementCard extends StatelessWidget {
     Key key,
     @required this.publicAnnouncements,
     @required this.internalAnnouncements,
-    @required this.widget,
+    @required this.project,
   }) : super(key: key);
 
   final List<Announcement> publicAnnouncements;
   final List<Announcement> internalAnnouncements;
-  final ProjectManagementOverview widget;
+  final Project project;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class PAnnouncementCard extends StatelessWidget {
                     Navigator.of(context).push(MaterialPageRoute(
                         settings: RouteSettings(name: "/notifications"),
                         builder: (_) =>
-                            AllNotifications(project: widget.project)));
+                            AllNotifications(project: project)));
                   },
                 ),
                 Positioned(
