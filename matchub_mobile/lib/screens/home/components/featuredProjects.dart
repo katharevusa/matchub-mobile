@@ -7,9 +7,9 @@ import 'package:matchub_mobile/screens/project/projectDetail/project_detail_over
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
-import 'package:matchub_mobile/widgets/rounded_bordered_container.dart';
+import 'package:matchub_mobile/unused/rounded_bordered_container.dart';
 
-import '../../../sizeconfig.dart';
+import '../../../sizeConfig.dart';
 
 class FeaturedProjects extends StatefulWidget {
   @override
@@ -66,10 +66,12 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
               ConnectionState.done)
           ? Column(
               children: [
-                RoundedContainer(
-                  height: 350,
-                  borderRadius: BorderRadius.circular(0),
-                  color: Colors.transparent,
+                Container(
+                  height: 270,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(0),
+                    color: Colors.transparent,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -184,10 +186,12 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                     ],
                   ),
                 ),
-                RoundedContainer(
-                  height: 300,
-                  borderRadius: BorderRadius.circular(0),
-                  color: Colors.transparent,
+                Container(
+                  height: 270,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(0),
+                    color: Colors.transparent,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
-import 'package:matchub_mobile/helpers/profile_helper.dart';
+import 'package:matchub_mobile/helpers/profileHelper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/chat/messages.dart';
-import 'package:matchub_mobile/screens/follow/follow_overview.dart';
+import 'package:matchub_mobile/screens/follow/followOverview.dart';
 import 'package:matchub_mobile/screens/profile/wall_components/manageKahsScreen.dart';
 import 'package:matchub_mobile/screens/profile/wall_components/manageOrganisationMembers.dart';
 import 'package:matchub_mobile/screens/profile/wall_components/viewOrganisationMembers.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
-import 'package:matchub_mobile/services/manage_organisationmembers.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/services/manageOrganisationmembers.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
@@ -304,8 +304,12 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                     size: 18,
                   ),
                   SizedBox(width: 2),
+                  if(widget.profile.city.isNotEmpty)  Text(
+                    "${widget.profile.city}, ",
+                    style: AppTheme.searchLight.copyWith(fontSize: 14),
+                  ),
                   Text(
-                    "${widget.profile.city}, ${widget.profile.country}",
+                    "${widget.profile.country}",
                     style: AppTheme.searchLight.copyWith(fontSize: 14),
                   )
                 ]),
@@ -339,7 +343,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
               ],
             ),
           ),
-          buildSkillset(),
+          if(widget.profile.skillSet.isNotEmpty) buildSkillset(),
           buildSDGTags(),
         ],
       ),

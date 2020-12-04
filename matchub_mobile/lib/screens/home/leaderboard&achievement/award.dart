@@ -3,7 +3,7 @@ import 'package:matchub_mobile/screens/home/leaderboard&achievement/achievement.
 import 'package:matchub_mobile/screens/home/leaderboard&achievement/individualLeaderboard.dart';
 import 'package:matchub_mobile/screens/home/leaderboard&achievement/organisationLeaderboard.dart';
 
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 
 class Award extends StatefulWidget {
@@ -19,8 +19,6 @@ class _AwardState extends State<Award> with SingleTickerProviderStateMixin {
       length: 3,
       child: SafeArea(
         child: Scaffold(
-          extendBodyBehindAppBar: true,
-          // backgroundColor: Colors.transparent,
           key: _key,
           appBar: AppBar(
             leadingWidth: 35,

@@ -3,14 +3,14 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
-import 'package:matchub_mobile/services/notification_service.dart';
-import 'package:matchub_mobile/widgets/popupmenubutton.dart' as popupmenu;
+import 'package:matchub_mobile/services/notificationService.dart';
+import 'package:matchub_mobile/widgets/popupMenuButton.dart' as popupmenu;
 import 'package:intl/intl.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:provider/provider.dart';
 
 class Messages extends StatefulWidget {

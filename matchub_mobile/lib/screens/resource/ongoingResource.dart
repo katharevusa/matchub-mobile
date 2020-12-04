@@ -1,21 +1,20 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/models/profile.dart';
 
 import 'package:matchub_mobile/models/resources.dart';
-import 'package:matchub_mobile/screens/campaign/campaign_creation.dart';
-import 'package:matchub_mobile/screens/home/components/create_post.dart';
-import 'package:matchub_mobile/screens/project/projectCreation/project_creation_screen.dart';
+import 'package:matchub_mobile/screens/campaign/campaignCreation.dart';
+import 'package:matchub_mobile/screens/home/components/createPost.dart';
 
-import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
+import 'package:matchub_mobile/screens/project/projectCreation/projectCreationScreen.dart';
+
+import 'package:matchub_mobile/screens/resource/resourceCreationScreen.dart';
+
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceDetail_screen.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manage_resource.dart';
+import 'package:matchub_mobile/services/manageResource.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';

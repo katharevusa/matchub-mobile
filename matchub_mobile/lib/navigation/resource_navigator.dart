@@ -3,7 +3,7 @@ import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceDetail_screen.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceRequest.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/resourcePayment.dart';
-import 'package:matchub_mobile/screens/resource/resource_screen.dart';
+import 'package:matchub_mobile/screens/resource/resourceScreen.dart';
 
 class ResourceNavigator extends StatefulWidget {
   @override

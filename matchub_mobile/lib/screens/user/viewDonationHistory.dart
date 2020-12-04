@@ -75,6 +75,7 @@ class _ViewDonationHistoryState extends State<ViewDonationHistory> {
                                   ),
                                   SizedBox(height: 10),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Campaign Title: ",
@@ -82,15 +83,18 @@ class _ViewDonationHistoryState extends State<ViewDonationHistory> {
                                             color: Colors.grey[850],
                                             fontSize: 12),
                                       ),
-                                      Text(
-                                        " ${userDonations[index].donationOption.fundCampaign.campaignTitle}",
-                                        style: TextStyle(
-                                            color: Colors.grey[850],
-                                            fontSize: 14),
+                                      Expanded(
+                                        child: Text(
+                                          " ${userDonations[index].donationOption.fundCampaign.campaignTitle}",
+                                          style: TextStyle(
+                                              color: Colors.grey[850],
+                                              fontSize: 14),
+                                        ),
                                       ),
                                     ],
                                   ),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Option: ",
@@ -98,11 +102,13 @@ class _ViewDonationHistoryState extends State<ViewDonationHistory> {
                                             color: Colors.grey[850],
                                             fontSize: 12),
                                       ),
-                                      Text(
-                                        "${userDonations[index].donationOption.optionDescription}",
-                                        style: TextStyle(
-                                            color: Colors.grey[850],
-                                            fontSize: 14),
+                                      Expanded(
+                                                                              child: Text(
+                                          "${userDonations[index].donationOption.optionDescription}",
+                                          style: TextStyle(
+                                              color: Colors.grey[850],
+                                              fontSize: 14),
+                                        ),
                                       ),
                                     ],
                                   )

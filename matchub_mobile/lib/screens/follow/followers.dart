@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/profile.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
-import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/profile/profileScreen.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
-import 'package:matchub_mobile/screens/profile/view_profile.dart';
+import 'package:matchub_mobile/screens/profile/viewProfile.dart';
 
 class FollowersScreen extends StatefulWidget {
   Profile user;

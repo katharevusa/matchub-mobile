@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/helpers/extensions.dart';
-import 'package:matchub_mobile/services/kanban_controller.dart';
+import 'package:matchub_mobile/services/kanbanController.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:provider/provider.dart';
 

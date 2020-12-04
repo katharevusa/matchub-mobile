@@ -6,12 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/chat/messages.dart';
-import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/profile/profileScreen.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/writeReview.dart';
 import 'package:matchub_mobile/services/auth.dart';
 import 'package:matchub_mobile/services/firebase.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/services/manageProject.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
 
@@ -134,17 +134,19 @@ class _TeamMembersManagementState extends State<TeamMembersManagement> {
             : 1,
         child: Scaffold(
             appBar: AppBar(
-              backgroundColor: kScaffoldColor,
-              elevation: 0,
               title: Text("Manage Team Members",
-                  style: TextStyle(color: Colors.black)),
-              // automaticallyImplyLeading: true,
-              iconTheme: IconThemeData(
-                color: Colors.black, //change your color here
-              ),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 2.3 * SizeConfig.textMultiplier,
+                      fontWeight: FontWeight.w600)),
+              elevation: 0,
+              centerTitle: false,
+              leadingWidth: 30,
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(40),
                 child: Container(
+                  color: kScaffoldColor,
                   padding: EdgeInsets.only(left: 20),
                   alignment: Alignment.centerLeft,
                   child: TabBar(
@@ -273,12 +275,14 @@ class _TeamMembersManagementState extends State<TeamMembersManagement> {
                                     -1
                                 ? IconSlideAction(
                                     caption: 'Promote',
+                                    foregroundColor: Colors.white,
                                     color: AppTheme.project4,
                                     icon: Icons.star,
                                     onTap: () => _addProjectOwner(
                                         allMembers[index].accountId),
                                   )
                                 : IconSlideAction(
+                                    foregroundColor: Colors.white,
                                     caption: 'Demote',
                                     color: AppTheme.project4,
                                     icon: Icons.star,
@@ -287,6 +291,7 @@ class _TeamMembersManagementState extends State<TeamMembersManagement> {
                                   ),
                             if (widget.project.projStatus == "COMPLETED")
                               IconSlideAction(
+                                foregroundColor: Colors.white,
                                 caption: 'Review',
                                 color: AppTheme.project2,
                                 icon: Icons.rate_review,

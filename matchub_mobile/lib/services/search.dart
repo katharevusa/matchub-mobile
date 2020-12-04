@@ -62,7 +62,7 @@ class Search with ChangeNotifier {
         filter += "&country=${filterOptions['country']}";
       }
       for (num i in filterOptions['sdgs']) {
-        filter += "&sdgIds=${i + 1}";
+        filter += "&sdgIds=${i}";
       }
       for (num i in filterOptions['sdgTargetIds']) {
         filter += "&sdgTargetIds=$i";

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manage_resource.dart';
+import 'package:matchub_mobile/services/manageResource.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/resourceVerticalCard.dart';
 import 'package:provider/provider.dart';

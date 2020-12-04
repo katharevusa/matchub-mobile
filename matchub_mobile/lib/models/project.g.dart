@@ -37,11 +37,6 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
             .map((i) => Campaign.fromJson(i))
             .toList()
         : []
-
-    // ..selectedTargets = (json['selectedTargets'] as List)
-    //     .map((i) => SelectedTarget.fromJson(i))
-    //     .toList()
-
     ..selectedTargets = json['selectedTargets'] != null
         ? (json['selectedTargets'] as List)
             .map((i) => SelectedTarget.fromJson(i))

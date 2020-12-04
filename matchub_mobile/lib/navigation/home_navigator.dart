@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/chat/chat_screen.dart';
+import 'package:matchub_mobile/screens/chat/chatScreen.dart';
 import 'package:matchub_mobile/screens/home/competition/competitionDetail.dart';
 import 'package:matchub_mobile/screens/home/competition/joinCompetition.dart';
-import 'package:matchub_mobile/screens/home/home_screen.dart';
+import 'package:matchub_mobile/screens/home/homeScreen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
-import 'package:matchub_mobile/screens/search/search_page.dart';
+import 'package:matchub_mobile/screens/search/searchPage.dart';
 
 class HomeNavigator extends StatefulWidget {
   @override

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/screens/profile/profile_screen.dart';
+import 'package:matchub_mobile/screens/profile/profileScreen.dart';
 import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
 import 'package:matchub_mobile/screens/project_management/pManagementComponent/teamMemberManagement.dart';
-import 'package:matchub_mobile/screens/resource/resource_incoming/resource_incoming_screen.dart';
-import 'package:matchub_mobile/screens/resource/resource_outgoing/resource_outgoing_screen.dart';
+import 'package:matchub_mobile/screens/resource/resource_incoming/resourceIncomingScreen.dart';
+import 'package:matchub_mobile/screens/resource/resource_outgoing/resourceOutgoingScreen.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manage_notification.dart';
+import 'package:matchub_mobile/services/manageNotification.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
 

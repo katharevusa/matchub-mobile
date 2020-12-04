@@ -5,9 +5,7 @@ import 'package:matchub_mobile/screens/project/projectDetail/resourceDonate.dart
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceRequest.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/resourcePayment.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/firebase.dart';
-import 'package:matchub_mobile/services/manage_project.dart';
-import 'package:matchub_mobile/services/manage_resource.dart';
+import 'package:matchub_mobile/services/manageResource.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:path/path.dart';
 import 'package:path/path.dart';
@@ -142,12 +140,12 @@ class _ResourceActionsState extends State<ResourceActions> {
                                     fontSize: 15.0),
                               ),
                             } else ...{
-                              Text(
-                                "Pay",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15.0),
-                              ),
+                               Text(
+                                      "Pay",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15.0),
+                                    )
                             }
                           ],
                         ),

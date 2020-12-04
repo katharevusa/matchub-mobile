@@ -7,7 +7,7 @@ import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../sizeconfig.dart';
+import '../../../sizeConfig.dart';
 import '../../../style.dart';
 
 class PFounderTeamAttachBadgeSDG extends StatelessWidget {
@@ -29,6 +29,7 @@ class PFounderTeamAttachBadgeSDG extends StatelessWidget {
   }
 
   List<Widget> buildAttachments() {
+    documentKeys = project.documents.keys.toList();
     return (project.documents.isNotEmpty)
         ? [
             Padding(
@@ -43,7 +44,7 @@ class PFounderTeamAttachBadgeSDG extends StatelessWidget {
               ),
             ),
             Container(
-              color: AppTheme.appBackgroundColor,
+              // color: AppTheme.appBackgroundColor,
               height: 28 * SizeConfig.widthMultiplier,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -183,12 +184,13 @@ class PFounderTeamAttachBadgeSDG extends StatelessWidget {
           ),
         ),
         Container(
-            margin: EdgeInsets.only(left: 8.0 * SizeConfig.widthMultiplier),
+            margin: EdgeInsets.only(
+              left: 8.0 * SizeConfig.widthMultiplier,
+              top: 1.5 * SizeConfig.heightMultiplier,
+            ),
             height: 60,
             width: 60,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[700], width: 0.5),
-                shape: BoxShape.circle),
+            decoration: BoxDecoration(shape: BoxShape.circle),
             child: ClipOval(
                 child: Tooltip(
                     message: project.projectBadge.badgeTitle,

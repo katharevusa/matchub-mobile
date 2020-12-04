@@ -6,9 +6,8 @@ import 'package:matchub_mobile/screens/profile/wall_components/manageKahsScreen.
 import 'package:matchub_mobile/screens/profile/wall_components/manageOrganisationMembers.dart';
 import 'package:matchub_mobile/screens/profile/wall_components/viewOrganisationMembers.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manage_organisationmembers.dart';
-import 'package:matchub_mobile/services/manage_listOfKah.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/services/manageOrganisationmembers.dart';
+import 'package:matchub_mobile/sizeConfig.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';

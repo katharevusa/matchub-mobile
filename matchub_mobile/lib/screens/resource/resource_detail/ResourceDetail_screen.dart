@@ -1,29 +1,24 @@
 import 'dart:convert';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:intl/intl.dart';
 import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
-import 'package:matchub_mobile/models/resources.dart';
-import 'package:matchub_mobile/screens/profile/profile_screen.dart';
-import 'package:matchub_mobile/screens/project/projectDetail/project_detail_overview.dart';
-import 'package:matchub_mobile/screens/resource/resource_creation_screen.dart';
 
 import 'package:flutter/widgets.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/ResourceRequest.dart';
-import 'package:matchub_mobile/screens/resource/resource_detail/connectedProject.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceActions.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceGallery.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceInformation.dart';
 import 'package:matchub_mobile/screens/resource/resource_detail/resourceSuggestProject.dart';
 import 'package:matchub_mobile/services/auth.dart';
-import 'package:matchub_mobile/services/manage_resource.dart';
-import 'package:matchub_mobile/sizeconfig.dart';
+import 'package:matchub_mobile/services/manageResource.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/widgets/attachment_image.dart';
 import 'package:provider/provider.dart';
+
+import '../resourceCreationScreen.dart';
+import 'connectedProject.dart';
 
 class ResourceDetailScreen extends StatefulWidget {
   static const routeName = "/own-resource-detail";
@@ -35,6 +30,7 @@ class ResourceDetailScreen extends StatefulWidget {
 }
 
 class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
+  bool isLoading = true; 
   @override
   void initState() {
     loadResource();
@@ -44,6 +40,9 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
   loadResource() async {
     await Provider.of<ManageResource>(context, listen: false)
         .getResourceById(widget.resource.resourceId);
+        setState(() {
+          isLoading = false;
+        });
   }
 
   @override
@@ -62,7 +61,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        actions: [
+        actions: isLoading ? [] : [
           widget.resource.resourceOwnerId ==
                   Provider.of<Auth>(context, listen: false).myProfile.accountId
               ? IconButton(
@@ -82,7 +81,7 @@ class _ResourceDetailScreenState extends State<ResourceDetailScreen> {
         backgroundColor: AppTheme.appBackgroundColor,
         elevation: 0,
       ),
-      body: Stack(children: [
+      body: isLoading ? Container(): Stack(children: [
         Container(
           child: SingleChildScrollView(
             child: Column(

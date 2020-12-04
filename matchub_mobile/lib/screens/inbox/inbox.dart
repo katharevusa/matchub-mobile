@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:matchub_mobile/screens/chat/chat_screen.dart';
-import 'package:matchub_mobile/screens/inbox/inbox_notification.dart';
+import 'package:matchub_mobile/screens/chat/chatScreen.dart';
+import 'package:matchub_mobile/screens/inbox/inboxNotification.dart';
 
-import '../../sizeconfig.dart';
+import '../../sizeConfig.dart';
 import '../../style.dart';
 
 class InboxScreen extends StatefulWidget {
