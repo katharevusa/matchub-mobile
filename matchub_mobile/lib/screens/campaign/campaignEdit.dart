@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:matchub_mobile/screens/project_management/projectManagement.dart';
 import 'package:matchub_mobile/services/manageProject.dart';
 import 'package:matchub_mobile/widgets/dialogs.dart';
 import 'package:matchub_mobile/widgets/popupMenuButton.dart' as popupmenu;
@@ -85,7 +86,7 @@ class _CampaignEditState extends State<CampaignEdit>
                                       service.getProject(widget.project.projectId);
                                       service.retrieveCampaigns();
                                       Navigator.of(context)
-                                          .popUntil(ModalRoute.withName("/"));
+                                          .popUntil(ModalRoute.withName(ProjectManagementOverview.routeName));
                                     } catch (e) {
                                       showErrorDialog(
                                           "Campaign has already received donations. Unable to delete.",

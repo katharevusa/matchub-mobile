@@ -102,7 +102,7 @@ class _AttemptSurveyState extends State<AttemptSurvey> {
             }
           }
         }
-      }
+      } 
     }
     questionsToDisplay.sort((a, b) => a.questionId.compareTo(b.questionId));
     if (questionsToDisplay.last.nextQuestionId == null ||
@@ -197,7 +197,7 @@ class _AttemptSurveyState extends State<AttemptSurvey> {
                 onPressed: () async {
                   print(surveyResponses);
                   for (Map<String, dynamic> sr in surveyResponses) {
-                    if ((sr['input'] == null || sr['input'].isEmpty )&&
+                    if ((sr['input'] == null || sr['input'].isEmpty) &&
                         (sr['selectedOptionIds'] as List).isEmpty) {
                       showDialog(
                           context: context,
@@ -219,11 +219,16 @@ class _AttemptSurveyState extends State<AttemptSurvey> {
                       return;
                     }
                   }
-                  ApiBaseHelper.instance.postProtected("authenticated/createFullSurveyResponse", body: json.encode({
-                    "respondentId": Provider.of<Auth>(context,listen:false).myProfile.accountId,
-                    "surveyId": widget.survey.surveyId,
-                    "questionResponses": surveyResponses
-                  }));
+                  ApiBaseHelper.instance
+                      .postProtected("authenticated/createFullSurveyResponse",
+                          body: json.encode({
+                            "respondentId":
+                                Provider.of<Auth>(context, listen: false)
+                                    .myProfile
+                                    .accountId,
+                            "surveyId": widget.survey.surveyId,
+                            "questionResponses": surveyResponses
+                          }));
                   Navigator.pop(context);
                 },
                 shape: RoundedRectangleBorder(
@@ -308,11 +313,11 @@ class _QuestionCardState extends State<QuestionCard> {
                         widget.response['selectedOptionIds'].add(value);
                         print(widget.response['selectedOptionIds']);
                         print("Selected");
-                        if (widget.question.hasBranching) {
-                          widget.selectOptions(
-                              widget.response['selectedOptionIds'],
-                              widget.question.questionId);
-                        }
+                        // if (widget.question.hasBranching) {
+                        widget.selectOptions(
+                            widget.response['selectedOptionIds'],
+                            widget.question.questionId);
+                        // }
                       });
                     },
                   ),
@@ -343,11 +348,11 @@ class _QuestionCardState extends State<QuestionCard> {
                             }
                             print(widget.response['selectedOptionIds']);
                             print("Selected");
-                            if (widget.question.hasBranching) {
-                              widget.selectOptions(
-                                  widget.response['selectedOptionIds'],
-                                  widget.question.questionId);
-                            }
+                            // if (widget.question.hasBranching) {
+                            widget.selectOptions(
+                                widget.response['selectedOptionIds'],
+                                widget.question.questionId);
+                            // }
                           });
                         },
                       ),

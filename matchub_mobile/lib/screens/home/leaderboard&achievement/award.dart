@@ -21,14 +21,15 @@ class _AwardState extends State<Award> with SingleTickerProviderStateMixin {
         child: Scaffold(
           key: _key,
           appBar: AppBar(
+            title: Text("Leaderboard"),
             leadingWidth: 35,
-            iconTheme: IconThemeData(color: Colors.black),
-            backgroundColor: Colors.transparent,
+            // iconTheme: IconThemeData(color: Colors.black),
+            // backgroundColor: Colors.transparent,
             elevation: 0,
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(40),
               child: Container(
-                color: Colors.transparent,
+                color: Colors.white,
                 padding: EdgeInsets.only(left: 20),
                 alignment: Alignment.centerLeft,
                 child: TabBar(
@@ -43,10 +44,10 @@ class _AwardState extends State<Award> with SingleTickerProviderStateMixin {
                     isScrollable: true,
                     tabs: [
                       Tab(
-                        text: ("Individual Leaderboard"),
+                        text: ("Individual"),
                       ),
                       Tab(
-                        text: ("Organisation Leaderboard"),
+                        text: ("Organisation"),
                       ),
                       Tab(
                         text: ("Achievement"),

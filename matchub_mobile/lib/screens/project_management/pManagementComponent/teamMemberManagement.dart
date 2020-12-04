@@ -29,18 +29,7 @@ class _TeamMembersManagementState extends State<TeamMembersManagement> {
   List<TruncatedProfile> allMembers = [];
   @override
   initState() {
-    Provider.of<ManageProject>(context, listen: false)
-        .getProject(widget.project.projectId);
-    for (TruncatedProfile tp in widget.project.teamMembers) {
-      if (!allMembers.contains(tp)) {
-        allMembers.add(tp);
-      }
-    }
-    for (TruncatedProfile tp in widget.project.projectOwners) {
-      if (!allMembers.contains(tp)) {
-        allMembers.add(tp);
-      }
-    }
+    widget.project = Provider.of<ManageProject>(context, listen: false).managedProject;
 
     super.initState();
   }
@@ -123,6 +112,17 @@ class _TeamMembersManagementState extends State<TeamMembersManagement> {
   @override
   Widget build(BuildContext context) {
     widget.project = Provider.of<ManageProject>(context).managedProject;
+
+    for (TruncatedProfile tp in widget.project.teamMembers) {
+      if (allMembers.indexWhere((aM) => aM.accountId == tp.accountId) == -1) {
+        allMembers.add(tp);
+      }
+    }
+    for (TruncatedProfile tp in widget.project.projectOwners) {
+      if (allMembers.indexWhere((aM) => aM.accountId == tp.accountId) == -1) {
+        allMembers.add(tp);
+      }
+    }
     return DefaultTabController(
         length: (widget.project.projectOwners.indexWhere((element) =>
                     element.accountId ==

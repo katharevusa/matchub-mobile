@@ -30,11 +30,10 @@ class _PAnnouncementState extends State<PAnnouncement> {
   }
 
   loadAnnouncements() async {
-    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageNotification>(context, listen: false)
-        .getAllProjectInternal(widget.project, profile, accessToken);
+        .getAllProjectInternal(widget.project, profile);
     await Provider.of<ManageNotification>(context, listen: false)
-        .getAllProjectPublic(widget.project, profile, accessToken);
+        .getAllProjectPublic(widget.project, profile);
   }
 
   @override

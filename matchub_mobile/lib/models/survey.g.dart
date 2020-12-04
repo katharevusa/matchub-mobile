@@ -17,5 +17,10 @@ Survey _$SurveyFromJson(Map<String, dynamic> json) {
         ? (json['questions'] as List)
             .map((i) => SurveyQuestion.fromJson(i))
             .toList()
+        : []
+    ..surveyResponses = json['surveyResponses'] != null
+        ? (json['surveyResponses'] as List)
+            .map((i) => SurveyResponse.fromJson(i))
+            .toList()
         : [];
 }

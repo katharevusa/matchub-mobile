@@ -40,7 +40,7 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
   Duration _duration = Duration(seconds: 1000000);
   List<Announcement> internalAnnouncements = [];
   List<Announcement> publicAnnouncements = [];
-  bool isLoaded = false;
+  bool isLoading = true;
   Profile myProfile;
   @override
   void initState() {
@@ -48,56 +48,26 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
     loadAnnouncements();
   }
 
-  refreshState() {
+  loadProject() async {
+    await Provider.of<ManageProject>(context, listen: false).getProject(
+      widget.project.projectId,
+    );
+    widget.project = Provider.of<ManageProject>(
+      context,
+    ).managedProject;
     setState(() {
-      isLoaded = false;
+      isLoading = false;
     });
-    myProfile = Provider.of<Auth>(context, listen: false).myProfile;
-    // widget.project = Provider.of<ManageProject>(context, listen:false).managedProject;
-    publicAnnouncements =
-        Provider.of<ManageNotification>(context, listen: false)
-            .projectPublicAnnouncement;
-    internalAnnouncements =
-        Provider.of<ManageNotification>(context, listen: false)
-            .projectInternalAnnouncement;
-    _children = [
-      SingleChildScrollView(
-        child: PManagementAbout(
-          myProfile: myProfile,
-          internalAnnouncements: internalAnnouncements,
-          publicAnnouncements: publicAnnouncements,
-          project: Provider.of<ManageProject>(context, listen:false).managedProject,
-          loadProject: loadProject,
-        ),
-      ),
-      ChannelsScreen(
-        project: widget.project,
-      ),
-      TeamMembersManagement(
-        project: widget.project,
-      ),
-      PFundCampaignList(),
-      PManagementMatchedResources(widget.project),
-    ];
   }
 
   loadAnnouncements() async {
     var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageNotification>(context, listen: false)
-        .getAllProjectInternal(widget.project, myProfile, accessToken);
+        .getAllProjectInternal(widget.project, myProfile);
     await Provider.of<ManageNotification>(context, listen: false)
-        .getAllProjectPublic(widget.project, myProfile, accessToken);
-    await refreshState();
-    setState(() {
-      isLoaded = true;
-    });
+        .getAllProjectPublic(widget.project, myProfile);
   }
 
-  loadProject() async {
-    await Provider.of<ManageProject>(context, listen: false).getProject(
-      widget.project.projectId,
-    );
-  }
   int _currentIndex = 0;
   List<Widget> _children = [];
   void onTabTapped(int index) {
@@ -108,37 +78,68 @@ class _ProjectManagementOverviewState extends State<ProjectManagementOverview>
 
   @override
   Widget build(BuildContext context) {
-    print(Provider.of<ManageProject>(context).managedProject.projectTitle);
-    return SafeArea(
-      child: Scaffold(
-        body: isLoaded
-            ? _children[_currentIndex]
-            : Container(child: Center(child: CircularProgressIndicator())),
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped, // new
-          currentIndex: _currentIndex, // new
-          unselectedItemColor: Colors.grey[400],
-          selectedItemColor: kSecondaryColor,
-          items: [
-            BottomNavigationBarItem(
-              icon: new Icon(Icons.home),
-              title: new Text('Home'),
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.developer_board_rounded),
-                title: Text('Channels')),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.people_alt_rounded), title: Text('People')),
-            BottomNavigationBarItem(
-              icon: new Icon(Icons.monetization_on_rounded),
-              title: new Text('Campaigns'),
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(FlutterIcons.luggage_cart_faw5s),
-                title: Text('Resources')),
-          ],
+    myProfile = Provider.of<Auth>(context, listen: false).myProfile;
+    publicAnnouncements =
+        Provider.of<ManageNotification>(context, listen: false)
+            .projectPublicAnnouncement;
+    internalAnnouncements =
+        Provider.of<ManageNotification>(context, listen: false)
+            .projectInternalAnnouncement;
+    Project pr = Provider.of<ManageProject>(
+      context,
+    ).managedProject;
+    _children = [
+      SingleChildScrollView(
+        child: PManagementAbout(
+          myProfile: myProfile,
+          internalAnnouncements: internalAnnouncements,
+          publicAnnouncements: publicAnnouncements,
+          project: pr,
+          loadProject: loadProject,
         ),
       ),
+      ChannelsScreen(
+        project: pr,
+      ),
+      TeamMembersManagement(
+        project: pr,
+      ),
+      PFundCampaignList(),
+      PManagementMatchedResources(pr),
+    ];
+    return SafeArea(
+      child: isLoading
+          ? Scaffold(
+              body:
+                  Container(child: Center(child: CircularProgressIndicator())))
+          : Scaffold(
+              body: _children[_currentIndex],
+              bottomNavigationBar: BottomNavigationBar(
+                onTap: onTabTapped, // new
+                currentIndex: _currentIndex, // new
+                unselectedItemColor: Colors.grey[400],
+                selectedItemColor: kSecondaryColor,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: new Icon(Icons.home),
+                    title: new Text('Home'),
+                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.developer_board_rounded),
+                      title: Text('Channels')),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.people_alt_rounded),
+                      title: Text('People')),
+                  BottomNavigationBarItem(
+                    icon: new Icon(Icons.monetization_on_rounded),
+                    title: new Text('Campaigns'),
+                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(FlutterIcons.luggage_cart_faw5s),
+                      title: Text('Resources')),
+                ],
+              ),
+            ),
     );
   }
 

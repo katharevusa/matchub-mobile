@@ -27,3 +27,4 @@ export 'gamificationPointTiers.dart';
 export 'resourceTransaction.dart';
 export 'competition.dart';
 export 'voterCredential.dart';
+export 'surveyResponse.dart';

@@ -30,11 +30,13 @@ class _PProgressBarState extends State<PProgressBar> {
   Widget build(BuildContext context) {
     myProfile = Provider.of<Auth>(context).myProfile;
     // project = Provider.of<ManageProject>(context).managedProject;
+    int denominator =
+        (widget.project.endDate.difference(widget.project.startDate).inDays);
+    if (denominator == 0) {
+      denominator = 1;
+    }
     int progress = (DateTime.now().difference(widget.project.startDate).inDays /
-            (widget.project.endDate
-                .difference(widget.project.startDate)
-                .inDays
-                .toDouble()) *
+            denominator *
             100)
         .toInt();
     print("progress: " + progress.toString());

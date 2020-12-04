@@ -74,8 +74,8 @@ class _GreetingCardState extends State<GreetingCard> {
           children: [
             InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    settings: RouteSettings(name: "/notifications"),
+                Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                    // settings: RouteSettings(name: "/notifications"),
                     builder: (_) => Award()));
               },
               child: Container(

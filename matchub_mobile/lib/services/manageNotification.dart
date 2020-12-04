@@ -8,7 +8,7 @@ class ManageNotification with ChangeNotifier {
   List<Announcement> projectInternalAnnouncement = [];
   List<Announcement> projectPublicAnnouncement = [];
 
-  getAllAnnouncementForUsers(Profile profile, accessToken) async {
+  getAllAnnouncementForUsers(Profile profile) async {
     allAnnouncementForUsers = [];
     final url =
         'authenticated/getAnnouncementsByUserId?userId=${profile.accountId}';
@@ -19,7 +19,7 @@ class ManageNotification with ChangeNotifier {
     return allAnnouncementForUsers;
   }
 
-  getAllProjectInternal(Project project, Profile profile, accessToken) async {
+  getAllProjectInternal(Project project, Profile profile) async {
     projectInternalAnnouncement = [];
     final url =
         'authenticated/viewProjectInternalAnnouncements?projectId=${project.projectId}';
@@ -30,7 +30,7 @@ class ManageNotification with ChangeNotifier {
     return projectInternalAnnouncement;
   }
 
-  getAllProjectPublic(Project project, Profile profile, accessToken) async {
+  getAllProjectPublic(Project project, Profile profile) async {
     projectPublicAnnouncement = [];
     final url =
         'authenticated/viewProjectPublicAnnouncements?projectId=${project.projectId}';

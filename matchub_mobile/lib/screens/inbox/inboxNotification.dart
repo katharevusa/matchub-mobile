@@ -33,9 +33,8 @@ class _InboxNotificationState extends State<InboxNotification> {
 
   loadNotifications() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageNotification>(context, listen: false)
-        .getAllAnnouncementForUsers(profile, accessToken);
+        .getAllAnnouncementForUsers(profile);
     setState(() {
       _isLoading = false;
     });

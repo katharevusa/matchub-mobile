@@ -53,6 +53,8 @@ class _CompetitionDetailState extends State<CompetitionDetail> {
   @override
   Widget build(BuildContext context) {
     myProfile = Provider.of<Auth>(context, listen: false).myProfile;
+
+    List documentKeys = widget.competition.documents.keys.toList();
     return isLoading
         ? Scaffold(body: Center(child: CircularProgressIndicator()))
         : Scaffold(
@@ -148,11 +150,8 @@ class _CompetitionDetailState extends State<CompetitionDetail> {
                           shrinkWrap: true,
                           itemBuilder: (context, index) => GestureDetector(
                                 onTap: () async {
-                                  List documentKeys = widget
-                                      .competition.documents.keys
-                                      .toList();
-                                  String fileName = (widget.competition
-                                      .documents[documentKeys[index]]);
+                                  String fileName = widget.competition
+                                      .documents[documentKeys[index]];
                                   String url = ApiBaseHelper.instance.baseUrl +
                                       fileName.substring(30);
                                   if (await canLaunch(url)) {

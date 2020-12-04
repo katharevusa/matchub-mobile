@@ -78,13 +78,12 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
 
   loadAnnouncements() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageNotification>(context, listen: false)
-        .getAllProjectInternal(project, profile, accessToken);
+        .getAllProjectInternal(project, profile);
     await Provider.of<ManageNotification>(context, listen: false)
-        .getAllProjectPublic(project, profile, accessToken);
+        .getAllProjectPublic(project, profile);
     await Provider.of<ManageNotification>(context, listen: false)
-        .getAllAnnouncementForUsers(profile, accessToken);
+        .getAllAnnouncementForUsers(profile);
   }
 
   readNotification() async {
@@ -92,9 +91,8 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
       Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
       final url =
           "authenticated/viewAnnouncement?announcementId=${widget.announcement.announcementId}&viewerId=${profile.accountId}";
-      var accessToken = Provider.of<Auth>(this.context).accessToken;
       final response = await ApiBaseHelper.instance
-          .putProtected(url, accessToken: accessToken);
+          .putProtected(url);
       await loadNotifications();
       print("Success");
     }
@@ -102,9 +100,8 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
 
   loadNotifications() async {
     Profile profile = Provider.of<Auth>(context, listen: false).myProfile;
-    var accessToken = Provider.of<Auth>(context, listen: false).accessToken;
     await Provider.of<ManageNotification>(context, listen: false)
-        .getAllAnnouncementForUsers(profile, accessToken);
+        .getAllAnnouncementForUsers(profile);
   }
 
   deleteAnnouncement() async {
@@ -114,9 +111,7 @@ class _AnnouncementDetailState extends State<AnnouncementDetail> {
       final url =
           "authenticated/deleteProjectInternalAnnouncement?announcementId=${widget.announcement.announcementId}&userId=${profileId}";
       try {
-        var accessToken = Provider.of<Auth>(context).accessToken;
-        final responseData = await ApiBaseHelper.instance.deleteProtected(url,
-            accessToken: Provider.of<Auth>(context).accessToken);
+        final responseData = await ApiBaseHelper.instance.deleteProtected(url);
         print("Success");
         await loadAnnouncements();
         // Provider.of<Auth>(context).retrieveUser();

@@ -66,51 +66,52 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
               ConnectionState.done)
           ? Column(
               children: [
-                Container(
-                  height: 270,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(0),
-                    color: Colors.transparent,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
                         "Projects Under Spotlight",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 2.2 * SizeConfig.textMultiplier,
                         ),
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Expanded(
-                        child: Swiper(
-                          pagination:
-                              SwiperPagination(margin: const EdgeInsets.only()),
-                          viewportFraction: 0.9,
-                          itemCount: spotLightProjects.length,
-                          loop: false,
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(
-                                  context,
-                                ).pushNamed(ProjectDetailScreen.routeName,
-                                    arguments: spotLightProjects[index]);
-                              },
-                              child: Card(
-                                elevation: 4.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      height: 230,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        itemCount: spotLightProjects.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(ProjectDetailScreen.routeName,
+                                  arguments: spotLightProjects[index]);
+                            },
+                            child: Card(
+                              elevation: 4.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Container(
+                                width: 70 * SizeConfig.widthMultiplier,
                                 child: Stack(
                                   children: <Widget>[
                                     Column(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         Container(
-                                          height: 150.0,
+                                          height: 120.0,
                                           decoration: BoxDecoration(
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(10.0),
@@ -122,24 +123,29 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                                                 fit: BoxFit.cover,
                                               )),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Text(
-                                            spotLightProjects[index]
-                                                .projectTitle,
-                                            style: titleTextStyle,
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(
+                                              spotLightProjects[index]
+                                                  .projectTitle,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: titleTextStyle.copyWith(
+                                                  fontSize: 15),
+                                            ),
                                           ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 16.0),
+                                              vertical: 8, horizontal: 16.0),
                                           child: Row(
                                             children: <Widget>[
                                               Text(
                                                 "End Date: ${DateFormat('dd-MMM-yyyy ').format(spotLightProjects[index].endDate)}",
                                                 style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: 14.0,
+                                                  fontSize: 12.0,
                                                 ),
                                               ),
                                               Spacer(),
@@ -150,7 +156,7 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                                                     " Upvotes",
                                                 style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: 14.0,
+                                                  fontSize: 12.0,
                                                 ),
                                               ),
                                             ],
@@ -159,7 +165,7 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                                       ],
                                     ),
                                     Positioned(
-                                      top: 140,
+                                      top: 110,
                                       left: 20.0,
                                       child: Container(
                                         color: Colors.green,
@@ -176,61 +182,65 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                                   ],
                                 ),
                               ),
-                            );
-                          },
-                          // itemWidth: 300.0,
-                          // itemHeight: 400.0,
-                          // layout: SwiperLayout.TINDER,
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Container(
-                  height: 270,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(0),
-                    color: Colors.transparent,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
                         "Resources Under Spotlight",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 2.2 * SizeConfig.textMultiplier,
                         ),
                       ),
-                      SizedBox(height: 5),
-                      Expanded(
-                        child: Swiper(
-                          // itemWidth: 200.0,
-                          // itemHeight: 400.0,
-                          // layout: SwiperLayout.STACK,
-                          pagination:
-                              SwiperPagination(margin: const EdgeInsets.only()),
-                          viewportFraction: 0.9,
-                          itemCount: spotLightResources.length,
-                          loop: false,
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(context, rootNavigator: true)
-                                    .pushNamed(ResourceDetailScreen.routeName,
-                                        arguments: spotLightResources[index]);
-                              },
-                              child: Card(
-                                elevation: 4.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
+                    ),
+                    SizedBox(height: 5),
+                    Container(
+                      height: 230,
+                      child: ListView.builder(
+                        // itemWidth: 200.0,
+                        // itemHeight: 400.0,
+                        // layout: SwiperLayout.STACK,
+                        // pagination:
+                        //     SwiperPagination(margin: const EdgeInsets.only()),
+                        // viewportFraction: 0.9,
+                        // loop: false,
+
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        itemCount: spotLightResources.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context, rootNavigator: true)
+                                  .pushNamed(ResourceDetailScreen.routeName,
+                                      arguments: spotLightResources[index]);
+                            },
+                            child: Card(
+                              elevation: 4.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Container(
+                                width: 70 * SizeConfig.widthMultiplier,
                                 child: Stack(
                                   children: <Widget>[
                                     Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Container(
-                                          height: 150.0,
+                                          height: 120.0,
                                           decoration: BoxDecoration(
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(10.0),
@@ -242,17 +252,20 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                                                 fit: BoxFit.cover,
                                               )),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Text(
-                                            spotLightResources[index]
-                                                .resourceName,
-                                            style: titleTextStyle,
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(
+                                              spotLightResources[index]
+                                                  .resourceName,
+                                              style: titleTextStyle.copyWith(
+                                                  fontSize: 15),
+                                            ),
                                           ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 16.0),
+                                              vertical: 8, horizontal: 16.0),
                                           child: Row(
                                             children: <Widget>[
                                               Text(
@@ -263,7 +276,7 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                                                     " Units",
                                                 style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: 14.0,
+                                                  fontSize: 12.0,
                                                 ),
                                               ),
                                               Spacer(),
@@ -273,7 +286,7 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                                                     .toString(),
                                                 style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: 14.0,
+                                                  fontSize: 12.0,
                                                 ),
                                               ),
                                             ],
@@ -282,7 +295,7 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                                       ],
                                     ),
                                     Positioned(
-                                      top: 140,
+                                      top: 110,
                                       left: 20.0,
                                       child: Container(
                                         color: Colors.green,
@@ -299,12 +312,12 @@ class _FeaturedProjectsState extends State<FeaturedProjects> {
                                   ],
                                 ),
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             )

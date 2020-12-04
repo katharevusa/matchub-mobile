@@ -15,6 +15,7 @@ class Survey {
     // DateTime closeDate;
     bool expired;
     List<SurveyQuestion> questions;
+    List<SurveyResponse> surveyResponses;
     
     factory Survey.fromJson(Map<String,dynamic> json) => _$SurveyFromJson(json);
 }

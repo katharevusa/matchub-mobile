@@ -33,294 +33,287 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return Scaffold(
+        body: FutureBuilder(
       future: individualsFuture,
       builder: (context, snapshot) => (snapshot.connectionState ==
               ConnectionState.done)
-          ? Scaffold(
-              body: Stack(
-                children: <Widget>[
-                  // Container(
-                  //   width: double.infinity,
-                  //   height: double.infinity,
-                  //   child: Image.asset(
-                  //     "assets/images/leaderboard.JPG",
-                  //     fit: BoxFit.cover,
-                  //   ),
-                  // ),
-                  Positioned(
-                    top: 100,
-                    left: 110,
-                    child: Container(
-                        height: 100,
-                        width: 150,
-                        child: Text(
-                          "Best Champions",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black, fontSize: 27),
-                        )),
-                  ),
-                  // Positioned(
-                  //   top: 220,
-                  //   left: 100,
-                  //   child: Container(
-                  //     height: 30,
-                  //     width: 20,
-                  //     child: Image.asset(
-                  //       "assets/images/silver.png",
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
-                  Positioned(
-                    top: 230,
-                    left: 30,
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 80,
-                          width: 80,
-                          child: ClipOval(
-                            child: SizedBox(
-                                height: 16 * SizeConfig.heightMultiplier,
-                                width: 16 * SizeConfig.widthMultiplier,
-                                child: AttachmentImage(
-                                    individuals[1].profilePhoto)),
-                          ),
+          ? Stack(
+              children: <Widget>[
+                // Container(
+                //   width: double.infinity,
+                //   height: double.infinity,
+                //   child: Image.asset(
+                //     "assets/images/leaderboard.JPG",
+                //     fit: BoxFit.cover,
+                //   ),
+                // ),
+                Positioned(
+                  top: 10,
+                  left: 130,
+                  child: Container(
+                      height: 100,
+                      width: 150,
+                      child: Text(
+                        "Best Champions",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black, fontSize: 27),
+                      )),
+                ),
+                Positioned(
+                  top: 120,
+                  left: 30,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 80,
+                        width: 80,
+                        child: ClipOval(
+                          child: SizedBox(
+                              height: 16 * SizeConfig.heightMultiplier,
+                              width: 16 * SizeConfig.widthMultiplier,
+                              child:
+                                  AttachmentImage(individuals[1].profilePhoto)),
                         ),
-                        Container(
-                          height: 80,
-                          width: 80,
-                          child: Text(
-                            individuals[1].name,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 15, color: Colors.black),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Positioned(
-                  //   top: 180,
-                  //   left: 215,
-                  //   child: Container(
-                  //     height: 30,
-                  //     width: 20,
-                  //     child: Image.asset(
-                  //       "assets/images/gold.png",
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
-                  Positioned(
-                    top: 185,
-                    right: 135,
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 100,
-                          width: 100,
-                          child: ClipOval(
-                            child: SizedBox(
-                                height: 16 * SizeConfig.heightMultiplier,
-                                width: 16 * SizeConfig.widthMultiplier,
-                                child: AttachmentImage(
-                                    individuals[0].profilePhoto)),
-                          ),
-                        ),
-                        Container(
-                          height: 100,
-                          width: 100,
-                          child: Text(
-                            individuals[0].name,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 15, color: Colors.black),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Positioned(
-                  //   top: 220,
-                  //   right: 20,
-                  //   child: Container(
-                  //     height: 30,
-                  //     width: 20,
-                  //     child: Image.asset(
-                  //       "assets/images/bronze.png",
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
-                  Positioned(
-                    top: 230,
-                    right: 30,
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 80,
-                          width: 80,
-                          child: ClipOval(
-                            child: SizedBox(
-                                height: 16 * SizeConfig.heightMultiplier,
-                                width: 16 * SizeConfig.widthMultiplier,
-                                child: AttachmentImage(
-                                    individuals[2].profilePhoto)),
-                          ),
-                        ),
-                        Container(
-                          height: 80,
-                          width: 80,
-                          child: Text(
-                            individuals[2].name,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 15, color: Colors.black),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SafeArea(
-                      child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 250,
                       ),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: AppTheme.project4.withOpacity(0.2)),
-                          child: Column(
-                            children: <Widget>[
-                              const SizedBox(height: 30.0),
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  physics: BouncingScrollPhysics(),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      ListView.separated(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        separatorBuilder: (context, index) =>
-                                            SizedBox(height: 5),
-                                        itemBuilder: (context, index) =>
-                                            Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 5,
-                                                            horizontal: 20.0),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30),
-                                                      child: Container(
-                                                        height: 70,
-                                                        color: AppTheme.project4
-                                                            .withOpacity(0.6),
-                                                        child: Row(
-                                                          children: <Widget>[
-                                                            Container(
-                                                                width: 50,
-                                                                height: 70,
-                                                                child: Center(
-                                                                  child: Text(
-                                                                    '#' +
-                                                                        (index +
-                                                                                1)
-                                                                            .toString(),
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            15),
-                                                                  ),
-                                                                )),
-                                                            Container(
-                                                              height: 50,
-                                                              width: 50,
-                                                              child: ClipOval(
-                                                                child: SizedBox(
-                                                                    height: 16 *
-                                                                        SizeConfig
-                                                                            .heightMultiplier,
-                                                                    width: 16 *
-                                                                        SizeConfig
-                                                                            .widthMultiplier,
-                                                                    child: AttachmentImage(
-                                                                        individuals[index]
-                                                                            .profilePhoto)),
-                                                              ),
+                      Container(
+                        height: 80,
+                        width: 80,
+                        child: Text(
+                          individuals[1].name,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 120,
+                  left: 30,
+                  child: Container(
+                    height: 30,
+                    width: 20,
+                    child: Image.asset(
+                      "assets/images/silver.png",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 90,
+                  left: 155,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 100,
+                        width: 100,
+                        child: ClipOval(
+                          child: SizedBox(
+                              height: 16 * SizeConfig.heightMultiplier,
+                              width: 16 * SizeConfig.widthMultiplier,
+                              child:
+                                  AttachmentImage(individuals[0].profilePhoto)),
+                        ),
+                      ),
+                      Container(
+                        height: 100,
+                        width: 100,
+                        child: Text(
+                          individuals[0].name,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 90,
+                  left: 155,
+                  child: Container(
+                    height: 30,
+                    width: 20,
+                    child: Image.asset(
+                      "assets/images/gold.png",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 130,
+                  right: 30,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 80,
+                        width: 80,
+                        child: ClipOval(
+                          child: SizedBox(
+                              height: 16 * SizeConfig.heightMultiplier,
+                              width: 16 * SizeConfig.widthMultiplier,
+                              child:
+                                  AttachmentImage(individuals[2].profilePhoto)),
+                        ),
+                      ),
+                      Container(
+                        height: 80,
+                        width: 80,
+                        child: Text(
+                          individuals[2].name,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 130,
+                  right: 30,
+                  child: Container(
+                    height: 30,
+                    width: 20,
+                    child: Image.asset(
+                      "assets/images/bronze.png",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                SafeArea(
+                    child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 250,
+                    ),
+                    Expanded(
+                      child: Container(
+                        // decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(20.0),
+                        //     color: AppTheme.project4.withOpacity(0.2)),
+                        child: Column(
+                          children: <Widget>[
+                            const SizedBox(height: 30.0),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    ListView.separated(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      separatorBuilder: (context, index) =>
+                                          SizedBox(height: 5),
+                                      itemBuilder: (context, index) => Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 5,
+                                                  horizontal: 20.0),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                child: Container(
+                                                  height: 70,
+                                                  color: AppTheme.project4
+                                                      .withOpacity(0.6),
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Container(
+                                                          width: 50,
+                                                          height: 70,
+                                                          child: Center(
+                                                            child: Text(
+                                                              '#' +
+                                                                  (index + 1)
+                                                                      .toString(),
+                                                              style: TextStyle(
+                                                                  fontSize: 15),
                                                             ),
-                                                            SizedBox(width: 10),
-                                                            Text(
-                                                                individuals[
-                                                                        index]
-                                                                    .name,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        15)),
-                                                            Spacer(),
-                                                            Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text('Rep',
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize:
-                                                                            15)),
-                                                                Text(
-                                                                    individuals[
-                                                                            index]
-                                                                        .reputationPoints
-                                                                        .toString(),
-                                                                    style: TextStyle(
-                                                                        color: AppTheme
-                                                                            .project2,
-                                                                        fontSize:
-                                                                            15)),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                              width: 20,
-                                                            ),
-                                                          ],
+                                                          )),
+                                                      Container(
+                                                        height: 50,
+                                                        width: 50,
+                                                        child: ClipOval(
+                                                          child: SizedBox(
+                                                              height: 16 *
+                                                                  SizeConfig
+                                                                      .heightMultiplier,
+                                                              width: 16 *
+                                                                  SizeConfig
+                                                                      .widthMultiplier,
+                                                              child: AttachmentImage(
+                                                                  individuals[
+                                                                          index]
+                                                                      .profilePhoto)),
                                                         ),
                                                       ),
-                                                    ),
+                                                      SizedBox(width: 10),
+                                                      Text(
+                                                          individuals[index]
+                                                              .name,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 15)),
+                                                      Spacer(),
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text('Rep',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      15)),
+                                                          Text(
+                                                              individuals[index]
+                                                                  .reputationPoints
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  color: AppTheme
+                                                                      .project2,
+                                                                  fontSize:
+                                                                      15)),
+                                                        ],
+                                                      ),
+                                                      SizedBox(
+                                                        width: 20,
+                                                      ),
+                                                    ],
                                                   ),
-                                                )),
-                                        itemCount: individuals.length,
-                                      ),
-                                    ],
-                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )),
+                                      itemCount: individuals.length,
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      )
-                    ],
-                  ))
-                ],
-              ),
-              /*  SingleChildScrollView(
+                      ),
+                    )
+                  ],
+                ))
+              ],
+            )
+          : Center(child: CircularProgressIndicator()),
+      /*  SingleChildScrollView(
               child: Column(
                 children: [
                   Stack(children: [
@@ -462,8 +455,6 @@ class _IndividialLeaderboardState extends State<IndividialLeaderboard> {
               ),
             )
             */
-            )
-          : Center(child: CircularProgressIndicator()),
-    );
+    ));
   }
 }

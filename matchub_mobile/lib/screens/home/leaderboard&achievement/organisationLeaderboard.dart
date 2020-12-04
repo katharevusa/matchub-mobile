@@ -50,8 +50,8 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                   //   ),
                   // ),
                   Positioned(
-                    top: 100,
-                    left: 110,
+                  top: 10,
+                  left: 130,
                     child: Container(
                         height: 100,
                         width: 150,
@@ -61,21 +61,9 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                           style: TextStyle(color: Colors.black, fontSize: 27),
                         )),
                   ),
-                  // Positioned(
-                  //   top: 220,
-                  //   left: 100,
-                  //   child: Container(
-                  //     height: 30,
-                  //     width: 20,
-                  //     child: Image.asset(
-                  //       "assets/images/silver.png",
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
                   Positioned(
-                    top: 230,
-                    left: 30,
+                  top: 120,
+                  left: 30,
                     child: Column(
                       children: [
                         Container(
@@ -103,21 +91,21 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                       ],
                     ),
                   ),
-                  // Positioned(
-                  //   top: 180,
-                  //   left: 215,
-                  //   child: Container(
-                  //     height: 30,
-                  //     width: 20,
-                  //     child: Image.asset(
-                  //       "assets/images/gold.png",
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
                   Positioned(
-                    top: 185,
-                    right: 135,
+                  top: 120,
+                  left: 30,
+                    child: Container(
+                      height: 30,
+                      width: 20,
+                      child: Image.asset(
+                        "assets/images/silver.png",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                  top: 90,
+                  left: 155,
                     child: Column(
                       children: [
                         Container(
@@ -145,21 +133,21 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                       ],
                     ),
                   ),
-                  // Positioned(
-                  //   top: 220,
-                  //   right: 20,
-                  //   child: Container(
-                  //     height: 30,
-                  //     width: 20,
-                  //     child: Image.asset(
-                  //       "assets/images/bronze.png",
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
                   Positioned(
-                    top: 230,
-                    right: 30,
+                  top: 90,
+                  left: 155,
+                    child: Container(
+                      height: 30,
+                      width: 20,
+                      child: Image.asset(
+                        "assets/images/gold.png",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                  top: 130,
+                  right: 30,
                     child: Column(
                       children: [
                         Container(
@@ -187,6 +175,18 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                       ],
                     ),
                   ),
+                  Positioned(
+                  top: 130,
+                  right: 30,
+                    child: Container(
+                      height: 30,
+                      width: 20,
+                      child: Image.asset(
+                        "assets/images/bronze.png",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                   SafeArea(
                       child: Column(
                     children: <Widget>[
@@ -195,9 +195,9 @@ class _OrganisationLeaderboardState extends State<OrganisationLeaderboard> {
                       ),
                       Expanded(
                         child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: AppTheme.project4.withOpacity(0.2)),
+                          // decoration: BoxDecoration(
+                          //     borderRadius: BorderRadius.circular(20.0),
+                          //     color: AppTheme.project4.withOpacity(0.2)),
                           child: Column(
                             children: <Widget>[
                               const SizedBox(height: 30.0),
