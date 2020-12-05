@@ -8,5 +8,5 @@ SurveyResponse _$SurveyResponseFromJson(Map<String, dynamic> json) {
   return SurveyResponse()
     ..surveyResponseId = json['surveyResponseId'] as num
     ..timestamp = DateTime.parse(json['timestamp'])
-    ..respondent = TruncatedProfile.fromJson(json['respondent']);
+    ..respondent = json['respondent'] != null ? TruncatedProfile.fromJson(json['respondent']) : null;
 }

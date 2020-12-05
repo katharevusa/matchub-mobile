@@ -10,6 +10,7 @@ class SurveyResponse {
     num surveyResponseId;
     DateTime timestamp;
     TruncatedProfile respondent;
+    Survey  survey;
 
     factory SurveyResponse.fromJson(Map<String,dynamic> json) => _$SurveyResponseFromJson(json);
 }

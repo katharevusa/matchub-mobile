@@ -35,9 +35,10 @@ class _SDGState extends State<SDG> {
                       widget.project['sdgs'].forEach((e) => list.add(e + 1));
                       print(list);
                       widget.project['sdgs'] = list;
-                      // (widget.project['sdgIds'] as List)..addAll(value)..toSet();
-
-                      // widget.project['sdgs'] = (value);
+                      widget.project['hashmapSDG'].clear();
+                      widget.project['sdgs'].forEach((e) => widget
+                          .project['hashmapSDG']
+                          .putIfAbsent(e, () => []));
                     }
                     print(widget.project['sdgs']);
                   });
@@ -107,7 +108,8 @@ class _SDGState extends State<SDG> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(4),
                               border: Border.fromBorderSide(
-                                BorderSide(color: Colors.grey[850].withOpacity(0.1)),
+                                BorderSide(
+                                    color: Colors.grey[850].withOpacity(0.1)),
                               )),
                           child: Center(
                               child: Text(

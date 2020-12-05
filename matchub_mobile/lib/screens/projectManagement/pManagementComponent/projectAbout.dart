@@ -4,6 +4,7 @@ import 'package:matchub_mobile/api/api_helper.dart';
 import 'package:matchub_mobile/models/index.dart';
 import 'package:matchub_mobile/screens/project_management/about/projectAnnouncement.dart';
 import 'package:matchub_mobile/screens/project_management/reputationPointAllocation/repAllocation.dart';
+import 'package:matchub_mobile/services/manageProject.dart';
 import 'package:matchub_mobile/style.dart';
 import 'package:matchub_mobile/screens/project/projectCreation/projectCreationScreen.dart';
 import 'package:matchub_mobile/screens/project_management/about/projectChannels.dart';
@@ -60,20 +61,20 @@ class _PManagementAboutState extends State<PManagementAbout> {
                         children: <Widget>[
                           Column(
                             children: <Widget>[
-                              FlatButton(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Text("Spotlight Project"),
-                                onPressed: () async {
-                                  try {
-                                    await spotlightProject();
-                                  } catch (e) {
-                                    showErrorDialog(e.toString(), context);
-                                  }
-                                  // spotlightAction(project, context);
-                                  Navigator.pop(context, true);
-                                },
-                              ),
-                              Divider(),
+                              // FlatButton(
+                              //   padding: const EdgeInsets.all(5.0),
+                              //   child: Text("Spotlight Project"),
+                              //   onPressed: () async {
+                              //     try {
+                              //       await spotlightProject();
+                              //     } catch (e) {
+                              //       showErrorDialog(e.toString(), context);
+                              //     }
+                              //     // spotlightAction(project, context);
+                              //     Navigator.pop(context, true);
+                              //   },
+                              // ),
+                              // Divider(),
                               FlatButton(
                                 padding: const EdgeInsets.all(5.0),
                                 child: Text("Terminate Project Early"),
@@ -170,7 +171,7 @@ class _PManagementAboutState extends State<PManagementAbout> {
           ? RepAllocation(widget.project)
           : Container(),
       PManagementSwiperCard(widget.project),
-      // PFundCampaignCard(),
+      PFundCampaignCard(),
       PAnnouncementCard(
         publicAnnouncements: widget.publicAnnouncements,
         internalAnnouncements: widget.internalAnnouncements,
@@ -273,8 +274,8 @@ class _PManagementHeaderState extends State<PManagementHeader> {
         right: 8,
         child: Row(
           children: [
-            (widget.myProfile.projectsOwned
-                        .indexWhere((e) => e.projectId == widget.project.projectId) >=
+            (widget.myProfile.projectsOwned.indexWhere(
+                        (e) => e.projectId == widget.project.projectId) >=
                     0)
                 ? IconButton(
                     visualDensity: VisualDensity.compact,
@@ -283,14 +284,15 @@ class _PManagementHeaderState extends State<PManagementHeader> {
                     color: Colors.white,
                     onPressed: () => Navigator.of(context, rootNavigator: true)
                         .push(MaterialPageRoute(
-                            builder: (context) =>
-                                ProjectCreationScreen(newProject: widget.project))))
+                            builder: (context) => ProjectCreationScreen(
+                                newProject: widget.project))))
                 : Container(),
             IconButton(
                 iconSize: 24,
                 icon: Icon(Icons.more_vert_rounded),
                 color: Colors.white,
-                onPressed: () => widget.projectEndingAction(widget.project, context))
+                onPressed: () =>
+                    widget.projectEndingAction(widget.project, context))
           ],
         ),
       ),
@@ -307,39 +309,131 @@ class _PManagementHeaderState extends State<PManagementHeader> {
                 fontWeight: FontWeight.w400)),
       ),
       Positioned(
-          bottom: 20,
-          left: 20,
-          child: !widget.project.spotlight &&
-                  widget.project.projStatus != "COMPLETED" &&
-                  widget.project.projStatus != "TERMINATED" &&
-                  (widget.myProfile.projectsOwned.indexWhere(
-                          (e) => e.projectId == widget.project.projectId) >=
-                      0)
-              ? InkWell(
-                  onTap: () {
-                    spotlightAction(widget.project, context);
-                  },
-                  child: Container(
-                    height: 30,
-                    width: 90,
-                    decoration: BoxDecoration(
-                      color: AppTheme.project3,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.star_border,
-                          color: Colors.black,
-                        ),
-                        Text("Spotlight"),
-                      ],
-                    ),
+        bottom: 20,
+        left: 20,
+        child: !widget.project.spotlight &&
+                widget.project.projStatus != "COMPLETED" &&
+                widget.project.projStatus != "TERMINATED" &&
+                (widget.myProfile.projectsOwned.indexWhere(
+                        (e) => e.projectId == widget.project.projectId) >=
+                    0)
+            ? InkWell(
+                onTap: () {
+                  spotlightAction(widget.project, context);
+                },
+                child: Container(
+                  height: 30,
+                  width: 90,
+                  decoration: BoxDecoration(
+                    color: AppTheme.project3,
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                )
-              : Container())
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.star_border,
+                        color: Colors.black,
+                      ),
+                      Text("Spotlight"),
+                    ],
+                  ),
+                ),
+              )
+            : widget.project.spotlight
+                ? InkWell(
+                    onTap: () {
+                      spotlightDuration(widget.project, context);
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 150,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.white),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.star,
+                            color: AppTheme.project1,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Under Spotlight",
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(),
+      )
     ]);
+  }
+
+  spotlightDuration(Project project, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            child: Container(
+              padding: EdgeInsets.all(15),
+              height: 200,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  )),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Text("Spotlight will end in",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w500)),
+                  ),
+                  SlideCountdownClock(
+                    duration: Duration(
+                        days: DateTime.parse(widget.project.spotlightEndTime)
+                            .difference(DateTime.now())
+                            .inDays,
+                        minutes: DateTime.parse(widget.project.spotlightEndTime)
+                            .difference(DateTime.now())
+                            .inMinutes),
+                    slideDirection: SlideDirection.Up,
+                    separator: ":",
+                    textStyle: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    shouldShowDays: true,
+                  ),
+                  CircleAvatar(
+                    radius: 55,
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                      image: AssetImage(
+                        './././assets/images/spotlight.png',
+                      ),
+                    ))),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   spotlightAction(Project project, BuildContext context) {
@@ -419,7 +513,9 @@ class _PManagementHeaderState extends State<PManagementHeader> {
       final response = await ApiBaseHelper.instance.putProtected(
         url,
       );
-      await widget.loadProject();
+      await Provider.of<ManageProject>(context, listen: false).getProject(
+        widget.project.projectId,
+      );
       print("Success");
     } catch (error) {
       print("Failure");

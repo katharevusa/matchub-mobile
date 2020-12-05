@@ -16,11 +16,14 @@ class NotificationSetting extends StatefulWidget {
 class _NotificationSettingState extends State<NotificationSetting> {
   Profile myProfile;
   Map<String, bool> announcementSettings;
+  List<String> announcementName;
+
   @override
   void initState() {
     myProfile = Provider.of<Auth>(context, listen: false).myProfile;
     announcementSettings =
         Map<String, bool>.from(myProfile.announcementsSetting);
+    announcementName = announcementSettings.keys.toList();
     super.initState();
   }
 
@@ -65,20 +68,22 @@ class _NotificationSettingState extends State<NotificationSetting> {
         ),
         body: ListView.builder(
           shrinkWrap: true,
-          itemBuilder: (_, idx) => ListTile(
-            title: Text(
-              announcementTypes[idx].split("_").join(" ").capitalizeWords,
-            ),
-            trailing: Switch(
-              onChanged: (value) {
-                setState(
-                    () => announcementSettings[announcementTypes[idx]] = value);
-                print(announcementSettings);
-              },
-              value: announcementSettings[announcementTypes[idx]],
-            ),
-          ),
-          itemCount: announcementTypes.length,
+          itemBuilder: (_, idx) {
+            return ListTile(
+              title: Text(
+                announcementName[idx].split("_").join(" ").capitalizeWords,
+              ),
+              trailing: Switch(
+                onChanged: (value) {
+                  setState(() =>
+                      announcementSettings[announcementName[idx]] = value);
+                  print(announcementSettings);
+                },
+                value: announcementSettings[announcementName[idx]],
+              ),
+            );
+          },
+          itemCount: announcementName.length,
         ));
   }
 }

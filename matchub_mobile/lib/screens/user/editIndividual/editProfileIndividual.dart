@@ -137,6 +137,7 @@ class _EditIndividualScreenState extends State<EditIndividualScreen> {
       });
     });
     editedProfile['hashmapSDG'] = newMap;
+    print(newMap);
     try {
       final response = await ApiBaseHelper.instance.postProtected(
           "authenticated/updateIndividual",

@@ -59,7 +59,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       "projCreatorId": widget.newProject.projCreatorId,
       "spotlight": widget.newProject.spotlight,
       "spotlightEndTime": widget.newProject.spotlightEndTime,
-      "joinRequests": widget.newProject.joinRequests ?? [],
+      // "joinRequests": widget.newProject.joinRequests ?? [],
       "reviews": widget.newProject.reviews ?? [],
       "projectBadge": widget.newProject.projectBadge ?? "",
       "fundsCampaign": widget.newProject.fundsCampaign ?? [],
@@ -300,6 +300,7 @@ class _ProjectCreationScreenState extends State<ProjectCreationScreen> {
       });
     });
     project['hashmapSDG'] = newMap;
+    print(newMap);
 
     try {
       var accessToken = Provider.of<Auth>(context).accessToken;

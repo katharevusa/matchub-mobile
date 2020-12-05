@@ -26,7 +26,6 @@ class _ViewAllCompetitionState extends State<ViewAllCompetition> {
   @override
   void initState() {
     loadActiveCompetitions();
-    print('=======');
     super.initState();
   }
 
@@ -79,13 +78,14 @@ class _ViewAllCompetitionState extends State<ViewAllCompetition> {
                 ),
               ),
             ),
+
             _buildCompetition(activeCompetitions),
-            Container(
-              color: Colors.white.withOpacity(0.85),
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              width: double.infinity,
-              height: 1.0,
-            ),
+            // Container(
+            //   color: Colors.white.withOpacity(0.85),
+            //   margin: const EdgeInsets.symmetric(vertical: 8.0),
+            //   width: double.infinity,
+            //   height: 1.0,
+            // ),
             Padding(
               padding:
                   const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
@@ -101,7 +101,7 @@ class _ViewAllCompetitionState extends State<ViewAllCompetition> {
             allCompetitions.isNotEmpty
                 ? _buildCompetition(allCompetitions)
                 : SizedBox.shrink(),
-            _buildbuton(context),
+            // _buildbuton(context),
           ],
         ),
       ),
@@ -115,75 +115,89 @@ class _ViewAllCompetitionState extends State<ViewAllCompetition> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(
-            height: 40,
+            height: 10,
           ),
           Text(
-            "Hello " +
-                myProfile.name +
-                '.\n' +
-                "Welcome to MatcHub Competition section. \n" +
-                "In MatcHub Competition, you can join any of the active competition with your owned projects and stand a chance to win attractive prices. You could also vote for the projects in other competitions.",
-            style: TextStyle(
-              color: Colors.black87,
-              fontWeight: FontWeight.w500,
-            ),
+            "Welcome to MatcHub's Competition section. \n",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          Container(
-            color: Colors.white,
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            width: 225.0,
-            height: 1.0,
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "We want to help you get your projects up and running. Join a competition with a project you've listed, and the most deserving project will receive a grant!",
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Container(
+                height: 150,
+                alignment: Alignment.bottomRight,
+                child: Image.asset(
+                  "assets/images/competition2.png",
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+            ],
           ),
-          Column(
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children: [
-              //     Text(
-              //       "Your participation..",
-              //       style: TextStyle(
-              //           // color: Colors.white.withOpacity(0.85),
-              //           height: 1.4,
-              //           fontSize: 18,
-              //           color: AppTheme.project3),
-              //     ),
-              //     for (Project p in myProfile.projectsOwned) ...{
-              //       if (p.competition != null)
-              //         Column(
-              //           crossAxisAlignment: CrossAxisAlignment.start,
-              //           children: [
-              //             Text(
-              //               p.projectTitle + ':',
-              //               style: TextStyle(
-              //                 color: Colors.white.withOpacity(0.85),
-              //                 height: 1.4,
-              //               ),
-              //             ),
-              //             Row(
-              //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //               children: [
-              //                 Text(
-              //                   p.competitionVotes.toString() + ' VOTES',
-              //                   style: TextStyle(
-              //                     color: Colors.black,
-              //                     fontSize: 20,
-              //                     height: 1.4,
-              //                   ),
-              //                 ),
-              //                 Text(
-              //                   p.competition.competitionTitle,
-              //                   style: TextStyle(
-              //                     color: AppTheme.project3,
-              //                     fontSize: 15,
-              //                     height: 1.4,
-              //                   ),
-              //                 ),
-              //               ],
-              //             ),
-              //           ],
-              //         ),
-              //     }
-              //   ],
-              // ),
-              )
+          // Container(
+          //   color: Colors.white,
+          //   margin: const EdgeInsets.symmetric(vertical: 8.0),
+          //   width: 225.0,
+          //   height: 1.0,
+          // ),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     Text(
+          //       "Your participation..",
+          //       style: TextStyle(
+          //           // color: Colors.white.withOpacity(0.85),
+          //           height: 1.4,
+          //           fontSize: 18,
+          //           color: AppTheme.project3),
+          //     ),
+          //     for (Project p in myProfile.projectsOwned) ...{
+          //       if (p.competition != null)
+          //         Column(
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //             Text(
+          //               p.projectTitle + ':',
+          //               style: TextStyle(
+          //                 color: Colors.white.withOpacity(0.85),
+          //                 height: 1.4,
+          //               ),
+          //             ),
+          //             Row(
+          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //               children: [
+          //                 Text(
+          //                   p.competitionVotes.toString() + ' VOTES',
+          //                   style: TextStyle(
+          //                     color: Colors.black,
+          //                     fontSize: 20,
+          //                     height: 1.4,
+          //                   ),
+          //                 ),
+          //                 Text(
+          //                   p.competition.competitionTitle,
+          //                   style: TextStyle(
+          //                     color: AppTheme.project3,
+          //                     fontSize: 15,
+          //                     height: 1.4,
+          //                   ),
+          //                 ),
+          //               ],
+          //             ),
+          //           ],
+          //         ),
+          //     }
+          //   ],
+          // ),
+          // )
         ],
       ),
     );
@@ -266,15 +280,15 @@ class CompetitionCard extends StatelessWidget {
         children: [
           Text(
             competition.competitionTitle,
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 16),
           ),
-          Text(
-            competition.competitionDescription,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 3,
-            style:
-                TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 15),
-          ),
+          // Text(
+          //   competition.competitionDescription,
+          //   overflow: TextOverflow.ellipsis,
+          //   maxLines: 3,
+          //   style:
+          //       TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 15),
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

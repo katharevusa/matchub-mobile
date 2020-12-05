@@ -102,7 +102,17 @@ class _AttemptSurveyState extends State<AttemptSurvey> {
             }
           }
         }
-      } 
+      } else {
+        SurveyQuestion nextQuestion = widget.survey.questions.firstWhere(
+            (element) => element.questionId == cQ.nextQuestionId,
+            orElse: () => null);
+        if (nextQuestion != null &&
+            questionsToDisplay.indexWhere(
+                    (sQ) => sQ.questionId == nextQuestion.questionId) ==
+                -1) {
+          questionsToDisplay.add(nextQuestion);
+        }
+      }
     }
     questionsToDisplay.sort((a, b) => a.questionId.compareTo(b.questionId));
     if (questionsToDisplay.last.nextQuestionId == null ||

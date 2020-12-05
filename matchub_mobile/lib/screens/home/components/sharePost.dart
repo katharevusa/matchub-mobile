@@ -103,7 +103,7 @@ class _SharePostState extends State<SharePost> {
           ],
           title: Container(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: Text("Share post",
+            child: Text("Repost",
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
